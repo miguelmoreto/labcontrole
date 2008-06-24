@@ -1,5 +1,5 @@
 #Boa:Frame:FramePrincipal
-
+# by Moreto
 import wx
 import SisContinuo
 
