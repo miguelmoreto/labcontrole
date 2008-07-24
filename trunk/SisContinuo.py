@@ -4,13 +4,16 @@
 import wx
 from wx.lib.anchors import LayoutAnchors
 import matplotlib
-matplotlib.use('WX')
-from matplotlib.backends.backend_wx import NavigationToolbar2Wx, FigureCanvasWx,\
-     FigureManager
-
+matplotlib.use('WXAgg')
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+from matplotlib.backends.backend_wx import NavigationToolbar2Wx
+from matplotlib import rc
+rc('text', usetex=True)
 from matplotlib.figure import Figure
 from matplotlib.axes import Subplot
-import matplotlib.numerix as numpy
+from matplotlib.widgets import Button
+import numpy
+
 
 #from matplotlib.backends.backend_wx import *#NavigationToolbar2Wx
 
@@ -95,13 +98,13 @@ class Frame(wx.Frame):
     def _init_coll_Notebook_Pages(self, parent):
         # generated method, don't edit
 
-        parent.AddPage(imageId=-1, page=self.panel1, select=False,
+        parent.AddPage(imageId=-1, page=self.panel1, select=True,
               text='Diagrama')
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
         parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -270,7 +273,13 @@ class Frame(wx.Frame):
         self._init_ctrls(parent)
         
         # A partir de agora não é código automático do BOA constructor.
-        # Criando figura para plotar o resultado da simulação.
+
+        # =============== FLOAT CANVAS ===================
+        # Criando FloatCanvas onde é desenhado o diagrama de blocos:
+        self.DiagramaBlocosFig = self.DesenhaDiagramaBlocos(self.panel1)
+
+        # =============== FIGURAS DO MATPLOTLIB ==========
+        # Criando figuras para plotar os resultados das simulações.
         fig1 = self.CriaPainelGrafico(self.panel3)
         fig2 = self.CriaPainelGrafico(self.panelLGR)
         fig3 = self.CriaPainelGrafico(self.panelBode)
@@ -307,6 +316,7 @@ class Frame(wx.Frame):
         a.plot(t,s)
         a.plot(t,c)
         a.grid()
+        a.set_xlabel(r'$t(s)$')
         #toolbar.update()
 
     def CriaPainelGrafico(self,parent):
@@ -320,11 +330,9 @@ class Frame(wx.Frame):
         
         # Criando figura e toolbar do Matplotlib:
         tamanho = parent.GetSizeTuple()
-        #a = tamanho[0]/96
-        #b = tamanho[1]/96
-        #figura = Figure((a,b),96)
+
         figura = Figure()
-        canvas = FigureCanvasWx(parent,-1, figura)
+        canvas = FigureCanvas(parent,-1, figura)
         toolbar = NavigationToolbar2Wx(canvas)
         toolbar.Realize()
 
@@ -341,11 +349,34 @@ class Frame(wx.Frame):
         print sizer.GetSize(), sizer.GetPosition(), tamanho
         
         return figura
-##    def OnFrameSize(self, event):
-##        a = self.sizer2.GetSize()
-##        
-##        self.statusBar1.SetFields(['abc',str(a)])
-##        
+    
+    def DesenhaDiagramaBlocos(self,parent):
+
+        # Criando o Canvas grafico do Matplotlib:
+        tamanho = parent.GetSizeTuple()
+
+        figura = Figure()
+        canvas = FigureCanvas(parent,-1, figura)
+        # Colocando Canvas e toolbar no sizer:
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(canvas, 1, wx.GROW)
+        parent.SetSizer(sizer)
+        parent.Fit()
+        parent.Refresh()
+        
+        canvas.resize(tamanho[0],tamanho[1])
+        
+        axprev = figura.add_axes([0.45, 0.4625, 0.1, 0.075])
+        bprev = Button(axprev, 'Previous')
+        bprev.on_clicked(self.AtualizaDiagrama)
+        
+        self.TextoGs = figura.text(0.2,0.2,r'Teste $\Delta$')
+        
+        return figura
+    
+    def AtualizaDiagrama(self,event):
+        
+        self.TextoGs.set_text(r'$\frac{s^2+2s+1}{s^3+2s^2+4s+2}$')
 
 
 if __name__ == '__main__':
