@@ -325,7 +325,7 @@ class Frame(wx.Frame):
         self.Layout()
         #self.panel3.Layout()
         
-        Check
+        #Check
         
         #self.Show()
         
@@ -407,10 +407,12 @@ class Frame(wx.Frame):
         axC = figura.add_axes([0.44, 0.45, 0.12, 0.1])
         axG = figura.add_axes([0.8, 0.45, 0.12, 0.1])
         axW = figura.add_axes([0.677-0.05, 0.75, 0.1, 0.1])
+        #axMalha = figura.add_axes([0.63, 0.25, 0.12, 0.1])
         btnR = Button(axR, 'Ref')
         btnC = Button(axC, 'C(s)')
         btnG = Button(axG, 'G(s)')
         btnW = Button(axW, 'W(s)')
+        #btnW = Button(axW, 'W(s)')
         
         # Eventos dos botões:
         btnR.on_clicked(self.OnBtnR)
@@ -514,11 +516,20 @@ class Frame(wx.Frame):
         
         Tmax = float(self.Tmax.GetLineText(0))
         
-        deltaT = 0.02
+        string = '1.2'
         
+        # Cria instância do sistema realimentado:
         sis = SistemaContinuo()
+
+        sis.Malha = 'Fechada'
+        sis.Cnum = [1]
+        sis.Cden = [1,0]
+
+        # Cria vetor de tempo e de entrada:
+        t,u = sis.CriaEntrada(string, tmax=Tmax,delta_t=0.01,tempo_inic=1)
         
-        y, t, u = sis.RespostaDegrau(tmax=Tmax,delta_t=deltaT)
+        # Simula o sistema para a entrada calculada:
+        y = sis.Simulacao(u, t)
         
         # Plotando:
         self.fig1.clf()
