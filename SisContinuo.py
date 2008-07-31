@@ -18,6 +18,7 @@ from matplotlib.patches import Rectangle, FancyArrow,Ellipse
 import numpy
 
 from Sistema import *
+import DlgFT
 
 
 #from matplotlib.backends.backend_wx import *#NavigationToolbar2Wx
@@ -210,14 +211,12 @@ class Frame(wx.Frame):
               name='Limpar', parent=self.panel2, pos=wx.Point(27, 478),
               size=wx.Size(75, 23), style=0)
 
-        self.GrafVarList = wx.CheckListBox(choices=['Entrada: r(t)',
-              'Erro: e(t)', 'Controle: u(t)', 'Saída: y(t)'],
-              id=wxID_FRAMEGRAFVARLIST, name='GrafVarList', parent=self.panel2,
-              pos=wx.Point(4, 66), size=wx.Size(122, 315),
+        self.GrafVarList = wx.CheckListBox(choices=[ 'Saída: y(t)',
+              'Entrada: r(t)', 'Erro: e(t)', 'Perturbação: w(t)',
+              'Controle: u(t)'], id=wxID_FRAMEGRAFVARLIST, name='GrafVarList',
+              parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 315),
               style=wx.LB_EXTENDED)
         self.GrafVarList.SetStringSelection('')
-        self.GrafVarList.Bind(wx.EVT_LISTBOX, self.OnGrafVarListListbox,
-              id=wxID_FRAMEGRAFVARLIST)
 
         self.txtOpcoes = wx.StaticText(id=wxID_FRAMETXTOPCOES,
               label='Configura\xe7\xf5es:', name='txtOpcoes',
@@ -325,7 +324,7 @@ class Frame(wx.Frame):
         self.Layout()
         #self.panel3.Layout()
         
-        #Check
+        self.Malha = 'Fechada'
         
         #self.Show()
         
@@ -373,9 +372,9 @@ class Frame(wx.Frame):
         parent.Fit()
         parent.Refresh()
         
-        #sizer.SetDimension(0,0,709,415)
+
         
-        print sizer.GetSize(), sizer.GetPosition(), tamanho
+        #print sizer.GetSize(), sizer.GetPosition(), tamanho
         
         return figura
     
@@ -383,7 +382,6 @@ class Frame(wx.Frame):
 
         # Criando o Canvas grafico do Matplotlib:
         tamanho = parent.GetSizeTuple()
-        print tamanho
 
         figura = Figure()
         canvas = FigureCanvas(parent,-1, figura)
@@ -407,18 +405,21 @@ class Frame(wx.Frame):
         axC = figura.add_axes([0.44, 0.45, 0.12, 0.1])
         axG = figura.add_axes([0.8, 0.45, 0.12, 0.1])
         axW = figura.add_axes([0.677-0.05, 0.75, 0.1, 0.1])
-        #axMalha = figura.add_axes([0.63, 0.25, 0.12, 0.1])
+        axH = figura.add_axes([0.5, 0.205, 0.12, 0.1])
+        self.axM = figura.add_axes([0.75, 0.228, 0.05*0.619, 0.05])
         btnR = Button(axR, 'Ref')
         btnC = Button(axC, 'C(s)')
         btnG = Button(axG, 'G(s)')
         btnW = Button(axW, 'W(s)')
-        #btnW = Button(axW, 'W(s)')
+        btnH = Button(axH, 'H(s)')
+        self.btnM = Button(self.axM, '------')
         
         # Eventos dos botões:
         btnR.on_clicked(self.OnBtnR)
         btnC.on_clicked(self.OnBtnC)
         btnG.on_clicked(self.OnBtnG)
         btnW.on_clicked(self.OnBtnW)
+        self.btnM.on_clicked(self.OnBtnM)
         
         
         # Setas e linhas:
@@ -454,7 +455,7 @@ class Frame(wx.Frame):
         axes1.text(0.73,0.53,'u(t)'); axes1.text(0.95,0.53,'y(t)')
         axes1.text(0.69,0.68,'w(t)')
         
-        self.TextoGs = figura.text(0.2,0.2,r'Teste $\Delta$')
+        #self.TextoGs = figura.text(0.2,0.2,r'Teste $\Delta$')
         
         #rect = Rectangle((0.2,0.4),0.5,0.5,facecolor='b',fill=True)
 
@@ -485,7 +486,12 @@ class Frame(wx.Frame):
         """
         Evento do botão do controlador.
         """
-        pass
+        dlg = DlgFT.Dialog1(self)
+        try:
+            dlg.ShowModal()
+        finally:
+            dlg.Destroy()
+        
 
     def OnBtnG(self,event):
         """
@@ -496,8 +502,25 @@ class Frame(wx.Frame):
     def OnBtnW(self,event):
         """
         Evento do botão da perturbação.
+        Permite que o usuário entre com a função ou valor da entrada w(t).
         """
         pass
+
+    def OnBtnM(self,event):
+        """
+        Evento do botão abre/fecha a malha.
+        """
+        self.axM.clear()
+        if self.Malha == 'Fechada':
+            self.btnM = Button(self.axM, '')
+            self.Malha = 'Aberta'
+            
+        elif self.Malha == 'Aberta':
+            self.btnM = Button(self.axM, "------")
+            self.Malha = 'Fechada'
+
+        self.DBCanvas.draw()
+
 
         
     def onclick(self,event):
@@ -509,49 +532,75 @@ class Frame(wx.Frame):
         else:
             self.statusBar1.SetStatusText(number=0, text='Fora')
 
-    def OnGrafVarListListbox(self, event):
-        event.Skip()
-
     def OnSimularButton(self, event):
         
         Tmax = float(self.Tmax.GetLineText(0))
         
-        string = '1.2'
+        stringR = '1.2'
+        stringW = '0.2'
         
         # Cria instância do sistema realimentado:
         sis = SistemaContinuo()
 
-        sis.Malha = 'Fechada'
+        sis.Malha = self.Malha
         sis.Cnum = [1]
-        sis.Cden = [1,0]
+        sis.Cden = [1]
 
         # Cria vetor de tempo e de entrada:
-        t,u = sis.CriaEntrada(string, tmax=Tmax,delta_t=0.01,tempo_inic=1)
+        t,u,w = sis.CriaEntrada(stringR, stringW, Tmax, 0.01, 1, 4)
         
         # Simula o sistema para a entrada calculada:
-        y = sis.Simulacao(u, t)
+        y = sis.Simulacao(t, u, w)
+        
+        
+        #y,t,u = sis.RespostaDegrau(tempo_degrau=0.5, delta_t=0.01, tmax=Tmax)
         
         # Plotando:
         self.fig1.clf()
         ax = self.fig1.add_subplot(111)
         
         legenda = []
-        
-        # Verificando se a entrada está marcada para plotar:
+
+        flag = 0
+
+        # Verificando se a saída está marcada para plotar:
         if self.GrafVarList.IsChecked(0):
-            ax.plot(t,u)
-            legenda.append('Entrada')
+            ax.plot(t,y,'r')
+            legenda.append(r'Saida: y(t)')
+            flag = 1
+
+        # Verificando se a entrada r(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(1):
+            ax.plot(t,u,'b')
+            legenda.append(r'Entrada: u(t)')
+            flag = 1
+        # Verificando se o sinal de erro está marcado para plotar:
+        if self.GrafVarList.IsChecked(2):
+            ax.plot(t,u-y,'g')
+            legenda.append(r'Erro: e(t)')
+            flag = 1
+        # Verificando se a entrada w(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(3):
+            ax.plot(t,w,'m')
+            legenda.append(r'Perturbacao: w(t)')
+            flag = 1
         
-        # Plotando saída:
-        ax.plot(t,y)
-        legenda.append('Saida')
+        # Se nenhuma saida foi selecionado, não faz nada.
+        if flag == 0:
+            return
+
+        
         ax.grid()
+        
+        ylim = ax.get_ylim()
+        
+        # Seta novo limite máximo do eixo y, somando 1/10 do valor total da escala.
+        ax.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        
         ax.legend(legenda, loc=0)
         
         # Atualiza a tela.
         self.panel3.Refresh()
-        
-        event.Skip()
 
 
 if __name__ == '__main__':
