@@ -37,16 +37,17 @@ class SistemaContinuo:
         Simulação da resposta ao degrau do sistema
         """
         
-        S = self.Sistema()
+        S = self.SistemaR()
         
         y, t, u = S.step_response(fignum=None, dt=delta_t, maxt=tmax, 
                             step_time=tempo_degrau,**kwargs)
         
         return y, t, u
     
-    def Sistema(self):
+    def SistemaR(self):
         """
-        Monta função de transferência do sistema em malha aberta ou fechada.
+        Monta função de transferência do sistema em malha aberta ou fechada
+        considerando como entrada r(t).
         """
         
         # FT do controlador:
@@ -63,39 +64,77 @@ class SistemaContinuo:
         else:
             S = C*G
             return S/(1.0 + H*S)
-        
-    def Simulacao(self, u, t,X0=0):
-        """
-        Simula um sistema dado uma entrada e vetor de tempo qualquer para
-        condições iniciais nulas (X0 = 0).
-        """
-        
-        S = self.Sistema()
-        
-        y = signal.lsim(S, u, t, interp=0, X0=X0)[1]
-        
-        return y
     
-    def CriaEntrada(self, string, tmax=5,delta_t=0.01,tempo_inic=0.0):
+    def SistemaW(self):
         """
-        Cria um vetor de tempo e um de entrada a partir de uma string
+        Monta função de transferência do sistema em malha aberta ou fechada
+        considerando com entrada w(t).
+        """
+        
+        # FT do controlador:
+        C = controls.TransferFunction(self.Cnum,self.Cden)
+        
+        # FT da planta:
+        G = controls.TransferFunction(self.Gnum,self.Gden)
+        
+        # FT da realimentação:
+        H = controls.TransferFunction(self.Hnum,self.Hden)
+        
+        if self.Malha == 'Aberta':
+            return G
+        else:
+            return G/(1.0 + (H*C*G))
+        
+    def Simulacao(self, t, u, w, X0=0):
+        """
+        Simula um sistema dado as entradas u e w e um vetor de tempo qualquer
+        para condições iniciais nulas (X0 = 0).
+        """
+
+        Sr = self.SistemaR() # Sistema considerando a entrada r(t)
+        Sw = self.SistemaW() # Sistema considerando a entrada w(t)
+        
+        #y = signal.lsim(S, u, t, X0=None)[1]
+
+        # Simula separadamente para cada entrada (superposição):
+        yr = signal.lsim2(Sr, u, t)[1]
+        yw = signal.lsim2(Sw, w, t)[1]
+        
+        return yr + yw
+    
+    def CriaEntrada(self, stringR, stringW, tmax=5,delta_t=0.01,tempoR=0.0, tempoW=0.0):
+        """
+        Cria um vetor de tempo e um de entrada a partir de duas strings
         representando qualquer função matemática do python em função da
         varíavel t.
+        
+        Uma string para a entrada r(t) e outra para w(t)
+        
+        tempoR = instante de início da entrada r(t);
+        tempoW = instante de início da entrada w(t).
         """
         
-        if tempo_inic > tmax:
+        if (tempoR > tmax) or (tempoW > tmax):
             print "O tempo do degrau nao pode ser maior do que o tmax."
-            return 0, 0
+            return 0, 0, 0
         
         # Vetor de tempo:
         t_total = arange(0,tmax,delta_t)
            
         u = zeros_like(t_total)
+        w = zeros_like(t_total)
         
-        # Numero da amostra correspondente ao tempo_inic:
-        amostra = int(tempo_inic/delta_t)
+        # Numero da amostra correspondente aos tempoR e tempoW:
+        amostraR = int(tempoR/delta_t)
+        amostraW = int(tempoW/delta_t)
+        
+        # monta vetor u(t):
+        t = t_total[0:(len(t_total)-amostraR)]
+        u[amostraR:] = eval(stringR)
 
-        t = t_total[0:(len(t_total)-amostra)]
-        u[amostra:] = eval(string)
+        # monta vetor w(t)
+        t = t_total[0:(len(t_total)-amostraW)]
+        w[amostraW:] = eval(stringW)
+
        
-        return t_total, u
+        return t_total, u, w
