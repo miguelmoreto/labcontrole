@@ -60,7 +60,7 @@ RT_MANIFEST = 24
 
 # ###############################################################
 # Output folder (where the executables will be):
-out_dir = r'D:\Moreto\ProgramsEXE\LabControle'
+out_dir = r'..\ProgramsEXE\LabControle'
 # Current folder:
 current_dir = os.getcwd()
 
