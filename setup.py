@@ -60,10 +60,10 @@ RT_MANIFEST = 24
 
 # ###############################################################
 # Output folder (where the executables will be):
-out_dir = r'..\ProgramsEXE\LabControle'
+out_dir = r'..\..\ProgramsEXE\LabControle'
+
 # Current folder:
 current_dir = os.getcwd()
-
 
 
 # ###############################################################
@@ -92,7 +92,7 @@ options = {
                 "includes" : ["matplotlib.backends",  "matplotlib.backends.backend_qt4agg", "matplotlib.backends.backend_wxagg",
                                "matplotlib.figure","pylab", "numpy", "matplotlib.numerix.fft", "matplotlib.numerix.ma",
                                "matplotlib.numerix.linear_algebra", "matplotlib.numerix.random_array",
-                               "matplotlib.backends.backend_tkagg","scipy.io.numpyio","scipy.signal"],
+                               "matplotlib.backends.backend_tkagg","scipy.io.numpyio","IPython.Extensions.path"],
                 'excludes': ['_gtkagg', '_tkagg', '_agg2', '_cairo', '_cocoaagg',
                              '_fltkagg', '_gtk', '_gtkcairo', ],
                 'dll_excludes': ['libgdk-win32-2.0-0.dll',

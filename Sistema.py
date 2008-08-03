@@ -9,8 +9,9 @@
 #
 # Desenvolvido por Miguel Moreto
 #
-import controls
 from scipy import *
+from scipy import signal
+import controls
 import types
 
 class SistemaContinuo:
