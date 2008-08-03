@@ -4,14 +4,34 @@
 import wx
 from wx.lib.anchors import LayoutAnchors
 import matplotlib
+<<<<<<< .mine
+matplotlib.use('WXAgg')
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+from matplotlib.backends.backend_wx import NavigationToolbar2Wx
+#from matplotlib import rc
+#rc('text', usetex=True)
+=======
 matplotlib.use('WXAgg')
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.backends.backend_wx import NavigationToolbar2Wx
 from matplotlib import rc
 rc('text', usetex=True)
+>>>>>>> .r13
 from matplotlib.figure import Figure
 from matplotlib.axes import Subplot
 
+<<<<<<< .mine
+from matplotlib.widgets import Button
+from matplotlib.patches import Rectangle, FancyArrow,Ellipse
+
+import numpy
+
+from Sistema import *
+import DlgFT
+import DlgEntrada
+
+
+=======
 from matplotlib.widgets import Button
 from matplotlib.patches import Rectangle, FancyArrow,Ellipse
 
@@ -21,6 +41,7 @@ from Sistema import *
 import DlgFT
 
 
+>>>>>>> .r13
 #from matplotlib.backends.backend_wx import *#NavigationToolbar2Wx
 
 def create(parent):
@@ -322,11 +343,25 @@ class Frame(wx.Frame):
         # Atualiza os sizers:
         self.panel2.Layout()
         self.Layout()
-        #self.panel3.Layout()
         
         self.Malha = 'Fechada'
         
-        #self.Show()
+        self.GrafVarList.Check(0,True)
+        self.GrafVarList.Check(1,True)
+        
+        # Definições iniciais:
+        self.Malha = 'Fechada'
+        self.Gnum = [2,10]
+        self.Gden = [1,2,10]
+        self.Cnum = [1]
+        self.Cden = [1]
+        self.Hnum = [1]
+        self.Hden = [1]
+        self.Rt = '1'       # String com a função de entrada r(t)
+        self.InstRt = 0
+        self.Wt = '0'       # String com a função de entrada w(t)
+        self.InstWt = 0 
+        
         
     def plot_data(self,figura):
         
@@ -383,6 +418,301 @@ class Frame(wx.Frame):
         # Criando o Canvas grafico do Matplotlib:
         tamanho = parent.GetSizeTuple()
 
+<<<<<<< .mine
+        figura = Figure()
+        canvas = FigureCanvas(parent,-1, figura)
+        # Colocando Canvas e toolbar no sizer:
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(canvas, 1, wx.EXPAND)
+        parent.SetSizer(sizer)
+        parent.Fit()
+        parent.Refresh()
+        
+        
+        parent.SetSize(tamanho)
+        
+        canvas.draw()
+        
+        axes1 = figura.add_axes([0.01, 0.01, 0.98, 0.98])
+        
+        
+        # Botões:
+        axR = figura.add_axes([0.08, 0.45, 0.12, 0.1])
+        axC = figura.add_axes([0.44, 0.45, 0.12, 0.1])
+        axG = figura.add_axes([0.8, 0.45, 0.12, 0.1])
+        axW = figura.add_axes([0.677-0.05, 0.75, 0.1, 0.1])
+        axH = figura.add_axes([0.5, 0.205, 0.12, 0.1])
+        self.axM = figura.add_axes([0.75, 0.228, 0.05*0.619, 0.05])
+        btnR = Button(axR, 'Ref')
+        btnC = Button(axC, 'C(s)')
+        btnG = Button(axG, 'G(s)')
+        btnW = Button(axW, 'W(s)')
+        btnH = Button(axH, 'H(s)')
+        self.btnM = Button(self.axM, '------')
+        
+        # Eventos dos botões:
+        btnR.on_clicked(self.OnBtnR)
+        btnC.on_clicked(self.OnBtnC)
+        btnG.on_clicked(self.OnBtnG)
+        btnW.on_clicked(self.OnBtnW)
+        btnH.on_clicked(self.OnBtnH)
+        self.btnM.on_clicked(self.OnBtnM)
+        
+        
+        # Setas e linhas:
+        axes1.add_patch(FancyArrow(0.93,0.5,0.04,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.2-0.01,0.5,0.085,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.36-0.02,0.5,0.08,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.56,0.5,0.08-0.005,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.705,0.5,0.08,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.68,0.76,0,-0.195,0.001,
+                            head_width=0.015,head_length=0.022,fc='k'))
+        axes1.add_patch(FancyArrow(0.32,0.25,0,0.2-0.012,0.001,
+                            head_width=0.015,head_length=0.022,fc='k'))
+        axes1.add_patch(FancyArrow(0.32,0.25,0.62,0,0.002,
+                            head_width=0,head_length=0,fc='k'))
+        axes1.add_patch(FancyArrow(0.94,0.5,0,-0.25,0.002,
+                            head_width=0,head_length=0,fc='k'))
+
+        
+        
+        # Somadores:
+        axes1.add_patch(Ellipse((0.32,0.5),0.08*0.619,0.08,fc='0.85'))
+        axes1.add_patch(Ellipse((0.68,0.5),0.08*0.619,0.08,fc='0.85'))
+
+        # Textos:
+        axes1.text(0.3,0.49,'+'); axes1.text(0.66,0.49,'+')
+        axes1.text(0.317,0.47,'-'); axes1.text(0.676,0.51,'+')
+        axes1.text(0.22,0.53,'r(t)'); axes1.text(0.37,0.53,'e(t)')
+        axes1.text(0.73,0.53,'u(t)'); axes1.text(0.95,0.53,'y(t)')
+        axes1.text(0.69,0.68,'w(t)')
+        
+        #self.TextoGs = figura.text(0.2,0.2,r'Teste $\Delta$')
+        
+        #rect = Rectangle((0.2,0.4),0.5,0.5,facecolor='b',fill=True)
+
+        #axes1.add_patch(rect)
+        
+
+        axes1.set_axis_off()
+        #axes1.set_frame_on(False)
+
+        canvas.draw()
+        
+        #print Retangulo
+        #canvas.mpl_connect('button_press_event', self.onclick)
+        
+        return figura, canvas
+
+# Funções dos eventos dos botões:    
+    def OnBtnR(self,event):
+        """
+        Evento do botão da referência.
+        """
+        dlg = DlgEntrada.Dialog1(self)
+        dlg.SetTitle('Parâmetros da entrada r(t)')
+        dlg.AtualizaCampos(self.Rt,self.InstRt)
+        
+        result = dlg.ShowModal()
+        if result == wx.ID_OK:
+            self.Rt = dlg.Valor
+            self.InstRt = dlg.Instante
+            txt = "r(t) atualizada: " + self.Rt + ' em: ' + str(self.InstRt) + 'seg.'
+            self.statusBar1.SetStatusText(number=0, text=txt)
+        else:
+            self.statusBar1.SetStatusText(number=0, text='r(t) não atualizada')
+        
+        dlg.Destroy()
+
+    def OnBtnC(self,event):
+        """
+        Evento do botão do controlador.
+        """
+        
+        dlg = DlgFT.Dialog1(self)
+        dlg.SetTitle('Parâmetros de C(s)')
+        dlg.AtualizaCampos(self.Cnum,self.Cden)
+        
+        result = dlg.ShowModal()
+        if result == wx.ID_OK:
+            self.Cnum = dlg.Num
+            self.Cden = dlg.Den
+            txt = "C(s) atualizado: Num=" + str(self.Cnum) + " e Den=" + str(self.Cden)
+            self.statusBar1.SetStatusText(number=0, text=txt)
+        else:
+            self.statusBar1.SetStatusText(number=0, text='C(s) nao atualizado')
+        
+        dlg.Destroy()
+
+    def OnBtnG(self,event):
+        """
+        Evento do botão da planta.
+        """
+        dlg = DlgFT.Dialog1(self)
+        dlg.SetTitle('Parâmetros de G(s)')
+        dlg.AtualizaCampos(self.Gnum,self.Gden)
+        
+        result = dlg.ShowModal()
+        if result == wx.ID_OK:
+            self.Gnum = dlg.Num
+            self.Gden = dlg.Den
+            txt = "G(s) atualizado: Num=" + str(self.Gnum) + " e Den=" + str(self.Gden)
+            self.statusBar1.SetStatusText(number=0, text=txt)
+        else:
+            self.statusBar1.SetStatusText(number=0, text='G(s) nao atualizado')
+        
+        dlg.Destroy()        
+
+    def OnBtnH(self,event):
+        """
+        Evento do botão da realimentação.
+        """
+        dlg = DlgFT.Dialog1(self)
+        dlg.SetTitle('Parâmetros de H(s)')
+        dlg.AtualizaCampos(self.Hnum,self.Hden)
+        
+        result = dlg.ShowModal()
+        if result == wx.ID_OK:
+            self.Hnum = dlg.Num
+            self.Hden = dlg.Den
+            txt = "H(s) atualizado: Num=" + str(self.Hnum) + " e Den=" + str(self.Hden)
+            self.statusBar1.SetStatusText(number=0, text=txt)
+        else:
+            self.statusBar1.SetStatusText(number=0, text='H(s) nao atualizado')
+        
+        dlg.Destroy() 
+
+    def OnBtnW(self,event):
+        """
+        Evento do botão da perturbação.
+        Permite que o usuário entre com a função ou valor da entrada w(t).
+        """
+        
+        dlg = DlgEntrada.Dialog1(self)
+        dlg.SetTitle('Parâmetros da entrada w(t)')
+        dlg.AtualizaCampos(self.Wt,self.InstWt)
+        
+        result = dlg.ShowModal()
+        if result == wx.ID_OK:
+            self.Wt = dlg.Valor
+            self.InstWt = dlg.Instante
+            txt = "w(t) atualizada: " + self.Wt + ' em: ' + str(self.InstWt) + 'seg.'
+            self.statusBar1.SetStatusText(number=0, text=txt)
+        else:
+            self.statusBar1.SetStatusText(number=0, text='w(t) não atualizada')
+        
+        dlg.Destroy()
+        
+    def OnBtnM(self,event):
+        """
+        Evento do botão abre/fecha a malha.
+        """
+        self.axM.clear()
+        if self.Malha == 'Fechada':
+            self.btnM = Button(self.axM, '')
+            self.Malha = 'Aberta'
+            
+        elif self.Malha == 'Aberta':
+            self.btnM = Button(self.axM, "------")
+            self.Malha = 'Fechada'
+
+        self.DBCanvas.draw()
+
+
+        
+##    def onclick(self,event):
+##        x = event.xdata
+##        y = event.ydata
+##        if x != None and y != None:
+##            txt = "Posicao (%f, %f)" %(float(x),float(y))
+##            self.statusBar1.SetStatusText(number=0, text=txt)
+##        else:
+##            self.statusBar1.SetStatusText(number=0, text='Fora')
+
+    def OnSimularButton(self, event):
+        
+        Tmax = float(self.Tmax.GetLineText(0))
+        
+        stringR = self.Rt
+        stringW = self.Wt
+        
+        # Cria instância do sistema realimentado:
+        sis = SistemaContinuo()
+
+        sis.Malha = self.Malha
+        sis.Cnum = self.Cnum
+        sis.Cden = self.Cden
+        sis.Gnum = self.Gnum
+        sis.Gden = self.Gden
+
+        print stringR, stringW,  self.InstRt, self.InstWt
+        # Cria vetor de tempo e de entrada:
+        t,r,w = sis.CriaEntrada(stringR, stringW, Tmax, 0.01, self.InstRt, self.InstWt)
+        
+        
+        self.statusBar1.SetStatusText(number=1,text="Simulando, aguarde...")
+        
+        # Simula o sistema para a entrada calculada:
+        y = sis.Simulacao(t, r, w)
+        
+        self.statusBar1.SetStatusText(number=1,text="Simulação concluída.")
+        
+        #y,t,u = sis.RespostaDegrau(tempo_degrau=0.5, delta_t=0.01, tmax=Tmax)
+        
+        # Plotando:
+        self.fig1.clf()
+        ax = self.fig1.add_subplot(111)
+        
+        legenda = []
+
+        flag = 0
+
+        # Verificando se a saída está marcada para plotar:
+        if self.GrafVarList.IsChecked(0):
+            ax.plot(t,y,'r')
+            legenda.append(r'Saida: y(t)')
+            flag = 1
+
+        # Verificando se a entrada r(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(1):
+            ax.plot(t,r,'b')
+            legenda.append(r'Entrada: u(t)')
+            flag = 1
+        # Verificando se o sinal de erro está marcado para plotar:
+        if self.GrafVarList.IsChecked(2):
+            ax.plot(t,r-y,'g')
+            legenda.append(r'Erro: e(t)')
+            flag = 1
+        # Verificando se a entrada w(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(3):
+            ax.plot(t,w,'m')
+            legenda.append(r'Perturbacao: w(t)')
+            flag = 1
+        
+        # Se nenhuma saida foi selecionado, não faz nada.
+        if flag == 0:
+            return
+
+        
+        ax.grid()
+        
+        ylim = ax.get_ylim()
+        
+        # Seta novo limite máximo do eixo y, somando 1/10 do valor total da escala.
+        ax.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        
+        ax.legend(legenda, loc=0)
+        
+        # Atualiza a tela.
+        self.panel3.Refresh()
+
+
+=======
         figura = Figure()
         canvas = FigureCanvas(parent,-1, figura)
         # Colocando Canvas e toolbar no sizer:
@@ -603,6 +933,7 @@ class Frame(wx.Frame):
         self.panel3.Refresh()
 
 
+>>>>>>> .r13
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     frame = create(None)

@@ -97,8 +97,15 @@ class SistemaContinuo:
         #y = signal.lsim(S, u, t, X0=None)[1]
 
         # Simula separadamente para cada entrada (superposição):
-        yr = signal.lsim2(Sr, u, t)[1]
-        yw = signal.lsim2(Sw, w, t)[1]
+        try:
+            yr = signal.lsim(Sr, u, t)[1]
+        except:
+            yr = signal.lsim2(Sr, u, t)[1]
+            
+        try:
+            yw = signal.lsim(Sw, w, t)[1]
+        except:
+            yw = signal.lsim2(Sw, w, t)[1]
         
         return yr + yw
     
