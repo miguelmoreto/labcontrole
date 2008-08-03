@@ -113,6 +113,7 @@ data_files = [(r'mpl-data', glob.glob(r'C:\Python25\Lib\site-packages\matplotlib
                   (r'mpl-data\fonts\afm',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\afm\*.*')),
                   (r'mpl-data\fonts\pdfcorefonts',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\pdfcorefonts\*.*')),
                   (r'mpl-data\fonts\ttf',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\*.*')),
+				  ('.\\', glob.glob(current_dir + '\\*.ico'))
                   ]
 
 
@@ -168,12 +169,9 @@ class InnoScript:
 
         print >> ofi, r"[Icons]"
         for path in self.windows_exe_files:
-            print >> ofi, r'Name: "{group}\%s %s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\images\osc.ico"' % \
-                  (self.name, self.version, path)
-            print >> ofi, r'Name: "{sendto}\%s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\images\osc.ico"; Tasks: sendtoicon' % \
-                  (self.name, path)
-            print >> ofi, r'Name: "{commondesktop}\%s %s"; Filename: "{app}\%s";  WorkingDir: "{app}\"; IconFilename: "{app}\images\osc.ico"; Tasks: desktopicon' % \
-                  (self.name, self.version, path)
+            print >> ofi, r'Name: "{group}\%s %s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"' % (self.name, self.version, path)
+            print >> ofi, r'Name: "{sendto}\%s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"; Tasks: sendtoicon' % (self.name, path)
+            print >> ofi, r'Name: "{commondesktop}\%s %s"; Filename: "{app}\%s";  WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"; Tasks: desktopicon' % (self.name, self.version, path)
         print >> ofi, 'Name: "{group}\Uninstall %s %s"; Filename: "{uninstallexe}"' % (self.name, self.version)
 
     def compile(self):
