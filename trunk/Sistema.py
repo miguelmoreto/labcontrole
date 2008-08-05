@@ -20,8 +20,8 @@ class SistemaContinuo:
     """
     Gnum = [2,10]   # Numerador de G(s).
     Gden = [1,2,10] # Denominador de G(s).
-    Cnum = [1,1]      # Numerador de C(s).
-    Cden = [1,2]      # Denominador de C(s).
+    Cnum = [1]      # Numerador de C(s).
+    Cden = [1]      # Denominador de C(s).
     Hnum = [1]      # Numerador de H(s).
     Hden = [1]      # Denominador de H(s).
 
@@ -32,6 +32,15 @@ class SistemaContinuo:
     delta_t = 0.01  # Passo de simulação.
     
     Malha = 'Aberta' # Estado da malha (aberta ou fechada)
+    
+    K = 1.0 # Ganho do sistema.
+    
+    Kmax = 10.0 # Ganho máximo para o plot do LGR.
+    
+    # Parâmetros das regiões proibidas do LGR:
+    Rebd = 0.0
+    Ribd = 0.0
+    Imbd = 0.0
     
     def RespostaDegrau(self, tempo_degrau=0.5, delta_t=0.01, tmax=2,**kwargs):
         """
@@ -60,10 +69,12 @@ class SistemaContinuo:
         # FT da realimentação:
         H = controls.TransferFunction(self.Hnum,self.Hden)
         
+        K = self.K
+        
         if self.Malha == 'Aberta':
-            return C*G
+            return K*C*G
         else:
-            S = C*G
+            S = K*C*G
             return S/(1.0 + H*S)
     
     def SistemaW(self):
@@ -81,10 +92,12 @@ class SistemaContinuo:
         # FT da realimentação:
         H = controls.TransferFunction(self.Hnum,self.Hden)
         
+        K = self.K
+        
         if self.Malha == 'Aberta':
             return G
         else:
-            return G/(1.0 + (H*C*G))
+            return G/(1.0 + (K*H*C*G))
         
     def Simulacao(self, t, u, w, X0=0):
         """
@@ -146,3 +159,28 @@ class SistemaContinuo:
 
        
         return t_total, u, w
+
+    def LGR(self,kvect,figura):
+        """
+        Função para traçado do Lugar Geométrico das Raízes
+        
+        kvect: Vetor dos ganhos;
+        figura: referência a uma figura do Matplotlib.
+        """
+        
+        
+        # FT do controlador:
+        C = controls.TransferFunction(self.Cnum,self.Cden)
+        
+        # FT da planta:
+        G = controls.TransferFunction(self.Gnum,self.Gden)
+        
+        # Ganho:
+        K = self.K
+        
+        S = K*C*G
+        
+        ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
+        
+        return
+    
