@@ -58,6 +58,15 @@ manifest_template = '''
 
 RT_MANIFEST = 24
 
+# Mudando critério de inclusão de dlls do sistema, conforme o site do py2exe.
+origIsSystemDLL = py2exe.build_exe.isSystemDLL
+def isSystemDLL(pathname):
+        if os.path.basename(pathname).lower() in ("msvcp71.dll", "gdiplus.dll"):
+                return 0
+        return origIsSystemDLL(pathname)
+py2exe.build_exe.isSystemDLL = isSystemDLL
+
+
 # ###############################################################
 # Output folder (where the executables will be):
 out_dir = r'..\..\ProgramsEXE\LabControle'
@@ -89,10 +98,10 @@ zipfile = r"lib\shardlib"
 
 options = {
     'py2exe': { "dist_dir": out_dir,
-                "includes" : ["matplotlib.backends",  "matplotlib.backends.backend_qt4agg", "matplotlib.backends.backend_wxagg",
+                "includes" : ["matplotlib.backends",  "matplotlib.backends.backend_wxagg",
                                "matplotlib.figure","pylab", "numpy", "matplotlib.numerix.fft", "matplotlib.numerix.ma",
                                "matplotlib.numerix.linear_algebra", "matplotlib.numerix.random_array",
-                               "matplotlib.backends.backend_tkagg","scipy.io.numpyio","IPython.Extensions.path"],
+                               "scipy.io.numpyio","IPython.Extensions.path"],
                 'excludes': ['_gtkagg', '_tkagg', '_agg2', '_cairo', '_cocoaagg',
                              '_fltkagg', '_gtk', '_gtkcairo', ],
                 'dll_excludes': ['libgdk-win32-2.0-0.dll',
@@ -113,7 +122,8 @@ data_files = [(r'mpl-data', glob.glob(r'C:\Python25\Lib\site-packages\matplotlib
                   (r'mpl-data\fonts\afm',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\afm\*.*')),
                   (r'mpl-data\fonts\pdfcorefonts',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\pdfcorefonts\*.*')),
                   (r'mpl-data\fonts\ttf',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\*.*')),
-				  ('.\\', glob.glob(current_dir + '\\*.ico'))
+#                  (r'\.',glob.glob(r'C:\Python25\Lib\site-packages\wx-2.8-msw-ansi\wx\gdiplus.*')),
+                  ('.\\',glob.glob(current_dir + '\\*.ico'))
                   ]
 
 
