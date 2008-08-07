@@ -653,6 +653,8 @@ class Frame(wx.Frame):
         axes1.add_patch(Ellipse((0.32,0.5),0.08*0.619,0.08,fc='0.85'))
         axes1.add_patch(Ellipse((0.68,0.5),0.08*0.619,0.08,fc='0.85'))
 
+        
+
         # Textos:
         axes1.text(0.3,0.49,'+'); axes1.text(0.66,0.49,'+')
         axes1.text(0.317,0.47,'-'); axes1.text(0.676,0.51,'+')
@@ -716,6 +718,8 @@ class Frame(wx.Frame):
             self.statusBar1.SetStatusText(number=0, text='C(s) nao atualizado')
         
         dlg.Destroy()
+        
+        self.sis.Atualiza()
 
     def OnBtnG(self,event):
         """
@@ -734,7 +738,9 @@ class Frame(wx.Frame):
         else:
             self.statusBar1.SetStatusText(number=0, text='G(s) nao atualizado')
         
-        dlg.Destroy()        
+        dlg.Destroy()
+        
+        self.sis.Atualiza()      
 
     def OnBtnH(self,event):
         """
@@ -753,7 +759,9 @@ class Frame(wx.Frame):
         else:
             self.statusBar1.SetStatusText(number=0, text='H(s) nao atualizado')
         
-        dlg.Destroy() 
+        dlg.Destroy()
+        
+        self.sis.Atualiza()
 
     def OnBtnW(self,event):
         """
@@ -875,6 +883,8 @@ class Frame(wx.Frame):
             
         # Atualiza a tela.
         self.panel3.Refresh()
+        
+        event.Skip()
 
     def OnSlider1Scroll(self, event):
         """
@@ -896,6 +906,8 @@ class Frame(wx.Frame):
         self.flag = True
         self.Ganho.SetValue(str(Ganho))
         self.flag = False
+                
+        event.Skip()
 
     def OnKmaxText(self, event):
         """
@@ -909,6 +921,8 @@ class Frame(wx.Frame):
         # Atualiza posição do slider:
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
         self.slider1.SetValue(int(posicao))
+        
+        event.Skip()
 
     def OnGanhoText(self, event):
         """
@@ -920,11 +934,20 @@ class Frame(wx.Frame):
         # Escreve mensagem na status bar:
         txt = "Ganho alterado para: %f" %(Ganho)
         self.statusBar1.SetStatusText(number=0,text=txt)
-        
+
+        # Ajusta o slider se o ganho for digitado na interface:
         if self.flag == False:
             posicao = Ganho * (float(self.SliderMax) / self.sis.Kmax)
             self.slider1.SetValue(int(posicao))
-            self.statusBar1.SetStatusText(number=1,text=txt)
+            
+        # Calcula raízes do polinômio 1+k*TF(s):
+        raizes = self.sis.RaizesRL(Ganho)
+        txt = "Raizes da eq. caracteristica: " + str(raizes)
+        self.statusBar1.SetStatusText(number=1,text=txt)
+        
+        # Plotando pólos do sist. realimentado:
+        
+        event.Skip()
 
     def OnBtnLGRButton(self, event):
         """
@@ -943,8 +966,6 @@ class Frame(wx.Frame):
         
         # Atualiza a tela.
         self.panelLGR.Refresh()
-        
-        print kvect
         
         event.Skip()
 
