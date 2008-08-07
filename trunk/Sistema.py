@@ -41,6 +41,42 @@ class SistemaContinuo:
     Rebd = 0.0
     Ribd = 0.0
     Imbd = 0.0
+
+    def __init__(self):
+        """
+        Função de inicialização. É executado ao instanciar a classe.
+        """
+        self.Atualiza()
+        
+        
+    def Atualiza(self):
+        """
+        Atualiza funções de transferência do sistema realimentado.
+        """
+        
+        # FT do controlador:
+        self.C = controls.TransferFunction(self.Cnum,self.Cden)
+        # FT da planta:
+        self.G = controls.TransferFunction(self.Gnum,self.Gden)       
+        # FT da realimentação:
+        self.H = controls.TransferFunction(self.Hnum,self.Hden)
+        
+        return
+    
+    def RaizesRL(self,K):
+        """
+        Cálcula as raízes da equação característica (denominador do sist.
+        realimentado) aqui representada em função dos numeradores e denominadores
+        da FT malha direta e H(s).
+        """
+        
+        MD = self.C * self.G # FT da malha direta.
+        
+        # Cálculo da equação característica:
+        EqC = MD.den * self.H.den + K * MD.num * self.H.num
+        
+        return EqC.roots 
+        
     
     def RespostaDegrau(self, tempo_degrau=0.5, delta_t=0.01, tmax=2,**kwargs):
         """
@@ -60,22 +96,11 @@ class SistemaContinuo:
         considerando como entrada r(t).
         """
         
-        # FT do controlador:
-        C = controls.TransferFunction(self.Cnum,self.Cden)
-        
-        # FT da planta:
-        G = controls.TransferFunction(self.Gnum,self.Gden)
-        
-        # FT da realimentação:
-        H = controls.TransferFunction(self.Hnum,self.Hden)
-        
-        K = self.K
-        
         if self.Malha == 'Aberta':
-            return K*C*G
+            return self.K*self.C*self.G
         else:
-            S = K*C*G
-            return S/(1.0 + H*S)
+            S = self.K*self.C*self.G
+            return S/(1.0 + self.H*S)
     
     def SistemaW(self):
         """
@@ -83,21 +108,10 @@ class SistemaContinuo:
         considerando com entrada w(t).
         """
         
-        # FT do controlador:
-        C = controls.TransferFunction(self.Cnum,self.Cden)
-        
-        # FT da planta:
-        G = controls.TransferFunction(self.Gnum,self.Gden)
-        
-        # FT da realimentação:
-        H = controls.TransferFunction(self.Hnum,self.Hden)
-        
-        K = self.K
-        
         if self.Malha == 'Aberta':
-            return G
+            return self.G
         else:
-            return G/(1.0 + (K*H*C*G))
+            return self.G/(1.0 + (self.K*self.H*self.C*self.G))
         
     def Simulacao(self, t, u, w, X0=0):
         """
