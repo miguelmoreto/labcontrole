@@ -25,10 +25,12 @@ class SistemaContinuo:
     Hnum = [1]      # Numerador de H(s).
     Hden = [1]      # Denominador de H(s).
 
-    
-    Degrau = 1          # Amplitude do degrau de entrada.
-    TempoDegrau = 0.5   # Instante de ocorrência do degrau.
-    
+    # Entradas:
+    Rt = '1'       # String com a função de entrada r(t)
+    InstRt = 0
+    Wt = '0'       # String com a função de entrada w(t)
+    InstWt = 0
+
     delta_t = 0.01  # Passo de simulação.
     
     Malha = 'Aberta' # Estado da malha (aberta ou fechada)
@@ -41,6 +43,7 @@ class SistemaContinuo:
     Rebd = 0.0
     Ribd = 0.0
     Imbd = 0.0
+    
 
     def __init__(self):
         """
@@ -126,16 +129,24 @@ class SistemaContinuo:
 
         # Simula separadamente para cada entrada (superposição):
         try:
-            yr = signal.lsim(Sr, u, t)[1]
+            yr = signal.lsim(Sr, u, t)
         except:
-            yr = signal.lsim2(Sr, u, t)[1]
+            yr = signal.lsim2(Sr, u, t)
             
         try:
-            yw = signal.lsim(Sw, w, t)[1]
+            yw = signal.lsim(Sw, w, t)
         except:
-            yw = signal.lsim2(Sw, w, t)[1]
+            yw = signal.lsim2(Sw, w, t)
         
-        return yr + yw
+        Xr = yr[2]
+        X0w = yw[2]
+        
+        # Armazena condições iniciais:
+        self.X0r = Xr[-1]
+        self.X0w = Xw[-1]
+        
+        return yr[1] + yw[1]
+
     
     def CriaEntrada(self, stringR, stringW, tmax=5,delta_t=0.01,tempoR=0.0, tempoW=0.0):
         """
