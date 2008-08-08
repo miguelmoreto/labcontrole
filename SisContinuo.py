@@ -182,9 +182,9 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
@@ -273,6 +273,7 @@ class Frame(wx.Frame):
               parent=self, pos=wx.Point(0, 0), size=wx.Size(794, 531), style=0)
         self.Notebook.SetFitToCurrentPage(True)
         self.Notebook.SetAutoLayout(True)
+        self.Notebook.SetToolTipString('Selecione a opera\xe7\xe3o desejada.')
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW1,
               name='splitterWindow1', parent=self.Notebook, pos=wx.Point(0, 0),
@@ -289,6 +290,7 @@ class Frame(wx.Frame):
               505), style=wx.TAB_TRAVERSAL)
         self.panel2.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.panel2.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
+        self.panel2.SetToolTipString('Painel de configura\xe7\xe3o da simula\xe7\xe3o temporal.')
 
         self.panel3 = wx.Panel(id=wxID_FRAMEPANEL3, name='panel3',
               parent=self.splitterWindow1, pos=wx.Point(135, 0),
@@ -299,12 +301,16 @@ class Frame(wx.Frame):
         self.Simular = wx.Button(id=wxID_FRAMESIMULAR, label='Simular',
               name='Simular', parent=self.panel2, pos=wx.Point(21, 365),
               size=wx.Size(88, 40), style=0)
+        self.Simular.SetToolTipString('Simular o sistema na configura\xe7\xe3o atual.')
         self.Simular.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMESIMULAR)
 
         self.Limpar = wx.Button(id=wxID_FRAMELIMPAR, label='Limpar',
               name='Limpar', parent=self.panel2, pos=wx.Point(21, 461),
               size=wx.Size(88, 40), style=0)
+        self.Limpar.SetToolTipString('Limpar a \xe1rea do gr\xe1fico.')
+        self.Limpar.Bind(wx.EVT_BUTTON, self.OnLimparButton,
+              id=wxID_FRAMELIMPAR)
 
         self.GrafVarList = wx.CheckListBox(choices=[ 'Saída: y(t)',
               'Entrada: r(t)', 'Erro: e(t)', 'Perturbação: w(t)',
@@ -312,6 +318,7 @@ class Frame(wx.Frame):
               parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 264),
               style=wx.LB_EXTENDED)
         self.GrafVarList.SetStringSelection('')
+        self.GrafVarList.SetToolTipString('Selecione os sinais que deseja plotar.')
 
         self.txtOpcoes = wx.StaticText(id=wxID_FRAMETXTOPCOES,
               label='Configura\xe7\xf5es:', name='txtOpcoes',
@@ -320,6 +327,7 @@ class Frame(wx.Frame):
         self.txtOpcoes.Center(wx.BOTH)
         self.txtOpcoes.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
+        self.txtOpcoes.SetToolTipString('Painel de configura\xe7\xe3o da simula\xe7\xe3o temporal.')
 
         self.stTmax = wx.StaticText(id=wxID_FRAMESTTMAX, label='Tmax:',
               name='stTmax', parent=self.panel2, pos=wx.Point(6, 32),
@@ -327,17 +335,20 @@ class Frame(wx.Frame):
         self.stTmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
         self.stTmax.Center(wx.BOTH)
+        self.stTmax.SetToolTipString('Tempo total da simula\xe7\xe3o.')
 
         self.Tmax = wx.TextCtrl(id=wxID_FRAMETMAX, name='Tmax',
               parent=self.panel2, pos=wx.Point(68, 31), size=wx.Size(56, 23),
               style=0, value='10')
-        self.Tmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
+        self.Tmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
         self.Tmax.Center(wx.BOTH)
+        self.Tmax.SetToolTipString('Ajuste o tempo total da simula\xe7\xe3o.')
 
         self.Continuar = wx.Button(id=wxID_FRAMECONTINUAR, label='Continuar',
               name='Continuar', parent=self.panel2, pos=wx.Point(21, 413),
               size=wx.Size(88, 40), style=0)
+        self.Continuar.SetToolTipString('Continuar a simula\xe7\xe3o de onde parou.')
 
         self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES, label='A\xe7\xf5es:',
               name='stAcoes', parent=self.panel2, pos=wx.Point(37, 338),
@@ -368,6 +379,7 @@ class Frame(wx.Frame):
               parent=self.splitterWindow2, pos=wx.Point(0, 0), size=wx.Size(130,
               505), style=wx.TAB_TRAVERSAL)
         self.panel5.SetBackgroundColour(wx.Colour(192, 192, 192))
+        self.panel5.SetToolTipString('Painel de configura\xe7\xe3o do LGR.')
         self.splitterWindow2.SplitVertically(self.panel5, self.panelLGR, 130)
 
         self.splitterWindow3 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW3,
@@ -394,6 +406,7 @@ class Frame(wx.Frame):
               style=0, value='10')
         self.Kmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+        self.Kmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
         self.Kmax.Bind(wx.EVT_TEXT, self.OnKmaxText, id=wxID_FRAMEKMAX)
 
         self.txtKmax = wx.StaticText(id=wxID_FRAMETXTKMAX, label='Kmax:',
@@ -401,6 +414,7 @@ class Frame(wx.Frame):
               size=wx.Size(64, 21), style=wx.ALIGN_CENTRE | wx.ALIGN_RIGHT)
         self.txtKmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+        self.txtKmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
 
         self.slider1 = wx.Slider(id=wxID_FRAMESLIDER1, maxValue=10, minValue=0,
               name='slider1', parent=self.panel5, pos=wx.Point(79, 48),
@@ -452,12 +466,14 @@ class Frame(wx.Frame):
         self.btnLGR = wx.Button(id=wxID_FRAMEBTNLGR, label='Tra\xe7ar LGR',
               name='btnLGR', parent=self.panel5, pos=wx.Point(21, 398),
               size=wx.Size(88, 40), style=0)
+        self.btnLGR.SetToolTipString('Tra\xe7ar o LGR')
         self.btnLGR.Bind(wx.EVT_BUTTON, self.OnBtnLGRButton,
               id=wxID_FRAMEBTNLGR)
 
         self.btnLGRSim = wx.Button(id=wxID_FRAMEBTNLGRSIM, label='Simular',
               name='btnLGRSim', parent=self.panel5, pos=wx.Point(21, 446),
               size=wx.Size(88, 40), style=0)
+        self.btnLGRSim.SetToolTipString('Simular o sistema com o ganho atual')
         self.btnLGRSim.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMEBTNLGRSIM)
 
@@ -466,12 +482,14 @@ class Frame(wx.Frame):
               size=wx.Size(60, 22), style=0)
         self.txtK.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+        self.txtK.SetToolTipString('Ganho atual do sistema.')
 
         self.Ganho = wx.TextCtrl(id=wxID_FRAMEGANHO, name='Ganho',
               parent=self.panel5, pos=wx.Point(10, 158), size=wx.Size(53, 24),
               style=wx.TE_CENTER, value='1')
         self.Ganho.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+        self.Ganho.SetToolTipString('Ganho atual do sistema.')
         self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
 
         self._init_coll_Notebook_Pages(self.Notebook)
@@ -492,18 +510,6 @@ class Frame(wx.Frame):
         self.fig1 = self.CriaPainelGrafico(self.panel3)
         self.fig2 = self.CriaPainelGrafico(self.panelLGR)
         self.fig3 = self.CriaPainelGrafico(self.panelBode)
-        
-        # Definindo sistema inicial:
-        
-        
-        # Exemplo de plot.
-        #self.plot_data(fig1)
-        #self.plot_data(self.fig2)
-        self.plot_data(self.fig3)
-
-        a = self.GetSize()
-        
-        self.SetSize(a)
 
         # Atualiza os sizers:
         self.panel2.Layout()
@@ -526,31 +532,7 @@ class Frame(wx.Frame):
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
         self.slider1.SetValue(int(posicao))
         self.slider1.SetTickFreq(10) # O número de ticks vai ser 200/10=20
-
-
-        self.Rt = '1'       # String com a função de entrada r(t)
-        self.InstRt = 0
-        self.Wt = '0'       # String com a função de entrada w(t)
-        self.InstWt = 0 
-        
-        
-    def plot_data(self,figura):
-        
-        # Use ths line if using a toolbar
-        a = figura.add_subplot(111)
-        
-        #a.set_axis_bgcolor(color = '0.2')
-        # Or this one if there is no toolbar
-        #a = Subplot(self.fig, 111)
-        
-        t = numpy.arange(0.0,3.0,0.01)
-        s = numpy.sin(2*numpy.pi*t)
-        c = numpy.cos(2*numpy.pi*t)
-        a.plot(t,s)
-        a.plot(t,c)
-        a.grid()
-        a.set_xlabel('t(s)')
-        #toolbar.update()
+ 
 
     def CriaPainelGrafico(self,parent):
         """ Rotina de criação de um painel gráfico para plotar dados.
@@ -680,13 +662,14 @@ class Frame(wx.Frame):
         """
         dlg = DlgEntrada.Dialog1(self)
         dlg.SetTitle('Parâmetros da entrada r(t)')
-        dlg.AtualizaCampos(self.Rt,self.InstRt)
+        dlg.AtualizaCampos(self.sis.Rt,self.sis.InstRt)
         
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            self.Rt = dlg.Valor
-            self.InstRt = dlg.Instante
-            txt = "r(t) atualizada: " + self.Rt + ' em: ' + str(self.InstRt) + 'seg.'
+            self.sis.Rt = dlg.Valor
+            self.sis.InstRt = dlg.Instante
+            txt = "r(t) atualizada: " + self.sis.Rt + ' em: ' \
+                            + str(self.sis.InstRt) + 'seg.'
             self.statusBar1.SetStatusText(number=0, text=txt)
         else:
             self.statusBar1.SetStatusText(number=0, text='r(t) não atualizada')
@@ -765,13 +748,14 @@ class Frame(wx.Frame):
         
         dlg = DlgEntrada.Dialog1(self)
         dlg.SetTitle('Parâmetros da entrada w(t)')
-        dlg.AtualizaCampos(self.Wt,self.InstWt)
+        dlg.AtualizaCampos(self.sis.Wt,self.sis.InstWt)
         
         result = dlg.ShowModal()
         if result == wx.ID_OK:
-            self.Wt = dlg.Valor
-            self.InstWt = dlg.Instante
-            txt = "w(t) atualizada: " + self.Wt + ' em: ' + str(self.InstWt) + 'seg.'
+            self.sis.Wt = dlg.Valor
+            self.sis.InstWt = dlg.Instante
+            txt = "w(t) atualizada: " + self.sis.Wt + ' em: ' \
+                    + str(self.sis.InstWt) + 'seg.'
             self.statusBar1.SetStatusText(number=0, text=txt)
         else:
             self.statusBar1.SetStatusText(number=0, text='w(t) não atualizada')
@@ -797,9 +781,10 @@ class Frame(wx.Frame):
         """
         Evento do botão do ganho K.
         """
+        K = self.sis.K
         # Cria dialog:
         dialog = wx.TextEntryDialog(self,"Entre com o valor do ganho.",
-                "Ajuste do ganho",'1',style=wx.OK|wx.CANCEL|wx.CENTRE)
+                "Ajuste do ganho",str(K),style=wx.OK|wx.CANCEL|wx.CENTRE)
         
         # Mostra dialog:
         if dialog.ShowModal() == wx.ID_OK:
@@ -824,14 +809,14 @@ class Frame(wx.Frame):
         
         Tmax = float(self.Tmax.GetLineText(0))
         
-        stringR = self.Rt
-        stringW = self.Wt
+        stringR = self.sis.Rt
+        stringW = self.sis.Wt
 
         delta_t = 0.01
 
-        print stringR, stringW,  self.InstRt, self.InstWt
         # Cria vetor de tempo e de entrada:
-        t,r,w = self.sis.CriaEntrada(stringR, stringW, Tmax, delta_t, self.InstRt, self.InstWt)
+        t,r,w = self.sis.CriaEntrada(stringR, stringW, Tmax, delta_t, 
+                            self.sis.InstRt, self.sis.InstWt)
         
         self.statusBar1.SetStatusText(number=1,text="Simulando, aguarde...")
         
@@ -890,7 +875,7 @@ class Frame(wx.Frame):
             self.Notebook.SetSelection(1)
             
         # Atualiza a tela.
-        self.panel3.Refresh()
+        self.fig1.canvas.draw()
         
         event.Skip()
 
@@ -1017,6 +1002,15 @@ class Frame(wx.Frame):
             pass
         
         return
+
+    def OnLimparButton(self, event):
+        """
+        Evento do botão limpar.
+        """
+        # Limpando a área do gráfico da simulação:
+        self.fig1.clf()
+        self.fig1.canvas.draw()
+        event.Skip()
 
 
 if __name__ == '__main__':
