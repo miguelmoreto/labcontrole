@@ -168,7 +168,6 @@ class InnoScript:
 
         print >> ofi, r"[Tasks]"
         print >> ofi, r'Name: desktopicon; Description: "Criar ícone no &desktop"; GroupDescription: "Additional icons:"'
-        print >> ofi, r'Name: sendtoicon; Description: "Criar ícone no menu Enviar para do windows explorer"; GroupDescription: "Additional icons:"'
         print >> ofi
 
         
@@ -180,7 +179,6 @@ class InnoScript:
         print >> ofi, r"[Icons]"
         for path in self.windows_exe_files:
             print >> ofi, r'Name: "{group}\%s %s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"' % (self.name, self.version, path)
-            print >> ofi, r'Name: "{sendto}\%s"; Filename: "{app}\%s"; WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"; Tasks: sendtoicon' % (self.name, path)
             print >> ofi, r'Name: "{commondesktop}\%s %s"; Filename: "{app}\%s";  WorkingDir: "{app}\"; IconFilename: "{app}\py1.ico"; Tasks: desktopicon' % (self.name, self.version, path)
         print >> ofi, 'Name: "{group}\Uninstall %s %s"; Filename: "{uninstallexe}"' % (self.name, self.version)
 
