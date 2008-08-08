@@ -180,6 +180,8 @@ class SistemaContinuo:
         
         kvect: Vetor dos ganhos;
         figura: referência a uma figura do Matplotlib.
+        
+        O LGR é traçado sempre com ganho K = 1.
         """
         
         
@@ -190,7 +192,7 @@ class SistemaContinuo:
         G = controls.TransferFunction(self.Gnum,self.Gden)
         
         # Ganho:
-        K = self.K
+        K = 1
         
         S = K*C*G
         

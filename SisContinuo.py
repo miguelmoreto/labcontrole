@@ -257,7 +257,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(413, 260), size=wx.Size(802, 602),
+              pos=wx.Point(413, 258), size=wx.Size(802, 602),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
@@ -404,11 +404,12 @@ class Frame(wx.Frame):
 
         self.slider1 = wx.Slider(id=wxID_FRAMESLIDER1, maxValue=10, minValue=0,
               name='slider1', parent=self.panel5, pos=wx.Point(79, 48),
-              size=wx.Size(48, 215), style=wx.SL_VERTICAL | wx.SL_AUTOTICKS,
+              size=wx.Size(48, 215), style=wx.SL_AUTOTICKS | wx.SL_VERTICAL,
               value=0)
         self.slider1.SetMax(100)
         self.slider1.SetMin(0)
         self.slider1.SetBackgroundColour(wx.Colour(192, 192, 192))
+        self.slider1.SetToolTipString('Ajuste do ganho')
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1Scroll)
 
         self.Ridb = wx.TextCtrl(id=wxID_FRAMERIDB, name='Ridb',
@@ -519,11 +520,12 @@ class Frame(wx.Frame):
         self.sis = SistemaContinuo()
         
         # Ajusta o slider:
-        self.SliderMax = 100
+        self.SliderMax = 200
         self.slider1.SetMax(self.SliderMax)
         self.flag = False
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
         self.slider1.SetValue(int(posicao))
+        self.slider1.SetTickFreq(10) # O número de ticks vai ser 200/10=20
 
 
         self.Rt = '1'       # String com a função de entrada r(t)
@@ -605,17 +607,20 @@ class Frame(wx.Frame):
         
         
         # Botões:
-        axR = figura.add_axes([0.08, 0.45, 0.12, 0.1])
+        axR = figura.add_axes([0.02, 0.45, 0.08, 0.1])
         axC = figura.add_axes([0.44, 0.45, 0.12, 0.1])
         axG = figura.add_axes([0.8, 0.45, 0.12, 0.1])
         axW = figura.add_axes([0.677-0.05, 0.75, 0.1, 0.1])
         axH = figura.add_axes([0.5, 0.205, 0.12, 0.1])
+        axK = figura.add_axes([0.27, 0.45, 0.08, 0.1])
+        
         self.axM = figura.add_axes([0.75, 0.228, 0.05*0.619, 0.05])
         btnR = Button(axR, 'Ref')
         btnC = Button(axC, 'C(s)')
         btnG = Button(axG, 'G(s)')
         btnW = Button(axW, 'W(s)')
         btnH = Button(axH, 'H(s)')
+        btnK = Button(axK, 'K')
         self.btnM = Button(self.axM, '')
         
         # Eventos dos botões:
@@ -624,13 +629,16 @@ class Frame(wx.Frame):
         btnG.on_clicked(self.OnBtnG)
         btnW.on_clicked(self.OnBtnW)
         btnH.on_clicked(self.OnBtnH)
+        btnK.on_clicked(self.OnBtnK)
         self.btnM.on_clicked(self.OnBtnM)
         
         
         # Setas e linhas:
         axes1.add_patch(FancyArrow(0.93,0.5,0.04,0,0.001,
                             head_width=0.02,head_length=0.02,fc='k'))
-        axes1.add_patch(FancyArrow(0.2-0.01,0.5,0.085,0,0.001,
+        axes1.add_patch(FancyArrow(0.05-0.01,0.5,0.085,0,0.001,
+                            head_width=0.02,head_length=0.02,fc='k'))
+        axes1.add_patch(FancyArrow(0.16,0.5,0.085,0,0.001,
                             head_width=0.02,head_length=0.02,fc='k'))
         axes1.add_patch(FancyArrow(0.36-0.02,0.5,0.08,0,0.001,
                             head_width=0.02,head_length=0.02,fc='k'))
@@ -640,42 +648,28 @@ class Frame(wx.Frame):
                             head_width=0.02,head_length=0.02,fc='k'))
         axes1.add_patch(FancyArrow(0.68,0.76,0,-0.195,0.001,
                             head_width=0.015,head_length=0.022,fc='k'))
-        axes1.add_patch(FancyArrow(0.32,0.25,0,0.2-0.012,0.001,
+        axes1.add_patch(FancyArrow(0.17,0.25,0,0.2-0.012,0.001,
                             head_width=0.015,head_length=0.022,fc='k'))
-        axes1.add_patch(FancyArrow(0.32,0.25,0.62,0,0.002,
+        axes1.add_patch(FancyArrow(0.17,0.25,0.77,0,0.002,
                             head_width=0,head_length=0,fc='k'))
         axes1.add_patch(FancyArrow(0.94,0.5,0,-0.25,0.002,
                             head_width=0,head_length=0,fc='k'))
 
         
-        
         # Somadores:
-        axes1.add_patch(Ellipse((0.32,0.5),0.08*0.619,0.08,fc='0.85'))
+        axes1.add_patch(Ellipse((0.17,0.5),0.08*0.619,0.08,fc='0.85'))
         axes1.add_patch(Ellipse((0.68,0.5),0.08*0.619,0.08,fc='0.85'))
 
-        
-
         # Textos:
-        axes1.text(0.3,0.49,'+'); axes1.text(0.66,0.49,'+')
-        axes1.text(0.317,0.47,'-'); axes1.text(0.676,0.51,'+')
-        axes1.text(0.22,0.53,'r(t)'); axes1.text(0.37,0.53,'e(t)')
+        axes1.text(0.15,0.49,'+'); axes1.text(0.66,0.49,'+')
+        axes1.text(0.167,0.47,'-'); axes1.text(0.676,0.51,'+')
+        axes1.text(0.11,0.53,'r(t)'); axes1.text(0.21,0.53,'e(t)')
         axes1.text(0.73,0.53,'u(t)'); axes1.text(0.95,0.53,'y(t)')
         axes1.text(0.69,0.68,'w(t)')
-        
-        #self.TextoGs = figura.text(0.2,0.2,r'Teste $\Delta$')
-        
-        #rect = Rectangle((0.2,0.4),0.5,0.5,facecolor='b',fill=True)
-
-        #axes1.add_patch(rect)
-        
 
         axes1.set_axis_off()
-        #axes1.set_frame_on(False)
 
         canvas.draw()
-        
-        #print Retangulo
-        #canvas.mpl_connect('button_press_event', self.onclick)
         
         return figura, canvas
 
@@ -798,7 +792,23 @@ class Frame(wx.Frame):
             self.sis.Malha = 'Fechada'
 
         self.DBCanvas.draw()
+    
+    def OnBtnK(self,event):
+        """
+        Evento do botão do ganho K.
+        """
+        # Cria dialog:
+        dialog = wx.TextEntryDialog(self,"Entre com o valor do ganho.",
+                "Ajuste do ganho",'1',style=wx.OK|wx.CANCEL|wx.CENTRE)
+        
+        # Mostra dialog:
+        if dialog.ShowModal() == wx.ID_OK:
+            self.sis.K = float(dialog.GetValue())
+        
+        dialog.Destroy()
 
+        # Atualiza interface do LGR:
+        self.Ganho.SetValue(str(self.sis.K))
 
         
 ##    def onclick(self,event):
@@ -822,7 +832,6 @@ class Frame(wx.Frame):
         print stringR, stringW,  self.InstRt, self.InstWt
         # Cria vetor de tempo e de entrada:
         t,r,w = self.sis.CriaEntrada(stringR, stringW, Tmax, delta_t, self.InstRt, self.InstWt)
-        
         
         self.statusBar1.SetStatusText(number=1,text="Simulando, aguarde...")
         
@@ -866,7 +875,6 @@ class Frame(wx.Frame):
         # Se nenhuma saida foi selecionado, não faz nada.
         if flag == 0:
             return
-
         
         ax.grid()
         
@@ -939,35 +947,8 @@ class Frame(wx.Frame):
         if self.flag == False:
             posicao = Ganho * (float(self.SliderMax) / self.sis.Kmax)
             self.slider1.SetValue(int(posicao))
-            
-        # Calcula raízes do polinômio 1+k*TF(s):
-        raizes = self.sis.RaizesRL(Ganho)
-        txt = "Raizes da eq. caracteristica: " + str(raizes)
-        self.statusBar1.SetStatusText(number=1,text=txt)
         
-        # Plotando pólos do sist. realimentado:
-        
-        try: # Se nenhum LGR foi traçado, não faz mais nada.
-            self.polosLGR[0].set_xdata(real(raizes))
-            self.polosLGR[0].set_ydata(imag(raizes))
-        except AttributeError:
-            try:
-                self.polosLGR = self.axesLGR.plot(real(raizes), imag(raizes), 'go')
-            except AttributeError:
-#                print 'ok1'
-                return
-        else:
-            self.axesLGR.redraw_in_frame()
-            print 'ok2'
-#            print c, len(c)
-#           print c[0].get_xdata(),c[0].get_ydata()           
-#        else:
-#            print 'ok'
-        finally:
-            pass
-        
-        #self.panelLGR.Refresh()
-        
+        self.DesenhaPolosMF(Ganho)
         
         event.Skip()
 
@@ -987,13 +968,55 @@ class Frame(wx.Frame):
         self.statusBar1.SetStatusText(number=1,text='Finalizado.')
         
         # Atualiza a tela.
-        self.panelLGR.Refresh()
+        self.fig2.canvas.draw()
         
         # Salva a instância
         self.axesLGR = self.fig2.gca()
         
+        self.axesLGR.grid(True)
+        self.axesLGR.set_xlabel("Eixo real")
+        self.axesLGR.set_ylabel("Eixo imaginario")
+        self.axesLGR.set_title("Lugar Geometrico das raizes de C(s)*G(s)")
+        
+        # Tenta apagar a instância dos pólos em malha fechada na figura. Se já
+        # existirem, apaga, senão não faz nada.
+        try:
+            del self.polosLGR
+        except AttributeError:
+            pass
+        
+        self.DesenhaPolosMF(self.sis.K)
+        
         event.Skip()
 
+    def DesenhaPolosMF(self,Ganho):
+            
+        # Calcula raízes do polinômio 1+k*TF(s):
+        raizes = self.sis.RaizesRL(Ganho)
+        txt = "Raizes da eq. caracteristica: " + str(raizes)
+        self.statusBar1.SetStatusText(number=1,text=txt)
+        
+        # Plotando pólos do sist. realimentado:
+        
+        try: # Se nenhum LGR foi traçado, não faz mais nada.
+            self.polosLGR[0].set_xdata(real(raizes))
+            self.polosLGR[0].set_ydata(imag(raizes))
+        except AttributeError:
+            try: # Se nenhum polo foi desenhado, desenha então:
+                self.polosLGR = self.axesLGR.plot(real(raizes), imag(raizes),
+                                'xb',ms=7,mew=3)
+            except AttributeError:
+
+                return
+            else:
+                self.fig2.canvas.draw()
+        else:
+            self.fig2.canvas.draw()
+
+        finally:
+            pass
+        
+        return
 
 
 if __name__ == '__main__':
