@@ -947,6 +947,28 @@ class Frame(wx.Frame):
         
         # Plotando pólos do sist. realimentado:
         
+        try: # Se nenhum LGR foi traçado, não faz mais nada.
+            self.polosLGR[0].set_xdata(real(raizes))
+            self.polosLGR[0].set_ydata(imag(raizes))
+        except AttributeError:
+            try:
+                self.polosLGR = self.axesLGR.plot(real(raizes), imag(raizes), 'go')
+            except AttributeError:
+#                print 'ok1'
+                return
+        else:
+            self.axesLGR.redraw_in_frame()
+            print 'ok2'
+#            print c, len(c)
+#           print c[0].get_xdata(),c[0].get_ydata()           
+#        else:
+#            print 'ok'
+        finally:
+            pass
+        
+        #self.panelLGR.Refresh()
+        
+        
         event.Skip()
 
     def OnBtnLGRButton(self, event):
@@ -966,6 +988,9 @@ class Frame(wx.Frame):
         
         # Atualiza a tela.
         self.panelLGR.Refresh()
+        
+        # Salva a instância
+        self.axesLGR = self.fig2.gca()
         
         event.Skip()
 
