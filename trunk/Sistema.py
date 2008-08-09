@@ -44,6 +44,9 @@ class SistemaContinuo:
     Ribd = 0.0
     Imbd = 0.0
     
+    # Estados iniciais.
+    X0r = None
+    X0w = None
 
     def __init__(self):
         """
@@ -129,26 +132,33 @@ class SistemaContinuo:
 
         # Simula separadamente para cada entrada (superposição):
         try:
-            yr = signal.lsim(Sr, u, t)
+            yr = signal.lsim(Sr, u, t, self.X0r)
         except:
-            yr = signal.lsim2(Sr, u, t)
+            yr = signal.lsim2(Sr, u, t, self.X0r)
             
         try:
-            yw = signal.lsim(Sw, w, t)
+            yw = signal.lsim(Sw, w, t, self.X0w)
         except:
-            yw = signal.lsim2(Sw, w, t)
+            yw = signal.lsim2(Sw, w, t, self.X0w)
         
-        Xr = yr[2]
-        X0w = yw[2]
+        Xr = yr[-1]
+        Xw = yw[-1]
         
         # Armazena condições iniciais:
         self.X0r = Xr[-1]
         self.X0w = Xw[-1]
         
+        self.tfinal = t[-1]
+        self.Rfinal = u[-1]
+        self.Wfinal = w[-1]
+        #print self.X0r, self.X0w, self.tfinal
+
+        
         return yr[1] + yw[1]
 
     
-    def CriaEntrada(self, stringR, stringW, tmax=5,delta_t=0.01,tempoR=0.0, tempoW=0.0):
+    def CriaEntrada(self, stringR, stringW, tinic=0.0, tmax=5,delta_t=0.01,\
+                    tempoR=0.0, tempoW=0.0, Rinic = 0, Winic = 0):
         """
         Cria um vetor de tempo e um de entrada a partir de duas strings
         representando qualquer função matemática do python em função da
@@ -158,6 +168,8 @@ class SistemaContinuo:
         
         tempoR = instante de início da entrada r(t);
         tempoW = instante de início da entrada w(t).
+        
+        tinic = tempo inicial.
         """
         
         if (tempoR > tmax) or (tempoW > tmax):
@@ -165,7 +177,7 @@ class SistemaContinuo:
             return 0, 0, 0
         
         # Vetor de tempo:
-        t_total = arange(0,tmax,delta_t)
+        t_total = arange(tinic,tinic+tmax,delta_t)
            
         u = zeros_like(t_total)
         w = zeros_like(t_total)
@@ -177,10 +189,12 @@ class SistemaContinuo:
         # monta vetor u(t):
         t = t_total[0:(len(t_total)-amostraR)]
         u[amostraR:] = eval(stringR)
+        u[0:amostraR] = Rinic
 
         # monta vetor w(t)
         t = t_total[0:(len(t_total)-amostraW)]
         w[amostraW:] = eval(stringW)
+        w[0:amostraW] = Winic
 
        
         return t_total, u, w

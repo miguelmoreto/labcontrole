@@ -257,7 +257,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(413, 258), size=wx.Size(802, 602),
+              pos=wx.Point(413, 146), size=wx.Size(802, 602),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
@@ -349,6 +349,9 @@ class Frame(wx.Frame):
               name='Continuar', parent=self.panel2, pos=wx.Point(21, 413),
               size=wx.Size(88, 40), style=0)
         self.Continuar.SetToolTipString('Continuar a simula\xe7\xe3o de onde parou.')
+        self.Continuar.Enable(False)
+        self.Continuar.Bind(wx.EVT_BUTTON, self.OnContinuarButton,
+              id=wxID_FRAMECONTINUAR)
 
         self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES, label='A\xe7\xf5es:',
               name='stAcoes', parent=self.panel2, pos=wx.Point(37, 338),
@@ -806,16 +809,22 @@ class Frame(wx.Frame):
 ##            self.statusBar1.SetStatusText(number=0, text='Fora')
 
     def OnSimularButton(self, event):
+        """
+        Botão simular.
+        """
         
         Tmax = float(self.Tmax.GetLineText(0))
-        
+
+        self.sis.X0r = None
+        self.sis.X0w = None
+
         stringR = self.sis.Rt
         stringW = self.sis.Wt
 
         delta_t = 0.01
 
         # Cria vetor de tempo e de entrada:
-        t,r,w = self.sis.CriaEntrada(stringR, stringW, Tmax, delta_t, 
+        t,r,w = self.sis.CriaEntrada(stringR, stringW, 0, Tmax, delta_t, 
                             self.sis.InstRt, self.sis.InstWt)
         
         self.statusBar1.SetStatusText(number=1,text="Simulando, aguarde...")
@@ -876,6 +885,14 @@ class Frame(wx.Frame):
             
         # Atualiza a tela.
         self.fig1.canvas.draw()
+        # Habilita botão continuar:
+        self.Continuar.Enable()
+        
+        # Salva dados para o continuar:
+        #self.t = t
+        #self.r = r
+        #self.w = w
+        #self.y = y
         
         event.Skip()
 
@@ -1010,6 +1027,95 @@ class Frame(wx.Frame):
         # Limpando a área do gráfico da simulação:
         self.fig1.clf()
         self.fig1.canvas.draw()
+        self.Continuar.Disable()
+        
+        self.sis.X0r = None
+        self.sis.X0w = None
+        
+        event.Skip()
+
+    def OnContinuarButton(self, event):
+        """
+        Evento do botão continuar simulação.
+        """
+        Tmax = float(self.Tmax.GetLineText(0))
+        Tinic = self.sis.tfinal
+        
+        stringR = self.sis.Rt
+        stringW = self.sis.Wt
+
+        delta_t = 0.01
+
+        # Cria vetor de tempo e de entrada:
+        t,r,w = self.sis.CriaEntrada(stringR, stringW, Tinic , Tmax, delta_t, 
+                            self.sis.InstRt, self.sis.InstWt,self.sis.Rfinal,
+                            self.sis.Wfinal)
+        
+        self.statusBar1.SetStatusText(number=1,text="Simulando, aguarde...")
+        
+        # Simula o sistema para a entrada calculada:
+        y = self.sis.Simulacao(t, r, w)
+        
+        self.statusBar1.SetStatusText(number=1,text="Simulação concluída.")
+        
+        # Concatenando com os dados da simulação anterior:
+        #t = concatenate((self.t,t))
+        #r = concatenate((self.r,r))
+        #w = concatenate((self.w,w))
+        #y = concatenate((self.y,y))
+        
+        #y,t,u = sis.RespostaDegrau(tempo_degrau=0.5, delta_t=0.01, tmax=Tmax)
+        
+        # Plotando:
+        #self.fig1.clf()
+        ax = self.fig1.gca()
+        
+        legenda = []
+
+        flag = 0
+
+        # Verificando se a saída está marcada para plotar:
+        if self.GrafVarList.IsChecked(0):
+            ax.plot(t,y,'r')
+            legenda.append(r'Saida: y(t)')
+            flag = 1
+
+        # Verificando se a entrada r(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(1):
+            ax.plot(t,r,'b')
+            legenda.append(r'Entrada: u(t)')
+            flag = 1
+        # Verificando se o sinal de erro está marcado para plotar:
+        if self.GrafVarList.IsChecked(2):
+            ax.plot(t,r-y,'g')
+            legenda.append(r'Erro: e(t)')
+            flag = 1
+        # Verificando se a entrada w(t) está marcada para plotar:
+        if self.GrafVarList.IsChecked(3):
+            ax.plot(t,w,'m')
+            legenda.append(r'Perturbacao: w(t)')
+            flag = 1
+        
+        # Se nenhuma saida foi selecionado, não faz nada.
+        if flag == 0:
+            return
+        
+        ax.grid(True)
+        
+        ylim = ax.get_ylim()
+        
+        # Seta novo limite máximo do eixo y, somando 1/10 do valor total da escala.
+        ax.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        
+        ax.legend(legenda, loc=0)
+        
+        # Se o tab ativo é outro, troca para o tab da simulação:
+        if self.Notebook.GetSelection() != 1:
+            self.Notebook.SetSelection(1)
+            
+        # Atualiza a tela.
+        self.fig1.canvas.draw()        
+        
         event.Skip()
 
 
