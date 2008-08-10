@@ -1,4 +1,7 @@
 # -*- coding: iso-8859-1 -*-
+#
+# $LastChangedDate$
+# $Rev$
 #Boa:Frame:Frame
 
 import wx
