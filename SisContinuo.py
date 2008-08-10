@@ -2,6 +2,8 @@
 #
 # $LastChangedDate$
 # $Rev$
+#
+# $Author$
 #Boa:Frame:Frame
 
 import wx
@@ -34,7 +36,7 @@ def create(parent):
  wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, wxID_FRAMEKMAX, 
  wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, 
  wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANELBODE, 
- wxID_FRAMEPANELLGR, wxID_FRAMEREDB, wxID_FRAMERIDB, wxID_FRAMESIMULAR, 
+ wxID_FRAMEPANELLGR, wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, 
  wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
  wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
  wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTIMBD, wxID_FRAMETXTK, 
@@ -126,7 +128,7 @@ class Frame(wx.Frame):
 
         parent.AddWindow(self.txtRedb, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Redb, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.Rebd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizer7_Items(self, parent):
         # generated method, don't edit
@@ -140,7 +142,7 @@ class Frame(wx.Frame):
 
         parent.AddWindow(self.txtRidb, 1, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Ridb, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
@@ -185,9 +187,9 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
               text='Lugar das ra\xedzes')
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
@@ -260,7 +262,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(413, 146), size=wx.Size(802, 602),
+              pos=wx.Point(394, 184), size=wx.Size(802, 602),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
@@ -432,12 +434,12 @@ class Frame(wx.Frame):
         self.slider1.SetToolTipString('Ajuste do ganho')
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1Scroll)
 
-        self.Ridb = wx.TextCtrl(id=wxID_FRAMERIDB, name='Ridb',
+        self.Ribd = wx.TextCtrl(id=wxID_FRAMERIBD, name='Ribd',
               parent=self.panel5, pos=wx.Point(76, 279), size=wx.Size(40, 25),
               style=0, value='0')
-        self.Ridb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+        self.Ribd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.Ridb.SetHelpText('')
+        self.Ribd.SetHelpText('')
 
         self.txtRidb = wx.StaticText(id=wxID_FRAMETXTRIDB, label='Ribd:',
               name='txtRidb', parent=self.panel5, pos=wx.Point(13, 280),
@@ -445,16 +447,16 @@ class Frame(wx.Frame):
         self.txtRidb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
-        self.txtRedb = wx.StaticText(id=wxID_FRAMETXTREDB, label='Redb:',
+        self.txtRedb = wx.StaticText(id=wxID_FRAMETXTREDB, label='Rebd:',
               name='txtRedb', parent=self.panel5, pos=wx.Point(14, 322),
               size=wx.Size(54, 21), style=wx.ALIGN_RIGHT)
         self.txtRedb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
-        self.Redb = wx.TextCtrl(id=wxID_FRAMEREDB, name='Redb',
+        self.Rebd = wx.TextCtrl(id=wxID_FRAMEREBD, name='Rebd',
               parent=self.panel5, pos=wx.Point(76, 320), size=wx.Size(40, 25),
               style=0, value='0')
-        self.Redb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+        self.Rebd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.txtImbd = wx.StaticText(id=wxID_FRAMETXTIMBD, label='Imbd:',
@@ -882,6 +884,9 @@ class Frame(wx.Frame):
         
         ax.legend(legenda, loc=0)
         
+        ax.set_xlabel('Tempo [s]')
+        ax.set_title('Simulacao no tempo')
+        
         # Se o tab ativo é outro, troca para o tab da simulação:
         if self.Notebook.GetSelection() != 1:
             self.Notebook.SetSelection(1)
@@ -972,8 +977,6 @@ class Frame(wx.Frame):
         
         self.statusBar1.SetStatusText(number=1,text='Finalizado.')
         
-        # Atualiza a tela.
-        self.fig2.canvas.draw()
         
         # Salva a instância
         self.axesLGR = self.fig2.gca()
@@ -990,8 +993,41 @@ class Frame(wx.Frame):
         except AttributeError:
             pass
         
+        # Plota pólos em MF com o ganho inicial do LGR (ganho unitário):
         self.DesenhaPolosMF(self.sis.K)
         
+        # # Traçado das regiões proibidas:
+        # Parâmetros da interface gráfica:
+        Ribd = abs(float(self.Ribd.GetValue()))
+        Rebd = abs(float(self.Rebd.GetValue()))
+        Imbd = abs(float(self.Imbd.GetValue()))
+        
+        xlimites = self.axesLGR.get_xlim()
+        ylimites = self.axesLGR.get_ylim()
+        
+        if Rebd > 0:
+            if Rebd < 0.5:
+                inic = Rebd + 0.5
+            else:
+                inic = 0
+            y = [ylimites[0],ylimites[1],ylimites[1],ylimites[0]]
+            x = [-Rebd,-Rebd,inic,inic]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+        
+        if Ribd > 0:
+            # R = Ribd * I
+            y = [0,ylimites[1],ylimites[1],0,ylimites[0],ylimites[0]]
+            x = [0,-Ribd*ylimites[1],0,0,0,Ribd*ylimites[0]]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+        
+        if Imbd > 0:
+            x = [xlimites[0],xlimites[1],xlimites[1],xlimites[0]]
+            y = [-Imbd,-Imbd,Imbd,Imbd]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)
+
+        # Atualiza a tela.
+        self.fig2.canvas.draw()   
+             
         event.Skip()
 
     def DesenhaPolosMF(self,Ganho):
