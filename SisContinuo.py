@@ -32,16 +32,18 @@ import DlgEntrada
 def create(parent):
     return Frame(parent)
 
-[wxID_FRAME, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMECONTINUAR, 
- wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, wxID_FRAMEKMAX, 
- wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, 
- wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANELBODE, 
- wxID_FRAMEPANELLGR, wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, 
- wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
+[wxID_FRAME, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMEBUTTON1, 
+ wxID_FRAMEBUTTON2, wxID_FRAMECONTINUAR, wxID_FRAMEGANHO, 
+ wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, wxID_FRAMEKMAX, wxID_FRAMELIMPAR, 
+ wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, 
+ wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
+ wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, wxID_FRAMESLIDER1, 
+ wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
  wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
- wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTIMBD, wxID_FRAMETXTK, 
- wxID_FRAMETXTKMAX, wxID_FRAMETXTOPCOES, wxID_FRAMETXTREDB, wxID_FRAMETXTRIDB, 
-] = [wx.NewId() for _init_ctrls in range(34)]
+ wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, wxID_FRAMETXTIMBD, 
+ wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTOPCOES, wxID_FRAMETXTREDB, 
+ wxID_FRAMETXTRIDB, 
+] = [wx.NewId() for _init_ctrls in range(37)]
 
 [wxID_FRAMEARQUIVOMENUITEMSALVAR] = [wx.NewId() for _init_coll_Arquivo_Items in range(1)]
 
@@ -65,6 +67,16 @@ class Frame(wx.Frame):
               flag=wx.ALIGN_CENTER | wx.ALIGN_RIGHT | wx.ALL)
         parent.AddWindow(self.Kmax, 1, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
+    def _init_coll_flexGridSizerBode_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtBode, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.button2, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.button1, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+
     def _init_coll_flexGridSizer2_Items(self, parent):
         # generated method, don't edit
 
@@ -75,19 +87,19 @@ class Frame(wx.Frame):
     def _init_coll_flexGridSizer3_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddSizer(self.flexGridSizer4, 0, border=4,
+        parent.AddSizer(self.flexGridSizer4, 0, border=0,
               flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer8, 0, border=4,
+        parent.AddSizer(self.flexGridSizer8, 1, border=0,
+              flag=wx.GROW | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizer5, 0, border=0,
               flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer5, 0, border=4,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer6, 0, border=4,
+        parent.AddSizer(self.flexGridSizer6, 0, border=0,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddSizer(self.flexGridSizer7, 0, border=4,
+        parent.AddSizer(self.flexGridSizer7, 0, border=0,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGR, 0, border=4,
+        parent.AddWindow(self.btnLGR, 0, border=2,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGRSim, 0, border=4,
+        parent.AddWindow(self.btnLGRSim, 0, border=2,
               flag=wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizer2_Growables(self, parent):
@@ -115,6 +127,7 @@ class Frame(wx.Frame):
     def _init_coll_flexGridSizer3_Growables(self, parent):
         # generated method, don't edit
 
+        parent.AddGrowableRow(1)
         parent.AddGrowableCol(0)
 
     def _init_coll_flexGridSizer1_Growables(self, parent):
@@ -144,6 +157,11 @@ class Frame(wx.Frame):
               flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
+    def _init_coll_flexGridSizer8_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableRow(0)
+
     def _init_coll_boxSizer1_Items(self, parent):
         # generated method, don't edit
 
@@ -155,7 +173,12 @@ class Frame(wx.Frame):
         parent.AddSizer(self.flexGridSizer9, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.slider1, 0, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+
+    def _init_coll_flexGridSizerBode_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableCol(0)
 
     def _init_coll_BarraMenus_Menus(self, parent):
         # generated method, don't edit
@@ -189,9 +212,9 @@ class Frame(wx.Frame):
               text='Diagrama')
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -241,6 +264,9 @@ class Frame(wx.Frame):
 
         self.flexGridSizer9 = wx.FlexGridSizer(cols=1, hgap=0, rows=2, vgap=0)
 
+        self.flexGridSizerBode = wx.FlexGridSizer(cols=1, hgap=0, rows=3,
+              vgap=0)
+
         self._init_coll_flexGridSizer1_Items(self.flexGridSizer1)
         self._init_coll_flexGridSizer1_Growables(self.flexGridSizer1)
         self._init_coll_flexGridSizer2_Growables(self.flexGridSizer2)
@@ -253,20 +279,24 @@ class Frame(wx.Frame):
         self._init_coll_flexGridSizer6_Items(self.flexGridSizer6)
         self._init_coll_flexGridSizer7_Items(self.flexGridSizer7)
         self._init_coll_flexGridSizer8_Items(self.flexGridSizer8)
+        self._init_coll_flexGridSizer8_Growables(self.flexGridSizer8)
         self._init_coll_flexGridSizer9_Items(self.flexGridSizer9)
+        self._init_coll_flexGridSizerBode_Items(self.flexGridSizerBode)
+        self._init_coll_flexGridSizerBode_Growables(self.flexGridSizerBode)
 
         self.panel2.SetSizer(self.flexGridSizer1)
         self.Notebook.SetSizer(self.boxSizer1)
         self.panel5.SetSizer(self.flexGridSizer3)
+        self.panel4.SetSizer(self.flexGridSizerBode)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(394, 184), size=wx.Size(802, 602),
+              pos=wx.Point(490, 283), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
-        self.SetClientSize(wx.Size(794, 574))
+        self.SetClientSize(wx.Size(640, 523))
         self.SetStatusBarPane(1)
         self.SetThemeEnabled(False)
         self.SetMenuBar(self.BarraMenus)
@@ -275,14 +305,14 @@ class Frame(wx.Frame):
         self.Center(wx.BOTH)
 
         self.Notebook = wx.Notebook(id=wxID_FRAMENOTEBOOK, name='Notebook',
-              parent=self, pos=wx.Point(0, 0), size=wx.Size(794, 531), style=0)
+              parent=self, pos=wx.Point(0, 0), size=wx.Size(640, 480), style=0)
         self.Notebook.SetFitToCurrentPage(True)
         self.Notebook.SetAutoLayout(True)
         self.Notebook.SetToolTipString('Selecione a opera\xe7\xe3o desejada.')
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW1,
               name='splitterWindow1', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(786, 505),
+              size=wx.Size(632, 454),
               style=wx.SP_3DBORDER | wx.SP_3D | wx.DOUBLE_BORDER)
         self.splitterWindow1.SetMinimumPaneSize(130)
         self.splitterWindow1.SetSashSize(5)
@@ -292,26 +322,26 @@ class Frame(wx.Frame):
 
         self.panel2 = wx.Panel(id=wxID_FRAMEPANEL2, name='panel2',
               parent=self.splitterWindow1, pos=wx.Point(0, 0), size=wx.Size(130,
-              505), style=wx.TAB_TRAVERSAL)
+              454), style=wx.TAB_TRAVERSAL)
         self.panel2.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.panel2.SetBackgroundStyle(wx.BG_STYLE_SYSTEM)
         self.panel2.SetToolTipString('Painel de configura\xe7\xe3o da simula\xe7\xe3o temporal.')
 
         self.panel3 = wx.Panel(id=wxID_FRAMEPANEL3, name='panel3',
               parent=self.splitterWindow1, pos=wx.Point(135, 0),
-              size=wx.Size(651, 505), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(497, 454), style=wx.TAB_TRAVERSAL)
         self.panel3.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.splitterWindow1.SplitVertically(self.panel2, self.panel3, 130)
 
         self.Simular = wx.Button(id=wxID_FRAMESIMULAR, label='Simular',
-              name='Simular', parent=self.panel2, pos=wx.Point(21, 365),
+              name='Simular', parent=self.panel2, pos=wx.Point(21, 314),
               size=wx.Size(88, 40), style=0)
         self.Simular.SetToolTipString('Simular o sistema na configura\xe7\xe3o atual.')
         self.Simular.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMESIMULAR)
 
         self.Limpar = wx.Button(id=wxID_FRAMELIMPAR, label='Limpar',
-              name='Limpar', parent=self.panel2, pos=wx.Point(21, 461),
+              name='Limpar', parent=self.panel2, pos=wx.Point(21, 410),
               size=wx.Size(88, 40), style=0)
         self.Limpar.SetToolTipString('Limpar a \xe1rea do gr\xe1fico.')
         self.Limpar.Bind(wx.EVT_BUTTON, self.OnLimparButton,
@@ -320,10 +350,11 @@ class Frame(wx.Frame):
         self.GrafVarList = wx.CheckListBox(choices=[ 'Saída: y(t)',
               'Entrada: r(t)', 'Erro: e(t)', 'Perturbação: w(t)',
               'Controle: u(t)'], id=wxID_FRAMEGRAFVARLIST, name='GrafVarList',
-              parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 264),
+              parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 213),
               style=wx.LB_EXTENDED)
         self.GrafVarList.SetStringSelection('')
         self.GrafVarList.SetToolTipString('Selecione os sinais que deseja plotar.')
+        self.GrafVarList.SetMinSize(wx.Size(122, 120))
 
         self.txtOpcoes = wx.StaticText(id=wxID_FRAMETXTOPCOES,
               label='Configura\xe7\xf5es:', name='txtOpcoes',
@@ -351,7 +382,7 @@ class Frame(wx.Frame):
         self.Tmax.SetToolTipString('Ajuste o tempo total da simula\xe7\xe3o.')
 
         self.Continuar = wx.Button(id=wxID_FRAMECONTINUAR, label='Continuar',
-              name='Continuar', parent=self.panel2, pos=wx.Point(21, 413),
+              name='Continuar', parent=self.panel2, pos=wx.Point(21, 362),
               size=wx.Size(88, 40), style=0)
         self.Continuar.SetToolTipString('Continuar a simula\xe7\xe3o de onde parou.')
         self.Continuar.Enable(False)
@@ -359,7 +390,7 @@ class Frame(wx.Frame):
               id=wxID_FRAMECONTINUAR)
 
         self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES, label='A\xe7\xf5es:',
-              name='stAcoes', parent=self.panel2, pos=wx.Point(37, 338),
+              name='stAcoes', parent=self.panel2, pos=wx.Point(37, 287),
               size=wx.Size(55, 19), style=wx.ALIGN_CENTRE)
         self.stAcoes.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
@@ -374,43 +405,43 @@ class Frame(wx.Frame):
 
         self.splitterWindow2 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW2,
               name='splitterWindow2', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(786, 505), style=wx.SP_3D)
+              size=wx.Size(632, 454), style=wx.SP_3D)
         self.splitterWindow2.SetMinimumPaneSize(130)
 
         self.panelLGR = wx.Panel(id=wxID_FRAMEPANELLGR, name='panelLGR',
               parent=self.splitterWindow2, pos=wx.Point(134, 0),
-              size=wx.Size(652, 505), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(498, 454), style=wx.TAB_TRAVERSAL)
         self.panelLGR.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.panel5 = wx.Panel(id=wxID_FRAMEPANEL5, name='panel5',
               parent=self.splitterWindow2, pos=wx.Point(0, 0), size=wx.Size(130,
-              505), style=wx.TAB_TRAVERSAL)
+              454), style=wx.TAB_TRAVERSAL)
         self.panel5.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.panel5.SetToolTipString('Painel de configura\xe7\xe3o do LGR.')
         self.splitterWindow2.SplitVertically(self.panel5, self.panelLGR, 130)
 
         self.splitterWindow3 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW3,
               name='splitterWindow3', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(786, 505), style=wx.SP_3D)
+              size=wx.Size(632, 454), style=wx.SP_3D)
         self.splitterWindow3.SetMinimumPaneSize(130)
 
         self.panel4 = wx.Panel(id=wxID_FRAMEPANEL4, name='panel4',
               parent=self.splitterWindow3, pos=wx.Point(0, 0), size=wx.Size(130,
-              505), style=wx.TAB_TRAVERSAL)
+              454), style=wx.TAB_TRAVERSAL)
 
         self.panelBode = wx.Panel(id=wxID_FRAMEPANELBODE, name='panelBode',
               parent=self.splitterWindow3, pos=wx.Point(134, 0),
-              size=wx.Size(652, 505), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(498, 454), style=wx.TAB_TRAVERSAL)
         self.splitterWindow3.SplitVertically(self.panel4, self.panelBode, 130)
 
         self.panel1 = wx.Panel(id=wxID_FRAMEPANEL1, name='panel1',
-              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(0, 505),
+              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(0, 454),
               style=wx.TAB_TRAVERSAL)
-        self.panel1.SetBackgroundColour(wx.Colour(255, 128, 64))
+        self.panel1.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.Kmax = wx.TextCtrl(id=wxID_FRAMEKMAX, name='Kmax',
-              parent=self.panel5, pos=wx.Point(81, 8), size=wx.Size(40, 24),
+              parent=self.panel5, pos=wx.Point(81, 4), size=wx.Size(40, 24),
               style=0, value='10')
         self.Kmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
@@ -418,87 +449,102 @@ class Frame(wx.Frame):
         self.Kmax.Bind(wx.EVT_TEXT, self.OnKmaxText, id=wxID_FRAMEKMAX)
 
         self.txtKmax = wx.StaticText(id=wxID_FRAMETXTKMAX, label='Kmax:',
-              name='txtKmax', parent=self.panel5, pos=wx.Point(9, 9),
+              name='txtKmax', parent=self.panel5, pos=wx.Point(9, 5),
               size=wx.Size(64, 21), style=wx.ALIGN_CENTRE | wx.ALIGN_RIGHT)
         self.txtKmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtKmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
 
         self.slider1 = wx.Slider(id=wxID_FRAMESLIDER1, maxValue=10, minValue=0,
-              name='slider1', parent=self.panel5, pos=wx.Point(79, 48),
-              size=wx.Size(48, 215), style=wx.SL_AUTOTICKS | wx.SL_VERTICAL,
+              name='slider1', parent=self.panel5, pos=wx.Point(80, 36),
+              size=wx.Size(46, 227), style=wx.SL_AUTOTICKS | wx.SL_VERTICAL,
               value=0)
         self.slider1.SetMax(100)
         self.slider1.SetMin(0)
         self.slider1.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.slider1.SetToolTipString('Ajuste do ganho')
+        self.slider1.SetMinSize(wx.Size(48, 140))
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1Scroll)
 
         self.Ribd = wx.TextCtrl(id=wxID_FRAMERIBD, name='Ribd',
-              parent=self.panel5, pos=wx.Point(76, 279), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(76, 271), size=wx.Size(40, 25),
               style=0, value='0')
         self.Ribd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.Ribd.SetHelpText('')
 
         self.txtRidb = wx.StaticText(id=wxID_FRAMETXTRIDB, label='Ribd:',
-              name='txtRidb', parent=self.panel5, pos=wx.Point(13, 280),
+              name='txtRidb', parent=self.panel5, pos=wx.Point(13, 272),
               size=wx.Size(55, 22), style=wx.ALIGN_RIGHT)
         self.txtRidb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.txtRedb = wx.StaticText(id=wxID_FRAMETXTREDB, label='Rebd:',
-              name='txtRedb', parent=self.panel5, pos=wx.Point(14, 322),
+              name='txtRedb', parent=self.panel5, pos=wx.Point(14, 306),
               size=wx.Size(54, 21), style=wx.ALIGN_RIGHT)
         self.txtRedb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.Rebd = wx.TextCtrl(id=wxID_FRAMEREBD, name='Rebd',
-              parent=self.panel5, pos=wx.Point(76, 320), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(76, 304), size=wx.Size(40, 25),
               style=0, value='0')
         self.Rebd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.txtImbd = wx.StaticText(id=wxID_FRAMETXTIMBD, label='Imbd:',
-              name='txtImbd', parent=self.panel5, pos=wx.Point(14, 364),
+              name='txtImbd', parent=self.panel5, pos=wx.Point(14, 340),
               size=wx.Size(54, 19), style=wx.ALIGN_RIGHT)
         self.txtImbd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.Imbd = wx.TextCtrl(id=wxID_FRAMEIMBD, name='Imbd',
-              parent=self.panel5, pos=wx.Point(76, 361), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(76, 337), size=wx.Size(40, 25),
               style=0, value='0')
         self.Imbd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.btnLGR = wx.Button(id=wxID_FRAMEBTNLGR, label='Tra\xe7ar LGR',
-              name='btnLGR', parent=self.panel5, pos=wx.Point(21, 398),
+              name='btnLGR', parent=self.panel5, pos=wx.Point(21, 368),
               size=wx.Size(88, 40), style=0)
         self.btnLGR.SetToolTipString('Tra\xe7ar o LGR')
         self.btnLGR.Bind(wx.EVT_BUTTON, self.OnBtnLGRButton,
               id=wxID_FRAMEBTNLGR)
 
         self.btnLGRSim = wx.Button(id=wxID_FRAMEBTNLGRSIM, label='Simular',
-              name='btnLGRSim', parent=self.panel5, pos=wx.Point(21, 446),
+              name='btnLGRSim', parent=self.panel5, pos=wx.Point(21, 412),
               size=wx.Size(88, 40), style=0)
         self.btnLGRSim.SetToolTipString('Simular o sistema com o ganho atual')
         self.btnLGRSim.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMEBTNLGRSIM)
 
         self.txtK = wx.StaticText(id=wxID_FRAMETXTK, label='Ganho:',
-              name='txtK', parent=self.panel5, pos=wx.Point(7, 128),
+              name='txtK', parent=self.panel5, pos=wx.Point(8, 122),
               size=wx.Size(60, 22), style=0)
         self.txtK.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtK.SetToolTipString('Ganho atual do sistema.')
 
         self.Ganho = wx.TextCtrl(id=wxID_FRAMEGANHO, name='Ganho',
-              parent=self.panel5, pos=wx.Point(10, 158), size=wx.Size(53, 24),
+              parent=self.panel5, pos=wx.Point(11, 152), size=wx.Size(53, 24),
               style=wx.TE_CENTER, value='1')
         self.Ganho.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.Ganho.SetToolTipString('Ganho atual do sistema.')
         self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
+
+        self.button1 = wx.Button(id=wxID_FRAMEBUTTON1, label='button1',
+              name='button1', parent=self.panel4, pos=wx.Point(27, 56),
+              size=wx.Size(75, 23), style=0)
+
+        self.txtBode = wx.StaticText(id=wxID_FRAMETXTBODE, label='Bode',
+              name='txtBode', parent=self.panel4, pos=wx.Point(53, 4),
+              size=wx.Size(41, 19), style=0)
+        self.txtBode.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+
+        self.button2 = wx.Button(id=wxID_FRAMEBUTTON2, label='button2',
+              name='button2', parent=self.panel4, pos=wx.Point(27, 25),
+              size=wx.Size(75, 23), style=0)
 
         self._init_coll_Notebook_Pages(self.Notebook)
 
@@ -567,8 +613,6 @@ class Frame(wx.Frame):
         parent.SetSizer(sizer)
         parent.Fit()
         parent.Refresh()
-        
-
         
         #print sizer.GetSize(), sizer.GetPosition(), tamanho
         
@@ -968,7 +1012,7 @@ class Frame(wx.Frame):
         """
         
         delta_k = float(self.sis.Kmax) / float(self.SliderMax)
-        kvect = numpy.arange(0,self.sis.Kmax,delta_k/10)
+        kvect = numpy.arange(0,self.sis.Kmax,delta_k)
         
         txt = "Plotando LGR com %d pontos..." %(len(kvect))
         self.statusBar1.SetStatusText(number=1,text=txt)
