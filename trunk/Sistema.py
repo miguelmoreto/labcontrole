@@ -223,5 +223,5 @@ class SistemaContinuo:
         
         ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         
-        return
+        return ganhos
     
