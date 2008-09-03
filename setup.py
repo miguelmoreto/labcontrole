@@ -103,7 +103,7 @@ options = {
                                "matplotlib.numerix.linear_algebra", "matplotlib.numerix.random_array",
                                "scipy.io.numpyio","IPython.Extensions.path"],
                 'excludes': ['_gtkagg', '_tkagg', '_agg2', '_cairo', '_cocoaagg',
-                             '_fltkagg', '_gtk', '_gtkcairo', 'PyQt4._qt'],
+                             '_fltkagg', '_gtk', '_gtkcairo', 'PyQt4'],
                 'dll_excludes': ['libgdk-win32-2.0-0.dll',
                                  'libgobject-2.0-0.dll','QtCore4.dll','QtGui4.dll']
               }
