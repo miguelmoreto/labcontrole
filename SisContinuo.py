@@ -210,11 +210,11 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
               text='Simula\xe7\xe3o')
         parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -286,8 +286,8 @@ class Frame(wx.Frame):
 
         self.panel2.SetSizer(self.flexGridSizer1)
         self.Notebook.SetSizer(self.boxSizer1)
-        self.panel5.SetSizer(self.flexGridSizer3)
         self.panel4.SetSizer(self.flexGridSizerBode)
+        self.panel5.SetSizer(self.flexGridSizer3)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -533,17 +533,17 @@ class Frame(wx.Frame):
         self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
 
         self.button1 = wx.Button(id=wxID_FRAMEBUTTON1, label='button1',
-              name='button1', parent=self.panel4, pos=wx.Point(27, 56),
+              name='button1', parent=self.panel4, pos=wx.Point(27, 62),
               size=wx.Size(75, 23), style=0)
 
         self.txtBode = wx.StaticText(id=wxID_FRAMETXTBODE, label='Bode',
-              name='txtBode', parent=self.panel4, pos=wx.Point(53, 4),
+              name='txtBode', parent=self.panel4, pos=wx.Point(44, 4),
               size=wx.Size(41, 19), style=0)
         self.txtBode.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
 
         self.button2 = wx.Button(id=wxID_FRAMEBUTTON2, label='button2',
-              name='button2', parent=self.panel4, pos=wx.Point(27, 25),
+              name='button2', parent=self.panel4, pos=wx.Point(27, 31),
               size=wx.Size(75, 23), style=0)
 
         self._init_coll_Notebook_Pages(self.Notebook)
