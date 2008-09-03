@@ -1,7 +1,10 @@
 # -*- coding: iso-8859-1 -*-
-#
+
+__version__ ='$Rev$'
+__date__ = '$LastChangedDate$'
+
 # $LastChangedDate$
-# $Rev$
+# 
 #
 # $Author$
 #Boa:Frame:Frame
@@ -25,6 +28,7 @@ import numpy
 from Sistema import *
 import DlgFT
 import DlgEntrada
+import DlgAbout
 
 
 #from matplotlib.backends.backend_wx import *#NavigationToolbar2Wx
@@ -192,6 +196,8 @@ class Frame(wx.Frame):
 
         parent.Append(help='', id=wxID_FRAMEMENUAJUDAMENUAJUDAITEMSOBRE,
               kind=wx.ITEM_NORMAL, text='Sobre o LabControle')
+        self.Bind(wx.EVT_MENU, self.OnMenuAbout,
+              id=wxID_FRAMEMENUAJUDAMENUAJUDAITEMSOBRE)
 
     def _init_coll_MenuOpcoes_Items(self, parent):
         # generated method, don't edit
@@ -1199,6 +1205,22 @@ class Frame(wx.Frame):
         # Atualiza a tela.
         self.fig1.canvas.draw()        
         
+        event.Skip()
+
+    def OnMenuAbout(self, event):
+        """
+        Evento do botão "About".
+        """
+        
+        dlg = DlgAbout.AboutDlg(self)
+        versao = __version__.strip('$')
+        dlg.VersaoTxt.SetLabel('Vers\xe3o: 1.0 ' + versao)
+        result = dlg.ShowModal()
+
+        if result == wx.ID_OK:
+            self.statusBar1.SetStatusText(number=1,text="Obrigado!")
+            
+        dlg.Destroy()
         event.Skip()
 
 
