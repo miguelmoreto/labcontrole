@@ -53,7 +53,7 @@ class AboutDlg(wx.Dialog):
         parent.AddWindow(self.DescTxt, 1, border=4,
               flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
         parent.AddSizer(self.SizerLogos, 0, border=4,
-              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+              flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.BtnOk, 0, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_SizerLogos_Growables(self, parent):
@@ -92,36 +92,36 @@ class AboutDlg(wx.Dialog):
         self.SetClientSize(wx.Size(356, 365))
 
         self.BtnOk = wx.Button(id=wx.ID_OK, label='OK', name='BtnOk',
-              parent=self, pos=wx.Point(136, 329), size=wx.Size(84, 30),
+              parent=self, pos=wx.Point(136, 330), size=wx.Size(84, 30),
               style=0)
 
         self.VersaoTxt = wx.StaticText(id=wxID_ABOUTDLGVERSAOTXT,
-              label='Vers\xe3o: 1.0 r31', name='VersaoTxt', parent=self,
-              pos=wx.Point(4, 73), size=wx.Size(348, 19),
+              label='Vers\xe3o: 1.1', name='VersaoTxt', parent=self,
+              pos=wx.Point(4, 73), size=wx.Size(348, 39),
               style=wx.ALIGN_CENTRE)
         self.VersaoTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Arial'))
         self.VersaoTxt.SetHelpText('')
 
         self.DescTxt = wx.StaticText(id=wxID_ABOUTDLGDESCTXT, label='Descricao',
-              name='DescTxt', parent=self, pos=wx.Point(4, 100),
-              size=wx.Size(348, 150), style=0)
+              name='DescTxt', parent=self, pos=wx.Point(4, 120),
+              size=wx.Size(348, 136), style=0)
         self.DescTxt.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
               'MS Shell Dlg 2'))
 
         self.staticBitmap1 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./gplv3.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP1,
-              name='staticBitmap1', parent=self, pos=wx.Point(8, 262),
-              size=wx.Size(152, 55), style=0)
+              name='staticBitmap1', parent=self, pos=wx.Point(25, 268),
+              size=wx.Size(138, 50), style=0)
         self.staticBitmap1.SetMinSize(wx.Size(152, 54))
 
         self.staticBitmap2 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./python.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP2,
-              name='staticBitmap2', parent=self, pos=wx.Point(168, 262),
-              size=wx.Size(180, 55), style=0)
+              name='staticBitmap2', parent=self, pos=wx.Point(171, 268),
+              size=wx.Size(160, 50), style=0)
         self.staticBitmap2.SetMinSize(wx.Size(180, 61))
 
-        self.staticBitmap3 = wx.StaticBitmap(bitmap=wx.Bitmap(u'D:/Moreto/Programs/LabControle/logoLabControle.png',
+        self.staticBitmap3 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./logoLabControle.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP3,
               name='staticBitmap3', parent=self, pos=wx.Point(4, 4),
               size=wx.Size(348, 61), style=0)

@@ -352,7 +352,7 @@ class Frame(wx.Frame):
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
               pos=wx.Point(490, 283), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
-              title='LabControle - Sistema continuo')
+              title='LabControle v1.1 - Sistema continuo - by Moreto')
         self._init_utils()
         self.SetClientSize(wx.Size(640, 523))
         self.SetStatusBarPane(1)
@@ -497,7 +497,7 @@ class Frame(wx.Frame):
         self.splitterWindow3.SplitVertically(self.panel4, self.panelBode, 130)
 
         self.panel1 = wx.Panel(id=wxID_FRAMEPANEL1, name='panel1',
-              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(0, 454),
+              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(632, 454),
               style=wx.TAB_TRAVERSAL)
         self.panel1.SetBackgroundColour(wx.Colour(192, 192, 192))
 
@@ -1331,7 +1331,7 @@ class Frame(wx.Frame):
         
         dlg = DlgAbout.AboutDlg(self)
         versao = __version__.strip('$')
-        dlg.VersaoTxt.SetLabel('Vers\xe3o: 1.0 ' + versao)
+        dlg.VersaoTxt.SetLabel("Vers\xe3o: 1.1\nSVN " + versao)
         result = dlg.ShowModal()
 
         if result == wx.ID_OK:
