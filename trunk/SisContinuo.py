@@ -4,9 +4,25 @@
 __version__ ='$Rev$'
 __date__ = '$LastChangedDate$'
 
+##    Este arquivo é parte do programa LabControle
+##
+##    LabControle é um software livre; você pode redistribui-lo e/ou 
+##    modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+##    publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+##    Licença.
+##
+##    Este programa é distribuido na esperança que possa ser  util, 
+##    mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+##    qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+##    GNU para maiores detalhes.
+##
+##    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+##    junto com este programa, se não, escreva para a Fundação do Software
+##    Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 # $Author$
-
+#
+#
 
 import wx
 from wx.lib.anchors import LayoutAnchors
@@ -35,23 +51,24 @@ import DlgAbout
 def create(parent):
     return Frame(parent)
 
-[wxID_FRAME, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMEBUTTON1, 
- wxID_FRAMEBUTTON2, wxID_FRAMECONTINUAR, wxID_FRAMEGANHO, 
+[wxID_FRAME, wxID_FRAMEBODEFMAX, wxID_FRAMEBODEFMIN, wxID_FRAMEBODEPONTOS, 
+ wxID_FRAMEBTNBODE, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMEBUTTON1, 
+ wxID_FRAMECONTINUAR, wxID_FRAMEFMAXTXT, wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, 
  wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, wxID_FRAMEKMAX, wxID_FRAMELIMPAR, 
  wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, 
- wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
- wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, wxID_FRAMESLIDER1, 
- wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
- wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
- wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, wxID_FRAMETXTIMBD, 
- wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTOPCOES, wxID_FRAMETXTREDB, 
- wxID_FRAMETXTRIDB, 
-] = [wx.NewId() for _init_ctrls in range(37)]
-
-[wxID_FRAMEARQUIVOMENUITEMSALVAR] = [wx.NewId() for _init_coll_Arquivo_Items in range(1)]
+ wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, 
+ wxID_FRAMEPANELLGR, wxID_FRAMEPONTOSBODETXT, wxID_FRAMEREBD, wxID_FRAMERIBD, 
+ wxID_FRAMESIMULAR, wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, 
+ wxID_FRAMESPLITTERWINDOW2, wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, 
+ wxID_FRAMESTATUSBAR1, wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, 
+ wxID_FRAMETXTIMBD, wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTOPCOES, 
+ wxID_FRAMETXTREDB, wxID_FRAMETXTRIDB, 
+] = [wx.NewId() for _init_ctrls in range(44)]
 
 [wxID_FRAMEMENUOPCOESCONFIGMENUITEM1, wxID_FRAMEMENUOPCOESITEMS1, 
 ] = [wx.NewId() for _init_coll_MenuOpcoes_Items in range(2)]
+
+[wxID_FRAMEARQUIVOMENUITEMSALVAR] = [wx.NewId() for _init_coll_Arquivo_Items in range(1)]
 
 [wxID_FRAMEMENUAJUDAMENUAJUDAITEMSOBRE] = [wx.NewId() for _init_coll_MenuAjuda_Items in range(1)]
 
@@ -75,8 +92,11 @@ class Frame(wx.Frame):
         # generated method, don't edit
 
         parent.AddWindow(self.txtBode, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.flexGridSizerBode1, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.button2, 0, border=4,
+        parent.AddWindow(self.panel6, 0, border=4, flag=wx.EXPAND | wx.ALL)
+        parent.AddWindow(self.btnBode, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.button1, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
@@ -87,6 +107,22 @@ class Frame(wx.Frame):
         parent.AddWindow(self.stTmax, 1, border=4,
               flag=wx.ALL | wx.ALIGN_CENTER)
         parent.AddWindow(self.Tmax, 1, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerBode1_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.FminTxt, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.BodeFmin, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.FmaxTxt, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.BodeFmax, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.PontosBodeTxt, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.BodePontos, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizer3_Items(self, parent):
         # generated method, don't edit
@@ -161,6 +197,11 @@ class Frame(wx.Frame):
               flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
+    def _init_coll_flexGridSizerBode1_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableCol(0)
+
     def _init_coll_flexGridSizer8_Growables(self, parent):
         # generated method, don't edit
 
@@ -182,6 +223,7 @@ class Frame(wx.Frame):
     def _init_coll_flexGridSizerBode_Growables(self, parent):
         # generated method, don't edit
 
+        parent.AddGrowableRow(2)
         parent.AddGrowableCol(0)
 
     def _init_coll_BarraMenus_Menus(self, parent):
@@ -223,9 +265,9 @@ class Frame(wx.Frame):
               text='Diagrama')
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -275,7 +317,10 @@ class Frame(wx.Frame):
 
         self.flexGridSizer9 = wx.FlexGridSizer(cols=1, hgap=0, rows=2, vgap=0)
 
-        self.flexGridSizerBode = wx.FlexGridSizer(cols=1, hgap=0, rows=3,
+        self.flexGridSizerBode = wx.FlexGridSizer(cols=1, hgap=0, rows=5,
+              vgap=0)
+
+        self.flexGridSizerBode1 = wx.FlexGridSizer(cols=2, hgap=0, rows=3,
               vgap=0)
 
         self._init_coll_flexGridSizer1_Items(self.flexGridSizer1)
@@ -294,6 +339,8 @@ class Frame(wx.Frame):
         self._init_coll_flexGridSizer9_Items(self.flexGridSizer9)
         self._init_coll_flexGridSizerBode_Items(self.flexGridSizerBode)
         self._init_coll_flexGridSizerBode_Growables(self.flexGridSizerBode)
+        self._init_coll_flexGridSizerBode1_Items(self.flexGridSizerBode1)
+        self._init_coll_flexGridSizerBode1_Growables(self.flexGridSizerBode1)
 
         self.panel2.SetSizer(self.flexGridSizer1)
         self.Notebook.SetSizer(self.boxSizer1)
@@ -303,7 +350,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 171), size=wx.Size(648, 551),
+              pos=wx.Point(490, 283), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
@@ -320,6 +367,7 @@ class Frame(wx.Frame):
         self.Notebook.SetFitToCurrentPage(True)
         self.Notebook.SetAutoLayout(True)
         self.Notebook.SetToolTipString('Selecione a opera\xe7\xe3o desejada.')
+        self.Notebook.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW1,
               name='splitterWindow1', parent=self.Notebook, pos=wx.Point(0, 0),
@@ -424,6 +472,7 @@ class Frame(wx.Frame):
               size=wx.Size(498, 454), style=wx.TAB_TRAVERSAL)
         self.panelLGR.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+        self.panelLGR.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.panel5 = wx.Panel(id=wxID_FRAMEPANEL5, name='panel5',
               parent=self.splitterWindow2, pos=wx.Point(0, 0), size=wx.Size(130,
@@ -440,6 +489,7 @@ class Frame(wx.Frame):
         self.panel4 = wx.Panel(id=wxID_FRAMEPANEL4, name='panel4',
               parent=self.splitterWindow3, pos=wx.Point(0, 0), size=wx.Size(130,
               454), style=wx.TAB_TRAVERSAL)
+        self.panel4.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.panelBode = wx.Panel(id=wxID_FRAMEPANELBODE, name='panelBode',
               parent=self.splitterWindow3, pos=wx.Point(134, 0),
@@ -451,6 +501,13 @@ class Frame(wx.Frame):
               style=wx.TAB_TRAVERSAL)
         self.panel1.SetBackgroundColour(wx.Colour(192, 192, 192))
 
+        self.txtKmax = wx.StaticText(id=wxID_FRAMETXTKMAX, label='Kmax:',
+              name='txtKmax', parent=self.panel5, pos=wx.Point(9, 5),
+              size=wx.Size(64, 21), style=wx.ALIGN_CENTRE | wx.ALIGN_RIGHT)
+        self.txtKmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.txtKmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
+
         self.Kmax = wx.TextCtrl(id=wxID_FRAMEKMAX, name='Kmax',
               parent=self.panel5, pos=wx.Point(81, 4), size=wx.Size(40, 24),
               style=0, value='10')
@@ -458,13 +515,6 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.Kmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
         self.Kmax.Bind(wx.EVT_TEXT, self.OnKmaxText, id=wxID_FRAMEKMAX)
-
-        self.txtKmax = wx.StaticText(id=wxID_FRAMETXTKMAX, label='Kmax:',
-              name='txtKmax', parent=self.panel5, pos=wx.Point(9, 5),
-              size=wx.Size(64, 21), style=wx.ALIGN_CENTRE | wx.ALIGN_RIGHT)
-        self.txtKmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
-              'MS Shell Dlg 2'))
-        self.txtKmax.SetToolTipString('M\xe1ximo ganho utilizado no tra\xe7ado do LGR')
 
         self.slider1 = wx.Slider(id=wxID_FRAMESLIDER1, maxValue=10, minValue=0,
               name='slider1', parent=self.panel5, pos=wx.Point(80, 36),
@@ -477,18 +527,33 @@ class Frame(wx.Frame):
         self.slider1.SetMinSize(wx.Size(48, 140))
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1Scroll)
 
-        self.Ribd = wx.TextCtrl(id=wxID_FRAMERIBD, name='Ribd',
-              parent=self.panel5, pos=wx.Point(76, 271), size=wx.Size(40, 25),
-              style=0, value='0')
-        self.Ribd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+        self.txtK = wx.StaticText(id=wxID_FRAMETXTK, label='Ganho:',
+              name='txtK', parent=self.panel5, pos=wx.Point(8, 122),
+              size=wx.Size(60, 22), style=0)
+        self.txtK.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.Ribd.SetHelpText('')
+        self.txtK.SetToolTipString('Ganho atual do sistema.')
+
+        self.Ganho = wx.TextCtrl(id=wxID_FRAMEGANHO, name='Ganho',
+              parent=self.panel5, pos=wx.Point(11, 152), size=wx.Size(53, 24),
+              style=wx.TE_CENTER, value='1')
+        self.Ganho.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.Ganho.SetToolTipString('Ganho atual do sistema.')
+        self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
 
         self.txtRidb = wx.StaticText(id=wxID_FRAMETXTRIDB, label='Ribd:',
               name='txtRidb', parent=self.panel5, pos=wx.Point(13, 272),
               size=wx.Size(55, 22), style=wx.ALIGN_RIGHT)
         self.txtRidb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
+
+        self.Ribd = wx.TextCtrl(id=wxID_FRAMERIBD, name='Ribd',
+              parent=self.panel5, pos=wx.Point(76, 271), size=wx.Size(40, 25),
+              style=0, value='0')
+        self.Ribd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.Ribd.SetHelpText('')
 
         self.txtRedb = wx.StaticText(id=wxID_FRAMETXTREDB, label='Rebd:',
               name='txtRedb', parent=self.panel5, pos=wx.Point(14, 306),
@@ -528,34 +593,69 @@ class Frame(wx.Frame):
         self.btnLGRSim.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMEBTNLGRSIM)
 
-        self.txtK = wx.StaticText(id=wxID_FRAMETXTK, label='Ganho:',
-              name='txtK', parent=self.panel5, pos=wx.Point(8, 122),
-              size=wx.Size(60, 22), style=0)
-        self.txtK.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+        self.txtBode = wx.StaticText(id=wxID_FRAMETXTBODE, label='Bode',
+              name='txtBode', parent=self.panel4, pos=wx.Point(4, 4),
+              size=wx.Size(122, 28), style=wx.ALIGN_CENTRE)
+        self.txtBode.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.txtK.SetToolTipString('Ganho atual do sistema.')
 
-        self.Ganho = wx.TextCtrl(id=wxID_FRAMEGANHO, name='Ganho',
-              parent=self.panel5, pos=wx.Point(11, 152), size=wx.Size(53, 24),
-              style=wx.TE_CENTER, value='1')
-        self.Ganho.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+        self.FminTxt = wx.StaticText(id=wxID_FRAMEFMINTXT, label='Fmin:',
+              name='FminTxt', parent=self.panel4, pos=wx.Point(5, 44),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.FminTxt.SetAutoLayout(True)
+        self.FminTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.Ganho.SetToolTipString('Ganho atual do sistema.')
-        self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
+        self.FminTxt.SetToolTipString('Freq. minima para o tra\xe7ado do diagrama de bode.')
+
+        self.BodeFmin = wx.TextCtrl(id=wxID_FRAMEBODEFMIN, name='BodeFmin',
+              parent=self.panel4, pos=wx.Point(77, 44), size=wx.Size(48, 25),
+              style=0, value='0.01')
+        self.BodeFmin.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.BodeFmin.SetToolTipString('Entre com a freq. minima para o tra\xe7ado do diagrama de bode.')
+
+        self.FmaxTxt = wx.StaticText(id=wxID_FRAMEFMAXTXT, label='Fmax:',
+              name='FmaxTxt', parent=self.panel4, pos=wx.Point(5, 77),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.FmaxTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FmaxTxt.SetToolTipString('Freq. m\xe1xima para o tra\xe7ado do diagrama de bode.')
+
+        self.BodeFmax = wx.TextCtrl(id=wxID_FRAMEBODEFMAX, name='BodeFmax',
+              parent=self.panel4, pos=wx.Point(77, 77), size=wx.Size(48, 25),
+              style=0, value='100')
+        self.BodeFmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.BodeFmax.SetToolTipString('Entre com a freq. m\xe1xima para o tra\xe7ado do diagrama de bode.')
+
+        self.PontosBodeTxt = wx.StaticText(id=wxID_FRAMEPONTOSBODETXT,
+              label='Pontos:', name='PontosBodeTxt', parent=self.panel4,
+              pos=wx.Point(5, 110), size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.PontosBodeTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
+              False, 'MS Shell Dlg 2'))
+        self.PontosBodeTxt.SetToolTipString('N\xfamero de pontos do gr\xe1fico do diagrama de bode.')
+
+        self.BodePontos = wx.TextCtrl(id=wxID_FRAMEBODEPONTOS,
+              name='BodePontos', parent=self.panel4, pos=wx.Point(77, 110),
+              size=wx.Size(48, 25), style=0, value='3000')
+        self.BodePontos.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.BodePontos.SetToolTipString('Entre com o n\xfamero de pontos do gr\xe1fico do diagrama de bode.')
+
+        self.btnBode = wx.Button(id=wxID_FRAMEBTNBODE, label='Tra\xe7ar Bode',
+              name='btnBode', parent=self.panel4, pos=wx.Point(21, 362),
+              size=wx.Size(88, 40), style=0)
+        self.btnBode.Bind(wx.EVT_BUTTON, self.OnBtnBodeButton,
+              id=wxID_FRAMEBTNBODE)
 
         self.button1 = wx.Button(id=wxID_FRAMEBUTTON1, label='button1',
-              name='button1', parent=self.panel4, pos=wx.Point(27, 62),
-              size=wx.Size(75, 23), style=0)
+              name='button1', parent=self.panel4, pos=wx.Point(21, 410),
+              size=wx.Size(88, 40), style=0)
 
-        self.txtBode = wx.StaticText(id=wxID_FRAMETXTBODE, label='Bode',
-              name='txtBode', parent=self.panel4, pos=wx.Point(44, 4),
-              size=wx.Size(41, 19), style=0)
-        self.txtBode.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
-              'MS Shell Dlg 2'))
-
-        self.button2 = wx.Button(id=wxID_FRAMEBUTTON2, label='button2',
-              name='button2', parent=self.panel4, pos=wx.Point(27, 31),
-              size=wx.Size(75, 23), style=0)
+        self.panel6 = wx.Panel(id=wxID_FRAMEPANEL6, name='panel6',
+              parent=self.panel4, pos=wx.Point(4, 147), size=wx.Size(122, 207),
+              style=wx.TAB_TRAVERSAL)
+        self.panel6.SetMinSize(wx.Size(122, 40))
 
         self._init_coll_Notebook_Pages(self.Notebook)
 
@@ -578,6 +678,8 @@ class Frame(wx.Frame):
 
         # Atualiza os sizers:
         self.panel2.Layout()
+        self.panel4.Layout()
+        self.panel5.Layout()
         self.Layout()
 
         self.GrafVarList.Check(0,True)
@@ -1289,6 +1391,28 @@ class Frame(wx.Frame):
 
         txt = "Resolução: %f seg." %(self.sis.delta_t)
         self.statusBar1.SetStatusText(number=0,text=txt)
+        
+        event.Skip()
+
+    def OnBtnBodeButton(self, event):
+        """
+        Evento do botão para traçado do diagrama de Bode.
+        """
+
+        # Lendo valores da interface:
+        Fmin = float(self.BodeFmin.GetLineText(0))
+        Fmax = float(self.BodeFmax.GetLineText(0))
+        Pontos = float(self.BodePontos.GetLineText(0))
+        
+        f=arange(Fmin,Fmax,(Fmax-Fmin)/Pontos)
+        
+        self.statusBar1.SetStatusText(number=1,text='Tracando bode ...')
+        
+        self.sis.Bode(f,self.fig3)
+
+        # Atualiza a tela.
+        self.fig3.canvas.draw()
+        self.statusBar1.SetStatusText(number=1,text='Concluido')
         
         event.Skip()
 
