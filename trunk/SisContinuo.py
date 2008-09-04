@@ -1,13 +1,12 @@
 # -*- coding: iso-8859-1 -*-
+#Boa:Frame:Frame
 
 __version__ ='$Rev$'
 __date__ = '$LastChangedDate$'
 
-# $LastChangedDate$
-# 
 #
 # $Author$
-#Boa:Frame:Frame
+
 
 import wx
 from wx.lib.anchors import LayoutAnchors
@@ -51,7 +50,8 @@ def create(parent):
 
 [wxID_FRAMEARQUIVOMENUITEMSALVAR] = [wx.NewId() for _init_coll_Arquivo_Items in range(1)]
 
-[wxID_FRAMEMENUOPCOESCONFIGMENUITEM1] = [wx.NewId() for _init_coll_MenuOpcoes_Items in range(1)]
+[wxID_FRAMEMENUOPCOESCONFIGMENUITEM1, wxID_FRAMEMENUOPCOESITEMS1, 
+] = [wx.NewId() for _init_coll_MenuOpcoes_Items in range(2)]
 
 [wxID_FRAMEMENUAJUDAMENUAJUDAITEMSOBRE] = [wx.NewId() for _init_coll_MenuAjuda_Items in range(1)]
 
@@ -203,7 +203,12 @@ class Frame(wx.Frame):
         # generated method, don't edit
 
         parent.Append(help='', id=wxID_FRAMEMENUOPCOESCONFIGMENUITEM1,
-              kind=wx.ITEM_NORMAL, text='Configura\xe7\xe3o')
+              kind=wx.ITEM_NORMAL, text='Num. pontos LGR')
+        parent.Append(help='', id=wxID_FRAMEMENUOPCOESITEMS1,
+              kind=wx.ITEM_NORMAL, text='Simula\xe7\xe3o resolu\xe7\xe3o')
+        self.Bind(wx.EVT_MENU, self.OnMenuPontosLGR,
+              id=wxID_FRAMEMENUOPCOESCONFIGMENUITEM1)
+        self.Bind(wx.EVT_MENU, self.OnMenuSimRes, id=wxID_FRAMEMENUOPCOESITEMS1)
 
     def _init_coll_Arquivo_Items(self, parent):
         # generated method, don't edit
@@ -216,9 +221,9 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
               text='Lugar das ra\xedzes')
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
@@ -298,7 +303,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 283), size=wx.Size(648, 551),
+              pos=wx.Point(490, 171), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title='LabControle - Sistema continuo')
         self._init_utils()
@@ -591,7 +596,7 @@ class Frame(wx.Frame):
         self.flag = False
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
         self.slider1.SetValue(int(posicao))
-        self.slider1.SetTickFreq(10) # O número de ticks vai ser 200/10=20
+        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
  
 
     def CriaPainelGrafico(self,parent):
@@ -847,6 +852,10 @@ class Frame(wx.Frame):
         # Mostra dialog:
         if dialog.ShowModal() == wx.ID_OK:
             self.sis.K = float(dialog.GetValue())
+        else:
+            dialog.Destroy()
+            return
+        
         
         dialog.Destroy()
 
@@ -996,7 +1005,13 @@ class Frame(wx.Frame):
         """
         Evento quando o usuário entra com um ganho manualmente.
         """
-        Ganho = float(self.Ganho.GetValue())
+        
+        try: # Testa para ver se o valor digitado é um número.
+            Ganho = float(self.Ganho.GetValue())
+        except ValueError:
+            event.Skip()
+            return
+        
         # Atualiza sistema:
         self.sis.K = Ganho
         # Escreve mensagem na status bar:
@@ -1221,6 +1236,60 @@ class Frame(wx.Frame):
             self.statusBar1.SetStatusText(number=1,text="Obrigado!")
             
         dlg.Destroy()
+        event.Skip()
+
+    def OnMenuPontosLGR(self, event):
+        """
+        Evento do item do menu configuração para alterar o número de pontos do 
+        traçado do LGR.
+        """
+        # Cria dialog:
+        dialog = wx.TextEntryDialog(self,"Entre com o número de pontos\n para o traçado do LGR.",
+                "Num. pontos no LGR",str(self.SliderMax),style=wx.OK|wx.CANCEL|wx.CENTRE)
+        
+        # Mostra dialog:
+        if dialog.ShowModal() == wx.ID_OK:
+            pontos = int(dialog.GetValue())
+        else:
+            dialog.Destroy()
+            return
+
+        dialog.Destroy()
+
+        # Atualiza o slider:
+        self.SliderMax = pontos
+        self.slider1.SetMax(self.SliderMax)
+        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
+        self.slider1.SetValue(int(posicao))
+        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
+
+        txt = "Num. de pontos: %d" %(self.SliderMax)
+        self.statusBar1.SetStatusText(number=0,text=txt)
+
+        event.Skip()
+
+    def OnMenuSimRes(self, event):
+        """
+        Evento do item do menu configuração para ajustar a resolução (delta t)
+        utilizada na simulação no tempo.
+        """
+
+        # Cria dialog:
+        dialog = wx.TextEntryDialog(self,"Entre com a nova resolução temporal \n para as simulações (em segundos):",
+                "Ajuste da resolução",str(self.sis.delta_t),style=wx.OK|wx.CANCEL|wx.CENTRE)
+        
+        # Mostra dialog:
+        if dialog.ShowModal() == wx.ID_OK:
+            self.sis.delta_t = float(dialog.GetValue())
+        else:
+            dialog.Destroy()
+            return
+
+        dialog.Destroy()        
+
+        txt = "Resolução: %f seg." %(self.sis.delta_t)
+        self.statusBar1.SetStatusText(number=0,text=txt)
+        
         event.Skip()
 
 

@@ -1,5 +1,10 @@
 # -*- coding: iso-8859-1 -*- 
+
+__version__ ='$Rev: 34 $'
+__date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
+
 #
+# $Author: miguelmoreto $
 #
 # Módulo onde é definida uma classe contendo um sistema de controle
 # realimentado e métodos de simulação utilizando o módulo "Controls".
