@@ -1,6 +1,30 @@
 # -*- coding: iso-8859-1 -*-
-# A setup script showing how to extend py2exe.
+
+__version__ ='$Rev: 35 $'
+__date__ = '$LastChangedDate: 2008-09-04 00:29:33 -0300 (qui, 04 set 2008) $'
+
+##    Este arquivo é parte do programa LabControle
+##
+##    LabControle é um software livre; você pode redistribui-lo e/ou 
+##    modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+##    publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+##    Licença.
+##
+##    Este programa é distribuido na esperança que possa ser  util, 
+##    mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+##    qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+##    GNU para maiores detalhes.
+##
+##    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+##    junto com este programa, se não, escreva para a Fundação do Software
+##    Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+# $Author: miguelmoreto $
 #
+# Script para gerar um executável usando o py2exe.
+#
+# Baseado no exemplo fornecido juntamente com o py2exe.
+#**********************************************************************
 # In this case, the py2exe command is subclassed to create an installation
 # script for InnoSetup, which can be compiled with the InnoSetup compiler
 # to a single file windows installer.
@@ -123,7 +147,8 @@ data_files = [(r'mpl-data', glob.glob(r'C:\Python25\Lib\site-packages\matplotlib
                   (r'mpl-data\fonts\pdfcorefonts',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\pdfcorefonts\*.*')),
                   (r'mpl-data\fonts\ttf',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\*.*')),
 #                  (r'\.',glob.glob(r'C:\Python25\Lib\site-packages\wx-2.8-msw-ansi\wx\gdiplus.*')),
-                  ('.\\',glob.glob(current_dir + '\\*.ico'))
+                  ('.\\',glob.glob(current_dir + '\\*.ico')),
+                  ('.\\',glob.glob(current_dir + '\\*.png'))
                   ]
 
 

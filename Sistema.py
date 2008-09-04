@@ -3,7 +3,22 @@
 __version__ ='$Rev: 34 $'
 __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 
-#
+##    Este arquivo é parte do programa LabControle
+##
+##    LabControle é um software livre; você pode redistribui-lo e/ou 
+##    modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+##    publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+##    Licença.
+##
+##    Este programa é distribuido na esperança que possa ser  util, 
+##    mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+##    qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+##    GNU para maiores detalhes.
+##
+##    Você deve ter recebido uma cópia da Licença Pública Geral GNU
+##    junto com este programa, se não, escreva para a Fundação do Software
+##    Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 # $Author: miguelmoreto $
 #
 # Módulo onde é definida uma classe contendo um sistema de controle
@@ -229,4 +244,35 @@ class SistemaContinuo:
         ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         
         return ganhos
+    
+    def Bode(self,f,figura):
+        """
+        Método para traçado do diagrama de bode.
+        
+        f: Vetor de frequencias;
+        figura: referência a uma figura do Matplotlib.
+        """
+        # Criando sistema da malha direta:
+        G = self.K*self.C*self.G
+        
+        # Plotando o bode na figura:
+        a=G.FreqResp(f,fig=figura)
+        
+        # Pega as instâncias dos axes da figura do Bode:
+        [axMag,axFase] = figura.get_axes()
+        
+        axFase.grid(which='minor')
+        axMag.grid(which='minor')
+        
+        axMag.set_ylabel('Magnitude [dB]')
+        axFase.set_ylabel('Fase [graus]')
+        axFase.set_xlabel('Frequencia [Hz]')
+        
+        axMag.set_title('Diagrama de Bode de K*C(s)*G(s)')
+
+        print G.CrossoverFreq(f)
+        print G.PhaseMargin(f)
+
+        
+        return
     
