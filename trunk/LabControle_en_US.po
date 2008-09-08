@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-06 16:31-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Miguel Moreto <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: SisContinuo.py:445
+msgid "Ajuste o tempo total da simulação."
+msgstr "Adjust the simulation total time"
+
+#: SisContinuo.py:456
+msgid "Ações:"
+msgstr "Actions"
+
+#: SisContinuo.py:423
+msgid "Configurações:"
+msgstr "Configurations"
+
+#: SisContinuo.py:447
+msgid "Continuar"
+msgstr "Continue"
+
+#: SisContinuo.py:450
+msgid "Continuar a simulação de onde parou."
+msgstr "Continue the simulation from were its stoped."
+
+#: SisContinuo.py:358 SisContinuo.py:367
+msgid "LabControle v1.1 - Sistema continuo - by Moreto"
+msgstr "LabControle v1.1 - Continuous system - by Moreto"
+
+#: SisContinuo.py:406
+msgid "Limpar"
+msgstr "Clear"
+
+#: SisContinuo.py:409
+msgid "Limpar a área do gráfico."
+msgstr "Clear graphics area."
+
+#: SisContinuo.py:429
+msgid "Painel de configuração da simulação temporal."
+msgstr "Configuration panel of time simulation."
+
+#: SisContinuo.py:373
+msgid "Selecione a operação desejada."
+msgstr "Select the desired operation."
+
+#: SisContinuo.py:419
+msgid "Selecione os sinais que deseja plotar."
+msgstr "Select the channels you wish to plot."
+
+#: SisContinuo.py:399
+msgid "Simular"
+msgstr "Simulate"
+
+#: SisContinuo.py:402
+msgid "Simular o sistema na configuração atual."
+msgstr "Simulate the system in its actual configuration."
+
+#: SisContinuo.py:437
+msgid "Tempo total da simulação."
+msgstr "Total time of the simulation."
+
+#: SisContinuo.py:431
+msgid "Tmax:"
+msgstr "Tmax"

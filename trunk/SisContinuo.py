@@ -46,6 +46,9 @@ import DlgEntrada
 import DlgAbout
 
 
+# define _ or add _ to builtins in your app file
+_ = wx.GetTranslation
+
 #from matplotlib.backends.backend_wx import *#NavigationToolbar2Wx
 
 def create(parent):
@@ -263,11 +266,11 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
               text='Simula\xe7\xe3o')
         parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -350,9 +353,9 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 283), size=wx.Size(648, 551),
+              pos=wx.Point(490, 170), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
-              title='LabControle v1.1 - Sistema continuo - by Moreto')
+              title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
         self._init_utils()
         self.SetClientSize(wx.Size(640, 523))
         self.SetStatusBarPane(1)
@@ -361,12 +364,13 @@ class Frame(wx.Frame):
         self.SetMinSize(wx.Size(640, 480))
         self.Enable(True)
         self.Center(wx.BOTH)
+        self.SetToolTipString(_('LabControle v1.1 - Sistema continuo - by Moreto'))
 
         self.Notebook = wx.Notebook(id=wxID_FRAMENOTEBOOK, name='Notebook',
               parent=self, pos=wx.Point(0, 0), size=wx.Size(640, 480), style=0)
         self.Notebook.SetFitToCurrentPage(True)
         self.Notebook.SetAutoLayout(True)
-        self.Notebook.SetToolTipString('Selecione a opera\xe7\xe3o desejada.')
+        self.Notebook.SetToolTipString(_('Selecione a opera\xe7\xe3o desejada.'))
         self.Notebook.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW1,
@@ -392,17 +396,17 @@ class Frame(wx.Frame):
         self.panel3.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.splitterWindow1.SplitVertically(self.panel2, self.panel3, 130)
 
-        self.Simular = wx.Button(id=wxID_FRAMESIMULAR, label='Simular',
+        self.Simular = wx.Button(id=wxID_FRAMESIMULAR, label=_('Simular'),
               name='Simular', parent=self.panel2, pos=wx.Point(21, 314),
               size=wx.Size(88, 40), style=0)
-        self.Simular.SetToolTipString('Simular o sistema na configura\xe7\xe3o atual.')
+        self.Simular.SetToolTipString(_('Simular o sistema na configura\xe7\xe3o atual.'))
         self.Simular.Bind(wx.EVT_BUTTON, self.OnSimularButton,
               id=wxID_FRAMESIMULAR)
 
-        self.Limpar = wx.Button(id=wxID_FRAMELIMPAR, label='Limpar',
+        self.Limpar = wx.Button(id=wxID_FRAMELIMPAR, label=_('Limpar'),
               name='Limpar', parent=self.panel2, pos=wx.Point(21, 410),
               size=wx.Size(88, 40), style=0)
-        self.Limpar.SetToolTipString('Limpar a \xe1rea do gr\xe1fico.')
+        self.Limpar.SetToolTipString(_('Limpar a \xe1rea do gr\xe1fico.'))
         self.Limpar.Bind(wx.EVT_BUTTON, self.OnLimparButton,
               id=wxID_FRAMELIMPAR)
 
@@ -412,25 +416,25 @@ class Frame(wx.Frame):
               parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 213),
               style=wx.LB_EXTENDED)
         self.GrafVarList.SetStringSelection('')
-        self.GrafVarList.SetToolTipString('Selecione os sinais que deseja plotar.')
+        self.GrafVarList.SetToolTipString(_('Selecione os sinais que deseja plotar.'))
         self.GrafVarList.SetMinSize(wx.Size(122, 120))
 
         self.txtOpcoes = wx.StaticText(id=wxID_FRAMETXTOPCOES,
-              label='Configura\xe7\xf5es:', name='txtOpcoes',
+              label=_('Configura\xe7\xf5es:'), name='txtOpcoes',
               parent=self.panel2, pos=wx.Point(4, 2), size=wx.Size(121, 19),
               style=0)
         self.txtOpcoes.Center(wx.BOTH)
         self.txtOpcoes.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
-        self.txtOpcoes.SetToolTipString('Painel de configura\xe7\xe3o da simula\xe7\xe3o temporal.')
+        self.txtOpcoes.SetToolTipString(_('Painel de configura\xe7\xe3o da simula\xe7\xe3o temporal.'))
 
-        self.stTmax = wx.StaticText(id=wxID_FRAMESTTMAX, label='Tmax:',
+        self.stTmax = wx.StaticText(id=wxID_FRAMESTTMAX, label=_('Tmax:'),
               name='stTmax', parent=self.panel2, pos=wx.Point(6, 32),
               size=wx.Size(54, 21), style=wx.ALIGN_RIGHT)
         self.stTmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
         self.stTmax.Center(wx.BOTH)
-        self.stTmax.SetToolTipString('Tempo total da simula\xe7\xe3o.')
+        self.stTmax.SetToolTipString(_('Tempo total da simula\xe7\xe3o.'))
 
         self.Tmax = wx.TextCtrl(id=wxID_FRAMETMAX, name='Tmax',
               parent=self.panel2, pos=wx.Point(68, 31), size=wx.Size(56, 23),
@@ -438,21 +442,23 @@ class Frame(wx.Frame):
         self.Tmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
         self.Tmax.Center(wx.BOTH)
-        self.Tmax.SetToolTipString('Ajuste o tempo total da simula\xe7\xe3o.')
+        self.Tmax.SetToolTipString(_('Ajuste o tempo total da simula\xe7\xe3o.'))
 
-        self.Continuar = wx.Button(id=wxID_FRAMECONTINUAR, label='Continuar',
+        self.Continuar = wx.Button(id=wxID_FRAMECONTINUAR, label=_('Continuar'),
               name='Continuar', parent=self.panel2, pos=wx.Point(21, 362),
               size=wx.Size(88, 40), style=0)
-        self.Continuar.SetToolTipString('Continuar a simula\xe7\xe3o de onde parou.')
+        self.Continuar.SetToolTipString(_('Continuar a simula\xe7\xe3o de onde parou.'))
         self.Continuar.Enable(False)
         self.Continuar.Bind(wx.EVT_BUTTON, self.OnContinuarButton,
               id=wxID_FRAMECONTINUAR)
 
-        self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES, label='A\xe7\xf5es:',
-              name='stAcoes', parent=self.panel2, pos=wx.Point(37, 287),
-              size=wx.Size(55, 19), style=wx.ALIGN_CENTRE)
+        self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES,
+              label=_('A\xe7\xf5es:'), name='stAcoes', parent=self.panel2,
+              pos=wx.Point(37, 287), size=wx.Size(55, 19),
+              style=wx.ALIGN_CENTRE)
         self.stAcoes.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
+        self.stAcoes.SetToolTipString('')
 
         self.statusBar1 = wx.StatusBar(id=wxID_FRAMESTATUSBAR1,
               name='statusBar1', parent=self, style=0)
@@ -662,6 +668,8 @@ class Frame(wx.Frame):
         self._init_sizers()
 
     def __init__(self, parent):
+        
+
         self._init_ctrls(parent)
         
         # A partir de agora não é código automático do BOA constructor.
@@ -1419,6 +1427,15 @@ class Frame(wx.Frame):
 
 if __name__ == '__main__':
     app = wx.PySimpleApp()
+    
+    # choose language
+    #locale = wx.Locale(wx.LANGUAGE_ENGLISH_US)
+    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
+    
+    # setup catalog
+    wx.Locale.AddCatalogLookupPathPrefix('locale')
+    locale.AddCatalog('LabControle')
+        
     frame = create(None)
     frame.Show()
 
