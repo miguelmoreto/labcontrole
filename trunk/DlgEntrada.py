@@ -27,6 +27,9 @@ __date__ = '$LastChangedDate: 2008-09-04 00:29:33 -0300 (qui, 04 set 2008) $'
 #
 import wx
 
+# define _ or add _ to builtins in your app file
+_ = wx.GetTranslation
+
 def create(parent):
     return Dialog1(parent)
 
@@ -39,7 +42,7 @@ class Dialog1(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DIALOG1, name='', parent=prnt,
-              pos=wx.Point(670, 413), size=wx.Size(256, 268),
+              pos=wx.Point(616, 332), size=wx.Size(256, 268),
               style=wx.DEFAULT_DIALOG_STYLE, title='Par\xe2metros da Entrada')
         self.SetClientSize(wx.Size(248, 240))
 
@@ -55,23 +58,26 @@ class Dialog1(wx.Dialog):
         self.textCtrlInst = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLINST,
               name='textCtrlInst', parent=self, pos=wx.Point(96, 156),
               size=wx.Size(116, 21), style=0, value='0')
+        self.textCtrlInst.SetToolTipString('')
 
         self.textCtrlVal = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLVAL,
               name='textCtrlVal', parent=self, pos=wx.Point(96, 120),
               size=wx.Size(116, 21), style=0, value='1')
+        self.textCtrlVal.SetToolTipString('')
 
-        self.textNum = wx.StaticText(id=wxID_DIALOG1TEXTNUM, label='Valor:',
+        self.textNum = wx.StaticText(id=wxID_DIALOG1TEXTNUM, label=_('Valor:'),
               name='textNum', parent=self, pos=wx.Point(56, 124),
               size=wx.Size(29, 13), style=0)
 
         self.textHelp = wx.StaticText(id=wxID_DIALOG1TEXTHELP,
-              label='Preencha os campos abaixo com os par\xe2metros\nda entrada:\nValor: valor do degrau ou fun\xe7\xe3o no tempo (t);\nInstante: instante de tempo que a entrada \xe9\n               aplicada.\nExemplo:\nDeg. unit\xe1rio em 2seg.:  Val. = 1 e Inst. = 2\nRampa em 0seg.: Val. = t e Inst. = 0',
+              label=_('Preencha os campos abaixo com os par\xe2metros\nda entrada:\nValor: valor do degrau ou fun\xe7\xe3o no tempo (t);\nInstante: instante de tempo que a entrada \xe9\n               aplicada.\nExemplo:\nDeg. unit\xe1rio em 2seg.:  Val. = 1 e Inst. = 2\nRampa em 0seg.: Val. = t e Inst. = 0'),
               name='textHelp', parent=self, pos=wx.Point(8, 8),
               size=wx.Size(227, 104), style=0)
+        self.textHelp.SetToolTipString('')
 
-        self.textDen = wx.StaticText(id=wxID_DIALOG1TEXTDEN, label='Instante:',
-              name='textDen', parent=self, pos=wx.Point(40, 160),
-              size=wx.Size(45, 13), style=0)
+        self.textDen = wx.StaticText(id=wxID_DIALOG1TEXTDEN,
+              label=_('Instante:'), name='textDen', parent=self,
+              pos=wx.Point(40, 160), size=wx.Size(45, 13), style=0)
 
     def __init__(self, parent):
         self._init_ctrls(parent)
