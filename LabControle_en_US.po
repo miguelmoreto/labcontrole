@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-06 16:31-0300\n"
+"POT-Creation-Date: 2008-09-08 23:53-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Miguel Moreto <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,428 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: SisContinuo.py:445
+#: SisContinuo.py:889 SisContinuo.py:910 SisContinuo.py:931
+msgid " e Den="
+msgstr ""
+
+#: SisContinuo.py:868 SisContinuo.py:954
+msgid " em: "
+msgstr " in: "
+
+#: SisContinuo.py:1172
+msgid " pontos..."
+msgstr ""
+
+#: SisContinuo.py:241
+msgid "Ajuda"
+msgstr "Help"
+
+#: SisContinuo.py:1413
+msgid "Ajuste da resolução"
+msgstr ""
+
+#: SisContinuo.py:549 SisContinuo.py:984
+msgid "Ajuste do ganho"
+msgstr "Set the gain"
+
+#: SisContinuo.py:462
 msgid "Ajuste o tempo total da simulação."
 msgstr "Adjust the simulation total time"
 
-#: SisContinuo.py:456
+#: SisContinuo.py:238
+msgid "Arquivo"
+msgstr "File"
+
+#: SisContinuo.py:473
 msgid "Ações:"
 msgstr "Actions"
 
-#: SisContinuo.py:423
+#: SisContinuo.py:483
+msgid "Barra de status."
+msgstr "Status bar."
+
+#: SisContinuo.py:889
+#, fuzzy
+msgid "C(s) atualizado: Num="
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:892
+#, fuzzy
+msgid "C(s) nao atualizado"
+msgstr "r(t) setted: "
+
+#: DlgFT.py:58
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: SisContinuo.py:1447
+msgid "Concluido"
+msgstr ""
+
+#: SisContinuo.py:440
 msgid "Configurações:"
 msgstr "Configurations"
 
-#: SisContinuo.py:447
+#: SisContinuo.py:464
 msgid "Continuar"
 msgstr "Continue"
 
-#: SisContinuo.py:450
+#: SisContinuo.py:467
 msgid "Continuar a simulação de onde parou."
 msgstr "Continue the simulation from were its stoped."
 
-#: SisContinuo.py:358 SisContinuo.py:367
+#: DlgFT.py:84
+msgid "Denominador:"
+msgstr "Denominator:"
+
+#: SisContinuo.py:630
+msgid "Diagrama de bode."
+msgstr "Bode diagram."
+
+#: SisContinuo.py:1185
+msgid "Eixo imaginario"
+msgstr ""
+
+#: SisContinuo.py:1184
+msgid "Eixo real"
+msgstr ""
+
+#: SisContinuo.py:1054 SisContinuo.py:1324
+msgid "Entrada: u(t)"
+msgstr ""
+
+#: SisContinuo.py:645
+msgid "Entre com a freq. minima para o traçado do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:659
+msgid "Entre com a freq. máxima para o traçado do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:1412
+msgid ""
+"Entre com a nova resolução temporal \n"
+" para as simulações (em segundos):"
+msgstr ""
+
+#: SisContinuo.py:1381
+msgid ""
+"Entre com o número de pontos\n"
+" para o traçado do LGR."
+msgstr ""
+
+#: SisContinuo.py:673
+msgid "Entre com o número de pontos do gráfico do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:983
+msgid "Entre com o valor do ganho."
+msgstr ""
+
+#: SisContinuo.py:1059 SisContinuo.py:1329
+msgid "Erro: e(t)"
+msgstr ""
+
+#: SisContinuo.py:1177
+msgid "Finalizado."
+msgstr ""
+
+#: SisContinuo.py:638
+msgid "Freq. minima para o traçado do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:652
+msgid "Freq. máxima para o traçado do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:910
+#, fuzzy
+msgid "G(s) atualizado: Num="
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:913
+#, fuzzy
+msgid "G(s) nao atualizado"
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:1152
+msgid "Ganho alterado para: "
+msgstr ""
+
+#: SisContinuo.py:558 SisContinuo.py:565
+msgid "Ganho atual do sistema."
+msgstr ""
+
+#: SisContinuo.py:1130
+msgid "Ganho maximo alterado para: "
+msgstr ""
+
+#: SisContinuo.py:553
+msgid "Ganho:"
+msgstr ""
+
+#: SisContinuo.py:931
+#, fuzzy
+msgid "H(s) atualizado: Num="
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:934
+#, fuzzy
+msgid "H(s) nao atualizado"
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:240
+msgid "Idioma/Language"
+msgstr ""
+
+#: DlgEntrada.py:79
+msgid "Instante:"
+msgstr ""
+
+#: SisContinuo.py:375 SisContinuo.py:384
 msgid "LabControle v1.1 - Sistema continuo - by Moreto"
 msgstr "LabControle v1.1 - Continuous system - by Moreto"
 
-#: SisContinuo.py:406
+#: DlgAbout.py:120
+msgid "Licença GNU GPL v3."
+msgstr ""
+
+#: SisContinuo.py:423 SisContinuo.py:682
 msgid "Limpar"
 msgstr "Clear"
 
-#: SisContinuo.py:409
+#: SisContinuo.py:426
 msgid "Limpar a área do gráfico."
 msgstr "Clear graphics area."
 
-#: SisContinuo.py:429
+#: SisContinuo.py:1186
+msgid "Lugar Geometrico das raizes de C(s)*G(s)"
+msgstr ""
+
+#: SisContinuo.py:532 SisContinuo.py:539
+msgid "Máximo ganho utilizado no traçado do LGR"
+msgstr ""
+
+#: SisContinuo.py:1400
+msgid "Num. de pontos: "
+msgstr ""
+
+#: SisContinuo.py:255
+msgid "Num. pontos LGR"
+msgstr ""
+
+#: SisContinuo.py:1382
+msgid "Num. pontos no LGR"
+msgstr ""
+
+#: DlgFT.py:74
+msgid "Numerador:"
+msgstr ""
+
+#: SisContinuo.py:666
+msgid "Número de pontos do gráfico do diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:1370
+msgid "Obrigado!"
+msgstr ""
+
+#: SisContinuo.py:239
+#, fuzzy
+msgid "Opções"
+msgstr "Actions"
+
+#: SisContinuo.py:446
 msgid "Painel de configuração da simulação temporal."
 msgstr "Configuration panel of time simulation."
 
-#: SisContinuo.py:373
+#: SisContinuo.py:861
+msgid "Parâmetros da entrada r(t)"
+msgstr ""
+
+#: SisContinuo.py:947
+msgid "Parâmetros da entrada w(t)"
+msgstr ""
+
+#: SisContinuo.py:882
+msgid "Parâmetros de C(s)"
+msgstr ""
+
+#: SisContinuo.py:903
+msgid "Parâmetros de G(s)"
+msgstr ""
+
+#: SisContinuo.py:924
+msgid "Parâmetros de H(s)"
+msgstr ""
+
+#: SisContinuo.py:1064 SisContinuo.py:1334
+msgid "Perturbacao: w(t)"
+msgstr ""
+
+#: SisContinuo.py:1172
+msgid "Plotando LGR com "
+msgstr ""
+
+#: SisContinuo.py:662
+msgid "Pontos:"
+msgstr ""
+
+#: DlgFT.py:78
+msgid ""
+"Preencha os campos abaixo com os coeficientes\n"
+"dos polinômios em função da variável s que\n"
+"descrevem o numerador e denominador da fun-\n"
+"ção de transferência.\n"
+"Exemplo:\n"
+"s^2+2s+10 => [1, 2, 10]"
+msgstr ""
+
+#: DlgEntrada.py:73
+msgid ""
+"Preencha os campos abaixo com os parâmetros\n"
+"da entrada:\n"
+"Valor: valor do degrau ou função no tempo (t);\n"
+"Instante: instante de tempo que a entrada é\n"
+"               aplicada.\n"
+"Exemplo:\n"
+"Deg. unitário em 2seg.:  Val. = 1 e Inst. = 2\n"
+"Rampa em 0seg.: Val. = t e Inst. = 0"
+msgstr ""
+
+#: SisContinuo.py:1236
+msgid "Raizes da eq. caracteristica: "
+msgstr ""
+
+#: SisContinuo.py:588
+msgid "Região proibida de tempo de resposta."
+msgstr ""
+
+#: SisContinuo.py:573
+msgid "Região proibida sobresinal percentual"
+msgstr ""
+
+#: SisContinuo.py:1424
+msgid "Resolução: "
+msgstr ""
+
+#: SisContinuo.py:1048 SisContinuo.py:1318
+msgid "Saida: y(t)"
+msgstr ""
+
+#: SisContinuo.py:276
+msgid "Salvar sistema"
+msgstr ""
+
+#: SisContinuo.py:390
 msgid "Selecione a operação desejada."
 msgstr "Select the desired operation."
 
-#: SisContinuo.py:419
+#: SisContinuo.py:436
 msgid "Selecione os sinais que deseja plotar."
 msgstr "Select the channels you wish to plot."
 
-#: SisContinuo.py:399
+#: SisContinuo.py:1081
+msgid "Simulacao no tempo"
+msgstr ""
+
+#: SisContinuo.py:1028 SisContinuo.py:1292
+msgid "Simulando, aguarde..."
+msgstr ""
+
+#: SisContinuo.py:416 SisContinuo.py:618
 msgid "Simular"
 msgstr "Simulate"
 
-#: SisContinuo.py:402
+#: SisContinuo.py:621
+#, fuzzy
+msgid "Simular o sistema com o ganho atual"
+msgstr "Simulate the system in its actual configuration."
+
+#: SisContinuo.py:419
 msgid "Simular o sistema na configuração atual."
 msgstr "Simulate the system in its actual configuration."
 
-#: SisContinuo.py:437
+#: SisContinuo.py:1033 SisContinuo.py:1297
+msgid "Simulação concluída."
+msgstr ""
+
+#: SisContinuo.py:257
+msgid "Simulação resolução"
+msgstr ""
+
+#: SisContinuo.py:247
+msgid "Sobre o LabControle"
+msgstr ""
+
+#: SisContinuo.py:1080
+msgid "Tempo [s]"
+msgstr ""
+
+#: SisContinuo.py:454
 msgid "Tempo total da simulação."
 msgstr "Total time of the simulation."
 
-#: SisContinuo.py:431
+#: SisContinuo.py:448
 msgid "Tmax:"
 msgstr "Tmax"
+
+#: SisContinuo.py:1441
+msgid "Tracando bode ..."
+msgstr ""
+
+#: SisContinuo.py:611
+msgid "Traçar LGR"
+msgstr ""
+
+#: SisContinuo.py:678
+msgid "Traçar diagrama de bode."
+msgstr ""
+
+#: SisContinuo.py:614
+msgid "Traçar o LGR"
+msgstr ""
+
+#: DlgFT.py:66 DlgFT.py:71
+msgid "Utilize vírgula para separar os elementos do vetor."
+msgstr ""
+
+#: SisContinuo.py:581
+msgid "Valor da restrição de sobresinal percentual"
+msgstr ""
+
+#: SisContinuo.py:595
+msgid "Valor da restrição de tempo de resposta."
+msgstr ""
+
+#: DlgEntrada.py:68
+msgid "Valor:"
+msgstr ""
+
+#: SisContinuo.py:1366
+msgid ""
+"Versão: 1.1\n"
+"SVN "
+msgstr ""
+
+#: SisContinuo.py:868
+msgid "r(t) atualizada: "
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:872
+msgid "r(t) não atualizada"
+msgstr ""
+
+#: SisContinuo.py:869 SisContinuo.py:955 SisContinuo.py:1424
+msgid "seg."
+msgstr "sec."
+
+#: SisContinuo.py:954
+#, fuzzy
+msgid "w(t) atualizada: "
+msgstr "r(t) setted: "
+
+#: SisContinuo.py:958
+#, fuzzy
+msgid "w(t) não atualizada"
+msgstr "r(t) setted: "

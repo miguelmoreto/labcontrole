@@ -26,6 +26,9 @@ __date__ = '$LastChangedDate: 2008-09-03 12:31:48 -0300 (qua, 03 set 2008) $'
 
 import wx
 
+# define _ or add _ to builtins in your app file
+_ = wx.GetTranslation
+
 def create(parent):
     return AboutDlg(parent)
 
@@ -92,7 +95,7 @@ class AboutDlg(wx.Dialog):
         self.SetClientSize(wx.Size(356, 365))
 
         self.BtnOk = wx.Button(id=wx.ID_OK, label='OK', name='BtnOk',
-              parent=self, pos=wx.Point(136, 330), size=wx.Size(84, 30),
+              parent=self, pos=wx.Point(136, 336), size=wx.Size(84, 30),
               style=0)
 
         self.VersaoTxt = wx.StaticText(id=wxID_ABOUTDLGVERSAOTXT,
@@ -111,20 +114,23 @@ class AboutDlg(wx.Dialog):
 
         self.staticBitmap1 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./gplv3.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP1,
-              name='staticBitmap1', parent=self, pos=wx.Point(25, 268),
-              size=wx.Size(138, 50), style=0)
+              name='staticBitmap1', parent=self, pos=wx.Point(8, 268),
+              size=wx.Size(152, 61), style=0)
         self.staticBitmap1.SetMinSize(wx.Size(152, 54))
+        self.staticBitmap1.SetToolTipString(_('Licen\xe7a GNU GPL v3.'))
 
         self.staticBitmap2 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./python.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP2,
-              name='staticBitmap2', parent=self, pos=wx.Point(171, 268),
-              size=wx.Size(160, 50), style=0)
+              name='staticBitmap2', parent=self, pos=wx.Point(168, 268),
+              size=wx.Size(180, 61), style=0)
         self.staticBitmap2.SetMinSize(wx.Size(180, 61))
+        self.staticBitmap2.SetToolTipString('python')
 
         self.staticBitmap3 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./logoLabControle.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP3,
               name='staticBitmap3', parent=self, pos=wx.Point(4, 4),
               size=wx.Size(348, 61), style=0)
+        self.staticBitmap3.SetToolTipString('')
 
         self._init_sizers()
 
