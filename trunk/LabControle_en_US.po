@@ -3,30 +3,34 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: LabControle 1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-08 23:53-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Miguel Moreto <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-09-09 13:02-0300\n"
+"Last-Translator: Miguel Moreto <miguelmoreto@gmail.com>\n"
+"Language-Team: moreto <miguelmoreto@gmail.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
 
-#: SisContinuo.py:889 SisContinuo.py:910 SisContinuo.py:931
+#: SisContinuo.py:889
+#: SisContinuo.py:910
+#: SisContinuo.py:931
 msgid " e Den="
-msgstr ""
+msgstr "and Den= "
 
-#: SisContinuo.py:868 SisContinuo.py:954
+#: SisContinuo.py:868
+#: SisContinuo.py:954
 msgid " em: "
 msgstr " in: "
 
 #: SisContinuo.py:1172
 msgid " pontos..."
-msgstr ""
+msgstr "points..."
 
 #: SisContinuo.py:241
 msgid "Ajuda"
@@ -34,9 +38,10 @@ msgstr "Help"
 
 #: SisContinuo.py:1413
 msgid "Ajuste da resolução"
-msgstr ""
+msgstr "Resolution adjustment"
 
-#: SisContinuo.py:549 SisContinuo.py:984
+#: SisContinuo.py:549
+#: SisContinuo.py:984
 msgid "Ajuste do ganho"
 msgstr "Set the gain"
 
@@ -57,14 +62,12 @@ msgid "Barra de status."
 msgstr "Status bar."
 
 #: SisContinuo.py:889
-#, fuzzy
 msgid "C(s) atualizado: Num="
-msgstr "r(t) setted: "
+msgstr "C(s) changed: Num="
 
 #: SisContinuo.py:892
-#, fuzzy
 msgid "C(s) nao atualizado"
-msgstr "r(t) setted: "
+msgstr "C(s) not changed"
 
 #: DlgFT.py:58
 msgid "Cancelar"
@@ -72,7 +75,7 @@ msgstr "Cancel"
 
 #: SisContinuo.py:1447
 msgid "Concluido"
-msgstr ""
+msgstr "Ended"
 
 #: SisContinuo.py:440
 msgid "Configurações:"
@@ -96,113 +99,118 @@ msgstr "Bode diagram."
 
 #: SisContinuo.py:1185
 msgid "Eixo imaginario"
-msgstr ""
+msgstr "Imaginary axis"
 
 #: SisContinuo.py:1184
 msgid "Eixo real"
-msgstr ""
+msgstr "Real axis"
 
-#: SisContinuo.py:1054 SisContinuo.py:1324
+#: SisContinuo.py:1054
+#: SisContinuo.py:1324
 msgid "Entrada: u(t)"
-msgstr ""
+msgstr "Input: u(t)"
 
 #: SisContinuo.py:645
 msgid "Entre com a freq. minima para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Type the minimum frequency for the bode diagram plot."
 
 #: SisContinuo.py:659
 msgid "Entre com a freq. máxima para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Type the maximum frequency for the bode diagram plot."
 
 #: SisContinuo.py:1412
 msgid ""
 "Entre com a nova resolução temporal \n"
 " para as simulações (em segundos):"
 msgstr ""
+"Type the new time resolution \n"
+" for the simulation (in seconds):"
 
 #: SisContinuo.py:1381
 msgid ""
 "Entre com o número de pontos\n"
 " para o traçado do LGR."
 msgstr ""
+"Type the number of points\n"
+" for the RL plot."
 
 #: SisContinuo.py:673
 msgid "Entre com o número de pontos do gráfico do diagrama de bode."
-msgstr ""
+msgstr "Type the number of points used to plot de bode diagram."
 
 #: SisContinuo.py:983
 msgid "Entre com o valor do ganho."
-msgstr ""
+msgstr "Type the gain value."
 
-#: SisContinuo.py:1059 SisContinuo.py:1329
+#: SisContinuo.py:1059
+#: SisContinuo.py:1329
 msgid "Erro: e(t)"
-msgstr ""
+msgstr "Error: e(t)"
 
 #: SisContinuo.py:1177
 msgid "Finalizado."
-msgstr ""
+msgstr "Ended."
 
 #: SisContinuo.py:638
 msgid "Freq. minima para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Minimum frequency for the bode diagram plot."
 
 #: SisContinuo.py:652
 msgid "Freq. máxima para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Maximum frequency for the bode diagram plot."
 
 #: SisContinuo.py:910
-#, fuzzy
 msgid "G(s) atualizado: Num="
-msgstr "r(t) setted: "
+msgstr "G(s) changed: Num="
 
 #: SisContinuo.py:913
-#, fuzzy
 msgid "G(s) nao atualizado"
-msgstr "r(t) setted: "
+msgstr "G(s) not changed"
 
 #: SisContinuo.py:1152
 msgid "Ganho alterado para: "
-msgstr ""
+msgstr "Gain changed to: "
 
-#: SisContinuo.py:558 SisContinuo.py:565
+#: SisContinuo.py:558
+#: SisContinuo.py:565
 msgid "Ganho atual do sistema."
-msgstr ""
+msgstr "Current system gain."
 
 #: SisContinuo.py:1130
 msgid "Ganho maximo alterado para: "
-msgstr ""
+msgstr "Maximum gain changed to: "
 
 #: SisContinuo.py:553
 msgid "Ganho:"
-msgstr ""
+msgstr "Gain:"
 
 #: SisContinuo.py:931
-#, fuzzy
 msgid "H(s) atualizado: Num="
-msgstr "r(t) setted: "
+msgstr "H(s) changed: Num="
 
 #: SisContinuo.py:934
-#, fuzzy
 msgid "H(s) nao atualizado"
-msgstr "r(t) setted: "
+msgstr "H(s) not changed"
 
 #: SisContinuo.py:240
 msgid "Idioma/Language"
-msgstr ""
+msgstr "Idioma/Language"
 
 #: DlgEntrada.py:79
 msgid "Instante:"
-msgstr ""
+msgstr "Instant: "
 
-#: SisContinuo.py:375 SisContinuo.py:384
+#: SisContinuo.py:375
+#: SisContinuo.py:384
 msgid "LabControle v1.1 - Sistema continuo - by Moreto"
 msgstr "LabControle v1.1 - Continuous system - by Moreto"
 
 #: DlgAbout.py:120
 msgid "Licença GNU GPL v3."
-msgstr ""
+msgstr "License GNU GPL v3."
 
-#: SisContinuo.py:423 SisContinuo.py:682
+#: SisContinuo.py:423
+#: SisContinuo.py:682
 msgid "Limpar"
 msgstr "Clear"
 
@@ -212,27 +220,28 @@ msgstr "Clear graphics area."
 
 #: SisContinuo.py:1186
 msgid "Lugar Geometrico das raizes de C(s)*G(s)"
-msgstr ""
+msgstr "Root Locus of C(s)*G(s)"
 
-#: SisContinuo.py:532 SisContinuo.py:539
+#: SisContinuo.py:532
+#: SisContinuo.py:539
 msgid "Máximo ganho utilizado no traçado do LGR"
-msgstr ""
+msgstr "Maximum gain used by the RL plot."
 
 #: SisContinuo.py:1400
 msgid "Num. de pontos: "
-msgstr ""
+msgstr "Number of points: "
 
 #: SisContinuo.py:255
 msgid "Num. pontos LGR"
-msgstr ""
+msgstr "Num. points RL"
 
 #: SisContinuo.py:1382
 msgid "Num. pontos no LGR"
-msgstr ""
+msgstr "Num. points of RL"
 
 #: DlgFT.py:74
 msgid "Numerador:"
-msgstr ""
+msgstr "Numerator:"
 
 #: SisContinuo.py:666
 msgid "Número de pontos do gráfico do diagrama de bode."
@@ -243,9 +252,8 @@ msgid "Obrigado!"
 msgstr ""
 
 #: SisContinuo.py:239
-#, fuzzy
 msgid "Opções"
-msgstr "Actions"
+msgstr "Options"
 
 #: SisContinuo.py:446
 msgid "Painel de configuração da simulação temporal."
@@ -271,7 +279,8 @@ msgstr ""
 msgid "Parâmetros de H(s)"
 msgstr ""
 
-#: SisContinuo.py:1064 SisContinuo.py:1334
+#: SisContinuo.py:1064
+#: SisContinuo.py:1334
 msgid "Perturbacao: w(t)"
 msgstr ""
 
@@ -321,7 +330,8 @@ msgstr ""
 msgid "Resolução: "
 msgstr ""
 
-#: SisContinuo.py:1048 SisContinuo.py:1318
+#: SisContinuo.py:1048
+#: SisContinuo.py:1318
 msgid "Saida: y(t)"
 msgstr ""
 
@@ -341,24 +351,26 @@ msgstr "Select the channels you wish to plot."
 msgid "Simulacao no tempo"
 msgstr ""
 
-#: SisContinuo.py:1028 SisContinuo.py:1292
+#: SisContinuo.py:1028
+#: SisContinuo.py:1292
 msgid "Simulando, aguarde..."
 msgstr ""
 
-#: SisContinuo.py:416 SisContinuo.py:618
+#: SisContinuo.py:416
+#: SisContinuo.py:618
 msgid "Simular"
 msgstr "Simulate"
 
 #: SisContinuo.py:621
-#, fuzzy
 msgid "Simular o sistema com o ganho atual"
-msgstr "Simulate the system in its actual configuration."
+msgstr "Simulate the system with its actual configuration."
 
 #: SisContinuo.py:419
 msgid "Simular o sistema na configuração atual."
 msgstr "Simulate the system in its actual configuration."
 
-#: SisContinuo.py:1033 SisContinuo.py:1297
+#: SisContinuo.py:1033
+#: SisContinuo.py:1297
 msgid "Simulação concluída."
 msgstr ""
 
@@ -398,7 +410,8 @@ msgstr ""
 msgid "Traçar o LGR"
 msgstr ""
 
-#: DlgFT.py:66 DlgFT.py:71
+#: DlgFT.py:66
+#: DlgFT.py:71
 msgid "Utilize vírgula para separar os elementos do vetor."
 msgstr ""
 
@@ -428,16 +441,17 @@ msgstr "r(t) setted: "
 msgid "r(t) não atualizada"
 msgstr ""
 
-#: SisContinuo.py:869 SisContinuo.py:955 SisContinuo.py:1424
+#: SisContinuo.py:869
+#: SisContinuo.py:955
+#: SisContinuo.py:1424
 msgid "seg."
 msgstr "sec."
 
 #: SisContinuo.py:954
-#, fuzzy
 msgid "w(t) atualizada: "
-msgstr "r(t) setted: "
+msgstr "w(t) changed: "
 
 #: SisContinuo.py:958
-#, fuzzy
 msgid "w(t) não atualizada"
-msgstr "r(t) setted: "
+msgstr "w(t) not changed"
+
