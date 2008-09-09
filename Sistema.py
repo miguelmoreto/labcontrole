@@ -126,7 +126,7 @@ class SistemaContinuo:
             return self.K*self.C*self.G
         else:
             S = self.K*self.C*self.G
-            return S/(1.0 + self.H*S)
+            return S/(1.00000001 + self.H*S)
     
     def SistemaW(self):
         """
@@ -137,7 +137,7 @@ class SistemaContinuo:
         if self.Malha == 'Aberta':
             return self.G
         else:
-            return self.G/(1.0 + (self.K*self.H*self.C*self.G))
+            return self.G/(1.000000001 + (self.K*self.H*self.C*self.G))
         
     def Simulacao(self, t, u, w, X0=0):
         """
