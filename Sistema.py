@@ -259,10 +259,10 @@ class SistemaContinuo:
         deriv = polyder(dd)*nn - polyder(nn)*dd
         cpss = roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
-        for I in range(0,cpss.size):		
-                aux = dd(cpss[I])
+        for raiz in cpss:		
+                aux = dd(raiz)
                 if aux != 0:
-                        GG = nn(cpss[I]) / dd(cpss[I])
+                        GG = nn(raiz) / dd(raiz)
                         Kc = -1/GG
                         if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
                                 kvect = append(kvect,Kc)
