@@ -238,6 +238,9 @@ class SistemaContinuo:
         # FT da planta:
         G = controls.TransferFunction(self.Gnum,self.Gden)
         
+        # FT da realimentacao:
+        H = controls.TransferFunction(self.Hnum,self.Hden)
+        
         # Ganho:
         K = 1
         
