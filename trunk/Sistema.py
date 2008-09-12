@@ -58,6 +58,8 @@ class SistemaContinuo:
     K = 1.0 # Ganho do sistema.
     
     Kmax = 10.0 # Ganho máximo para o plot do LGR.
+    Kmin = 0.0    # Ganho mínimo para o plot do LGR.
+    Kpontos = 200.0 # Número de pontos para o traçado do LGR. 
     
     # Parâmetros das regiões proibidas do LGR:
     Rebd = 0.0
@@ -219,7 +221,7 @@ class SistemaContinuo:
        
         return t_total, u, w
 
-    def LGR(self,kvect,figura):
+    def LGR(self,figura):
         """
         Função para traçado do Lugar Geométrico das Raízes
         
@@ -239,7 +241,12 @@ class SistemaContinuo:
         # Ganho:
         K = 1
         
-        S = K*C*G
+        S = K*C*G # A fazer: Mudar para inserir o H.
+        
+        # Criando vetor de ganhos (sem os pontos críticos).
+        # Kmin, Kmax e numero de pontos são atributos desta classe.
+        delta_k = self.Kmax / self.Kpontos
+        kvect = arange(self.Kmin,self.Kmax,delta_k)
         
         ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         

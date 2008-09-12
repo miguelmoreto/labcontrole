@@ -725,7 +725,8 @@ class Frame(wx.Frame):
         self.sis = SistemaContinuo()
         
         # Ajusta o slider:
-        self.SliderMax = 200
+        self.SliderMax = 200.0
+        self.sis.Kpontos = self.SliderMax
         self.slider1.SetMax(self.SliderMax)
         self.flag = False
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
@@ -1172,7 +1173,7 @@ class Frame(wx.Frame):
         txt = _("Plotando LGR com ") + str(len(kvect)) + _(" pontos...")
         self.statusBar1.SetStatusText(number=1,text=txt)
         
-        self.sis.LGR(kvect,self.fig2)
+        self.sis.LGR(self.fig2)
         
         self.statusBar1.SetStatusText(number=1,text=_('Finalizado.'))
         
@@ -1383,7 +1384,7 @@ class Frame(wx.Frame):
         
         # Mostra dialog:
         if dialog.ShowModal() == wx.ID_OK:
-            pontos = int(dialog.GetValue())
+            self.sis.Kpontos = float(dialog.GetValue())
         else:
             dialog.Destroy()
             return
@@ -1391,7 +1392,7 @@ class Frame(wx.Frame):
         dialog.Destroy()
 
         # Atualiza o slider:
-        self.SliderMax = pontos
+        self.SliderMax = self.sis.Kpontos
         self.slider1.SetMax(self.SliderMax)
         posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
         self.slider1.SetValue(int(posicao))
