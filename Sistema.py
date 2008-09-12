@@ -241,12 +241,31 @@ class SistemaContinuo:
         # Ganho:
         K = 1
         
-        S = K*C*G # A fazer: Mudar para inserir o H.
+        S = K*C*G*H # A fazer: Mudar para inserir o H. (H inserido, verificar depois se esta certo)
         
         # Criando vetor de ganhos (sem os pontos críticos).
         # Kmin, Kmax e numero de pontos são atributos desta classe.
-        delta_k = self.Kmax / self.Kpontos
+        delta_k = (self.Kmax-self.Kmin) / self.Kpontos
         kvect = arange(self.Kmin,self.Kmax,delta_k)
+        
+        # Geracao dos pontos de separacao
+        # Definicao dos polinomios do numerador e denominador
+        nn = self.C.num * self.G.num * self.H.num
+        dd = self.C.den * self.G.den * self.H.num
+        # Fazendo d(-1/G(s))/ds = 0
+        deriv = polyder(dd)*nn - polyder(nn)*dd
+        cpss = roots(deriv) # candidatos a ponto de separacao
+        # Verificacao de quais os candidatos pertinentes
+        for I in range(0,cpss.size):		
+                aux = dd(cpss[I])
+                if aux != 0:
+                        GG = nn(cpss[I]) / dd(cpss[I])
+                        Kc = -1/GG
+                        if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                                kvect = append(kvect,Kc)
+       
+        # Reordena o kvect:
+        kvect = sort(kvect);
         
         ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         
