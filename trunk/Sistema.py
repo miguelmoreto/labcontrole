@@ -59,7 +59,7 @@ class SistemaContinuo:
     
     Kmax = 10.0 # Ganho máximo para o plot do LGR.
     Kmin = 0.0    # Ganho mínimo para o plot do LGR.
-    Kpontos = 200.0 # Número de pontos para o traçado do LGR. 
+    Kpontos = 200 # Número de pontos para o traçado do LGR. 
     
     # Parâmetros das regiões proibidas do LGR:
     Rebd = 0.0
@@ -260,19 +260,19 @@ class SistemaContinuo:
         cpss = roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for raiz in cpss:		
-                aux = dd(raiz)
-                if aux != 0:
-                        GG = nn(raiz) / dd(raiz)
-                        Kc = -1/GG
-                        if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
-                                kvect = append(kvect,Kc)
+            aux = dd(raiz)
+            if aux != 0:
+                GG = nn(raiz) / dd(raiz)
+                Kc = -1/GG
+                if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                        kvect = append(kvect,Kc)
        
         # Reordena o kvect:
         kvect = sort(kvect);
         
-        ganhos = S.RootLocus(kvect, figura, xlim=None, ylim=None)
+        raizes = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         
-        return ganhos
+        return raizes
     
     def Bode(self,f,figura):
         """
