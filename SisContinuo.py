@@ -56,17 +56,18 @@ def create(parent):
 
 [wxID_FRAME, wxID_FRAMEBODEFMAX, wxID_FRAMEBODEFMIN, wxID_FRAMEBODEPONTOS, 
  wxID_FRAMEBTNBODE, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMEBUTTON1, 
- wxID_FRAMECONTINUAR, wxID_FRAMEFMAXTXT, wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, 
- wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, wxID_FRAMEKMAX, wxID_FRAMELIMPAR, 
- wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, 
- wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, 
- wxID_FRAMEPANELLGR, wxID_FRAMEPONTOSBODETXT, wxID_FRAMEREBD, wxID_FRAMERIBD, 
- wxID_FRAMESIMULAR, wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, 
- wxID_FRAMESPLITTERWINDOW2, wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, 
- wxID_FRAMESTATUSBAR1, wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, 
- wxID_FRAMETXTIMBD, wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTOPCOES, 
+ wxID_FRAMECONTINUAR, wxID_FRAMECTRLKMIN, wxID_FRAMEFMAXTXT, 
+ wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, 
+ wxID_FRAMEKMAX, wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, 
+ wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, 
+ wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
+ wxID_FRAMEPONTOSBODETXT, wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, 
+ wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
+ wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
+ wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, wxID_FRAMETXTIMBD, 
+ wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTKMIN, wxID_FRAMETXTOPCOES, 
  wxID_FRAMETXTREDB, wxID_FRAMETXTRIDB, 
-] = [wx.NewId() for _init_ctrls in range(44)]
+] = [wx.NewId() for _init_ctrls in range(46)]
 
 [wxID_FRAMEMENUOPCOESCONFIGMENUITEM1, wxID_FRAMEMENUOPCOESITEMS1, 
 ] = [wx.NewId() for _init_coll_MenuOpcoes_Items in range(2)]
@@ -86,13 +87,6 @@ class Frame(wx.Frame):
               flag=wx.ALIGN_BOTTOM | wx.ALIGN_CENTER_HORIZONTAL | wx.ALL)
         parent.AddWindow(self.Ganho, 0, border=4,
               flag=wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL | wx.ALL)
-
-    def _init_coll_flexGridSizer4_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtKmax, 1, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALIGN_RIGHT | wx.ALL)
-        parent.AddWindow(self.Kmax, 1, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizerBode_Items(self, parent):
         # generated method, don't edit
@@ -130,24 +124,6 @@ class Frame(wx.Frame):
         parent.AddWindow(self.BodePontos, 0, border=4,
               flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
 
-    def _init_coll_flexGridSizer3_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddSizer(self.flexGridSizer4, 0, border=0,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer8, 1, border=0,
-              flag=wx.GROW | wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer5, 0, border=0,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizer6, 0, border=0,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddSizer(self.flexGridSizer7, 0, border=0,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGR, 0, border=2,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGRSim, 0, border=2,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-
     def _init_coll_flexGridSizer2_Growables(self, parent):
         # generated method, don't edit
 
@@ -170,11 +146,17 @@ class Frame(wx.Frame):
         parent.AddWindow(self.Limpar, 0, border=4,
               flag=wx.ALL | wx.ALIGN_CENTER)
 
-    def _init_coll_flexGridSizer3_Growables(self, parent):
+    def _init_coll_flexGridSizerBode1_Growables(self, parent):
         # generated method, don't edit
 
-        parent.AddGrowableRow(1)
         parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizerRebd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtRedb, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Rebd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizer1_Growables(self, parent):
         # generated method, don't edit
@@ -182,43 +164,22 @@ class Frame(wx.Frame):
         parent.AddGrowableRow(2)
         parent.AddGrowableCol(0)
 
-    def _init_coll_flexGridSizer6_Items(self, parent):
+    def _init_coll_flexGridSizerKmax_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.txtRedb, 0, border=4,
+        parent.AddWindow(self.txtKmax, 1, border=2,
+              flag=wx.ALIGN_CENTER | wx.ALIGN_RIGHT | wx.ALL)
+        parent.AddWindow(self.Kmax, 1, border=2, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerKmin_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtKmin, 0, border=2,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.CtrlKmin, 0, border=2,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Rebd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
-    def _init_coll_flexGridSizer7_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtImbd, 0, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Imbd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
-
-    def _init_coll_flexGridSizer5_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtRidb, 1, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
-
-    def _init_coll_flexGridSizerBode1_Growables(self, parent):
-        # generated method, don't edit
-
-        parent.AddGrowableCol(0)
-
-    def _init_coll_flexGridSizer8_Growables(self, parent):
-        # generated method, don't edit
-
-        parent.AddGrowableRow(0)
-
-    def _init_coll_boxSizer1_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.panel1, 0, border=0, flag=wx.EXPAND)
-
-    def _init_coll_flexGridSizer8_Items(self, parent):
+    def _init_coll_GridSizerSlider_Items(self, parent):
         # generated method, don't edit
 
         parent.AddSizer(self.flexGridSizer9, 0, border=4,
@@ -226,11 +187,61 @@ class Frame(wx.Frame):
         parent.AddWindow(self.slider1, 0, border=4,
               flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
 
+    def _init_coll_GridSizerSlider_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableRow(0)
+
     def _init_coll_flexGridSizerBode_Growables(self, parent):
         # generated method, don't edit
 
         parent.AddGrowableRow(2)
         parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizerLGR_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableRow(2)
+        parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizerLGR_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddSizer(self.flexGridSizerKmax, 0, border=0,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerKmin, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.GridSizerSlider, 1, border=0,
+              flag=wx.GROW | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerRebd, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.flexGridSizerRibd, 0, border=0,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerImbd, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.btnLGR, 0, border=2,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.btnLGRSim, 0, border=2,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_boxSizer1_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.panel1, 0, border=0, flag=wx.EXPAND)
+
+    def _init_coll_flexGridSizerImbd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtImbd, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Imbd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerRibd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtRidb, 1, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_BarraMenus_Menus(self, parent):
         # generated method, don't edit
@@ -282,9 +293,9 @@ class Frame(wx.Frame):
               text='Diagrama')
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -322,18 +333,22 @@ class Frame(wx.Frame):
 
         self.boxSizer1 = wx.BoxSizer(orient=wx.VERTICAL)
 
-        self.flexGridSizer3 = wx.FlexGridSizer(cols=1, hgap=0, rows=0, vgap=0)
-        self.flexGridSizer3.SetMinSize(wx.Size(134, 505))
+        self.flexGridSizerLGR = wx.FlexGridSizer(cols=1, hgap=0, rows=0, vgap=0)
+        self.flexGridSizerLGR.SetMinSize(wx.Size(134, 505))
 
-        self.flexGridSizer4 = wx.FlexGridSizer(cols=2, hgap=0, rows=1, vgap=0)
+        self.flexGridSizerKmax = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
+              vgap=0)
 
-        self.flexGridSizer5 = wx.FlexGridSizer(cols=2, hgap=0, rows=1, vgap=0)
+        self.flexGridSizerRibd = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
+              vgap=0)
 
-        self.flexGridSizer6 = wx.FlexGridSizer(cols=2, hgap=0, rows=1, vgap=0)
+        self.flexGridSizerRebd = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
+              vgap=0)
 
-        self.flexGridSizer7 = wx.FlexGridSizer(cols=2, hgap=0, rows=1, vgap=0)
+        self.flexGridSizerImbd = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
+              vgap=0)
 
-        self.flexGridSizer8 = wx.FlexGridSizer(cols=0, hgap=0, rows=1, vgap=0)
+        self.GridSizerSlider = wx.FlexGridSizer(cols=0, hgap=0, rows=1, vgap=0)
 
         self.flexGridSizer9 = wx.FlexGridSizer(cols=1, hgap=0, rows=2, vgap=0)
 
@@ -343,34 +358,38 @@ class Frame(wx.Frame):
         self.flexGridSizerBode1 = wx.FlexGridSizer(cols=2, hgap=0, rows=3,
               vgap=0)
 
+        self.flexGridSizerKmin = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
+              vgap=0)
+
         self._init_coll_flexGridSizer1_Items(self.flexGridSizer1)
         self._init_coll_flexGridSizer1_Growables(self.flexGridSizer1)
         self._init_coll_flexGridSizer2_Growables(self.flexGridSizer2)
         self._init_coll_flexGridSizer2_Items(self.flexGridSizer2)
         self._init_coll_boxSizer1_Items(self.boxSizer1)
-        self._init_coll_flexGridSizer3_Items(self.flexGridSizer3)
-        self._init_coll_flexGridSizer3_Growables(self.flexGridSizer3)
-        self._init_coll_flexGridSizer4_Items(self.flexGridSizer4)
-        self._init_coll_flexGridSizer5_Items(self.flexGridSizer5)
-        self._init_coll_flexGridSizer6_Items(self.flexGridSizer6)
-        self._init_coll_flexGridSizer7_Items(self.flexGridSizer7)
-        self._init_coll_flexGridSizer8_Items(self.flexGridSizer8)
-        self._init_coll_flexGridSizer8_Growables(self.flexGridSizer8)
+        self._init_coll_flexGridSizerLGR_Items(self.flexGridSizerLGR)
+        self._init_coll_flexGridSizerLGR_Growables(self.flexGridSizerLGR)
+        self._init_coll_flexGridSizerKmax_Items(self.flexGridSizerKmax)
+        self._init_coll_flexGridSizerRibd_Items(self.flexGridSizerRibd)
+        self._init_coll_flexGridSizerRebd_Items(self.flexGridSizerRebd)
+        self._init_coll_flexGridSizerImbd_Items(self.flexGridSizerImbd)
+        self._init_coll_GridSizerSlider_Items(self.GridSizerSlider)
+        self._init_coll_GridSizerSlider_Growables(self.GridSizerSlider)
         self._init_coll_flexGridSizer9_Items(self.flexGridSizer9)
         self._init_coll_flexGridSizerBode_Items(self.flexGridSizerBode)
         self._init_coll_flexGridSizerBode_Growables(self.flexGridSizerBode)
         self._init_coll_flexGridSizerBode1_Items(self.flexGridSizerBode1)
         self._init_coll_flexGridSizerBode1_Growables(self.flexGridSizerBode1)
+        self._init_coll_flexGridSizerKmin_Items(self.flexGridSizerKmin)
 
-        self.panel2.SetSizer(self.flexGridSizer1)
         self.Notebook.SetSizer(self.boxSizer1)
+        self.panel2.SetSizer(self.flexGridSizer1)
         self.panel4.SetSizer(self.flexGridSizerBode)
-        self.panel5.SetSizer(self.flexGridSizer3)
+        self.panel5.SetSizer(self.flexGridSizerLGR)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(468, 199), size=wx.Size(648, 551),
+              pos=wx.Point(490, 171), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
         self._init_utils()
@@ -525,23 +544,23 @@ class Frame(wx.Frame):
         self.panel1.SetBackgroundColour(wx.Colour(192, 192, 192))
 
         self.txtKmax = wx.StaticText(id=wxID_FRAMETXTKMAX, label='Kmax:',
-              name='txtKmax', parent=self.panel5, pos=wx.Point(9, 5),
-              size=wx.Size(64, 21), style=wx.ALIGN_CENTRE | wx.ALIGN_RIGHT)
+              name='txtKmax', parent=self.panel5, pos=wx.Point(6, 3),
+              size=wx.Size(64, 21), style=wx.ALIGN_RIGHT)
         self.txtKmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtKmax.SetToolTipString(_('M\xe1ximo ganho utilizado no tra\xe7ado do LGR'))
 
         self.Kmax = wx.TextCtrl(id=wxID_FRAMEKMAX, name='Kmax',
-              parent=self.panel5, pos=wx.Point(81, 4), size=wx.Size(40, 24),
-              style=0, value='10')
+              parent=self.panel5, pos=wx.Point(74, 2), size=wx.Size(49, 24),
+              style=wx.TE_CENTER, value='10')
         self.Kmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.Kmax.SetToolTipString(_('M\xe1ximo ganho utilizado no tra\xe7ado do LGR'))
         self.Kmax.Bind(wx.EVT_TEXT, self.OnKmaxText, id=wxID_FRAMEKMAX)
 
         self.slider1 = wx.Slider(id=wxID_FRAMESLIDER1, maxValue=10, minValue=0,
-              name='slider1', parent=self.panel5, pos=wx.Point(80, 36),
-              size=wx.Size(46, 227), style=wx.SL_AUTOTICKS | wx.SL_VERTICAL,
+              name='slider1', parent=self.panel5, pos=wx.Point(80, 60),
+              size=wx.Size(46, 203), style=wx.SL_AUTOTICKS | wx.SL_VERTICAL,
               value=0)
         self.slider1.SetMax(100)
         self.slider1.SetMin(0)
@@ -551,14 +570,14 @@ class Frame(wx.Frame):
         self.slider1.Bind(wx.EVT_SCROLL, self.OnSlider1Scroll)
 
         self.txtK = wx.StaticText(id=wxID_FRAMETXTK, label=_('Ganho:'),
-              name='txtK', parent=self.panel5, pos=wx.Point(8, 122),
+              name='txtK', parent=self.panel5, pos=wx.Point(8, 134),
               size=wx.Size(60, 22), style=0)
         self.txtK.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtK.SetToolTipString(_('Ganho atual do sistema.'))
 
         self.Ganho = wx.TextCtrl(id=wxID_FRAMEGANHO, name='Ganho',
-              parent=self.panel5, pos=wx.Point(11, 152), size=wx.Size(53, 24),
+              parent=self.panel5, pos=wx.Point(10, 164), size=wx.Size(56, 24),
               style=wx.TE_CENTER, value='1')
         self.Ganho.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
@@ -566,14 +585,14 @@ class Frame(wx.Frame):
         self.Ganho.Bind(wx.EVT_TEXT, self.OnGanhoText, id=wxID_FRAMEGANHO)
 
         self.txtRidb = wx.StaticText(id=wxID_FRAMETXTRIDB, label='Ribd:',
-              name='txtRidb', parent=self.panel5, pos=wx.Point(13, 272),
+              name='txtRidb', parent=self.panel5, pos=wx.Point(6, 305),
               size=wx.Size(55, 22), style=wx.ALIGN_RIGHT)
         self.txtRidb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtRidb.SetToolTipString(_('Regi\xe3o proibida sobresinal percentual'))
 
         self.Ribd = wx.TextCtrl(id=wxID_FRAMERIBD, name='Ribd',
-              parent=self.panel5, pos=wx.Point(76, 271), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(69, 304), size=wx.Size(55, 25),
               style=0, value='0')
         self.Ribd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
@@ -581,32 +600,32 @@ class Frame(wx.Frame):
         self.Ribd.SetToolTipString(_('Valor da restri\xe7\xe3o de sobresinal percentual'))
 
         self.txtRedb = wx.StaticText(id=wxID_FRAMETXTREDB, label='Rebd:',
-              name='txtRedb', parent=self.panel5, pos=wx.Point(14, 306),
+              name='txtRedb', parent=self.panel5, pos=wx.Point(6, 273),
               size=wx.Size(54, 21), style=wx.ALIGN_RIGHT)
         self.txtRedb.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtRedb.SetToolTipString(_('Regi\xe3o proibida de tempo de resposta.'))
 
         self.Rebd = wx.TextCtrl(id=wxID_FRAMEREBD, name='Rebd',
-              parent=self.panel5, pos=wx.Point(76, 304), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(68, 271), size=wx.Size(55, 25),
               style=0, value='0')
         self.Rebd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.Rebd.SetToolTipString(_('Valor da restri\xe7\xe3o de tempo de resposta.'))
 
         self.txtImbd = wx.StaticText(id=wxID_FRAMETXTIMBD, label='Imbd:',
-              name='txtImbd', parent=self.panel5, pos=wx.Point(14, 340),
+              name='txtImbd', parent=self.panel5, pos=wx.Point(6, 340),
               size=wx.Size(54, 19), style=wx.ALIGN_RIGHT)
         self.txtImbd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.txtImbd.SetToolTipString('Regi\xe3o proibida de tempo de pico.')
 
         self.Imbd = wx.TextCtrl(id=wxID_FRAMEIMBD, name='Imbd',
-              parent=self.panel5, pos=wx.Point(76, 337), size=wx.Size(40, 25),
+              parent=self.panel5, pos=wx.Point(68, 337), size=wx.Size(55, 25),
               style=0, value='0')
         self.Imbd.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.Imbd.SetToolTipString('Valor da restri\xe7\xe3o de tempo de tempo de pico.')
+        self.Imbd.SetToolTipString('Valor da restri\xe7\xe3o de tempo de pico.')
 
         self.btnLGR = wx.Button(id=wxID_FRAMEBTNLGR, label=_('Tra\xe7ar LGR'),
               name='btnLGR', parent=self.panel5, pos=wx.Point(21, 368),
@@ -690,6 +709,21 @@ class Frame(wx.Frame):
               style=wx.TAB_TRAVERSAL)
         self.panel6.SetMinSize(wx.Size(122, 40))
 
+        self.txtKmin = wx.StaticText(id=wxID_FRAMETXTKMIN, label='Kmin:',
+              name='txtKmin', parent=self.panel5, pos=wx.Point(6, 31),
+              size=wx.Size(64, 21), style=wx.ALIGN_RIGHT)
+        self.txtKmin.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.txtKmin.SetToolTipString(_('M\xednimo ganho utilizado no tra\xe7ado do LGR.'))
+
+        self.CtrlKmin = wx.TextCtrl(id=wxID_FRAMECTRLKMIN, name='CtrlKmin',
+              parent=self.panel5, pos=wx.Point(74, 30), size=wx.Size(49, 24),
+              style=wx.TE_CENTER, value='0')
+        self.CtrlKmin.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.CtrlKmin.SetToolTipString(_('M\xednimo ganho utilizado no tra\xe7ado do LGR.'))
+        self.CtrlKmin.Bind(wx.EVT_TEXT, self.OnKminText, id=wxID_FRAMECTRLKMIN)
+
         self._init_coll_Notebook_Pages(self.Notebook)
 
         self._init_sizers()
@@ -724,14 +758,16 @@ class Frame(wx.Frame):
         # Cria instância do sistema realimentado:
         self.sis = SistemaContinuo()
         
-        # Ajusta o slider:
-        self.SliderMax = 200.0
-        self.sis.Kpontos = self.SliderMax
-        self.slider1.SetMax(self.SliderMax)
-        self.flag = False
-        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
-        self.slider1.SetValue(int(posicao))
-        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
+        
+        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
+##        # Ajusta o slider:
+##        self.SliderMax = 200
+##        self.sis.Kpontos = self.SliderMax
+##        self.slider1.SetMax(self.SliderMax)
+##        self.flag = False
+##        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
+##        self.slider1.SetValue(int(posicao))
+##        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
  
 
     def CriaPainelGrafico(self,parent):
@@ -1111,7 +1147,8 @@ class Frame(wx.Frame):
         SliderVal = self.slider1.GetValue()
         # Calcula ganho em função do SliderMax (para dar mais precisão)
         #  já que o wx.Slider só retorna um int:
-        Ganho = (self.sis.Kmax / float(self.SliderMax)) * float(self.slider1.GetValue())
+        #Ganho = (self.sis.Kmax / float(self.SliderMax)) * float(self.slider1.GetValue())
+        Ganho = float(self.slider1.GetValue())*(abs(self.sis.Kmin)+abs(self.sis.Kmax))/self.sis.Kpontos + self.sis.Kmin
         # Atualiza sistema:
         self.sis.K = Ganho
         # Atualiza interface:
@@ -1124,16 +1161,30 @@ class Frame(wx.Frame):
     def OnKmaxText(self, event):
         """
         Evento quando o texto do Kmax é alterado.
-        Altera o valor do Kmax no sistema.
+        Altera o valor do Kmax no sistema e o slider.
         """
         self.sis.Kmax = float(self.Kmax.GetValue())
         # Escreve mensagem na status bar:
         txt = _("Ganho maximo alterado para: ") + str(self.sis.Kmax)
         self.statusBar1.SetStatusText(number=0,text=txt)
         # Atualiza posição do slider:
-        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
-        self.slider1.SetValue(int(posicao))
+        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
         
+        event.Skip()
+
+    def OnKminText(self, event):
+        """
+        Evento quando o texto do Kmin é alterado.
+        Altera o valor do Kmax no sistema e o slider.
+        """
+        self.sis.Kmin = float(self.CtrlKmin.GetValue())
+        print self.sis.Kmin
+        # Escreve mensagem na status bar:
+        txt = _("Ganho minimo alterado para: ") + str(self.sis.Kmin)
+        self.statusBar1.SetStatusText(number=0,text=txt)        
+        # Atualiza posição do slider:
+        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
+
         event.Skip()
 
     def OnGanhoText(self, event):
@@ -1155,9 +1206,13 @@ class Frame(wx.Frame):
 
         # Ajusta o slider se o ganho for digitado na interface:
         if self.flag == False:
-            posicao = Ganho * (float(self.SliderMax) / self.sis.Kmax)
-            self.slider1.SetValue(int(posicao))
-        
+            self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,Ganho)
+##            # Conversao de escalas para achar a posição do slider (de 0 a Kpontos):
+##            posicao = float(self.sis.Kpontos) * ((Ganho - self.sis.Kmin)/\
+##                                (abs(self.sis.Kmax)+abs(self.sis.Kmin)))
+##            # Atualiza o slider:
+##            self.slider1.SetValue(int(posicao))
+            
         self.DesenhaPolosMF(Ganho)
         
         event.Skip()
@@ -1166,11 +1221,8 @@ class Frame(wx.Frame):
         """
         Evento do botão de traçado do LGR.
         """
-        
-        delta_k = float(self.sis.Kmax) / float(self.SliderMax)
-        kvect = numpy.arange(0,self.sis.Kmax,delta_k)
-        
-        txt = _("Plotando LGR com ") + str(len(kvect)) + _(" pontos...")
+
+        txt = _("Plotando LGR com ") + str(self.sis.Kpontos) + _(" pontos...")
         self.statusBar1.SetStatusText(number=1,text=txt)
         
         self.sis.LGR(self.fig2)
@@ -1229,6 +1281,28 @@ class Frame(wx.Frame):
         self.fig2.canvas.draw()   
              
         event.Skip()
+
+    def AtualizaSlider(self,Kmin,Kmax,Kpontos,K):
+        """
+        Função que atualiza o slider da interface gráfico (LGR).
+        Parâmetros:
+            Kmin: Mínimo ganho;
+            Kmax: Máximo ganho;
+            Kpontos: Número de pontos (resolução);
+            
+            Se K=None entao atualiza o slider e o numero de Ticks.
+                senão só atualiza a posição do slider.
+        """
+        # Ajusta o slider:
+        #self.SliderMax = 200
+        #self.sis.Kpontos = self.SliderMax
+        self.slider1.SetMax(Kpontos)
+        self.flag = False
+        # Conversao de escalas para achar a posição do slider (de 0 a Kpontos):
+        posicao = float(Kpontos) * ((K - Kmin)/ (abs(Kmax)+abs(Kmin)))
+        # Atualiza o slider:
+        self.slider1.SetValue(int(posicao))
+
 
     def DesenhaPolosMF(self,Ganho):
             
@@ -1391,14 +1465,11 @@ class Frame(wx.Frame):
 
         dialog.Destroy()
 
-        # Atualiza o slider:
-        self.SliderMax = self.sis.Kpontos
-        self.slider1.SetMax(self.SliderMax)
-        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
-        self.slider1.SetValue(int(posicao))
-        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
+        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos)
 
-        txt = _("Num. de pontos: ") + str(self.SliderMax)
+        self.slider1.SetTickFreq(self.sis.Kpontos/20) # O número de ticks vai ser 20
+
+        txt = _("Num. de pontos: ") + str(self.sis.Kpontos)
         self.statusBar1.SetStatusText(number=0,text=txt)
 
         event.Skip()
