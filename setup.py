@@ -148,7 +148,8 @@ data_files = [(r'mpl-data', glob.glob(r'C:\Python25\Lib\site-packages\matplotlib
                   (r'mpl-data\fonts\ttf',glob.glob(r'C:\Python25\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\*.*')),
 #                  (r'\.',glob.glob(r'C:\Python25\Lib\site-packages\wx-2.8-msw-ansi\wx\gdiplus.*')),
                   ('.\\',glob.glob(current_dir + '\\*.ico')),
-                  ('.\\',glob.glob(current_dir + '\\*.png'))
+                  ('.\\',glob.glob(current_dir + '\\*.png')),
+                  (r'locale\en_US\LC_MESSAGES',[current_dir + r'\locale\en_US\LC_MESSAGES\LabControle.mo'])
                   ]
 
 

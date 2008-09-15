@@ -55,12 +55,12 @@ def create(parent):
     return Frame(parent)
 
 [wxID_FRAME, wxID_FRAMEBODEFMAX, wxID_FRAMEBODEFMIN, wxID_FRAMEBODEPONTOS, 
- wxID_FRAMEBTNBODE, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, wxID_FRAMEBUTTON1, 
- wxID_FRAMECONTINUAR, wxID_FRAMECTRLKMIN, wxID_FRAMEFMAXTXT, 
- wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, 
- wxID_FRAMEKMAX, wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, 
- wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, 
- wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
+ wxID_FRAMEBTNBODE, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, 
+ wxID_FRAMEBTNLIMPABODE, wxID_FRAMECONTINUAR, wxID_FRAMECTRLKMIN, 
+ wxID_FRAMEFMAXTXT, wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, 
+ wxID_FRAMEIMBD, wxID_FRAMEKMAX, wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, 
+ wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, 
+ wxID_FRAMEPANEL5, wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
  wxID_FRAMEPONTOSBODETXT, wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, 
  wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
  wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
@@ -98,7 +98,7 @@ class Frame(wx.Frame):
         parent.AddWindow(self.panel6, 0, border=4, flag=wx.EXPAND | wx.ALL)
         parent.AddWindow(self.btnBode, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.button1, 0, border=4,
+        parent.AddWindow(self.btnLimpaBode, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_flexGridSizer2_Items(self, parent):
@@ -293,9 +293,9 @@ class Frame(wx.Frame):
               text='Diagrama')
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text='Simula\xe7\xe3o')
-        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -389,7 +389,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 171), size=wx.Size(648, 551),
+              pos=wx.Point(490, 284), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
         self._init_utils()
@@ -654,42 +654,42 @@ class Frame(wx.Frame):
         self.FminTxt.SetAutoLayout(True)
         self.FminTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.FminTxt.SetToolTipString(_('Freq. minima para o tra\xe7ado do diagrama de bode.'))
+        self.FminTxt.SetToolTipString(_('Freq. minima [Hz] para o tra\xe7ado do diagrama de bode.'))
 
         self.BodeFmin = wx.TextCtrl(id=wxID_FRAMEBODEFMIN, name='BodeFmin',
               parent=self.panel4, pos=wx.Point(77, 44), size=wx.Size(48, 25),
               style=0, value='0.01')
         self.BodeFmin.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.BodeFmin.SetToolTipString(_('Entre com a freq. minima para o tra\xe7ado do diagrama de bode.'))
+        self.BodeFmin.SetToolTipString(_('Entre com a freq. minima [Hz] para o tra\xe7ado do diagrama de bode.'))
 
         self.FmaxTxt = wx.StaticText(id=wxID_FRAMEFMAXTXT, label='Fmax:',
               name='FmaxTxt', parent=self.panel4, pos=wx.Point(5, 77),
               size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
         self.FmaxTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.FmaxTxt.SetToolTipString(_('Freq. m\xe1xima para o tra\xe7ado do diagrama de bode.'))
+        self.FmaxTxt.SetToolTipString(_('Freq. m\xe1xima [Hz] para o tra\xe7ado do diagrama de bode.'))
 
         self.BodeFmax = wx.TextCtrl(id=wxID_FRAMEBODEFMAX, name='BodeFmax',
               parent=self.panel4, pos=wx.Point(77, 77), size=wx.Size(48, 25),
               style=0, value='100')
         self.BodeFmax.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.BodeFmax.SetToolTipString(_('Entre com a freq. m\xe1xima para o tra\xe7ado do diagrama de bode.'))
+        self.BodeFmax.SetToolTipString(_('Entre com a freq. m\xe1xima [Hz] para o tra\xe7ado do diagrama de bode.'))
 
         self.PontosBodeTxt = wx.StaticText(id=wxID_FRAMEPONTOSBODETXT,
-              label=_('Pontos:'), name='PontosBodeTxt', parent=self.panel4,
+              label=_('Res.:'), name='PontosBodeTxt', parent=self.panel4,
               pos=wx.Point(5, 110), size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
         self.PontosBodeTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, 'MS Shell Dlg 2'))
-        self.PontosBodeTxt.SetToolTipString(_('N\xfamero de pontos do gr\xe1fico do diagrama de bode.'))
+        self.PontosBodeTxt.SetToolTipString(_('Resolu\xe7\xe3o do gr\xe1fico. N\xfamero de pontos por d\xe9cada.'))
 
         self.BodePontos = wx.TextCtrl(id=wxID_FRAMEBODEPONTOS,
               name='BodePontos', parent=self.panel4, pos=wx.Point(77, 110),
-              size=wx.Size(48, 25), style=0, value='3000')
+              size=wx.Size(48, 25), style=0, value='20')
         self.BodePontos.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
-        self.BodePontos.SetToolTipString(_('Entre com o n\xfamero de pontos do gr\xe1fico do diagrama de bode.'))
+        self.BodePontos.SetToolTipString(_('Entre com o n\xfamero de pontos por d\xe9cada do diagrama de bode.'))
 
         self.btnBode = wx.Button(id=wxID_FRAMEBTNBODE, label='Tra\xe7ar Bode',
               name='btnBode', parent=self.panel4, pos=wx.Point(21, 362),
@@ -698,11 +698,13 @@ class Frame(wx.Frame):
         self.btnBode.Bind(wx.EVT_BUTTON, self.OnBtnBodeButton,
               id=wxID_FRAMEBTNBODE)
 
-        self.button1 = wx.Button(id=wxID_FRAMEBUTTON1, label=_('Limpar'),
-              name='button1', parent=self.panel4, pos=wx.Point(21, 410),
-              size=wx.Size(88, 40), style=0)
-        self.button1.SetToolTipString('button1')
-        self.button1.Enable(True)
+        self.btnLimpaBode = wx.Button(id=wxID_FRAMEBTNLIMPABODE,
+              label=_('Limpar'), name='btnLimpaBode', parent=self.panel4,
+              pos=wx.Point(21, 410), size=wx.Size(88, 40), style=0)
+        self.btnLimpaBode.SetToolTipString(_('Limpar gr\xe1fico'))
+        self.btnLimpaBode.Enable(True)
+        self.btnLimpaBode.Bind(wx.EVT_BUTTON, self.OnBtnLimpaBodeButton,
+              id=wxID_FRAMEBTNLIMPABODE)
 
         self.panel6 = wx.Panel(id=wxID_FRAMEPANEL6, name='panel6',
               parent=self.panel4, pos=wx.Point(4, 147), size=wx.Size(122, 207),
@@ -745,6 +747,11 @@ class Frame(wx.Frame):
         self.fig2 = self.CriaPainelGrafico(self.panelLGR)
         self.fig3 = self.CriaPainelGrafico(self.panelBode)
 
+        # Associando eventos de movimento do mouse:
+        self.fig1.canvas.mpl_connect('motion_notify_event', self.OnMouseSim)
+        self.fig2.canvas.mpl_connect('motion_notify_event', self.OnMouseLGR)
+        self.fig3.canvas.mpl_connect('motion_notify_event', self.OnMouseBode)
+
         # Atualiza os sizers:
         self.panel2.Layout()
         self.panel4.Layout()
@@ -760,14 +767,6 @@ class Frame(wx.Frame):
         
         
         self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
-##        # Ajusta o slider:
-##        self.SliderMax = 200
-##        self.sis.Kpontos = self.SliderMax
-##        self.slider1.SetMax(self.SliderMax)
-##        self.flag = False
-##        posicao = self.sis.K * (float(self.SliderMax) / self.sis.Kmax)
-##        self.slider1.SetValue(int(posicao))
-##        self.slider1.SetTickFreq(self.SliderMax/20) # O número de ticks vai ser 20
  
 
     def CriaPainelGrafico(self,parent):
@@ -1504,19 +1503,19 @@ class Frame(wx.Frame):
         """
 
         # Lendo valores da interface:
-        Fmin = float(self.BodeFmin.GetLineText(0))
-        Fmax = float(self.BodeFmax.GetLineText(0))
-        Pontos = float(self.BodePontos.GetLineText(0))
-        
-        f=arange(Fmin,Fmax,(Fmax-Fmin)/Pontos)
+        self.sis.Fmin = float(self.BodeFmin.GetLineText(0))
+        self.sis.Fmax = float(self.BodeFmax.GetLineText(0))
+        self.sis.Fpontos = float(self.BodePontos.GetLineText(0))
         
         self.statusBar1.SetStatusText(number=1,text=_('Tracando bode ...'))
         
-        self.sis.Bode(f,self.fig3)
+        self.sis.Bode(self.fig3)
 
         # Atualiza a tela.
         self.fig3.canvas.draw()
         self.statusBar1.SetStatusText(number=1,text=_('Concluido'))
+        
+        #cid = self.fig3.canvas.mpl_connect('motion_notify_event', self.OnMouseBode)
         
         event.Skip()
 
@@ -1525,6 +1524,58 @@ class Frame(wx.Frame):
 
     def OnIdiomaEngMenu(self, event):
         event.Skip()
+
+    def OnBtnLimpaBodeButton(self, event):
+        """
+        Evento do botão limpar do diagrama de bode.
+        """
+        # Limpando a área do gráfico da simulação:
+        self.fig3.clf()
+        self.fig3.canvas.draw()
+        event.Skip()
+
+
+    def OnMouseBode(self,event):
+        """
+        Evento do movimento do mouse sobre o gráfico do diagrama de Bode.
+        
+        Mostra as coordenadas na statusbar
+        """
+        
+        try:
+            txt = "x=%.3f, y=%.3f" %(event.xdata, event.ydata)
+        except TypeError:
+            pass
+        else:
+            self.statusBar1.SetStatusText(number=0,text=txt)
+
+    def OnMouseLGR(self,event):
+        """
+        Evento do movimento do mouse sobre o gráfico do LGR
+        
+        Mostra as coordenadas na statusbar
+        """
+        
+        try:
+            txt = "r=%.3f, i=%.3f" %(event.xdata, event.ydata)
+        except TypeError:
+            pass
+        else:
+            self.statusBar1.SetStatusText(number=0,text=txt)
+
+    def OnMouseSim(self,event):
+        """
+        Evento do movimento do mouse sobre o gráfico do diagrama de Bode.
+        
+        Mostra as coordenadas na statusbar
+        """
+        
+        try:
+            txt = "t=%.3f, y=%.3f" %(event.xdata, event.ydata)
+        except TypeError:
+            pass
+        else:
+            self.statusBar1.SetStatusText(number=0,text=txt)
 
 
 if __name__ == '__main__':
