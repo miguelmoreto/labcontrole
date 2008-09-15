@@ -66,6 +66,11 @@ class SistemaContinuo:
     Ribd = 0.0
     Imbd = 0.0
     
+    # Parâmetros para o Diagrama de Bode:
+    Fmin = 0.01
+    Fmax = 100.0
+    Fpontos = 20
+    
     # Estados iniciais.
     X0r = None
     X0w = None
@@ -274,33 +279,63 @@ class SistemaContinuo:
         
         return raizes
     
-    def Bode(self,f,figura):
+    def Bode(self,figura):
         """
         Método para traçado do diagrama de bode.
         
-        f: Vetor de frequencias;
         figura: referência a uma figura do Matplotlib.
+        
+        O bode é traçado para frequencias de self.Fmin a self.Fmax com
+        self.Fpontos por década.
         """
         # Criando sistema da malha direta:
         G = self.K*self.C*self.G
         
-        # Plotando o bode na figura:
-        a=G.FreqResp(f,fig=figura)
         
-        # Pega as instâncias dos axes da figura do Bode:
-        [axMag,axFase] = figura.get_axes()
+        # Criando vetor de frequencias complexas.
+        # Com o logspace, são necessários relativamente poucos pontos
+        # para o gráfico ficar bom.
+        dec = log10(self.Fmax/self.Fmin) # Número de decadas;
+        f = logspace(log10(self.Fmin),log10(self.Fmax),self.Fpontos*dec)
         
-        axFase.grid(which='minor')
-        axMag.grid(which='minor')
         
-        axMag.set_ylabel('Magnitude [dB]')
-        axFase.set_ylabel('Fase [graus]')
-        axFase.set_xlabel('Frequencia [Hz]')
+        # Calculando resposta em frequencia do sistema:
+        val = G.FreqResp(f,fignum=None,fig=None)
         
-        axMag.set_title('Diagrama de Bode de K*C(s)*G(s)')
+        dBmag = 20*log10(abs(val))
+        fase = angle(val,1)
+        
+        # Ajustando os valores da fase se der menor do que -180 ou maior do
+        # que 180 graus (função angle só retorna valores entre -180 e +180).
+        for i in arange(1, fase.shape[0]):
+            if abs(fase[i]-fase[i-1]) > 179:
+                fase[i:] -= 360.        
+        
+        #figura.clf()
+        
+        # Plotando a magnitude:
+        ax1 = figura.add_subplot(2,1,1)
+        ax1.semilogx(f, dBmag)
+        ax1.grid()
+        ax1.xaxis.grid(True, which='minor')
+        # Plotando a fase:
+        ax2 = figura.add_subplot(2,1,2, sharex=ax1)
+        ax2.semilogx(f, fase)
+        ax2.grid()
+        ax2.xaxis.grid(True, which='minor')
+        
+        # Ajustando labels e título:
+        ax1.set_ylabel('Magnitude [dB]')
+        ax2.set_ylabel('Fase [graus]')
+        ax2.set_xlabel('Frequencia [Hz]')
+        
+        ax1.set_title('Diagrama de Bode de K*C(s)*G(s)')
 
-        print G.CrossoverFreq(f)
-        print G.PhaseMargin(f)
+        [freq,index] = G.CrossoverFreq(f)
+        
+        #ax1.hold()
+        ax1.semilogx([f[index]],[dBmag[index]],'bo')
+        #print G.PhaseMargin(f)
 
         
         return
