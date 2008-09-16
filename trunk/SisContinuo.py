@@ -39,6 +39,7 @@ from matplotlib.widgets import Button
 from matplotlib.patches import Rectangle, FancyArrow,Ellipse
 
 import numpy
+import pickle
 
 from Sistema import *
 import DlgFT
@@ -273,9 +274,9 @@ class Frame(wx.Frame):
     def _init_coll_Idioma_Items(self, parent):
         # generated method, don't edit
 
-        parent.Append(help='', id=wxID_FRAMEIDIOMAITEMS0, kind=wx.ITEM_CHECK,
+        parent.Append(help='', id=wxID_FRAMEIDIOMAITEMS0, kind=wx.ITEM_RADIO,
               text='Portugu\xeas')
-        parent.Append(help='', id=wxID_FRAMEIDIOMAITEMS1, kind=wx.ITEM_CHECK,
+        parent.Append(help='', id=wxID_FRAMEIDIOMAITEMS1, kind=wx.ITEM_RADIO,
               text='English')
         self.Bind(wx.EVT_MENU, self.OnIdiomaPtBrMenu, id=wxID_FRAMEIDIOMAITEMS0)
         self.Bind(wx.EVT_MENU, self.OnIdiomaEngMenu, id=wxID_FRAMEIDIOMAITEMS1)
@@ -291,11 +292,11 @@ class Frame(wx.Frame):
 
         parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
               text='Simula\xe7\xe3o')
         parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
               text='Lugar das ra\xedzes')
-        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=True,
+        parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text='Diagrama de bode')
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -389,7 +390,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 284), size=wx.Size(648, 551),
+              pos=wx.Point(490, 283), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
         self._init_utils()
@@ -691,9 +692,9 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.BodePontos.SetToolTipString(_('Entre com o n\xfamero de pontos por d\xe9cada do diagrama de bode.'))
 
-        self.btnBode = wx.Button(id=wxID_FRAMEBTNBODE, label='Tra\xe7ar Bode',
-              name='btnBode', parent=self.panel4, pos=wx.Point(21, 362),
-              size=wx.Size(88, 40), style=0)
+        self.btnBode = wx.Button(id=wxID_FRAMEBTNBODE,
+              label=_('Tra\xe7ar Bode'), name='btnBode', parent=self.panel4,
+              pos=wx.Point(21, 362), size=wx.Size(88, 40), style=0)
         self.btnBode.SetToolTipString(_('Tra\xe7ar diagrama de bode.'))
         self.btnBode.Bind(wx.EVT_BUTTON, self.OnBtnBodeButton,
               id=wxID_FRAMEBTNBODE)
@@ -761,12 +762,15 @@ class Frame(wx.Frame):
         self.GrafVarList.Check(0,True)
         self.GrafVarList.Check(1,True)
         
-        
         # Cria instância do sistema realimentado:
         self.sis = SistemaContinuo()
         
-        
+        # Atualizando slider:
         self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
+        
+        # Inicializacao da variável que vai receber o objeto com os dados de
+        # inicialização do programa, como último arquivo aberto, idioma, etc.
+        self.InitObj = None
  
 
     def CriaPainelGrafico(self,parent):
@@ -1520,9 +1524,46 @@ class Frame(wx.Frame):
         event.Skip()
 
     def OnIdiomaPtBrMenu(self, event):
+        """
+        Evento do menu de mudança de idioma para portugues.
+        """
+
+        self.InitObj.Idioma = wx.LANGUAGE_DEFAULT
+        arqv = file('init.cfg','w')
+        pickle.dump(self.InitObj,arqv) # Salvando a mudança no arquivo (pickle).
+        arqv.close()
+        
+        # Mostrando janela de aviso:
+        txt = "Voc\xea deve reiniciar o programa para esta altera\xe7\xe3o ter efeito.\nDeseja sair agora?"
+        dlg = wx.MessageDialog(self,txt,"Atenção",wx.YES_NO | wx.ICON_INFORMATION)
+        
+        saida = dlg.ShowModal()
+        if saida == wx.ID_YES:
+            self.Destroy()
+        else:
+            dlg.Destroy()
+        
         event.Skip()
 
     def OnIdiomaEngMenu(self, event):
+        """
+        Evento do menu de mudança de idioma para o ingles.
+        """
+
+        self.InitObj.Idioma = wx.LANGUAGE_ENGLISH_US
+        arqv = file('init.cfg','w')
+        pickle.dump(self.InitObj,arqv) # Salvando a mudança no arquivo (pickle).
+        arqv.close()
+        
+        # Mostrando janela de aviso:
+        txt = "You should restart the program in order the switch the language.\nDo you want to exit know?"
+        dlg = wx.MessageDialog(self,txt,"Atention",wx.YES_NO | wx.ICON_INFORMATION)
+        
+        saida = dlg.ShowModal()
+        if saida == wx.ID_YES:
+            self.Destroy()
+        else:
+            dlg.Destroy()        
         event.Skip()
 
     def OnBtnLimpaBodeButton(self, event):
@@ -1577,19 +1618,59 @@ class Frame(wx.Frame):
         else:
             self.statusBar1.SetStatusText(number=0,text=txt)
 
+class Configs:
+    """
+    Classe onde são armazenadas as informações a serem lidas na inicialização
+    do programa, como, último arquivo aberto, diretório inicial, lingua a ser
+    utilizada na interface, etc.
+    """
+    Idioma = None
+
+def Inicializacao():
+    """
+    Função que é executada na inicialização do programa, antes da criação
+    da interface gráfica.
+    
+    Retorna o objeto lido.
+    """
+    
+    try: # Tenta abrir arquivo com as configurações:
+        arqv = file('init.cfg','r')
+    except IOError: # Senão, cria um objeto da classe Configs e o configura.
+        conf = Configs() # Instânciando a classe Configs.
+        conf.Idioma = wx.LANGUAGE_DEFAULT
+        arqv = file('init.cfg','w')
+        pickle.dump(conf,arqv) # Cria o arquivo salvando o valor default.
+        arqv.close()
+    else: # Se conseguiu abrir o arquivo, carrega os dados com o pickle.
+        conf = pickle.load(arqv)
+        arqv.close()
+        
+   
+    return conf
+
 
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     
     # choose language
     #locale = wx.Locale(wx.LANGUAGE_ENGLISH_US)
-    locale = wx.Locale(wx.LANGUAGE_DEFAULT)
+    #locale = wx.Locale(wx.LANGUAGE_DEFAULT)
     
+    #wx.Locale.AddCatalogLookupPathPrefix('locale')
+    #locale.AddCatalog('LabControle')
+    conf = Inicializacao()
+
     # setup catalog
+    locale = wx.Locale(conf.Idioma)
     wx.Locale.AddCatalogLookupPathPrefix('locale')
     locale.AddCatalog('LabControle')
         
     frame = create(None)
+    
+    # Passando para o frame o objeto de configurações iniciais:
+    frame.InitObj = conf
+    
     frame.Show()
 
     app.MainLoop()
