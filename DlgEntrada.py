@@ -46,6 +46,16 @@ class Dialog1(wx.Dialog):
               style=wx.DEFAULT_DIALOG_STYLE, title='Par\xe2metros da Entrada')
         self.SetClientSize(wx.Size(248, 240))
 
+        self.textCtrlVal = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLVAL,
+              name='textCtrlVal', parent=self, pos=wx.Point(96, 120),
+              size=wx.Size(116, 21), style=0, value='1')
+        self.textCtrlVal.SetToolTipString('')
+
+        self.textCtrlInst = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLINST,
+              name='textCtrlInst', parent=self, pos=wx.Point(96, 156),
+              size=wx.Size(116, 21), style=0, value='0')
+        self.textCtrlInst.SetToolTipString('')
+
         self.btnOk = wx.Button(id=wxID_DIALOG1BTNOK, label='Ok', name='btnOk',
               parent=self, pos=wx.Point(16, 192), size=wx.Size(80, 30),
               style=0)
@@ -54,16 +64,6 @@ class Dialog1(wx.Dialog):
         self.btnCancel = wx.Button(id=wx.ID_CANCEL, label='Cancelar',
               name='btnCancel', parent=self, pos=wx.Point(152, 192),
               size=wx.Size(80, 30), style=0)
-
-        self.textCtrlInst = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLINST,
-              name='textCtrlInst', parent=self, pos=wx.Point(96, 156),
-              size=wx.Size(116, 21), style=0, value='0')
-        self.textCtrlInst.SetToolTipString('')
-
-        self.textCtrlVal = wx.TextCtrl(id=wxID_DIALOG1TEXTCTRLVAL,
-              name='textCtrlVal', parent=self, pos=wx.Point(96, 120),
-              size=wx.Size(116, 21), style=0, value='1')
-        self.textCtrlVal.SetToolTipString('')
 
         self.textNum = wx.StaticText(id=wxID_DIALOG1TEXTNUM, label=_('Valor:'),
               name='textNum', parent=self, pos=wx.Point(56, 124),

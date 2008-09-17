@@ -290,14 +290,14 @@ class Frame(wx.Frame):
     def _init_coll_Notebook_Pages(self, parent):
         # generated method, don't edit
 
-        parent.AddPage(imageId=-1, page=self.panel1, select=False,
-              text='Diagrama')
-        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=True,
-              text='Simula\xe7\xe3o')
+        parent.AddPage(imageId=-1, page=self.panel1, select=True,
+              text=_('Diagrama'))
+        parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
+              text=_('Simula\xe7\xe3o'))
         parent.AddPage(imageId=-1, page=self.splitterWindow2, select=False,
-              text='Lugar das ra\xedzes')
+              text=_('Lugar das ra\xedzes'))
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
-              text='Diagrama de bode')
+              text=_('Diagrama de bode'))
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -390,7 +390,7 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 283), size=wx.Size(648, 551),
+              pos=wx.Point(463, 170), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
         self._init_utils()
@@ -447,10 +447,10 @@ class Frame(wx.Frame):
         self.Limpar.Bind(wx.EVT_BUTTON, self.OnLimparButton,
               id=wxID_FRAMELIMPAR)
 
-        self.GrafVarList = wx.CheckListBox(choices=[ 'Saída: y(t)',
-              'Entrada: r(t)', 'Erro: e(t)', 'Perturbação: w(t)',
-              'Controle: u(t)'], id=wxID_FRAMEGRAFVARLIST, name='GrafVarList',
-              parent=self.panel2, pos=wx.Point(4, 66), size=wx.Size(122, 213),
+        self.GrafVarList = wx.CheckListBox(choices=[_( 'Saída: y(t)'),
+              _('Entrada: r(t)'), _('Erro: e(t)'), _('Perturbação: w(t)')],
+              id=wxID_FRAMEGRAFVARLIST, name='GrafVarList', parent=self.panel2,
+              pos=wx.Point(4, 66), size=wx.Size(122, 205),
               style=wx.LB_EXTENDED)
         self.GrafVarList.SetStringSelection('')
         self.GrafVarList.SetToolTipString(_('Selecione os sinais que deseja plotar.'))
@@ -491,7 +491,7 @@ class Frame(wx.Frame):
 
         self.stAcoes = wx.StaticText(id=wxID_FRAMESTACOES,
               label=_('A\xe7\xf5es:'), name='stAcoes', parent=self.panel2,
-              pos=wx.Point(37, 287), size=wx.Size(55, 19),
+              pos=wx.Point(29, 279), size=wx.Size(72, 27),
               style=wx.ALIGN_CENTRE)
         self.stAcoes.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Tahoma'))
@@ -771,7 +771,6 @@ class Frame(wx.Frame):
         # Inicializacao da variável que vai receber o objeto com os dados de
         # inicialização do programa, como último arquivo aberto, idioma, etc.
         self.InitObj = None
- 
 
     def CriaPainelGrafico(self,parent):
         """ Rotina de criação de um painel gráfico para plotar dados.
@@ -1529,6 +1528,7 @@ class Frame(wx.Frame):
         """
 
         self.InitObj.Idioma = wx.LANGUAGE_DEFAULT
+        self.InitObj.MenuItemId = event.GetId() # Pega id do menu que foi clicado e armazena.
         arqv = file('init.cfg','w')
         pickle.dump(self.InitObj,arqv) # Salvando a mudança no arquivo (pickle).
         arqv.close()
@@ -1543,6 +1543,11 @@ class Frame(wx.Frame):
         else:
             dlg.Destroy()
         
+        #id = event.GetId()
+        
+#        item = self.GetMenuBar().FindItemById(event.GetId())
+#        print item.IsChecked()
+        
         event.Skip()
 
     def OnIdiomaEngMenu(self, event):
@@ -1551,6 +1556,7 @@ class Frame(wx.Frame):
         """
 
         self.InitObj.Idioma = wx.LANGUAGE_ENGLISH_US
+        self.InitObj.MenuItemId = event.GetId() # Pega id do menu que foi clicado e armazena.
         arqv = file('init.cfg','w')
         pickle.dump(self.InitObj,arqv) # Salvando a mudança no arquivo (pickle).
         arqv.close()
@@ -1624,7 +1630,8 @@ class Configs:
     do programa, como, último arquivo aberto, diretório inicial, lingua a ser
     utilizada na interface, etc.
     """
-    Idioma = None
+    Idioma = None # Codigo do idioma selecionado;
+    MenuItemId = None # Id do item do menu idioma selecionado;
 
 def Inicializacao():
     """
@@ -1645,7 +1652,6 @@ def Inicializacao():
     else: # Se conseguiu abrir o arquivo, carrega os dados com o pickle.
         conf = pickle.load(arqv)
         arqv.close()
-        
    
     return conf
 
@@ -1653,15 +1659,10 @@ def Inicializacao():
 if __name__ == '__main__':
     app = wx.PySimpleApp()
     
-    # choose language
-    #locale = wx.Locale(wx.LANGUAGE_ENGLISH_US)
-    #locale = wx.Locale(wx.LANGUAGE_DEFAULT)
-    
-    #wx.Locale.AddCatalogLookupPathPrefix('locale')
-    #locale.AddCatalog('LabControle')
+    # Lê configurações com o pickle:
     conf = Inicializacao()
 
-    # setup catalog
+    # Altera a lingua:
     locale = wx.Locale(conf.Idioma)
     wx.Locale.AddCatalogLookupPathPrefix('locale')
     locale.AddCatalog('LabControle')
@@ -1670,6 +1671,11 @@ if __name__ == '__main__':
     
     # Passando para o frame o objeto de configurações iniciais:
     frame.InitObj = conf
+    # Atualiza o menu dos idiomas checando o idioma selecionado:
+    if conf.MenuItemId:
+        # Encontra o objeto do menu correspondende a partir da Id:
+        item = frame.GetMenuBar().FindItemById(conf.MenuItemId)
+        item.Check(True) # Check!
     
     frame.Show()
 
