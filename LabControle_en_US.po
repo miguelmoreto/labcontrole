@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-16 21:36-0300\n"
-"PO-Revision-Date: 2008-09-16 22:36-0300\n"
+"PO-Revision-Date: 2008-09-17 10:38-0300\n"
 "Last-Translator: Miguel Moreto <miguelmoreto@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,245 +73,248 @@ msgstr "Cancel"
 
 #: SisContinuo.py:1519
 msgid "Concluido"
-msgstr ""
+msgstr "Ended"
 
 #: SisContinuo.py:460
 msgid "Configurações:"
-msgstr ""
+msgstr "Configurations:"
 
 #: SisContinuo.py:484
 msgid "Continuar"
-msgstr ""
+msgstr "Continue"
 
 #: SisContinuo.py:487
 msgid "Continuar a simulação de onde parou."
-msgstr ""
+msgstr "Continue the simulation from where it stopped."
 
 #: DlgFT.py:62
 msgid "Denominador:"
-msgstr ""
+msgstr "Denominator:"
 
 #: SisContinuo.py:294
 msgid "Diagrama"
-msgstr ""
+msgstr "Diagram"
 
 #: SisContinuo.py:300
 msgid "Diagrama de bode"
-msgstr ""
+msgstr "Bode diagram"
 
 #: SisContinuo.py:650
 msgid "Diagrama de bode."
-msgstr ""
+msgstr "Bode diagram."
 
 #: SisContinuo.py:1240
 msgid "Eixo imaginario"
-msgstr ""
+msgstr "Imaginary axis"
 
 #: SisContinuo.py:1239
 msgid "Eixo real"
-msgstr ""
+msgstr "Real axis"
 
 #: SisContinuo.py:451
-#, fuzzy
 msgid "Entrada: r(t)"
-msgstr "Output: y(t)"
+msgstr "Input: r(t)"
 
 #: SisContinuo.py:1093
 #: SisContinuo.py:1401
 msgid "Entrada: u(t)"
-msgstr ""
+msgstr "Input: u(t)"
 
 #: SisContinuo.py:665
 msgid "Entre com a freq. minima [Hz] para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Enter the minimum frequency [Hz] for ploting the bode diagram."
 
 #: SisContinuo.py:679
 msgid "Entre com a freq. máxima [Hz] para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Enter the maximum frequency [Hz] for ploting the bode diagram."
 
 #: SisContinuo.py:1486
 msgid ""
 "Entre com a nova resolução temporal \n"
 " para as simulações (em segundos):"
 msgstr ""
+"Enter the new resolution time\n"
+"for the time simulation [sec.]:"
 
 #: SisContinuo.py:1458
 msgid ""
 "Entre com o número de pontos\n"
 " para o traçado do LGR."
 msgstr ""
+"Enter the number of points\n"
+"for the RL plot."
 
 #: SisContinuo.py:693
 msgid "Entre com o número de pontos por década do diagrama de bode."
-msgstr ""
+msgstr "Enter the number of point per dacade for ploting the bode diagram."
 
 #: SisContinuo.py:1022
 msgid "Entre com o valor do ganho."
-msgstr ""
+msgstr "Enter the gain value."
 
 #: SisContinuo.py:451
 #: SisContinuo.py:1098
 #: SisContinuo.py:1406
 msgid "Erro: e(t)"
-msgstr ""
+msgstr "Error: e(t)"
 
 #: SisContinuo.py:1232
 msgid "Finalizado."
-msgstr ""
+msgstr "Ended."
 
 #: SisContinuo.py:658
 msgid "Freq. minima [Hz] para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Minimum frequency [Hz] of bode diagram plot."
 
 #: SisContinuo.py:672
 msgid "Freq. máxima [Hz] para o traçado do diagrama de bode."
-msgstr ""
+msgstr "Maximum frequency [Hz] of bode diagram plot."
 
 #: SisContinuo.py:949
 msgid "G(s) atualizado: Num="
-msgstr ""
+msgstr "G(s) setted: Num="
 
 #: SisContinuo.py:952
 msgid "G(s) nao atualizado"
-msgstr ""
+msgstr "G(s) not setted"
 
 #: SisContinuo.py:1206
 msgid "Ganho alterado para: "
-msgstr ""
+msgstr "Gain setted to: "
 
 #: SisContinuo.py:578
 #: SisContinuo.py:585
 msgid "Ganho atual do sistema."
-msgstr ""
+msgstr "Actual system gain."
 
 #: SisContinuo.py:1170
 msgid "Ganho maximo alterado para: "
-msgstr ""
+msgstr "Maximum gain setted to:"
 
 #: SisContinuo.py:1185
 msgid "Ganho minimo alterado para: "
-msgstr ""
+msgstr "Minimum gain setted to: "
 
 #: SisContinuo.py:573
 msgid "Ganho:"
-msgstr ""
+msgstr "Gain:"
 
 #: SisContinuo.py:970
 msgid "H(s) atualizado: Num="
-msgstr ""
+msgstr "H(s) setted: Num="
 
 #: SisContinuo.py:973
 msgid "H(s) nao atualizado"
-msgstr ""
+msgstr "H(s) not setted"
 
 #: SisContinuo.py:252
 msgid "Idioma/Language"
-msgstr ""
+msgstr "Idioma/Language"
 
 #: DlgEntrada.py:79
 msgid "Instante:"
-msgstr ""
+msgstr "Time:"
 
 #: SisContinuo.py:395
 #: SisContinuo.py:404
 msgid "LabControle v1.1 - Sistema continuo - by Moreto"
-msgstr ""
+msgstr "LabControle v1.1 - Sistema continuo - by Moreto"
 
 #: DlgAbout.py:120
 msgid "Licença GNU GPL v3."
-msgstr ""
+msgstr "License GNU GPL v3."
 
 #: SisContinuo.py:443
 #: SisContinuo.py:703
 msgid "Limpar"
-msgstr ""
+msgstr "Clear"
 
 #: SisContinuo.py:446
 msgid "Limpar a área do gráfico."
-msgstr ""
+msgstr "Clear graphic area."
 
 #: SisContinuo.py:705
 msgid "Limpar gráfico"
-msgstr ""
+msgstr "Clear graphic"
 
 #: SisContinuo.py:1241
 msgid "Lugar Geometrico das raizes de C(s)*G(s)"
-msgstr ""
+msgstr "Root Locus of C(s)*G(s)"
 
 #: SisContinuo.py:298
 msgid "Lugar das raízes"
-msgstr ""
+msgstr "Root Locus"
 
 #: SisContinuo.py:552
 #: SisContinuo.py:559
 msgid "Máximo ganho utilizado no traçado do LGR"
-msgstr ""
+msgstr "Maximum gain used to draw the root locus."
 
 #: SisContinuo.py:720
 #: SisContinuo.py:727
 msgid "Mínimo ganho utilizado no traçado do LGR."
-msgstr ""
+msgstr "Minimum gain used to draw the root locus."
 
 #: SisContinuo.py:1474
 msgid "Num. de pontos: "
-msgstr ""
+msgstr "Num. of points: "
 
 #: SisContinuo.py:267
 msgid "Num. pontos LGR"
-msgstr ""
+msgstr "Num. points RL"
 
 #: SisContinuo.py:1459
 msgid "Num. pontos no LGR"
-msgstr ""
+msgstr "Number of points in RL draw"
 
 #: DlgFT.py:53
 msgid "Numerador:"
-msgstr ""
+msgstr "Numerator:"
 
 #: SisContinuo.py:1447
 msgid "Obrigado!"
-msgstr ""
+msgstr "Thanks!"
 
 #: SisContinuo.py:251
 msgid "Opções"
-msgstr ""
+msgstr "Options"
 
 #: SisContinuo.py:466
 msgid "Painel de configuração da simulação temporal."
-msgstr ""
+msgstr "Time simulation panel."
 
 #: SisContinuo.py:900
 msgid "Parâmetros da entrada r(t)"
-msgstr ""
+msgstr "r(t) input parameters"
 
 #: SisContinuo.py:986
 msgid "Parâmetros da entrada w(t)"
-msgstr ""
+msgstr "w(t) input parameters"
 
 #: SisContinuo.py:921
 msgid "Parâmetros de C(s)"
-msgstr ""
+msgstr "C(s) parameters"
 
 #: SisContinuo.py:942
 msgid "Parâmetros de G(s)"
-msgstr ""
+msgstr "G(s) parameters"
 
 #: SisContinuo.py:963
 msgid "Parâmetros de H(s)"
-msgstr ""
+msgstr "H(s) parameters"
 
 #: SisContinuo.py:1103
 #: SisContinuo.py:1411
 msgid "Perturbacao: w(t)"
-msgstr ""
+msgstr "Perturbation: w(t)"
 
 #: SisContinuo.py:451
 msgid "Perturbação: w(t)"
-msgstr ""
+msgstr "Perturbation: w(t)"
 
 #: SisContinuo.py:1227
 msgid "Plotando LGR com "
-msgstr ""
+msgstr "Drawing RL with "
 
 #: DlgFT.py:82
 msgid ""
@@ -322,6 +325,10 @@ msgid ""
 "Exemplo:\n"
 "s^2+2s+10 => [1, 2, 10]"
 msgstr ""
+"Fill the following fields with the coeficients\n"
+"of the numerator and denominator spolynomials of the transfer function.\n"
+"Example:\n"
+"2^2+2s+10 => [1,2,10]"
 
 #: DlgEntrada.py:73
 msgid ""
@@ -334,30 +341,37 @@ msgid ""
 "Deg. unitário em 2seg.:  Val. = 1 e Inst. = 2\n"
 "Rampa em 0seg.: Val. = t e Inst. = 0"
 msgstr ""
+"Fill the following field with the parameters\n"
+"of the input:\n"
+"Value: value of the step or time function (t);\n"
+"Time: time instant whem the input is applied.\n"
+"Example:\n"
+"Unit step em 2 sec.: Val. = 1 and Time = 2\n"
+"Ramp in 0 sec.: Val. = t and Time = 0"
 
 #: SisContinuo.py:1313
 msgid "Raizes da eq. caracteristica: "
-msgstr ""
+msgstr "Close loop roots: "
 
 #: SisContinuo.py:608
 msgid "Região proibida de tempo de resposta."
-msgstr ""
+msgstr "Response time forbiden region."
 
 #: SisContinuo.py:593
 msgid "Região proibida sobresinal percentual"
-msgstr ""
+msgstr "Percent overshot forbiden region"
 
 #: SisContinuo.py:682
 msgid "Res.:"
-msgstr ""
+msgstr "Res.:"
 
 #: SisContinuo.py:686
 msgid "Resolução do gráfico. Número de pontos por década."
-msgstr ""
+msgstr "Resolution of the drawing. Number of points per decade."
 
 #: SisContinuo.py:1498
 msgid "Resolução: "
-msgstr ""
+msgstr "Resolution: "
 
 #: SisContinuo.py:1087
 #: SisContinuo.py:1395
@@ -366,29 +380,28 @@ msgstr "Output: y(t)"
 
 #: SisContinuo.py:288
 msgid "Salvar sistema"
-msgstr ""
+msgstr "Save system"
 
 #: SisContinuo.py:450
-#, fuzzy
 msgid "Saída: y(t)"
 msgstr "Output: y(t)"
 
 #: SisContinuo.py:410
 msgid "Selecione a operação desejada."
-msgstr ""
+msgstr "Select the desired operation."
 
 #: SisContinuo.py:456
 msgid "Selecione os sinais que deseja plotar."
-msgstr ""
+msgstr "Select the signals you wich to plot."
 
 #: SisContinuo.py:1120
 msgid "Simulacao no tempo"
-msgstr ""
+msgstr "Time simulation"
 
 #: SisContinuo.py:1067
 #: SisContinuo.py:1369
 msgid "Simulando, aguarde..."
-msgstr ""
+msgstr "Simulating, wait..."
 
 #: SisContinuo.py:436
 #: SisContinuo.py:638
@@ -397,104 +410,105 @@ msgstr "Simulate"
 
 #: SisContinuo.py:641
 msgid "Simular o sistema com o ganho atual"
-msgstr ""
+msgstr "Simulates the system with the actual gain."
 
 #: SisContinuo.py:439
 msgid "Simular o sistema na configuração atual."
-msgstr ""
+msgstr "Simulates the system with the actual configuration."
 
 #: SisContinuo.py:296
-#, fuzzy
 msgid "Simulação"
 msgstr "Simulate"
 
 #: SisContinuo.py:1072
 #: SisContinuo.py:1374
 msgid "Simulação concluída."
-msgstr ""
+msgstr "Simultation ended."
 
 #: SisContinuo.py:269
 msgid "Simulação resolução"
-msgstr ""
+msgstr "Simulation resolution"
 
 #: SisContinuo.py:259
 msgid "Sobre o LabControle"
-msgstr ""
+msgstr "About LabControl"
 
 #: SisContinuo.py:1119
 msgid "Tempo [s]"
-msgstr ""
+msgstr "Time [s]"
 
 #: SisContinuo.py:474
 msgid "Tempo total da simulação."
-msgstr ""
+msgstr "Total simulatino time."
 
 #: SisContinuo.py:468
 msgid "Tmax:"
-msgstr ""
+msgstr "Tmax:"
 
 #: SisContinuo.py:1513
 msgid "Tracando bode ..."
-msgstr ""
+msgstr "Drawing bode ..."
 
 #: SisContinuo.py:696
 msgid "Traçar Bode"
-msgstr ""
+msgstr "Draw bode"
 
 #: SisContinuo.py:631
 msgid "Traçar LGR"
-msgstr ""
+msgstr "Draw RL"
 
 #: SisContinuo.py:698
 msgid "Traçar diagrama de bode."
-msgstr ""
+msgstr "Draw bode diagram."
 
 #: SisContinuo.py:634
 msgid "Traçar o LGR"
-msgstr ""
+msgstr "Draw root locus"
 
 #: DlgFT.py:59
 #: DlgFT.py:68
 msgid "Utilize vírgula para separar os elementos do vetor."
-msgstr ""
+msgstr "Use commas to separate the values within the vector."
 
 #: SisContinuo.py:601
 msgid "Valor da restrição de sobresinal percentual"
-msgstr ""
+msgstr "Value of percent overshoot constraint"
 
 #: SisContinuo.py:615
 msgid "Valor da restrição de tempo de resposta."
-msgstr ""
+msgstr "Value of response time constraint."
 
 #: DlgEntrada.py:68
 msgid "Valor:"
-msgstr ""
+msgstr "Value:"
 
 #: SisContinuo.py:1443
 msgid ""
 "Versão: 1.1\n"
 "SVN "
 msgstr ""
+"Version: 1.1\n"
+"SVN"
 
 #: SisContinuo.py:907
 msgid "r(t) atualizada: "
-msgstr ""
+msgstr "r(t) setted"
 
 #: SisContinuo.py:911
 msgid "r(t) não atualizada"
-msgstr ""
+msgstr "r(t) not setted"
 
 #: SisContinuo.py:908
 #: SisContinuo.py:994
 #: SisContinuo.py:1498
 msgid "seg."
-msgstr ""
+msgstr "sec."
 
 #: SisContinuo.py:993
 msgid "w(t) atualizada: "
-msgstr ""
+msgstr "w(t) setted: "
 
 #: SisContinuo.py:997
 msgid "w(t) não atualizada"
-msgstr ""
+msgstr "w(t) not setted"
 

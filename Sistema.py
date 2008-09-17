@@ -259,16 +259,16 @@ class SistemaContinuo:
         # Geracao dos pontos de separacao
         # Definicao dos polinomios do numerador e denominador
         nn = self.C.num * self.G.num * self.H.num
-        dd = self.C.den * self.G.den * self.H.num
+        dd = self.C.den * self.G.den * self.H.den
+
         # Fazendo d(-1/G(s))/ds = 0
         deriv = polyder(dd)*nn - polyder(nn)*dd
         cpss = roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for raiz in cpss:		
-            aux = dd(raiz)
+            aux = nn(raiz)
             if aux != 0:
-                GG = nn(raiz) / dd(raiz)
-                Kc = -1/GG
+                Kc = -dd(raiz) / nn(raiz)
                 if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
                         kvect = append(kvect,Kc)
        
