@@ -766,6 +766,7 @@ class Frame(wx.Frame):
         self.sis = SistemaContinuo()
         
         # Atualizando slider:
+        self.slider1.SetTickFreq(self.sis.Kpontos/20) # O número de ticks vai ser 20
         self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
         
         # Inicializacao da variável que vai receber o objeto com os dados de
@@ -839,7 +840,7 @@ class Frame(wx.Frame):
         btnW = Button(axW, 'W(s)')
         btnH = Button(axH, 'H(s)')
         btnK = Button(axK, 'K')
-        self.btnM = Button(self.axM, '')
+        self.btnM = Button(self.axM, '------')
         
         # Eventos dos botões:
         btnR.on_clicked(self.OnBtnR)
@@ -1238,7 +1239,7 @@ class Frame(wx.Frame):
         self.axesLGR.grid(True)
         self.axesLGR.set_xlabel(_("Eixo real"))
         self.axesLGR.set_ylabel(_("Eixo imaginario"))
-        self.axesLGR.set_title(_("Lugar Geometrico das raizes de C(s)*G(s)"))
+        self.axesLGR.set_title(_("Lugar Geometrico das raizes de C(s)*G(s)*H(s)"))
         
         # Tenta apagar a instância dos pólos em malha fechada na figura. Se já
         # existirem, apaga, senão não faz nada.
@@ -1310,7 +1311,15 @@ class Frame(wx.Frame):
             
         # Calcula raízes do polinômio 1+k*TF(s):
         raizes = self.sis.RaizesRL(Ganho)
-        txt = _("Raizes da eq. caracteristica: ") + str(raizes)
+        txt = ''
+        for r in raizes:
+            if isreal(r):
+                temp = "%.3f, " %(r)
+            else:
+                temp = "%.3f+j%.3f, " %(r.real,r.imag)
+            txt = txt + temp
+        
+        txt = _("Pólos MF: ") + txt
         self.statusBar1.SetStatusText(number=1,text=txt)
         
         # Plotando pólos do sist. realimentado:
@@ -1370,19 +1379,9 @@ class Frame(wx.Frame):
         
         # Simula o sistema para a entrada calculada:
         y = self.sis.Simulacao(t, r, w)
-        
+        # Atualizando statusbar.
         self.statusBar1.SetStatusText(number=1,text=_("Simulação concluída."))
         
-        # Concatenando com os dados da simulação anterior:
-        #t = concatenate((self.t,t))
-        #r = concatenate((self.r,r))
-        #w = concatenate((self.w,w))
-        #y = concatenate((self.y,y))
-        
-        #y,t,u = sis.RespostaDegrau(tempo_degrau=0.5, delta_t=0.01, tmax=Tmax)
-        
-        # Plotando:
-        #self.fig1.clf()
         ax = self.fig1.gca()
         
         legenda = []
@@ -1456,7 +1455,7 @@ class Frame(wx.Frame):
         """
         # Cria dialog:
         dialog = wx.TextEntryDialog(self,_("Entre com o número de pontos\n para o traçado do LGR."),
-                _("Num. pontos no LGR"),str(self.SliderMax),style=wx.OK|wx.CANCEL|wx.CENTRE)
+                _("Num. pontos no LGR"),str(self.sis.Kpontos),style=wx.OK|wx.CANCEL|wx.CENTRE)
         
         # Mostra dialog:
         if dialog.ShowModal() == wx.ID_OK:
@@ -1467,7 +1466,7 @@ class Frame(wx.Frame):
 
         dialog.Destroy()
 
-        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos)
+        self.AtualizaSlider(self.sis.Kmin,self.sis.Kmax,self.sis.Kpontos,self.sis.K)
 
         self.slider1.SetTickFreq(self.sis.Kpontos/20) # O número de ticks vai ser 20
 
@@ -1513,6 +1512,14 @@ class Frame(wx.Frame):
         self.statusBar1.SetStatusText(number=1,text=_('Tracando bode ...'))
         
         self.sis.Bode(self.fig3)
+
+
+        [ax1,ax2] = self.fig3.get_axes()
+        # Ajustando labels e título:
+        ax1.set_ylabel(_('Magnitude [dB]'))
+        ax2.set_ylabel(_('Fase [graus]'))
+        ax2.set_xlabel(_('Frequencia [Hz]'))
+        ax1.set_title(_('Diagrama de Bode de K*C(s)*G(s)'))
 
         # Atualiza a tela.
         self.fig3.canvas.draw()
@@ -1590,7 +1597,7 @@ class Frame(wx.Frame):
         """
         
         try:
-            txt = "x=%.3f, y=%.3f" %(event.xdata, event.ydata)
+            txt = "f=%.3f, y=%.3f" %(event.xdata, event.ydata)
         except TypeError:
             pass
         else:
@@ -1612,7 +1619,7 @@ class Frame(wx.Frame):
 
     def OnMouseSim(self,event):
         """
-        Evento do movimento do mouse sobre o gráfico do diagrama de Bode.
+        Evento do movimento do mouse sobre o gráfico da simulação.
         
         Mostra as coordenadas na statusbar
         """

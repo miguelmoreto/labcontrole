@@ -53,7 +53,7 @@ class SistemaContinuo:
 
     delta_t = 0.01  # Passo de simulação.
     
-    Malha = 'Aberta' # Estado da malha (aberta ou fechada)
+    Malha = 'Fechada' # Estado da malha (aberta ou fechada)
     
     K = 1.0 # Ganho do sistema.
     
@@ -323,13 +323,6 @@ class SistemaContinuo:
         ax2.semilogx(f, fase)
         ax2.grid()
         ax2.xaxis.grid(True, which='minor')
-        
-        # Ajustando labels e título:
-        ax1.set_ylabel('Magnitude [dB]')
-        ax2.set_ylabel('Fase [graus]')
-        ax2.set_xlabel('Frequencia [Hz]')
-        
-        ax1.set_title('Diagrama de Bode de K*C(s)*G(s)')
 
         [freq,index] = G.CrossoverFreq(f)
         
