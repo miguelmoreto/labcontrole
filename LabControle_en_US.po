@@ -5,332 +5,29 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: LabControle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-16 21:36-0300\n"
-"PO-Revision-Date: 2008-09-17 10:38-0300\n"
+"POT-Creation-Date: 2008-09-19 17:41-0300\n"
+"PO-Revision-Date: 2008-09-19 17:41-0300\n"
 "Last-Translator: Miguel Moreto <miguelmoreto@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Moreto <miguelmoreto@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: D:\\Moreto\\Programs\\LabControle\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-Country: UNITED STATES\n"
+"X-Poedit-SearchPath-0: D:\\Moreto\\Programs\\LabControle\n"
 
-#: SisContinuo.py:928
-#: SisContinuo.py:949
-#: SisContinuo.py:970
-msgid " e Den="
-msgstr " e Den="
-
-#: SisContinuo.py:907
-#: SisContinuo.py:993
-msgid " em: "
-msgstr "in: "
-
-#: SisContinuo.py:1227
-msgid " pontos..."
-msgstr " points..."
-
-#: SisContinuo.py:253
-msgid "Ajuda"
-msgstr "Help"
-
-#: SisContinuo.py:1487
-msgid "Ajuste da resolução"
-msgstr "Resolution adjustment"
-
-#: SisContinuo.py:569
-#: SisContinuo.py:1023
-msgid "Ajuste do ganho"
-msgstr "Gain adjustment"
-
-#: SisContinuo.py:482
-msgid "Ajuste o tempo total da simulação."
-msgstr "Adjust the total simulationo time."
-
-#: SisContinuo.py:250
-msgid "Arquivo"
-msgstr "File"
-
-#: SisContinuo.py:493
-msgid "Ações:"
-msgstr "Actions:"
-
-#: SisContinuo.py:503
-msgid "Barra de status."
-msgstr "Status bar."
-
-#: SisContinuo.py:928
-msgid "C(s) atualizado: Num="
-msgstr "C(s) setted: Num="
-
-#: SisContinuo.py:931
-msgid "C(s) nao atualizado"
-msgstr "C(s) not setted"
-
-#: DlgFT.py:76
-msgid "Cancelar"
-msgstr "Cancel"
-
-#: SisContinuo.py:1519
-msgid "Concluido"
-msgstr "Ended"
-
-#: SisContinuo.py:460
-msgid "Configurações:"
-msgstr "Configurations:"
-
-#: SisContinuo.py:484
-msgid "Continuar"
-msgstr "Continue"
-
-#: SisContinuo.py:487
-msgid "Continuar a simulação de onde parou."
-msgstr "Continue the simulation from where it stopped."
-
-#: DlgFT.py:62
-msgid "Denominador:"
-msgstr "Denominator:"
-
-#: SisContinuo.py:294
-msgid "Diagrama"
-msgstr "Diagram"
-
-#: SisContinuo.py:300
-msgid "Diagrama de bode"
-msgstr "Bode diagram"
-
-#: SisContinuo.py:650
-msgid "Diagrama de bode."
-msgstr "Bode diagram."
-
-#: SisContinuo.py:1240
-msgid "Eixo imaginario"
-msgstr "Imaginary axis"
-
-#: SisContinuo.py:1239
-msgid "Eixo real"
-msgstr "Real axis"
-
-#: SisContinuo.py:451
-msgid "Entrada: r(t)"
-msgstr "Input: r(t)"
-
-#: SisContinuo.py:1093
-#: SisContinuo.py:1401
-msgid "Entrada: u(t)"
-msgstr "Input: u(t)"
-
-#: SisContinuo.py:665
-msgid "Entre com a freq. minima [Hz] para o traçado do diagrama de bode."
-msgstr "Enter the minimum frequency [Hz] for ploting the bode diagram."
-
-#: SisContinuo.py:679
-msgid "Entre com a freq. máxima [Hz] para o traçado do diagrama de bode."
-msgstr "Enter the maximum frequency [Hz] for ploting the bode diagram."
-
-#: SisContinuo.py:1486
-msgid ""
-"Entre com a nova resolução temporal \n"
-" para as simulações (em segundos):"
-msgstr ""
-"Enter the new resolution time\n"
-"for the time simulation [sec.]:"
-
-#: SisContinuo.py:1458
-msgid ""
-"Entre com o número de pontos\n"
-" para o traçado do LGR."
-msgstr ""
-"Enter the number of points\n"
-"for the RL plot."
-
-#: SisContinuo.py:693
-msgid "Entre com o número de pontos por década do diagrama de bode."
-msgstr "Enter the number of point per dacade for ploting the bode diagram."
-
-#: SisContinuo.py:1022
-msgid "Entre com o valor do ganho."
-msgstr "Enter the gain value."
-
-#: SisContinuo.py:451
-#: SisContinuo.py:1098
-#: SisContinuo.py:1406
-msgid "Erro: e(t)"
-msgstr "Error: e(t)"
-
-#: SisContinuo.py:1232
-msgid "Finalizado."
-msgstr "Ended."
-
-#: SisContinuo.py:658
-msgid "Freq. minima [Hz] para o traçado do diagrama de bode."
-msgstr "Minimum frequency [Hz] of bode diagram plot."
-
-#: SisContinuo.py:672
-msgid "Freq. máxima [Hz] para o traçado do diagrama de bode."
-msgstr "Maximum frequency [Hz] of bode diagram plot."
-
-#: SisContinuo.py:949
-msgid "G(s) atualizado: Num="
-msgstr "G(s) setted: Num="
-
-#: SisContinuo.py:952
-msgid "G(s) nao atualizado"
-msgstr "G(s) not setted"
-
-#: SisContinuo.py:1206
-msgid "Ganho alterado para: "
-msgstr "Gain setted to: "
-
-#: SisContinuo.py:578
-#: SisContinuo.py:585
-msgid "Ganho atual do sistema."
-msgstr "Actual system gain."
-
-#: SisContinuo.py:1170
-msgid "Ganho maximo alterado para: "
-msgstr "Maximum gain setted to:"
-
-#: SisContinuo.py:1185
-msgid "Ganho minimo alterado para: "
-msgstr "Minimum gain setted to: "
-
-#: SisContinuo.py:573
-msgid "Ganho:"
-msgstr "Gain:"
-
-#: SisContinuo.py:970
-msgid "H(s) atualizado: Num="
-msgstr "H(s) setted: Num="
-
-#: SisContinuo.py:973
-msgid "H(s) nao atualizado"
-msgstr "H(s) not setted"
-
-#: SisContinuo.py:252
-msgid "Idioma/Language"
-msgstr "Idioma/Language"
-
-#: DlgEntrada.py:79
-msgid "Instante:"
-msgstr "Time:"
-
-#: SisContinuo.py:395
-#: SisContinuo.py:404
-msgid "LabControle v1.1 - Sistema continuo - by Moreto"
-msgstr "LabControle v1.1 - Sistema continuo - by Moreto"
-
-#: DlgAbout.py:120
+#: D:\Moreto\Programs\LabControle/DlgAbout.py:120
 msgid "Licença GNU GPL v3."
 msgstr "License GNU GPL v3."
 
-#: SisContinuo.py:443
-#: SisContinuo.py:703
-msgid "Limpar"
-msgstr "Clear"
+#: D:\Moreto\Programs\LabControle/DlgEntrada.py:68
+msgid "Valor:"
+msgstr "Value:"
 
-#: SisContinuo.py:446
-msgid "Limpar a área do gráfico."
-msgstr "Clear graphic area."
-
-#: SisContinuo.py:705
-msgid "Limpar gráfico"
-msgstr "Clear graphic"
-
-#: SisContinuo.py:1241
-msgid "Lugar Geometrico das raizes de C(s)*G(s)"
-msgstr "Root Locus of C(s)*G(s)"
-
-#: SisContinuo.py:298
-msgid "Lugar das raízes"
-msgstr "Root Locus"
-
-#: SisContinuo.py:552
-#: SisContinuo.py:559
-msgid "Máximo ganho utilizado no traçado do LGR"
-msgstr "Maximum gain used to draw the root locus."
-
-#: SisContinuo.py:720
-#: SisContinuo.py:727
-msgid "Mínimo ganho utilizado no traçado do LGR."
-msgstr "Minimum gain used to draw the root locus."
-
-#: SisContinuo.py:1474
-msgid "Num. de pontos: "
-msgstr "Num. of points: "
-
-#: SisContinuo.py:267
-msgid "Num. pontos LGR"
-msgstr "Num. points RL"
-
-#: SisContinuo.py:1459
-msgid "Num. pontos no LGR"
-msgstr "Number of points in RL draw"
-
-#: DlgFT.py:53
-msgid "Numerador:"
-msgstr "Numerator:"
-
-#: SisContinuo.py:1447
-msgid "Obrigado!"
-msgstr "Thanks!"
-
-#: SisContinuo.py:251
-msgid "Opções"
-msgstr "Options"
-
-#: SisContinuo.py:466
-msgid "Painel de configuração da simulação temporal."
-msgstr "Time simulation panel."
-
-#: SisContinuo.py:900
-msgid "Parâmetros da entrada r(t)"
-msgstr "r(t) input parameters"
-
-#: SisContinuo.py:986
-msgid "Parâmetros da entrada w(t)"
-msgstr "w(t) input parameters"
-
-#: SisContinuo.py:921
-msgid "Parâmetros de C(s)"
-msgstr "C(s) parameters"
-
-#: SisContinuo.py:942
-msgid "Parâmetros de G(s)"
-msgstr "G(s) parameters"
-
-#: SisContinuo.py:963
-msgid "Parâmetros de H(s)"
-msgstr "H(s) parameters"
-
-#: SisContinuo.py:1103
-#: SisContinuo.py:1411
-msgid "Perturbacao: w(t)"
-msgstr "Perturbation: w(t)"
-
-#: SisContinuo.py:451
-msgid "Perturbação: w(t)"
-msgstr "Perturbation: w(t)"
-
-#: SisContinuo.py:1227
-msgid "Plotando LGR com "
-msgstr "Drawing RL with "
-
-#: DlgFT.py:82
-msgid ""
-"Preencha os campos abaixo com os coeficientes\n"
-"dos polinômios em função da variável s que\n"
-"descrevem o numerador e denominador da fun-\n"
-"ção de transferência.\n"
-"Exemplo:\n"
-"s^2+2s+10 => [1, 2, 10]"
-msgstr ""
-"Fill the following fields with the coeficients\n"
-"of the numerator and denominator spolynomials of the transfer function.\n"
-"Example:\n"
-"2^2+2s+10 => [1,2,10]"
-
-#: DlgEntrada.py:73
+#: D:\Moreto\Programs\LabControle/DlgEntrada.py:73
 msgid ""
 "Preencha os campos abaixo com os parâmetros\n"
 "da entrada:\n"
@@ -349,140 +46,425 @@ msgstr ""
 "Unit step em 2 sec.: Val. = 1 and Time = 2\n"
 "Ramp in 0 sec.: Val. = t and Time = 0"
 
-#: SisContinuo.py:1313
-msgid "Raizes da eq. caracteristica: "
-msgstr "Close loop roots: "
+#: D:\Moreto\Programs\LabControle/DlgEntrada.py:79
+msgid "Instante:"
+msgstr "Time:"
 
-#: SisContinuo.py:608
-msgid "Região proibida de tempo de resposta."
-msgstr "Response time forbiden region."
+#: D:\Moreto\Programs\LabControle/DlgFT.py:53
+msgid "Numerador:"
+msgstr "Numerator:"
 
-#: SisContinuo.py:593
-msgid "Região proibida sobresinal percentual"
-msgstr "Percent overshot forbiden region"
-
-#: SisContinuo.py:682
-msgid "Res.:"
-msgstr "Res.:"
-
-#: SisContinuo.py:686
-msgid "Resolução do gráfico. Número de pontos por década."
-msgstr "Resolution of the drawing. Number of points per decade."
-
-#: SisContinuo.py:1498
-msgid "Resolução: "
-msgstr "Resolution: "
-
-#: SisContinuo.py:1087
-#: SisContinuo.py:1395
-msgid "Saida: y(t)"
-msgstr "Output: y(t)"
-
-#: SisContinuo.py:288
-msgid "Salvar sistema"
-msgstr "Save system"
-
-#: SisContinuo.py:450
-msgid "Saída: y(t)"
-msgstr "Output: y(t)"
-
-#: SisContinuo.py:410
-msgid "Selecione a operação desejada."
-msgstr "Select the desired operation."
-
-#: SisContinuo.py:456
-msgid "Selecione os sinais que deseja plotar."
-msgstr "Select the signals you wich to plot."
-
-#: SisContinuo.py:1120
-msgid "Simulacao no tempo"
-msgstr "Time simulation"
-
-#: SisContinuo.py:1067
-#: SisContinuo.py:1369
-msgid "Simulando, aguarde..."
-msgstr "Simulating, wait..."
-
-#: SisContinuo.py:436
-#: SisContinuo.py:638
-msgid "Simular"
-msgstr "Simulate"
-
-#: SisContinuo.py:641
-msgid "Simular o sistema com o ganho atual"
-msgstr "Simulates the system with the actual gain."
-
-#: SisContinuo.py:439
-msgid "Simular o sistema na configuração atual."
-msgstr "Simulates the system with the actual configuration."
-
-#: SisContinuo.py:296
-msgid "Simulação"
-msgstr "Simulate"
-
-#: SisContinuo.py:1072
-#: SisContinuo.py:1374
-msgid "Simulação concluída."
-msgstr "Simultation ended."
-
-#: SisContinuo.py:269
-msgid "Simulação resolução"
-msgstr "Simulation resolution"
-
-#: SisContinuo.py:259
-msgid "Sobre o LabControle"
-msgstr "About LabControl"
-
-#: SisContinuo.py:1119
-msgid "Tempo [s]"
-msgstr "Time [s]"
-
-#: SisContinuo.py:474
-msgid "Tempo total da simulação."
-msgstr "Total simulatino time."
-
-#: SisContinuo.py:468
-msgid "Tmax:"
-msgstr "Tmax:"
-
-#: SisContinuo.py:1513
-msgid "Tracando bode ..."
-msgstr "Drawing bode ..."
-
-#: SisContinuo.py:696
-msgid "Traçar Bode"
-msgstr "Draw bode"
-
-#: SisContinuo.py:631
-msgid "Traçar LGR"
-msgstr "Draw RL"
-
-#: SisContinuo.py:698
-msgid "Traçar diagrama de bode."
-msgstr "Draw bode diagram."
-
-#: SisContinuo.py:634
-msgid "Traçar o LGR"
-msgstr "Draw root locus"
-
-#: DlgFT.py:59
-#: DlgFT.py:68
+#: D:\Moreto\Programs\LabControle/DlgFT.py:59
+#: D:\Moreto\Programs\LabControle/DlgFT.py:68
 msgid "Utilize vírgula para separar os elementos do vetor."
 msgstr "Use commas to separate the values within the vector."
 
-#: SisContinuo.py:601
+#: D:\Moreto\Programs\LabControle/DlgFT.py:62
+msgid "Denominador:"
+msgstr "Denominator:"
+
+#: D:\Moreto\Programs\LabControle/DlgFT.py:76
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: D:\Moreto\Programs\LabControle/DlgFT.py:82
+msgid ""
+"Preencha os campos abaixo com os coeficientes\n"
+"dos polinômios em função da variável s que\n"
+"descrevem o numerador e denominador da fun-\n"
+"ção de transferência.\n"
+"Exemplo:\n"
+"s^2+2s+10 => [1, 2, 10]"
+msgstr ""
+"Fill the following fields with the coeficients\n"
+"of the numerator and denominator spolynomials of the transfer function.\n"
+"Example:\n"
+"2^2+2s+10 => [1,2,10]"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:250
+msgid "Arquivo"
+msgstr "File"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:251
+msgid "Opções"
+msgstr "Options"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:252
+msgid "Idioma/Language"
+msgstr "Idioma/Language"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:253
+msgid "Ajuda"
+msgstr "Help"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:259
+msgid "Sobre o LabControle"
+msgstr "About LabControl"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:267
+msgid "Num. pontos LGR"
+msgstr "Num. points RL"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:269
+msgid "Simulação resolução"
+msgstr "Simulation resolution"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:288
+msgid "Salvar sistema"
+msgstr "Save system"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:294
+msgid "Diagrama"
+msgstr "Diagram"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:296
+msgid "Simulação"
+msgstr "Simulate"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:298
+msgid "Lugar das raízes"
+msgstr "Root Locus"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:300
+msgid "Diagrama de bode"
+msgstr "Bode diagram"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:395
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:404
+msgid "LabControle v1.1 - Sistema continuo - by Moreto"
+msgstr "LabControle v1.1 - Sistema continuo - by Moreto"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:410
+msgid "Selecione a operação desejada."
+msgstr "Select the desired operation."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:436
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:638
+msgid "Simular"
+msgstr "Simulate"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:439
+msgid "Simular o sistema na configuração atual."
+msgstr "Simulates the system with the actual configuration."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:443
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:703
+msgid "Limpar"
+msgstr "Clear"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:446
+msgid "Limpar a área do gráfico."
+msgstr "Clear graphic area."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:450
+msgid "Saída: y(t)"
+msgstr "Output: y(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:451
+msgid "Entrada: r(t)"
+msgstr "Input: r(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:451
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1099
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1397
+msgid "Erro: e(t)"
+msgstr "Error: e(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:451
+msgid "Perturbação: w(t)"
+msgstr "Perturbation: w(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:456
+msgid "Selecione os sinais que deseja plotar."
+msgstr "Select the signals you wich to plot."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:460
+msgid "Configurações:"
+msgstr "Configurations:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:466
+msgid "Painel de configuração da simulação temporal."
+msgstr "Time simulation panel."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:468
+msgid "Tmax:"
+msgstr "Tmax:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:474
+msgid "Tempo total da simulação."
+msgstr "Total simulatino time."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:482
+msgid "Ajuste o tempo total da simulação."
+msgstr "Adjust the total simulationo time."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:484
+msgid "Continuar"
+msgstr "Continue"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:487
+msgid "Continuar a simulação de onde parou."
+msgstr "Continue the simulation from where it stopped."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:493
+msgid "Ações:"
+msgstr "Actions:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:503
+msgid "Barra de status."
+msgstr "Status bar."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:552
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:559
+msgid "Máximo ganho utilizado no traçado do LGR"
+msgstr "Maximum gain used to draw the root locus."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:569
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1024
+msgid "Ajuste do ganho"
+msgstr "Gain adjustment"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:573
+msgid "Ganho:"
+msgstr "Gain:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:578
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:585
+msgid "Ganho atual do sistema."
+msgstr "Actual system gain."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:593
+msgid "Região proibida sobresinal percentual"
+msgstr "Percent overshot forbiden region"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:601
 msgid "Valor da restrição de sobresinal percentual"
 msgstr "Value of percent overshoot constraint"
 
-#: SisContinuo.py:615
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:608
+msgid "Região proibida de tempo de resposta."
+msgstr "Response time forbiden region."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:615
 msgid "Valor da restrição de tempo de resposta."
 msgstr "Value of response time constraint."
 
-#: DlgEntrada.py:68
-msgid "Valor:"
-msgstr "Value:"
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:631
+msgid "Traçar LGR"
+msgstr "Draw RL"
 
-#: SisContinuo.py:1443
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:634
+msgid "Traçar o LGR"
+msgstr "Draw root locus"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:641
+msgid "Simular o sistema com o ganho atual"
+msgstr "Simulates the system with the actual gain."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:650
+msgid "Diagrama de bode."
+msgstr "Bode diagram."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:658
+msgid "Freq. minima [Hz] para o traçado do diagrama de bode."
+msgstr "Minimum frequency [Hz] of bode diagram plot."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:665
+msgid "Entre com a freq. minima [Hz] para o traçado do diagrama de bode."
+msgstr "Enter the minimum frequency [Hz] for ploting the bode diagram."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:672
+msgid "Freq. máxima [Hz] para o traçado do diagrama de bode."
+msgstr "Maximum frequency [Hz] of bode diagram plot."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:679
+msgid "Entre com a freq. máxima [Hz] para o traçado do diagrama de bode."
+msgstr "Enter the maximum frequency [Hz] for ploting the bode diagram."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:682
+msgid "Res.:"
+msgstr "Res.:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:686
+msgid "Resolução do gráfico. Número de pontos por década."
+msgstr "Resolution of the drawing. Number of points per decade."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:693
+msgid "Entre com o número de pontos por década do diagrama de bode."
+msgstr "Enter the number of point per dacade for ploting the bode diagram."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:696
+msgid "Traçar Bode"
+msgstr "Draw bode"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:698
+msgid "Traçar diagrama de bode."
+msgstr "Draw bode diagram."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:705
+msgid "Limpar gráfico"
+msgstr "Clear graphic"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:720
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:727
+msgid "Mínimo ganho utilizado no traçado do LGR."
+msgstr "Minimum gain used to draw the root locus."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:901
+msgid "Parâmetros da entrada r(t)"
+msgstr "r(t) input parameters"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:908
+msgid "r(t) atualizada: "
+msgstr "r(t) setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:908
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:994
+msgid " em: "
+msgstr "in: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:909
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:995
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1489
+msgid "seg."
+msgstr "sec."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:912
+msgid "r(t) não atualizada"
+msgstr "r(t) not setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:922
+msgid "Parâmetros de C(s)"
+msgstr "C(s) parameters"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:929
+msgid "C(s) atualizado: Num="
+msgstr "C(s) setted: Num="
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:929
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:950
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:971
+msgid " e Den="
+msgstr " e Den="
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:932
+msgid "C(s) nao atualizado"
+msgstr "C(s) not setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:943
+msgid "Parâmetros de G(s)"
+msgstr "G(s) parameters"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:950
+msgid "G(s) atualizado: Num="
+msgstr "G(s) setted: Num="
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:953
+msgid "G(s) nao atualizado"
+msgstr "G(s) not setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:964
+msgid "Parâmetros de H(s)"
+msgstr "H(s) parameters"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:971
+msgid "H(s) atualizado: Num="
+msgstr "H(s) setted: Num="
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:974
+msgid "H(s) nao atualizado"
+msgstr "H(s) not setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:987
+msgid "Parâmetros da entrada w(t)"
+msgstr "w(t) input parameters"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:994
+msgid "w(t) atualizada: "
+msgstr "w(t) setted: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:998
+msgid "w(t) não atualizada"
+msgstr "w(t) not setted"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1023
+msgid "Entre com o valor do ganho."
+msgstr "Enter the gain value."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1068
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1370
+msgid "Simulando, aguarde..."
+msgstr "Simulating, wait..."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1073
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1375
+msgid "Simulação concluída."
+msgstr "Simultation ended."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1088
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1386
+msgid "Saida: y(t)"
+msgstr "Output: y(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1094
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1392
+msgid "Entrada: u(t)"
+msgstr "Input: u(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1104
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1402
+msgid "Perturbacao: w(t)"
+msgstr "Perturbation: w(t)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1120
+msgid "Tempo [s]"
+msgstr "Time [s]"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1121
+msgid "Simulacao no tempo"
+msgstr "Time simulation"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1171
+msgid "Ganho maximo alterado para: "
+msgstr "Maximum gain setted to:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1186
+msgid "Ganho minimo alterado para: "
+msgstr "Minimum gain setted to: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1207
+msgid "Ganho alterado para: "
+msgstr "Gain setted to: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1228
+msgid "Plotando LGR com "
+msgstr "Drawing RL with "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1228
+msgid " pontos..."
+msgstr " points..."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1233
+msgid "Finalizado."
+msgstr "Ended."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1240
+msgid "Eixo real"
+msgstr "Real axis"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1241
+msgid "Eixo imaginario"
+msgstr "Imaginary axis"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1242
+msgid "Lugar Geometrico das raizes de C(s)*G(s)*H(s)"
+msgstr "Root Locus of C(s)*G(s)*H(s)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1314
+msgid "Pólos MF: "
+msgstr "Closed Loop poles: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1434
 msgid ""
 "Versão: 1.1\n"
 "SVN "
@@ -490,25 +472,66 @@ msgstr ""
 "Version: 1.1\n"
 "SVN"
 
-#: SisContinuo.py:907
-msgid "r(t) atualizada: "
-msgstr "r(t) setted"
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1438
+msgid "Obrigado!"
+msgstr "Thanks!"
 
-#: SisContinuo.py:911
-msgid "r(t) não atualizada"
-msgstr "r(t) not setted"
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1449
+msgid ""
+"Entre com o número de pontos\n"
+" para o traçado do LGR."
+msgstr ""
+"Enter the number of points\n"
+"for the RL plot."
 
-#: SisContinuo.py:908
-#: SisContinuo.py:994
-#: SisContinuo.py:1498
-msgid "seg."
-msgstr "sec."
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1450
+msgid "Num. pontos no LGR"
+msgstr "Number of points in RL draw"
 
-#: SisContinuo.py:993
-msgid "w(t) atualizada: "
-msgstr "w(t) setted: "
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1465
+msgid "Num. de pontos: "
+msgstr "Num. of points: "
 
-#: SisContinuo.py:997
-msgid "w(t) não atualizada"
-msgstr "w(t) not setted"
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1477
+msgid ""
+"Entre com a nova resolução temporal \n"
+" para as simulações (em segundos):"
+msgstr ""
+"Enter the new resolution time\n"
+"for the time simulation [sec.]:"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1478
+msgid "Ajuste da resolução"
+msgstr "Resolution adjustment"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1489
+msgid "Resolução: "
+msgstr "Resolution: "
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1504
+msgid "Tracando bode ..."
+msgstr "Drawing bode ..."
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1511
+msgid "Magnitude [dB]"
+msgstr "Magnitude [dB]"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1512
+msgid "Fase [graus]"
+msgstr "Phase [deg.]"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1513
+msgid "Frequencia [Hz]"
+msgstr "Frequency [Hz]"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1514
+msgid "Diagrama de Bode de K*C(s)*G(s)"
+msgstr "Bode diagram of K*C(s)*G(s)"
+
+#: D:\Moreto\Programs\LabControle/SisContinuo.py:1518
+msgid "Concluido"
+msgstr "Ended"
+
+#~ msgid "Raizes da eq. caracteristica: "
+#~ msgstr "Close loop roots: "
 
