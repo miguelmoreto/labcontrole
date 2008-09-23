@@ -390,9 +390,9 @@ class Frame(wx.Frame):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(463, 170), size=wx.Size(648, 551),
+              pos=wx.Point(490, 283), size=wx.Size(648, 551),
               style=wx.DEFAULT_FRAME_STYLE,
-              title=_('LabControle v1.1 - Sistema continuo - by Moreto'))
+              title=_('LabControle v1.2 - Sistema continuo - by Moreto'))
         self._init_utils()
         self.SetClientSize(wx.Size(640, 523))
         self.SetStatusBarPane(1)
@@ -401,7 +401,7 @@ class Frame(wx.Frame):
         self.SetMinSize(wx.Size(640, 480))
         self.Enable(True)
         self.Center(wx.BOTH)
-        self.SetToolTipString(_('LabControle v1.1 - Sistema continuo - by Moreto'))
+        self.SetToolTipString(_('LabControle v1.2 - Sistema continuo - by Moreto'))
 
         self.Notebook = wx.Notebook(id=wxID_FRAMENOTEBOOK, name='Notebook',
               parent=self, pos=wx.Point(0, 0), size=wx.Size(640, 480), style=0)
@@ -1166,7 +1166,11 @@ class Frame(wx.Frame):
         Evento quando o texto do Kmax é alterado.
         Altera o valor do Kmax no sistema e o slider.
         """
-        self.sis.Kmax = float(self.Kmax.GetValue())
+        try:# Testa para ver se o valor digitado é um número.
+            self.sis.Kmax = float(self.Kmax.GetValue())
+        except ValueError:
+            event.Skip()
+            return
         # Escreve mensagem na status bar:
         txt = _("Ganho maximo alterado para: ") + str(self.sis.Kmax)
         self.statusBar1.SetStatusText(number=0,text=txt)
@@ -1180,8 +1184,12 @@ class Frame(wx.Frame):
         Evento quando o texto do Kmin é alterado.
         Altera o valor do Kmax no sistema e o slider.
         """
-        self.sis.Kmin = float(self.CtrlKmin.GetValue())
-        print self.sis.Kmin
+        try:# Testa para ver se o valor digitado é um número.
+            self.sis.Kmin = float(self.CtrlKmin.GetValue())
+        except ValueError:
+            event.Skip()
+            return
+        
         # Escreve mensagem na status bar:
         txt = _("Ganho minimo alterado para: ") + str(self.sis.Kmin)
         self.statusBar1.SetStatusText(number=0,text=txt)        
@@ -1439,7 +1447,8 @@ class Frame(wx.Frame):
         
         dlg = DlgAbout.AboutDlg(self)
         versao = __version__.strip('$')
-        dlg.VersaoTxt.SetLabel(_("Vers\xe3o: 1.1\nSVN ") + versao)
+        txt = dlg.VersaoTxt.GetLabel()
+        dlg.VersaoTxt.SetLabel(txt + versao)
         result = dlg.ShowModal()
 
         if result == wx.ID_OK:
