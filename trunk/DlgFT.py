@@ -29,6 +29,8 @@ __date__ = '$LastChangedDate: 2008-09-04 00:29:33 -0300 (qui, 04 set 2008) $'
 #
 
 import wx
+from utils import *
+from inspect import *
 
 # define _ or add _ to builtins in your app file
 _ = wx.GetTranslation
@@ -92,14 +94,24 @@ class Dialog1(wx.Dialog):
         """
         Evento do botão OK. Lê os valores dos campos de entrada.
         """
-        self.Num = eval(self.textCtrlNum.GetLineText(0))
-        
-        self.Den = eval(self.textCtrlDen.GetLineText(0))
+        self.textonum = self.textCtrlNum.GetLineText(0)
+        if self.textonum.startswith('[') :
+                self.Num = eval(self.textonum)
+        else :
+                equacao = parseexpr(self.textonum)                
+                self.Num = equacao.c.tolist()
+                
+        self.textoden = self.textCtrlDen.GetLineText(0)
+        if self.textoden.startswith('[') :
+                self.Den = eval(self.textoden)
+        else :
+                equacao = parseexpr(self.textoden)
+                self.Den = equacao.c.tolist()
         
         self.EndModal(wx.ID_OK)
 
     def AtualizaCampos(self,Num,Den):
-    
+		
         self.textCtrlNum.SetValue(str(Num))
         self.textCtrlDen.SetValue(str(Den))
 
