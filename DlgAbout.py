@@ -91,7 +91,7 @@ class AboutDlg(wx.Dialog):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_ABOUTDLG, name='AboutDlg', parent=prnt,
               pos=wx.Point(564, 209), size=wx.Size(364, 393),
-              style=wx.DEFAULT_DIALOG_STYLE, title='Sobre o LabControle')
+              style=wx.DEFAULT_DIALOG_STYLE, title=_('Sobre o LabControle'))
         self.SetClientSize(wx.Size(356, 365))
 
         self.BtnOk = wx.Button(id=wx.ID_OK, label='OK', name='BtnOk',
@@ -99,29 +99,30 @@ class AboutDlg(wx.Dialog):
               style=0)
 
         self.VersaoTxt = wx.StaticText(id=wxID_ABOUTDLGVERSAOTXT,
-              label='Vers\xe3o: 1.1', name='VersaoTxt', parent=self,
-              pos=wx.Point(4, 73), size=wx.Size(348, 39),
+              label=_('Vers\xe3o: 1.2\nSVN '), name='VersaoTxt', parent=self,
+              pos=wx.Point(4, 73), size=wx.Size(348, 38),
               style=wx.ALIGN_CENTRE)
         self.VersaoTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'Arial'))
         self.VersaoTxt.SetHelpText('')
+        self.VersaoTxt.SetToolTipString(_('Vers\xe3o'))
 
         self.DescTxt = wx.StaticText(id=wxID_ABOUTDLGDESCTXT, label='Descricao',
-              name='DescTxt', parent=self, pos=wx.Point(4, 120),
+              name='DescTxt', parent=self, pos=wx.Point(4, 119),
               size=wx.Size(348, 136), style=0)
         self.DescTxt.SetFont(wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False,
               'MS Shell Dlg 2'))
 
         self.staticBitmap1 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./gplv3.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP1,
-              name='staticBitmap1', parent=self, pos=wx.Point(8, 268),
+              name='staticBitmap1', parent=self, pos=wx.Point(8, 267),
               size=wx.Size(152, 61), style=0)
         self.staticBitmap1.SetMinSize(wx.Size(152, 54))
         self.staticBitmap1.SetToolTipString(_('Licen\xe7a GNU GPL v3.'))
 
         self.staticBitmap2 = wx.StaticBitmap(bitmap=wx.Bitmap(u'./python.png',
               wx.BITMAP_TYPE_PNG), id=wxID_ABOUTDLGSTATICBITMAP2,
-              name='staticBitmap2', parent=self, pos=wx.Point(168, 268),
+              name='staticBitmap2', parent=self, pos=wx.Point(168, 267),
               size=wx.Size(180, 61), style=0)
         self.staticBitmap2.SetMinSize(wx.Size(180, 61))
         self.staticBitmap2.SetToolTipString('python')
@@ -137,9 +138,9 @@ class AboutDlg(wx.Dialog):
     def __init__(self, parent):
         self._init_ctrls(parent)
         
-        descricao = """        O LabControle é um programa simulador de sistemas de controle lineares e invariantes no tempo. Foi desenvolvido por Miguel Moreto na Universidade Federal de Santa Catarina.
+        descricao = _("""        O LabControle é um programa simulador de sistemas de controle lineares e invariantes no tempo. Foi desenvolvido por Miguel Moreto na Universidade Federal de Santa Catarina.
         Este software é distribuído sob a GNU General Public License versão 3.
-        Acesse o site <http://www.gnu.org/licenses/> para obter o texto completo da licença."""
+        Acesse o site <http://www.gnu.org/licenses/> para obter o texto completo da licença.""")
         
         self.DescTxt.SetLabel(descricao)
         self.Layout()
