@@ -102,7 +102,7 @@ class Dialog1(wx.Dialog):
                         equacao = parseexpr(self.textonum)                
                         self.Num = equacao.c.tolist()
         except :
-                wx.MessageBox('Erro: Numerador invalido.','',wx.ICON_ERROR)
+                wx.MessageBox(_('Erro: Numerador invalido.'),'',wx.ICON_ERROR)
                 return
         
         try :
@@ -113,11 +113,11 @@ class Dialog1(wx.Dialog):
                         equacao = parseexpr(self.textoden)
                         self.Den = equacao.c.tolist()
         except :
-                wx.MessageBox('Erro: Denominador invalido.','',wx.ICON_ERROR)
+                wx.MessageBox(_('Erro: Denominador invalido.'),'',wx.ICON_ERROR)
                 return
         
         if len(self.Num) > len(self.Den) :
-                wx.MessageBox('Erro: Ordem do numerador maior que ordem do denominador.','',wx.ICON_ERROR)
+                wx.MessageBox(_('Erro: Ordem do numerador maior que ordem do denominador.'),'',wx.ICON_ERROR)
                 return
         
         self.EndModal(wx.ID_OK)
