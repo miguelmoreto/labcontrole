@@ -88,25 +88,37 @@ class Dialog1(wx.Dialog):
 
     def __init__(self, parent):
         self._init_ctrls(parent)
-                
+        self.Centre()                
 
     def OnBtnOkButton(self, event):
         """
         Evento do botão OK. Lê os valores dos campos de entrada.
         """
-        self.textonum = self.textCtrlNum.GetLineText(0)
-        if self.textonum.startswith('[') :
-                self.Num = eval(self.textonum)
-        else :
-                equacao = parseexpr(self.textonum)                
-                self.Num = equacao.c.tolist()
-                
-        self.textoden = self.textCtrlDen.GetLineText(0)
-        if self.textoden.startswith('[') :
-                self.Den = eval(self.textoden)
-        else :
-                equacao = parseexpr(self.textoden)
-                self.Den = equacao.c.tolist()
+        try :
+                self.textonum = self.textCtrlNum.GetLineText(0)
+                if self.textonum.startswith('[') :
+                        self.Num = eval(self.textonum)
+                else :
+                        equacao = parseexpr(self.textonum)                
+                        self.Num = equacao.c.tolist()
+        except :
+                wx.MessageBox('Erro: Numerador invalido.','',wx.ICON_ERROR)
+                return
+        
+        try :
+                self.textoden = self.textCtrlDen.GetLineText(0)
+                if self.textoden.startswith('[') :
+                        self.Den = eval(self.textoden)
+                else :
+                        equacao = parseexpr(self.textoden)
+                        self.Den = equacao.c.tolist()
+        except :
+                wx.MessageBox('Erro: Denominador invalido.','',wx.ICON_ERROR)
+                return
+        
+        if len(self.Num) > len(self.Den) :
+                wx.MessageBox('Erro: Ordem do numerador maior que ordem do denominador.','',wx.ICON_ERROR)
+                return
         
         self.EndModal(wx.ID_OK)
 
