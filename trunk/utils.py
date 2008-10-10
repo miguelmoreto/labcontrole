@@ -35,33 +35,33 @@ def parseeqpoly(dados,listeq=[]) :
 				flagdiv = True
 				tt = tt.strip('/')
 			else : flagdiv = False
-			if tt.find('#') > -1 :
+			ichap = tt.find('^')
+			if ichap != -1 :
+				expoente = float(tt[ichap+1:])
+				tt = tt[0:ichap]
+			else : expoente = 1
+			if tt.find('s') > -1 :
+				if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + potencia
+				if (expoente < 1) : raise 'Erro 3 : ' + potencia				
+				tt = tt.replace('s','')
+				if tt != '' : raise 'Erro 1 : ' + tt
+				paux = poly1d([1,0])**int(expoente)				
+				if flagdiv : eqt = eqt / paux
+				else : eqt = eqt * paux
+			elif tt.find('#') > -1 :
 				i = tt.find('#')
 				f = tt.find('#',i+1)
 				if f == -1 : raise 'Erro 2 : ' + tt
 				idx = int(tt[i+1:f])
-				if flagdiv : eqt = eqt / listeq[idx]
-				else : eqt = eqt * listeq[idx]
-			elif tt.find('s') > -1 :
-				ichap = tt.find('^')
-				if ichap == -1 : potencia = 1				
-				else :
-					potencia = int(tt[ichap+1:])
-					tt = tt[0:ichap]
-				tt = tt.replace('s','')
-				if tt != '' : raise 'Erro 1 : ' + tt
-				paux = []
-				paux.append(1)
-				while potencia > 0 : 
-					paux.append(0)
-					potencia = potencia - 1	
-				if flagdiv : eqt = eqt / poly1d(paux)
-				else : eqt = eqt * poly1d(paux)
+				if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + expoente
+				if (expoente < 1) : raise 'Erro 3 : ' + expoente					
+				if flagdiv : eqt = eqt / (listeq[idx]**int(expoente))
+				else : eqt = eqt * (listeq[idx]**int(expoente))
 			else :							
 				if flagdiv : 
-					eqt = eqt / float(tt.strip('/'))
+					eqt = eqt / (float(tt.strip('/'))**expoente)
 				else : 
-					eqt = eqt * float(tt)
+					eqt = eqt * (float(tt)**expoente)				
 		retorno = retorno + sinal * eqt
 	return retorno
 
