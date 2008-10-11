@@ -32,6 +32,7 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 from scipy import *
 from scipy import signal
 import controls
+from utils import FreqResp,Nyquist
 import types
 
 class SistemaContinuo:
@@ -298,38 +299,43 @@ class SistemaContinuo:
         dec = log10(self.Fmax/self.Fmin) # Número de decadas;
         f = logspace(log10(self.Fmin),log10(self.Fmax),self.Fpontos*dec)
         
-        
         # Calculando resposta em frequencia do sistema:
-        val = G.FreqResp(f,fignum=None,fig=None)
+        #val = G.FreqResp(f,fignum=None,fig=None)
         
-        dBmag = 20*log10(abs(val))
-        fase = angle(val,1)
-        
+        #dBmag = 20*log10(abs(val))
+        #fase = angle(val,1)
+        dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(G.num,G.den,f,True)
+                                        
         # Ajustando os valores da fase se der menor do que -180 ou maior do
         # que 180 graus (função angle só retorna valores entre -180 e +180).
-        for i in arange(1, fase.shape[0]):
-            if abs(fase[i]-fase[i-1]) > 179:
-                fase[i:] -= 360.        
+        #for i in arange(1, fase.shape[0]):
+        #    if abs(fase[i]-fase[i-1]) > 179:
+        #        fase[i:] -= 360.        
         
         #figura.clf()
-        
+           
         # Plotando a magnitude:
         ax1 = figura.add_subplot(2,1,1)
-        ax1.semilogx(f, dBmag)
+        ax1.semilogx(f, dBmag)        
+        ax1.semilogx([self.Fmin,self.Fmax],[0,0],'k--')
         ax1.grid()
         ax1.xaxis.grid(True, which='minor')
         # Plotando a fase:
         ax2 = figura.add_subplot(2,1,2, sharex=ax1)
         ax2.semilogx(f, fase)
+        ax2.semilogx([self.Fmin,self.Fmax],[-180,-180],'k--')
         ax2.grid()
         ax2.xaxis.grid(True, which='minor')
 
-        [freq,index] = G.CrossoverFreq(f)
+        #[freq,index] = G.CrossoverFreq(f)
         
         #ax1.hold()
-        ax1.semilogx([f[index]],[dBmag[index]],'bo')
+        #ax1.semilogx([f[index]],[dBmag[index]],'bo')
         #print G.PhaseMargin(f)
-
+        ax2.semilogx(crossfreqmag,cfase,'ro')
+        for I in range(len(crossfreqmag)) : ax2.semilogx([crossfreqmag[I],crossfreqmag[I]],[-180,cfase[I]],'r');
+        ax1.semilogx(crossfreqfase,cmag,'ro')   
+        for I in range(len(crossfreqfase)) : ax1.semilogx([crossfreqfase[I],crossfreqfase[I]],[0,cmag[I]],'r');
         
         return
     
