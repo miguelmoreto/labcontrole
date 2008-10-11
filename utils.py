@@ -1,5 +1,5 @@
-from scipy import poly1d
-from numpy import array
+from scipy import *
+from numpy import array,arange
 
 def parseeqpoly(dados,listeq=[]) :
 	dados = dados.replace(' ','').lower()
@@ -91,3 +91,96 @@ def parseexpr(dados) :
 		retorno = parseeqpoly(dados,polys)
 		return retorno
 	
+
+def FreqResp(num,den,f,getcrossings=False) :	
+
+	w = 2j*pi*f	
+	fresp = num(w)/den(w)	
+	dBmag = 20*log10(abs(fresp))
+	phase = zeros(len(fresp))
+	rnum = num.r
+	rden = den.r	
+	for I in range(len(w)) : phase[I] = sum(angle(w[I]-rnum))-sum(angle(w[I]-rden))
+
+	if getcrossings :
+		# Cruzamentos em magnitude (0dB) e fase correspondente
+		crossmagidx = []
+		lastsign = 20*log10(abs(fresp[0]))/abs(20*log10(abs(fresp[0])))
+		ix = 1
+		for item in fresp[1:] :
+			mag = 20*log10(abs(item))
+			if lastsign != (mag/abs(mag)) :	crossmagidx.append(ix)
+			lastsign = (mag/abs(mag))
+			ix = ix + 1
+		crossfreqmag = []
+		cfase = []
+		for idx in crossmagidx :					
+			fd = f[idx-1]
+			vd = dBmag[idx-1]/abs(dBmag[idx-1])
+			fu = f[idx]
+			vu = dBmag[idx]/abs(dBmag[idx])
+			aux = 1
+			ct = 0
+			while (ct < 50) and (abs(aux) > 1e-10) :
+				fm = (fd+fu)/2
+				aa = num(2j*pi*fm)/den(2j*pi*fm)
+				aux = 20*log10(abs(aa))
+				if vd == (aux/abs(aux)) :
+					vd = aux/abs(aux)
+					fd = fm
+				else :
+					vu = aux/abs(aux)
+					fu = fm                        
+				ct = ct + 1
+			crossfreqmag.append(fm)			
+			ph = (phase[idx]-phase[idx-1])/(f[idx]-f[idx-1]) * (fm-f[idx-1]) + phase[idx-1]
+			if angle(aa) < 0 : 
+				angx = floor((-1*ph)/(2*pi))
+				cfase.append((angle(aa)-angx*2*pi)/pi*180)
+			else : 
+				angx = floor((-1*ph)/(2*pi))+1
+				cfase.append((angle(aa)-angx*2*pi)/pi*180)
+			
+		# Cruzamentos na fase e ganho correspondente
+		crossfaseidx = []
+		lastsign = ((phase[0])+pi)/abs(phase[0]+pi)
+		ix = 1
+		for item in phase[1:] :
+			mfase = item+pi
+			if lastsign != (mfase/abs(mfase)) :	crossfaseidx.append(ix)
+			lastsign = (mfase/abs(mfase))
+			ix = ix + 1
+		crossfreqfase = []
+		cmag = []
+		for idx in crossfaseidx :		
+			fd = f[idx-1]
+			vd = (phase[idx-1]+pi)/abs(phase[idx-1]+pi)
+			fu = f[idx]
+			vu = (phase[idx]+pi)/abs(phase[idx]+pi)
+			aux = 1
+			ct = 0
+			while (ct < 50) and (abs(aux) > 1e-10) :
+				fm = (fd+fu)/2
+				aa = num(2j*pi*fm)/den(2j*pi*fm)
+				aux = angle(aa)+pi
+				if vd == (aux/abs(aux)) :
+					vd = aux/abs(aux)
+					fd = fm
+				else :
+					vu = aux/abs(aux)
+					fu = fm                        
+				ct = ct + 1
+			crossfreqfase.append(fm)
+			cmag.append(20*log10(abs(aa)))
+		#print crossfreqfase
+		#print cmag	
+		
+	if getcrossings is True : return dBmag, phase/pi*180, crossfreqmag, cfase, crossfreqfase, cmag
+	else : return dBmag, phase
+	
+def Nyquist(num,den,f) :
+	w = 2j*pi*f	
+	fresp = num(w)/den(w)
+	preal = real(fresp)
+	pimag = imag(fresp)	
+	return preal, pimag
