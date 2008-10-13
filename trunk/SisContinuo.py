@@ -57,18 +57,23 @@ def create(parent):
 
 [wxID_FRAME, wxID_FRAMEBODEFMAX, wxID_FRAMEBODEFMIN, wxID_FRAMEBODEPONTOS, 
  wxID_FRAMEBTNBODE, wxID_FRAMEBTNLGR, wxID_FRAMEBTNLGRSIM, 
- wxID_FRAMEBTNLIMPABODE, wxID_FRAMECONTINUAR, wxID_FRAMECTRLKMIN, 
- wxID_FRAMEFMAXTXT, wxID_FRAMEFMINTXT, wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, 
- wxID_FRAMEIMBD, wxID_FRAMEKMAX, wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, 
- wxID_FRAMEPANEL1, wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, 
- wxID_FRAMEPANEL5, wxID_FRAMEPANEL6, wxID_FRAMEPANELBODE, wxID_FRAMEPANELLGR, 
- wxID_FRAMEPONTOSBODETXT, wxID_FRAMEREBD, wxID_FRAMERIBD, wxID_FRAMESIMULAR, 
- wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, wxID_FRAMESPLITTERWINDOW2, 
- wxID_FRAMESPLITTERWINDOW3, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
+ wxID_FRAMEBTNLIMPABODE, wxID_FRAMEBTNLIMPANYQ, wxID_FRAMEBTNNYQ, 
+ wxID_FRAMECHKNYQCIRCULO, wxID_FRAMECHKNYQPARCIAL, wxID_FRAMECONTINUAR, 
+ wxID_FRAMECTRLKMIN, wxID_FRAMEFMAXNYQ, wxID_FRAMEFMAXTXT, 
+ wxID_FRAMEFMAXTXTNYQ, wxID_FRAMEFMINNYQ, wxID_FRAMEFMINTXT, 
+ wxID_FRAMEFMINTXTNYQ, wxID_FRAMEGANHO, wxID_FRAMEGRAFVARLIST, wxID_FRAMEIMBD, 
+ wxID_FRAMEKMAX, wxID_FRAMELIMPAR, wxID_FRAMENOTEBOOK, wxID_FRAMEPANEL1, 
+ wxID_FRAMEPANEL2, wxID_FRAMEPANEL3, wxID_FRAMEPANEL4, wxID_FRAMEPANEL5, 
+ wxID_FRAMEPANEL6, wxID_FRAMEPANEL7, wxID_FRAMEPANEL8, wxID_FRAMEPANELBODE, 
+ wxID_FRAMEPANELLGR, wxID_FRAMEPANELNYQ, wxID_FRAMEPONTOSBODETXT, 
+ wxID_FRAMEREBD, wxID_FRAMERESNYQ, wxID_FRAMERESTXTNYQ, wxID_FRAMERIBD, 
+ wxID_FRAMESIMULAR, wxID_FRAMESLIDER1, wxID_FRAMESPLITTERWINDOW1, 
+ wxID_FRAMESPLITTERWINDOW2, wxID_FRAMESPLITTERWINDOW3, 
+ wxID_FRAMESPLITTERWINDOW4, wxID_FRAMESTACOES, wxID_FRAMESTATUSBAR1, 
  wxID_FRAMESTTMAX, wxID_FRAMETMAX, wxID_FRAMETXTBODE, wxID_FRAMETXTIMBD, 
- wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTKMIN, wxID_FRAMETXTOPCOES, 
- wxID_FRAMETXTREDB, wxID_FRAMETXTRIDB, 
-] = [wx.NewId() for _init_ctrls in range(46)]
+ wxID_FRAMETXTK, wxID_FRAMETXTKMAX, wxID_FRAMETXTKMIN, wxID_FRAMETXTNYQUIST, 
+ wxID_FRAMETXTOPCOES, wxID_FRAMETXTREDB, wxID_FRAMETXTRIDB, 
+] = [wx.NewId() for _init_ctrls in range(61)]
 
 [wxID_FRAMEMENUOPCOESCONFIGMENUITEM1, wxID_FRAMEMENUOPCOESITEMS1, 
 ] = [wx.NewId() for _init_coll_MenuOpcoes_Items in range(2)]
@@ -89,6 +94,35 @@ class Frame(wx.Frame):
         parent.AddWindow(self.Ganho, 0, border=4,
               flag=wx.ALIGN_TOP | wx.ALIGN_CENTER_HORIZONTAL | wx.ALL)
 
+    def _init_coll_flexGridSizerRebd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtRedb, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Rebd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerNyq1_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.FminTxtNyq, 0, border=4,
+              flag=wx.ALL | wx.ALIGN_CENTER | wx.EXPAND)
+        parent.AddWindow(self.FminNyq, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.FmaxTxtNyq, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.EXPAND | wx.ALL)
+        parent.AddWindow(self.FmaxNyq, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.ResTxtNyq, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.ResNyq, 0, border=4,
+              flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerLGR_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableRow(2)
+        parent.AddGrowableCol(0)
+
     def _init_coll_flexGridSizerBode_Items(self, parent):
         # generated method, don't edit
 
@@ -101,13 +135,6 @@ class Frame(wx.Frame):
               flag=wx.ALIGN_CENTER | wx.ALL)
         parent.AddWindow(self.btnLimpaBode, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
-
-    def _init_coll_flexGridSizer2_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.stTmax, 1, border=4,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddWindow(self.Tmax, 1, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
 
     def _init_coll_flexGridSizerBode1_Items(self, parent):
         # generated method, don't edit
@@ -124,6 +151,78 @@ class Frame(wx.Frame):
               flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
         parent.AddWindow(self.BodePontos, 0, border=4,
               flag=wx.EXPAND | wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizer1_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableRow(2)
+        parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizerKmax_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtKmax, 1, border=2,
+              flag=wx.ALIGN_CENTER | wx.ALIGN_RIGHT | wx.ALL)
+        parent.AddWindow(self.Kmax, 1, border=2, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerImbd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtImbd, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Imbd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerRibd_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtRidb, 1, border=4,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
+
+    def _init_coll_flexGridSizerBode1_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizer2_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.stTmax, 1, border=4,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.Tmax, 1, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerLGR_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddSizer(self.flexGridSizerKmax, 0, border=0,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerKmin, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.GridSizerSlider, 1, border=0,
+              flag=wx.GROW | wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerRebd, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.flexGridSizerRibd, 0, border=0,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddSizer(self.flexGridSizerImbd, 0, border=0,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.btnLGR, 0, border=2,
+              flag=wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.btnLGRSim, 0, border=2,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+
+    def _init_coll_flexGridSizerNyq1_Growables(self, parent):
+        # generated method, don't edit
+
+        parent.AddGrowableCol(0)
+
+    def _init_coll_flexGridSizerKmin_Items(self, parent):
+        # generated method, don't edit
+
+        parent.AddWindow(self.txtKmin, 0, border=2,
+              flag=wx.ALL | wx.ALIGN_CENTER)
+        parent.AddWindow(self.CtrlKmin, 0, border=2,
+              flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_flexGridSizer2_Growables(self, parent):
         # generated method, don't edit
@@ -147,37 +246,27 @@ class Frame(wx.Frame):
         parent.AddWindow(self.Limpar, 0, border=4,
               flag=wx.ALL | wx.ALIGN_CENTER)
 
-    def _init_coll_flexGridSizerBode1_Growables(self, parent):
+    def _init_coll_flexGridSizerNyq_Growables(self, parent):
         # generated method, don't edit
 
+        parent.AddGrowableRow(4)
         parent.AddGrowableCol(0)
 
-    def _init_coll_flexGridSizerRebd_Items(self, parent):
+    def _init_coll_flexGridSizerNyq_Items(self, parent):
         # generated method, don't edit
 
-        parent.AddWindow(self.txtRedb, 0, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Rebd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
-
-    def _init_coll_flexGridSizer1_Growables(self, parent):
-        # generated method, don't edit
-
-        parent.AddGrowableRow(2)
-        parent.AddGrowableCol(0)
-
-    def _init_coll_flexGridSizerKmax_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtKmax, 1, border=2,
-              flag=wx.ALIGN_CENTER | wx.ALIGN_RIGHT | wx.ALL)
-        parent.AddWindow(self.Kmax, 1, border=2, flag=wx.ALL | wx.ALIGN_CENTER)
-
-    def _init_coll_flexGridSizerKmin_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtKmin, 0, border=2,
+        parent.AddWindow(self.txtNyquist, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddSizer(self.flexGridSizerNyq1, 0, border=4,
+              flag=wx.BOTTOM | wx.TOP | wx.ALIGN_CENTER)
+        parent.AddWindow(self.chkNyqCirculo, 0, border=4,
+              flag=wx.EXPAND | wx.ALIGN_CENTER | wx.ALL)
+        parent.AddWindow(self.chkNyqParcial, 0, border=4,
+              flag=wx.ALIGN_CENTER | wx.EXPAND | wx.ALL)
+        parent.AddWindow(self.panel8, 0, border=4, flag=wx.ALL | wx.EXPAND)
+        parent.AddWindow(self.btnNyq, 0, border=4,
               flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddWindow(self.CtrlKmin, 0, border=2,
+        parent.AddWindow(self.btnLimpaNyq, 0, border=4,
               flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_GridSizerSlider_Items(self, parent):
@@ -198,51 +287,6 @@ class Frame(wx.Frame):
 
         parent.AddGrowableRow(2)
         parent.AddGrowableCol(0)
-
-    def _init_coll_flexGridSizerLGR_Growables(self, parent):
-        # generated method, don't edit
-
-        parent.AddGrowableRow(2)
-        parent.AddGrowableCol(0)
-
-    def _init_coll_flexGridSizerLGR_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddSizer(self.flexGridSizerKmax, 0, border=0,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizerKmin, 0, border=0,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddSizer(self.GridSizerSlider, 1, border=0,
-              flag=wx.GROW | wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizerRebd, 0, border=0,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddSizer(self.flexGridSizerRibd, 0, border=0,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-        parent.AddSizer(self.flexGridSizerImbd, 0, border=0,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGR, 0, border=2,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.btnLGRSim, 0, border=2,
-              flag=wx.ALL | wx.ALIGN_CENTER)
-
-    def _init_coll_boxSizer1_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.panel1, 0, border=0, flag=wx.EXPAND)
-
-    def _init_coll_flexGridSizerImbd_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtImbd, 0, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Imbd, 0, border=4, flag=wx.ALL | wx.ALIGN_CENTER)
-
-    def _init_coll_flexGridSizerRibd_Items(self, parent):
-        # generated method, don't edit
-
-        parent.AddWindow(self.txtRidb, 1, border=4,
-              flag=wx.ALIGN_CENTER | wx.ALL)
-        parent.AddWindow(self.Ribd, 1, border=4, flag=wx.ALIGN_CENTER | wx.ALL)
 
     def _init_coll_BarraMenus_Menus(self, parent):
         # generated method, don't edit
@@ -298,6 +342,8 @@ class Frame(wx.Frame):
               text=_('Lugar das ra\xedzes'))
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text=_('Diagrama de bode'))
+        parent.AddPage(imageId=-1, page=self.splitterWindow4, select=False,
+              text=_('Diagrama de Nyquist'))
 
     def _init_coll_statusBar1_Fields(self, parent):
         # generated method, don't edit
@@ -362,11 +408,16 @@ class Frame(wx.Frame):
         self.flexGridSizerKmin = wx.FlexGridSizer(cols=2, hgap=0, rows=1,
               vgap=0)
 
+        self.flexGridSizerNyq = wx.FlexGridSizer(cols=1, hgap=0, rows=7, vgap=0)
+        self.flexGridSizerNyq.SetMinSize(wx.Size(136, 454))
+
+        self.flexGridSizerNyq1 = wx.FlexGridSizer(cols=2, hgap=0, rows=3,
+              vgap=0)
+
         self._init_coll_flexGridSizer1_Items(self.flexGridSizer1)
         self._init_coll_flexGridSizer1_Growables(self.flexGridSizer1)
         self._init_coll_flexGridSizer2_Growables(self.flexGridSizer2)
         self._init_coll_flexGridSizer2_Items(self.flexGridSizer2)
-        self._init_coll_boxSizer1_Items(self.boxSizer1)
         self._init_coll_flexGridSizerLGR_Items(self.flexGridSizerLGR)
         self._init_coll_flexGridSizerLGR_Growables(self.flexGridSizerLGR)
         self._init_coll_flexGridSizerKmax_Items(self.flexGridSizerKmax)
@@ -381,20 +432,25 @@ class Frame(wx.Frame):
         self._init_coll_flexGridSizerBode1_Items(self.flexGridSizerBode1)
         self._init_coll_flexGridSizerBode1_Growables(self.flexGridSizerBode1)
         self._init_coll_flexGridSizerKmin_Items(self.flexGridSizerKmin)
+        self._init_coll_flexGridSizerNyq_Items(self.flexGridSizerNyq)
+        self._init_coll_flexGridSizerNyq_Growables(self.flexGridSizerNyq)
+        self._init_coll_flexGridSizerNyq1_Items(self.flexGridSizerNyq1)
+        self._init_coll_flexGridSizerNyq1_Growables(self.flexGridSizerNyq1)
 
         self.Notebook.SetSizer(self.boxSizer1)
         self.panel2.SetSizer(self.flexGridSizer1)
         self.panel4.SetSizer(self.flexGridSizerBode)
         self.panel5.SetSizer(self.flexGridSizerLGR)
+        self.panel7.SetSizer(self.flexGridSizerNyq)
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
-              pos=wx.Point(490, 283), size=wx.Size(648, 551),
+              pos=wx.Point(494, 283), size=wx.Size(640, 551),
               style=wx.DEFAULT_FRAME_STYLE,
               title=_('LabControle v1.2 - Sistema continuo - by Moreto'))
         self._init_utils()
-        self.SetClientSize(wx.Size(640, 523))
+        self.SetClientSize(wx.Size(632, 523))
         self.SetStatusBarPane(1)
         self.SetThemeEnabled(False)
         self.SetMenuBar(self.BarraMenus)
@@ -404,7 +460,7 @@ class Frame(wx.Frame):
         self.SetToolTipString(_('LabControle v1.2 - Sistema continuo - by Moreto'))
 
         self.Notebook = wx.Notebook(id=wxID_FRAMENOTEBOOK, name='Notebook',
-              parent=self, pos=wx.Point(0, 0), size=wx.Size(640, 480), style=0)
+              parent=self, pos=wx.Point(0, 0), size=wx.Size(632, 480), style=0)
         self.Notebook.SetFitToCurrentPage(True)
         self.Notebook.SetAutoLayout(True)
         self.Notebook.SetToolTipString(_('Selecione a opera\xe7\xe3o desejada.'))
@@ -412,7 +468,7 @@ class Frame(wx.Frame):
 
         self.splitterWindow1 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW1,
               name='splitterWindow1', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(632, 454),
+              size=wx.Size(624, 454),
               style=wx.SP_3DBORDER | wx.SP_3D | wx.DOUBLE_BORDER)
         self.splitterWindow1.SetMinimumPaneSize(130)
         self.splitterWindow1.SetSashSize(5)
@@ -429,7 +485,7 @@ class Frame(wx.Frame):
 
         self.panel3 = wx.Panel(id=wxID_FRAMEPANEL3, name='panel3',
               parent=self.splitterWindow1, pos=wx.Point(135, 0),
-              size=wx.Size(497, 454), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(489, 454), style=wx.TAB_TRAVERSAL)
         self.panel3.SetBackgroundColour(wx.Colour(192, 192, 192))
         self.splitterWindow1.SplitVertically(self.panel2, self.panel3, 130)
 
@@ -507,12 +563,12 @@ class Frame(wx.Frame):
 
         self.splitterWindow2 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW2,
               name='splitterWindow2', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(632, 454), style=wx.SP_3D)
+              size=wx.Size(624, 454), style=wx.SP_3D)
         self.splitterWindow2.SetMinimumPaneSize(130)
 
         self.panelLGR = wx.Panel(id=wxID_FRAMEPANELLGR, name='panelLGR',
               parent=self.splitterWindow2, pos=wx.Point(134, 0),
-              size=wx.Size(498, 454), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(490, 454), style=wx.TAB_TRAVERSAL)
         self.panelLGR.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.panelLGR.SetBackgroundColour(wx.Colour(192, 192, 192))
@@ -526,21 +582,22 @@ class Frame(wx.Frame):
 
         self.splitterWindow3 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW3,
               name='splitterWindow3', parent=self.Notebook, pos=wx.Point(0, 0),
-              size=wx.Size(632, 454), style=wx.SP_3D)
+              size=wx.Size(624, 454), style=wx.SP_3D)
         self.splitterWindow3.SetMinimumPaneSize(130)
 
         self.panel4 = wx.Panel(id=wxID_FRAMEPANEL4, name='panel4',
               parent=self.splitterWindow3, pos=wx.Point(0, 0), size=wx.Size(130,
               454), style=wx.TAB_TRAVERSAL)
         self.panel4.SetBackgroundColour(wx.Colour(192, 192, 192))
+        self.panel4.SetToolTipString('')
 
         self.panelBode = wx.Panel(id=wxID_FRAMEPANELBODE, name='panelBode',
               parent=self.splitterWindow3, pos=wx.Point(134, 0),
-              size=wx.Size(498, 454), style=wx.TAB_TRAVERSAL)
+              size=wx.Size(490, 454), style=wx.TAB_TRAVERSAL)
         self.splitterWindow3.SplitVertically(self.panel4, self.panelBode, 130)
 
         self.panel1 = wx.Panel(id=wxID_FRAMEPANEL1, name='panel1',
-              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(0, 454),
+              parent=self.Notebook, pos=wx.Point(0, 0), size=wx.Size(624, 454),
               style=wx.TAB_TRAVERSAL)
         self.panel1.SetBackgroundColour(wx.Colour(192, 192, 192))
 
@@ -711,6 +768,7 @@ class Frame(wx.Frame):
               parent=self.panel4, pos=wx.Point(4, 147), size=wx.Size(122, 207),
               style=wx.TAB_TRAVERSAL)
         self.panel6.SetMinSize(wx.Size(122, 40))
+        self.panel6.SetToolTipString('')
 
         self.txtKmin = wx.StaticText(id=wxID_FRAMETXTKMIN, label='Kmin:',
               name='txtKmin', parent=self.panel5, pos=wx.Point(6, 31),
@@ -726,6 +784,103 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.CtrlKmin.SetToolTipString(_('M\xednimo ganho utilizado no tra\xe7ado do LGR.'))
         self.CtrlKmin.Bind(wx.EVT_TEXT, self.OnKminText, id=wxID_FRAMECTRLKMIN)
+
+        self.splitterWindow4 = wx.SplitterWindow(id=wxID_FRAMESPLITTERWINDOW4,
+              name='splitterWindow4', parent=self.Notebook, pos=wx.Point(0, 0),
+              size=wx.Size(624, 454), style=wx.SP_3D)
+        self.splitterWindow4.SetMinimumPaneSize(130)
+
+        self.panel7 = wx.Panel(id=wxID_FRAMEPANEL7, name='panel7',
+              parent=self.splitterWindow4, pos=wx.Point(0, 0), size=wx.Size(130,
+              454), style=wx.TAB_TRAVERSAL)
+        self.panel7.SetToolTipString('')
+
+        self.panelNyq = wx.Panel(id=wxID_FRAMEPANELNYQ, name='panelNyq',
+              parent=self.splitterWindow4, pos=wx.Point(134, 0),
+              size=wx.Size(490, 454), style=wx.TAB_TRAVERSAL)
+        self.splitterWindow4.SplitVertically(self.panel7, self.panelNyq, 130)
+
+        self.txtNyquist = wx.StaticText(id=wxID_FRAMETXTNYQUIST,
+              label=_('Nyquist'), name='txtNyquist', parent=self.panel7,
+              pos=wx.Point(4, 4), size=wx.Size(122, 28), style=wx.ALIGN_CENTRE)
+        self.txtNyquist.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.txtNyquist.SetToolTipString(_('Diagrama de Nyquist'))
+
+        self.panel8 = wx.Panel(id=wxID_FRAMEPANEL8, name='panel8',
+              parent=self.panel7, pos=wx.Point(4, 211), size=wx.Size(122, 143),
+              style=wx.TAB_TRAVERSAL)
+        self.panel8.SetToolTipString('')
+
+        self.btnNyq = wx.Button(id=wxID_FRAMEBTNNYQ, label='Tra\xe7ar Nyquist',
+              name='btnNyq', parent=self.panel7, pos=wx.Point(21, 362),
+              size=wx.Size(88, 40), style=0)
+        self.btnNyq.SetToolTipString(_('Tra\xe7ar diagrama de Nyquist.'))
+
+        self.btnLimpaNyq = wx.Button(id=wxID_FRAMEBTNLIMPANYQ, label='Limpar',
+              name='btnLimpaNyq', parent=self.panel7, pos=wx.Point(21, 410),
+              size=wx.Size(88, 40), style=0)
+        self.btnLimpaNyq.SetToolTipString(_('Limpar \xe1rea do gr\xe1fico.'))
+
+        self.FminTxtNyq = wx.StaticText(id=wxID_FRAMEFMINTXTNYQ, label='Fmin:',
+              name='FminTxtNyq', parent=self.panel7, pos=wx.Point(5, 44),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.FminTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FminTxtNyq.SetToolTipString(_('Frequencia m\xednima utilizada no diagrama de Nyquist.'))
+
+        self.FmaxTxtNyq = wx.StaticText(id=wxID_FRAMEFMAXTXTNYQ, label='Fmax:',
+              name='FmaxTxtNyq', parent=self.panel7, pos=wx.Point(5, 77),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.FmaxTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FmaxTxtNyq.SetToolTipString(_('Frequencia m\xe1xima utilizada no diagrama de Nyquist.'))
+
+        self.ResTxtNyq = wx.StaticText(id=wxID_FRAMERESTXTNYQ, label='Res.:',
+              name='ResTxtNyq', parent=self.panel7, pos=wx.Point(5, 110),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.ResTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.ResTxtNyq.SetToolTipString(_('Resolu\xe7\xe3o do diagrama de Nyquist.'))
+
+        self.FminNyq = wx.TextCtrl(id=wxID_FRAMEFMINNYQ, name='FminNyq',
+              parent=self.panel7, pos=wx.Point(77, 44), size=wx.Size(48, 25),
+              style=0, value='0.01')
+        self.FminNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FminNyq.SetToolTipString(_('Entre com a frequencia m\xednima utilizada no tra\xe7ado do diagrama de Nyquist.'))
+
+        self.FmaxNyq = wx.TextCtrl(id=wxID_FRAMEFMAXNYQ, name='FmaxNyq',
+              parent=self.panel7, pos=wx.Point(77, 77), size=wx.Size(48, 25),
+              style=0, value='100')
+        self.FmaxNyq.SetInsertionPoint(4)
+        self.FmaxNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FmaxNyq.SetToolTipString(_('Entre com a frequencia m\xe1xima utilizada para o tra\xe7ado do diagrama de Nyquist.'))
+
+        self.ResNyq = wx.TextCtrl(id=wxID_FRAMERESNYQ, name='ResNyq',
+              parent=self.panel7, pos=wx.Point(77, 110), size=wx.Size(48, 25),
+              style=0, value='20')
+        self.ResNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.ResNyq.SetToolTipString(_('Entre com a resolu\xe7\xe3o do diagrama de Nyquist.'))
+
+        self.chkNyqCirculo = wx.CheckBox(id=wxID_FRAMECHKNYQCIRCULO,
+              label=_('C\xedrculo -1'), name='chkNyqCirculo',
+              parent=self.panel7, pos=wx.Point(4, 147), size=wx.Size(122, 24),
+              style=0)
+        self.chkNyqCirculo.SetValue(False)
+        self.chkNyqCirculo.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
+              False, 'MS Shell Dlg 2'))
+        self.chkNyqCirculo.SetToolTipString(_('Selecione para tra\xe7ar tamb\xe9m o c\xedrculo -1'))
+
+        self.chkNyqParcial = wx.CheckBox(id=wxID_FRAMECHKNYQPARCIAL,
+              label=_('Parcial'), name='chkNyqParcial', parent=self.panel7,
+              pos=wx.Point(4, 179), size=wx.Size(122, 24), style=0)
+        self.chkNyqParcial.SetValue(True)
+        self.chkNyqParcial.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
+              False, 'MS Shell Dlg 2'))
+        self.chkNyqParcial.SetToolTipString(_('Selecione para tra\xe7ar o Nyquist parcial.'))
 
         self._init_coll_Notebook_Pages(self.Notebook)
 
@@ -747,6 +902,7 @@ class Frame(wx.Frame):
         self.fig1 = self.CriaPainelGrafico(self.panel3)
         self.fig2 = self.CriaPainelGrafico(self.panelLGR)
         self.fig3 = self.CriaPainelGrafico(self.panelBode)
+        self.fig4 = self.CriaPainelGrafico(self.panelNyq)
 
         # Associando eventos de movimento do mouse:
         self.fig1.canvas.mpl_connect('motion_notify_event', self.OnMouseSim)
@@ -757,6 +913,7 @@ class Frame(wx.Frame):
         self.panel2.Layout()
         self.panel4.Layout()
         self.panel5.Layout()
+        self.panel7.Layout()
         self.Layout()
 
         self.GrafVarList.Check(0,True)
