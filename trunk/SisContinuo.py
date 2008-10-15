@@ -816,11 +816,15 @@ class Frame(wx.Frame):
               name='btnNyq', parent=self.panel7, pos=wx.Point(21, 362),
               size=wx.Size(88, 40), style=0)
         self.btnNyq.SetToolTipString(_('Tra\xe7ar diagrama de Nyquist.'))
+        self.btnNyq.Bind(wx.EVT_BUTTON, self.onBtnNyqButton,
+              id=wxID_FRAMEBTNNYQ)
 
         self.btnLimpaNyq = wx.Button(id=wxID_FRAMEBTNLIMPANYQ, label='Limpar',
               name='btnLimpaNyq', parent=self.panel7, pos=wx.Point(21, 410),
               size=wx.Size(88, 40), style=0)
         self.btnLimpaNyq.SetToolTipString(_('Limpar \xe1rea do gr\xe1fico.'))
+        self.btnLimpaNyq.Bind(wx.EVT_BUTTON, self.OnBtnLimpaNyqButton,
+              id=wxID_FRAMEBTNLIMPANYQ)
 
         self.FminTxtNyq = wx.StaticText(id=wxID_FRAMEFMINTXTNYQ, label='Fmin:',
               name='FminTxtNyq', parent=self.panel7, pos=wx.Point(5, 44),
@@ -860,7 +864,7 @@ class Frame(wx.Frame):
 
         self.ResNyq = wx.TextCtrl(id=wxID_FRAMERESNYQ, name='ResNyq',
               parent=self.panel7, pos=wx.Point(77, 110), size=wx.Size(48, 25),
-              style=0, value='20')
+              style=0, value='50')
         self.ResNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.ResNyq.SetToolTipString(_('Entre com a resolu\xe7\xe3o do diagrama de Nyquist.'))
@@ -881,7 +885,7 @@ class Frame(wx.Frame):
         self.chkNyqParcial.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, 'MS Shell Dlg 2'))
         self.chkNyqParcial.SetToolTipString(_('Selecione para tra\xe7ar o Nyquist parcial.'))
-
+        
         self._init_coll_Notebook_Pages(self.Notebook)
 
         self._init_sizers()
@@ -1694,6 +1698,30 @@ class Frame(wx.Frame):
         #cid = self.fig3.canvas.mpl_connect('motion_notify_event', self.OnMouseBode)
         
         event.Skip()
+    
+    def onBtnNyqButton(self, event) :
+        
+        # Lendo valores da interface:
+        self.sis.Fmin = float(self.FminNyq.GetLineText(0))
+        self.sis.Fmax = float(self.FmaxNyq.GetLineText(0))
+        self.sis.Fpontos = float(self.ResNyq.GetLineText(0))
+
+        self.statusBar1.SetStatusText(number=1,text=_('Tracando bode ...'))
+        
+        self.sis.Nyquist(self.fig4,completo=not self.chkNyqParcial.GetValue(),comcirculo=self.chkNyqCirculo.GetValue())
+
+        [ax] = self.fig4.get_axes()
+        # Ajustando labels e título:
+        ax.set_xlabel(_('$Re[KC(j\omega)G(j\omega)H(j\omega)]$'))
+        ax.set_ylabel(_('$Im[KC(j\omega)G(j\omega)H(j\omega)]$'))
+        ax.set_title(_('Diagrama de Nyquist'))
+
+        # Atualiza a tela.
+        self.fig4.canvas.draw()
+        self.statusBar1.SetStatusText(number=1,text=_('Concluido'))
+
+        event.Skip()
+           
 
     def OnIdiomaPtBrMenu(self, event):
         """
@@ -1753,6 +1781,15 @@ class Frame(wx.Frame):
         self.fig3.clf()
         self.fig3.canvas.draw()
         event.Skip()
+        
+    def OnBtnLimpaNyqButton(self, event):
+        """
+        Evento do botão limpar do diagrama de bode.
+        """
+        # Limpando a área do gráfico da simulação:
+        self.fig4.clf()
+        self.fig4.canvas.draw()
+        event.Skip()
 
 
     def OnMouseBode(self,event):
@@ -1796,6 +1833,7 @@ class Frame(wx.Frame):
             pass
         else:
             self.statusBar1.SetStatusText(number=0,text=txt)
+        
 
 class Configs:
     """

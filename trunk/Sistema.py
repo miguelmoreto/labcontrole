@@ -318,13 +318,13 @@ class SistemaContinuo:
         ax1 = figura.add_subplot(2,1,1)
         ax1.semilogx(f, dBmag)        
         ax1.semilogx([self.Fmin,self.Fmax],[0,0],'k--')
-        ax1.grid()
+        ax1.grid(True)
         ax1.xaxis.grid(True, which='minor')
         # Plotando a fase:
         ax2 = figura.add_subplot(2,1,2, sharex=ax1)
         ax2.semilogx(f, fase)
         ax2.semilogx([self.Fmin,self.Fmax],[-180,-180],'k--')
-        ax2.grid()
+        ax2.grid(True)
         ax2.xaxis.grid(True, which='minor')
 
         #[freq,index] = G.CrossoverFreq(f)
@@ -339,3 +339,72 @@ class SistemaContinuo:
         
         return
     
+    def Nyquist(self,figura,completo=False,comcirculo=False):
+        """
+        Método para traçado do diagrama de bode.
+
+        figura: referência a uma figura do Matplotlib.
+
+        O bode é traçado para frequencias de self.Fmin a self.Fmax com
+        self.Fpontos por década.
+        """
+        # Criando sistema da malha direta:
+        G = self.K*self.C*self.G
+
+        # Criando vetor de frequencias complexas.
+        # Com o logspace, são necessários relativamente poucos pontos
+        # para o gráfico ficar bom.
+        dec = log10(self.Fmax/self.Fmin) # Número de decadas;
+        f = logspace(log10(self.Fmin),log10(self.Fmax),self.Fpontos*dec)
+        
+        preal,pimag = Nyquist(G.num,G.den,f)
+        
+        # Plotando a magnitude:
+        ax = figura.add_subplot(111)
+        
+        [linha1] = ax.plot(preal,pimag)
+        if completo : [linha2] = ax.plot(preal,-1*pimag)        
+        if comcirculo :
+                cx = arange(-1,1+0.025,0.025)
+                cy = zeros(len(cx))
+                ct = 0
+                for a in cx : 
+                        cy[ct] = sqrt(1-a*a)
+                        ct = ct+1
+       
+                ax.plot(cx,cy,':k')
+                ax.plot(cx,-1*cy,':k')
+        
+        xl = ax.get_xlim()
+        yl = ax.get_ylim()
+        if abs(xl[0]-xl[1]) < abs(yl[0]-yl[1]) : modx = abs(xl[0]-xl[1]) * 0.03                
+        else : modx = abs(yl[0]-yl[1]) * 0.03        
+        
+        idxmaxvar = 0
+        maxvar = 0
+        for I in range(len(preal)-2) :
+                if maxvar < abs(preal[I]-preal[I+1]) : 
+                        maxvar = abs(preal[I]-preal[I+1])
+                        idxmaxvar = I+1
+                       
+        idxmarcador = idxmaxvar
+
+        print (pimag[idxmarcador+1]-pimag[idxmarcador])
+        print (preal[idxmarcador+1]-preal[idxmarcador])
+        angulo = arctan((pimag[idxmarcador]-pimag[idxmarcador-1])/(preal[idxmarcador]-preal[idxmarcador-1]))
+        if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = pi + angulo 
+        ang1 = angulo+pi-pi/9
+        ang2 = angulo+pi+pi/9             
+        ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*cos(ang1),preal[idxmarcador]+modx*cos(ang2),preal[idxmarcador]],[pimag[idxmarcador],pimag[idxmarcador]+modx*sin(ang1),pimag[idxmarcador]+modx*sin(ang2),pimag[idxmarcador]],edgecolor=linha1.get_color(),facecolor=linha1.get_color())                
+        if completo :                                        
+                angulo = pi + arctan((-pimag[idxmarcador+1]+pimag[idxmarcador])/(preal[idxmarcador+1]-preal[idxmarcador]))   
+                if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = pi + angulo 
+                ang1 = angulo+pi-pi/9
+                ang2 = angulo+pi+pi/9           
+                ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*cos(ang1),preal[idxmarcador]+modx*cos(ang2),preal[idxmarcador]],[-1*pimag[idxmarcador],-1*pimag[idxmarcador]+modx*sin(ang1),-1*pimag[idxmarcador]+modx*sin(ang2),-1*pimag[idxmarcador]],edgecolor=linha2.get_color(),facecolor=linha2.get_color())        
+                        
+        ax.grid(True)
+        
+       
+        
+        return
