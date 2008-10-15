@@ -100,7 +100,7 @@ class AboutDlg(wx.Dialog):
               style=0)
 
         self.VersaoTxt = wx.StaticText(id=wxID_ABOUTDLGVERSAOTXT,
-              label=_('Vers\xe3o: 1.2\nSVN '), name='VersaoTxt', parent=self,
+              label=_('Vers\xe3o: 1.3\nSVN '), name='VersaoTxt', parent=self,
               pos=wx.Point(4, 73), size=wx.Size(348, 38),
               style=wx.ALIGN_CENTRE)
         self.VersaoTxt.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,

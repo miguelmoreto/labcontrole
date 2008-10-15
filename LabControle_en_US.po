@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: LabControle\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-15 13:08-0300\n"
-"PO-Revision-Date: 2008-10-15 13:08-0300\n"
+"POT-Creation-Date: 2008-10-15 15:11-0300\n"
+"PO-Revision-Date: 2008-10-15 15:12-0300\n"
 "Last-Translator: Miguel Moreto <miguelmoreto@gmail.com>\n"
 "Language-Team: Moreto <miguelmoreto@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -27,10 +27,10 @@ msgstr "About LabControl"
 
 #: D:\Moreto\Programs\LabControle/DlgAbout.py:103
 msgid ""
-"Versão: 1.2\n"
+"Versão: 1.3\n"
 "SVN "
 msgstr ""
-"Version: 1.2\n"
+"Version: 1.3\n"
 "SVN "
 
 #: D:\Moreto\Programs\LabControle/DlgAbout.py:109
@@ -171,8 +171,8 @@ msgstr "Nyquist Diagram"
 
 #: D:\Moreto\Programs\LabControle/SisContinuo.py:451
 #: D:\Moreto\Programs\LabControle/SisContinuo.py:460
-msgid "LabControle v1.2 - Sistema continuo"
-msgstr "LabControle v1.2 - Continuous system"
+msgid "LabControle v1.3 - Sistema continuo"
+msgstr "LabControle v1.3 - Continuous system"
 
 #: D:\Moreto\Programs\LabControle/SisContinuo.py:466
 msgid "Selecione a operação desejada."
