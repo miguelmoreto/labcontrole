@@ -140,6 +140,11 @@ def FreqResp(num,den,f,getcrossings=False) :
 			else : 
 				angx = floor((-1*ph)/(2*pi))+1
 				cfase.append((angle(aa)-angx*2*pi)/pi*180)
+		
+		if len(crossfreqmag) > 15 : 
+			crossfreqmag = []
+			cfase = []
+		
 			
 		# Cruzamentos na fase e ganho correspondente
 		crossfaseidx = []
@@ -172,9 +177,13 @@ def FreqResp(num,den,f,getcrossings=False) :
 				ct = ct + 1
 			crossfreqfase.append(fm)
 			cmag.append(20*log10(abs(aa)))
+		
+		if len(crossfreqfase) > 15 : 
+			crossfreqfase = []
+			cmag = []
 		#print crossfreqfase
 		#print cmag	
-		
+	
 	if getcrossings is True : return dBmag, phase/pi*180, crossfreqmag, cfase, crossfreqfase, cmag
 	else : return dBmag, phase
 	
