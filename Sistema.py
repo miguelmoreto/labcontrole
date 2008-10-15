@@ -40,11 +40,17 @@ class SistemaContinuo:
     Classe que implementa um sistema contínuo com métodos para simulação.
     """
     Gnum = [2,10]   # Numerador de G(s).
+    GnumStr = '2*s+10'
     Gden = [1,2,10] # Denominador de G(s).
+    GdenStr = '1*s^2+2*s+10'
     Cnum = [1]      # Numerador de C(s).
+    CnumStr = '1'
     Cden = [1]      # Denominador de C(s).
+    CdenStr = '1'
     Hnum = [1]      # Numerador de H(s).
+    HnumStr = '1'
     Hden = [1]      # Denominador de H(s).
+    HdenStr = '1'
 
     # Entradas:
     Rt = '1'       # String com a função de entrada r(t)
@@ -341,7 +347,7 @@ class SistemaContinuo:
     
     def Nyquist(self,figura,completo=False,comcirculo=False):
         """
-        Método para traçado do diagrama de bode.
+        Método para traçado do diagrama de nyquist.
 
         figura: referência a uma figura do Matplotlib.
 
@@ -389,8 +395,8 @@ class SistemaContinuo:
                        
         idxmarcador = idxmaxvar
 
-        print (pimag[idxmarcador+1]-pimag[idxmarcador])
-        print (preal[idxmarcador+1]-preal[idxmarcador])
+        #print (pimag[idxmarcador+1]-pimag[idxmarcador])
+        #print (preal[idxmarcador+1]-preal[idxmarcador])
         angulo = arctan((pimag[idxmarcador]-pimag[idxmarcador-1])/(preal[idxmarcador]-preal[idxmarcador-1]))
         if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = pi + angulo 
         ang1 = angulo+pi-pi/9

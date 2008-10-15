@@ -47,9 +47,10 @@ class Dialog1(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_DIALOG1, name='', parent=prnt,
-              pos=wx.Point(553, 323), size=wx.Size(256, 235),
+              pos=wx.Point(686, 441), size=wx.Size(256, 235),
               style=wx.DEFAULT_DIALOG_STYLE, title='Par\xe2metros da FT')
         self.SetClientSize(wx.Size(248, 207))
+        self.Center(wx.BOTH)
 
         self.textNum = wx.StaticText(id=wxID_DIALOG1TEXTNUM,
               label=_('Numerador:'), name='textNum', parent=self,
@@ -81,9 +82,9 @@ class Dialog1(wx.Dialog):
         self.btnCancel.SetToolTipString('')
 
         self.textHelp = wx.StaticText(id=wxID_DIALOG1TEXTHELP,
-              label=_('Preencha os campos abaixo com os coeficientes\ndos polin\xf4mios em fun\xe7\xe3o da vari\xe1vel s que\ndescrevem o numerador e denominador da fun-\n\xe7\xe3o de transfer\xeancia.\nExemplo:\ns^2+2s+10 => [1, 2, 10]'),
+              label=_('Preencha os campos abaixo com uma fun\xe7\xe3o de\ns ou com os coeficientes do polin\xf4mio.\nExemplos:\ns^2+2*s+10 ou [1, 2, 10] ou (1+s)*(1+2*s)'),
               name='textHelp', parent=self, pos=wx.Point(8, 8),
-              size=wx.Size(229, 78), style=0)
+              size=wx.Size(229, 52), style=0)
         self.textHelp.SetToolTipString('')
 
     def __init__(self, parent):
@@ -122,9 +123,9 @@ class Dialog1(wx.Dialog):
         
         self.EndModal(wx.ID_OK)
 
-    def AtualizaCampos(self,Num,Den):
+    def AtualizaCampos(self,NumStr,DenStr):
 		
-        self.textCtrlNum.SetValue(str(Num))
-        self.textCtrlDen.SetValue(str(Den))
+        self.textCtrlNum.SetValue(NumStr)
+        self.textCtrlDen.SetValue(DenStr)
 
 
