@@ -334,7 +334,7 @@ class Frame(wx.Frame):
     def _init_coll_Notebook_Pages(self, parent):
         # generated method, don't edit
 
-        parent.AddPage(imageId=-1, page=self.panel1, select=True,
+        parent.AddPage(imageId=-1, page=self.panel1, select=False,
               text=_('Diagrama'))
         parent.AddPage(imageId=-1, page=self.splitterWindow1, select=False,
               text=_('Simula\xe7\xe3o'))
@@ -342,7 +342,7 @@ class Frame(wx.Frame):
               text=_('Lugar das ra\xedzes'))
         parent.AddPage(imageId=-1, page=self.splitterWindow3, select=False,
               text=_('Diagrama de bode'))
-        parent.AddPage(imageId=-1, page=self.splitterWindow4, select=False,
+        parent.AddPage(imageId=-1, page=self.splitterWindow4, select=True,
               text=_('Diagrama de Nyquist'))
 
     def _init_coll_statusBar1_Fields(self, parent):
@@ -448,7 +448,7 @@ class Frame(wx.Frame):
         wx.Frame.__init__(self, id=wxID_FRAME, name='Frame', parent=prnt,
               pos=wx.Point(494, 283), size=wx.Size(640, 551),
               style=wx.DEFAULT_FRAME_STYLE,
-              title=_('LabControle v1.2 - Sistema continuo - by Moreto'))
+              title=_('LabControle v1.2 - Sistema continuo'))
         self._init_utils()
         self.SetClientSize(wx.Size(632, 523))
         self.SetStatusBarPane(1)
@@ -457,7 +457,7 @@ class Frame(wx.Frame):
         self.SetMinSize(wx.Size(640, 480))
         self.Enable(True)
         self.Center(wx.BOTH)
-        self.SetToolTipString(_('LabControle v1.2 - Sistema continuo - by Moreto'))
+        self.SetToolTipString(_('LabControle v1.2 - Sistema continuo'))
 
         self.Notebook = wx.Notebook(id=wxID_FRAMENOTEBOOK, name='Notebook',
               parent=self, pos=wx.Point(0, 0), size=wx.Size(632, 480), style=0)
@@ -807,25 +807,6 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.txtNyquist.SetToolTipString(_('Diagrama de Nyquist'))
 
-        self.panel8 = wx.Panel(id=wxID_FRAMEPANEL8, name='panel8',
-              parent=self.panel7, pos=wx.Point(4, 211), size=wx.Size(122, 143),
-              style=wx.TAB_TRAVERSAL)
-        self.panel8.SetToolTipString('')
-
-        self.btnNyq = wx.Button(id=wxID_FRAMEBTNNYQ, label='Tra\xe7ar Nyquist',
-              name='btnNyq', parent=self.panel7, pos=wx.Point(21, 362),
-              size=wx.Size(88, 40), style=0)
-        self.btnNyq.SetToolTipString(_('Tra\xe7ar diagrama de Nyquist.'))
-        self.btnNyq.Bind(wx.EVT_BUTTON, self.onBtnNyqButton,
-              id=wxID_FRAMEBTNNYQ)
-
-        self.btnLimpaNyq = wx.Button(id=wxID_FRAMEBTNLIMPANYQ, label='Limpar',
-              name='btnLimpaNyq', parent=self.panel7, pos=wx.Point(21, 410),
-              size=wx.Size(88, 40), style=0)
-        self.btnLimpaNyq.SetToolTipString(_('Limpar \xe1rea do gr\xe1fico.'))
-        self.btnLimpaNyq.Bind(wx.EVT_BUTTON, self.OnBtnLimpaNyqButton,
-              id=wxID_FRAMEBTNLIMPANYQ)
-
         self.FminTxtNyq = wx.StaticText(id=wxID_FRAMEFMINTXTNYQ, label='Fmin:',
               name='FminTxtNyq', parent=self.panel7, pos=wx.Point(5, 44),
               size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
@@ -833,26 +814,19 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.FminTxtNyq.SetToolTipString(_('Frequencia m\xednima utilizada no diagrama de Nyquist.'))
 
-        self.FmaxTxtNyq = wx.StaticText(id=wxID_FRAMEFMAXTXTNYQ, label='Fmax:',
-              name='FmaxTxtNyq', parent=self.panel7, pos=wx.Point(5, 77),
-              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
-        self.FmaxTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
-              'MS Shell Dlg 2'))
-        self.FmaxTxtNyq.SetToolTipString(_('Frequencia m\xe1xima utilizada no diagrama de Nyquist.'))
-
-        self.ResTxtNyq = wx.StaticText(id=wxID_FRAMERESTXTNYQ, label='Res.:',
-              name='ResTxtNyq', parent=self.panel7, pos=wx.Point(5, 110),
-              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
-        self.ResTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
-              'MS Shell Dlg 2'))
-        self.ResTxtNyq.SetToolTipString(_('Resolu\xe7\xe3o do diagrama de Nyquist.'))
-
         self.FminNyq = wx.TextCtrl(id=wxID_FRAMEFMINNYQ, name='FminNyq',
               parent=self.panel7, pos=wx.Point(77, 44), size=wx.Size(48, 25),
               style=0, value='0.01')
         self.FminNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
               'MS Shell Dlg 2'))
         self.FminNyq.SetToolTipString(_('Entre com a frequencia m\xednima utilizada no tra\xe7ado do diagrama de Nyquist.'))
+
+        self.FmaxTxtNyq = wx.StaticText(id=wxID_FRAMEFMAXTXTNYQ, label='Fmax:',
+              name='FmaxTxtNyq', parent=self.panel7, pos=wx.Point(5, 77),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.FmaxTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.FmaxTxtNyq.SetToolTipString(_('Frequencia m\xe1xima utilizada no diagrama de Nyquist.'))
 
         self.FmaxNyq = wx.TextCtrl(id=wxID_FRAMEFMAXNYQ, name='FmaxNyq',
               parent=self.panel7, pos=wx.Point(77, 77), size=wx.Size(48, 25),
@@ -862,6 +836,13 @@ class Frame(wx.Frame):
               'MS Shell Dlg 2'))
         self.FmaxNyq.SetToolTipString(_('Entre com a frequencia m\xe1xima utilizada para o tra\xe7ado do diagrama de Nyquist.'))
 
+        self.ResTxtNyq = wx.StaticText(id=wxID_FRAMERESTXTNYQ, label='Res.:',
+              name='ResTxtNyq', parent=self.panel7, pos=wx.Point(5, 110),
+              size=wx.Size(64, 25), style=wx.ALIGN_RIGHT)
+        self.ResTxtNyq.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD, False,
+              'MS Shell Dlg 2'))
+        self.ResTxtNyq.SetToolTipString(_('Resolu\xe7\xe3o do diagrama de Nyquist.'))
+
         self.ResNyq = wx.TextCtrl(id=wxID_FRAMERESNYQ, name='ResNyq',
               parent=self.panel7, pos=wx.Point(77, 110), size=wx.Size(48, 25),
               style=0, value='50')
@@ -870,22 +851,40 @@ class Frame(wx.Frame):
         self.ResNyq.SetToolTipString(_('Entre com a resolu\xe7\xe3o do diagrama de Nyquist.'))
 
         self.chkNyqCirculo = wx.CheckBox(id=wxID_FRAMECHKNYQCIRCULO,
-              label=_('C\xedrculo -1'), name='chkNyqCirculo',
-              parent=self.panel7, pos=wx.Point(4, 147), size=wx.Size(122, 24),
-              style=0)
-        self.chkNyqCirculo.SetValue(False)
+              label=_('C\xedrculo 1'), name='chkNyqCirculo', parent=self.panel7,
+              pos=wx.Point(4, 147), size=wx.Size(122, 24), style=0)
+        self.chkNyqCirculo.SetValue(True)
         self.chkNyqCirculo.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, 'MS Shell Dlg 2'))
-        self.chkNyqCirculo.SetToolTipString(_('Selecione para tra\xe7ar tamb\xe9m o c\xedrculo -1'))
+        self.chkNyqCirculo.SetToolTipString(_('Selecione para tra\xe7ar tamb\xe9m o c\xedrculo unit\xe1rio'))
 
         self.chkNyqParcial = wx.CheckBox(id=wxID_FRAMECHKNYQPARCIAL,
               label=_('Parcial'), name='chkNyqParcial', parent=self.panel7,
               pos=wx.Point(4, 179), size=wx.Size(122, 24), style=0)
-        self.chkNyqParcial.SetValue(True)
+        self.chkNyqParcial.SetValue(False)
         self.chkNyqParcial.SetFont(wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD,
               False, 'MS Shell Dlg 2'))
         self.chkNyqParcial.SetToolTipString(_('Selecione para tra\xe7ar o Nyquist parcial.'))
-        
+
+        self.btnNyq = wx.Button(id=wxID_FRAMEBTNNYQ,
+              label=_('Tra\xe7ar Nyquist'), name='btnNyq', parent=self.panel7,
+              pos=wx.Point(21, 362), size=wx.Size(88, 40), style=0)
+        self.btnNyq.SetToolTipString(_('Tra\xe7ar diagrama de Nyquist.'))
+        self.btnNyq.Bind(wx.EVT_BUTTON, self.onBtnNyqButton,
+              id=wxID_FRAMEBTNNYQ)
+
+        self.btnLimpaNyq = wx.Button(id=wxID_FRAMEBTNLIMPANYQ,
+              label=_('Limpar'), name='btnLimpaNyq', parent=self.panel7,
+              pos=wx.Point(21, 410), size=wx.Size(88, 40), style=0)
+        self.btnLimpaNyq.SetToolTipString(_('Limpar \xe1rea do gr\xe1fico.'))
+        self.btnLimpaNyq.Bind(wx.EVT_BUTTON, self.OnBtnLimpaNyqButton,
+              id=wxID_FRAMEBTNLIMPANYQ)
+
+        self.panel8 = wx.Panel(id=wxID_FRAMEPANEL8, name='panel8',
+              parent=self.panel7, pos=wx.Point(4, 211), size=wx.Size(122, 143),
+              style=wx.TAB_TRAVERSAL)
+        self.panel8.SetToolTipString('')
+
         self._init_coll_Notebook_Pages(self.Notebook)
 
         self._init_sizers()
@@ -1081,13 +1080,15 @@ class Frame(wx.Frame):
         
         dlg = DlgFT.Dialog1(self)
         dlg.SetTitle(_('Parâmetros de C(s)'))
-        dlg.AtualizaCampos(self.sis.Cnum,self.sis.Cden)
+        dlg.AtualizaCampos(self.sis.CnumStr,self.sis.CdenStr)
         
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             self.sis.Cnum = dlg.Num
+            self.sis.CnumStr = dlg.textonum
             self.sis.Cden = dlg.Den
-            txt = _("C(s) atualizado: Num=") + str(self.sis.Cnum) + _(" e Den=") + str(self.sis.Cden)
+            self.sis.CdenStr = dlg.textoden
+            txt = _("C(s) atualizado: Num=") + self.sis.CnumStr + _(" e Den=") + self.sis.CdenStr
             self.statusBar1.SetStatusText(number=0, text=txt)
         else:
             self.statusBar1.SetStatusText(number=0, text=_('C(s) nao atualizado'))
@@ -1102,13 +1103,15 @@ class Frame(wx.Frame):
         """
         dlg = DlgFT.Dialog1(self)
         dlg.SetTitle(_('Parâmetros de G(s)'))
-        dlg.AtualizaCampos(self.sis.Gnum,self.sis.Gden)
+        dlg.AtualizaCampos(self.sis.GnumStr,self.sis.GdenStr)
         
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             self.sis.Gnum = dlg.Num
+            self.sis.GnumStr = dlg.textonum
             self.sis.Gden = dlg.Den
-            txt = _("G(s) atualizado: Num=") + str(self.sis.Gnum) + _(" e Den=") + str(self.sis.Gden)
+            self.sis.GdenStr = dlg.textoden
+            txt = _("G(s) atualizado: Num=") + self.sis.GnumStr + _(" e Den=") + self.sis.GdenStr
             self.statusBar1.SetStatusText(number=0, text=txt)
         else:
             self.statusBar1.SetStatusText(number=0, text=_('G(s) nao atualizado'))
@@ -1123,13 +1126,15 @@ class Frame(wx.Frame):
         """
         dlg = DlgFT.Dialog1(self)
         dlg.SetTitle(_('Parâmetros de H(s)'))
-        dlg.AtualizaCampos(self.sis.Hnum,self.sis.Hden)
+        dlg.AtualizaCampos(self.sis.HnumStr,self.sis.HdenStr)
         
         result = dlg.ShowModal()
         if result == wx.ID_OK:
             self.sis.Hnum = dlg.Num
+            self.sis.HnumStr = dlg.textonum
             self.sis.Hden = dlg.Den
-            txt = _("H(s) atualizado: Num=") + str(self.sis.Hnum) + _(" e Den=") + str(self.sis.Hden)
+            self.sis.HdenStr = dlg.textoden
+            txt = _("H(s) atualizado: Num=") + self.sis.HnumStr + _(" e Den=") + self.sis.HdenStr
             self.statusBar1.SetStatusText(number=0, text=txt)
         else:
             self.statusBar1.SetStatusText(number=0, text=_('H(s) nao atualizado'))

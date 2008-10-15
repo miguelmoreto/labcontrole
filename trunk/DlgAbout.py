@@ -90,9 +90,10 @@ class AboutDlg(wx.Dialog):
     def _init_ctrls(self, prnt):
         # generated method, don't edit
         wx.Dialog.__init__(self, id=wxID_ABOUTDLG, name='AboutDlg', parent=prnt,
-              pos=wx.Point(564, 209), size=wx.Size(364, 393),
+              pos=wx.Point(632, 362), size=wx.Size(364, 393),
               style=wx.DEFAULT_DIALOG_STYLE, title=_('Sobre o LabControle'))
         self.SetClientSize(wx.Size(356, 365))
+        self.Center(wx.BOTH)
 
         self.BtnOk = wx.Button(id=wx.ID_OK, label='OK', name='BtnOk',
               parent=self, pos=wx.Point(136, 336), size=wx.Size(84, 30),
