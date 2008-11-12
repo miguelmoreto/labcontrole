@@ -1,0 +1,16 @@
+#labels Featured,Phase-Requirements
+# This page shows the features of the LabControle.
+
+== The control system ==
+
+Under construction
+
+== Features ==
+
+
+Under construction.
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
