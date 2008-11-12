@@ -1,7 +1,8 @@
 #labels Featured,Phase-Requirements
-# This page shows the features of the LabControle.
+
 
 == The control system ==
+
 
 Under construction
 
