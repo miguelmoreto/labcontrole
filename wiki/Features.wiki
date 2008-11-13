@@ -1,17 +1,19 @@
 #labels Featured,Phase-Requirements
+= LABCONTROLE =
 
-== The control system ==
+LabControle is an educational tool for classical control system theory classes. It was developed in Santa Catarina, south of Brazil. It is an open source software developed in python language, so everyone interested may use and change it.
 
-http://code.google.com/p/labcontrole/source/browse/wiki/diagrama.gif
+The graphic interface of LabControle supports two languages: Brazilian portuguese (default) and english.
 
-Under construction
+Using LabControle the user will be able to simulate a Linear Time Invariant (LTI) control system like the one in the following figure.
 
-== Features ==
+http://labcontrole.googlecode.com/svn/trunk/imagens/diagrama.gif
 
+The user can perform the following actions:
 
-Under construction.
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * Time simulations: User can set the r(t) and w(t) inputs as functions of time. The program supports a wide variety of math funcionts to describe de input, from a single step (constant value) to complex funcions using trigonomethic operations like sin(t), cos(t), tan(t) and power operations like t^2^;
+  * Setting the system transfer functions: User can set the numerator and denominator of C(s), G(s) and H(s) as any polynomial funcion of the variable s, like '(s+1)(3s+4)';
+  * Plot the root locus: The LabControle plots the root locus of the system and the user can change the loop gain using a slider and watch the closed loop poles moving in the root locus;
+  * Bode plot: The bode plot of the system can be viewed in the program's interface;
+  * Nyquist plot: Also, the nyquist plot can be drawn.
+  * Saving figures: Every plot of the LabControle can be exported to several formats from bitmaps (.bmp, .jpg, .png) to vectorized pictures like encapsulated postscript (.eps) and scalable vector graphics (.svg).
