@@ -17,3 +17,5 @@ The user can perform the following actions:
   * Bode plot: The bode plot of the system can be viewed in the program's interface;
   * Nyquist plot: Also, the nyquist plot can be drawn.
   * Saving figures: Every plot of the LabControle can be exported to several formats from bitmaps (.bmp, .jpg, .png) to vectorized pictures like encapsulated postscript (.eps) and scalable vector graphics (.svg).
+
+You can see some screenshots of the LabControle [Screenshots here].
