@@ -1,8 +1,8 @@
 #labels Featured,Phase-Requirements
 
-
 == The control system ==
 
+http://code.google.com/p/labcontrole/source/browse/wiki/diagrama.gif
 
 Under construction
 
