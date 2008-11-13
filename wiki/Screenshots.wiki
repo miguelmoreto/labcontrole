@@ -1,0 +1,22 @@
+#summary This page shows some screenshots of the LabControle
+#labels Featured
+
+=== Block diagram and system configuration ===
+
+[http://labcontrole.googlecode.com/svn/trunk/imagens/bl-large.jpg http://labcontrole.googlecode.com/svn/trunk/imagens/bl-small.jpg]
+
+=== Time simulation with perturbation ===
+
+[http://labcontrole.googlecode.com/svn/trunk/imagens/ts-large.jpg http://labcontrole.googlecode.com/svn/trunk/imagens/ts-small.jpg]
+
+=== Root locus plot ===
+
+[http://labcontrole.googlecode.com/svn/trunk/imagens/rl-large.jpg http://labcontrole.googlecode.com/svn/trunk/imagens/rl-small.jpg]
+
+=== Bode plot ===
+
+[http://labcontrole.googlecode.com/svn/trunk/imagens/bd-large.jpg http://labcontrole.googlecode.com/svn/trunk/imagens/bd-small.jpg]
+
+=== Nyquist plot ===
+
+[http://labcontrole.googlecode.com/svn/trunk/imagens/nq-large.jpg http://labcontrole.googlecode.com/svn/trunk/imagens/nq-small.jpg]
