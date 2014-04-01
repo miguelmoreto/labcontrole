@@ -1,0 +1,1 @@
+pyuic4.bat -x MainWindow.ui -o MainWindow.py
