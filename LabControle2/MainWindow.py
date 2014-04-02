@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Tue Apr 01 17:39:27 2014
+# Created: Wed Apr 02 11:17:23 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -164,6 +164,13 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tabSimul, _fromUtf8(""))
         self.tabLGR = QtGui.QWidget()
         self.tabLGR.setObjectName(_fromUtf8("tabLGR"))
+        self.horizontalLayout_3 = QtGui.QHBoxLayout(self.tabLGR)
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.graphicsView = QtGui.QGraphicsView(self.tabLGR)
+        self.graphicsView.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
+        self.graphicsView.setViewportUpdateMode(QtGui.QGraphicsView.FullViewportUpdate)
+        self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
+        self.horizontalLayout_3.addWidget(self.graphicsView)
         self.tabWidget.addTab(self.tabLGR, _fromUtf8(""))
         self.tabBode = QtGui.QWidget()
         self.tabBode.setObjectName(_fromUtf8("tabBode"))
@@ -174,7 +181,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 23))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuArquivo = QtGui.QMenu(self.menubar)
         self.menuArquivo.setObjectName(_fromUtf8("menuArquivo"))
@@ -209,7 +216,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuAjuda.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
