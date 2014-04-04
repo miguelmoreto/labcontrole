@@ -17,6 +17,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
     """
     def __init__(self,parent=None):
+        self.init = 0
         super(LabControle2,self).__init__(parent)
         
         # Init variables:
@@ -65,8 +66,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.SVGRect = self.svgItem.boundingRect()
         self.GraphSize = self.graphicsView.size()
-        
+        print 'SVG rect'
         print self.SVGRect.width(), self.SVGRect.height()
+        print 'Graphsize'
         print self.GraphSize.width(), self.GraphSize.height()
         #print self.graphicsView.viewport().size()
         #print self.scene.width()
@@ -91,21 +93,29 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         QtCore.QObject.connect(self, QtCore.SIGNAL("resize()"), self.onResize)
         
+        self.init = 1
+        
     def resizeEvent(self, evt=None):
         self.emit(QtCore.SIGNAL("resize()"))
         
     def onResize(self):
+        self.SVGRect = self.svgItem.boundingRect()
+        self.GraphSize = self.graphicsView.size()
+        print 'SVG rect'
+        print self.SVGRect.width(), self.SVGRect.height()
+        print 'Graphsize'
+        print self.GraphSize.width(), self.GraphSize.height()
         #print self.image.s
         #print self.scene.width()
         #print self.graphicsView.size()
         sx = self.oldW/float(self.graphicsView.viewport().size().width())
         sy = self.oldH/float(self.graphicsView.viewport().size().height())
-        print sx, sy
-        self.graphicsView.scale(sx, sy)
+        ##print sx, sy
+        ##self.graphicsView.scale(sx, sy)
         #print self.graphicsView.viewport().size()
         self.oldW = self.graphicsView.viewport().size().width()
         self.oldH = self.graphicsView.viewport().size().height()
-        print self.oldW, self.oldH
+        ##print self.oldW, self.oldH
         
         
 if __name__ == '__main__':
