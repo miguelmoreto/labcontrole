@@ -37,10 +37,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.graphicsView.setViewport(QtGui.QWidget())
         
-        svg_file = QtCore.QFile('cubic.svg')
+        svg_file = QtCore.QFile('diagrama.svg')
         if not svg_file.exists():
             QtGui.QMessageBox.critical(self, "Open SVG File",
-                    "Could not open file '%s'." % 'cubic.svg')
+                    "Could not open file '%s'." % 'diagrama.svg')
 
             self.outlineAction.setEnabled(False)
             self.backgroundAction.setEnabled(False)
@@ -61,7 +61,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.backgroundItem.setVisible(True)
         self.backgroundItem.setZValue(-1)
 
-        self.scene.addItem(self.backgroundItem)
+        #self.scene.addItem(self.backgroundItem)
         self.scene.addItem(self.svgItem)
         
         self.SVGRect = self.svgItem.boundingRect()
@@ -72,7 +72,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         print self.GraphSize.width(), self.GraphSize.height()
         #print self.graphicsView.viewport().size()
         #print self.scene.width()
-        self.graphicsView.scale(self.GraphSize.width()/self.SVGRect.width(), self.GraphSize.height()/self.SVGRect.height())
+        #self.graphicsView.scale(self.GraphSize.width()/self.SVGRect.width(), self.GraphSize.height()/self.SVGRect.height())
         
         self.oldW = self.graphicsView.viewport().size().width()#self.GraphSize.width();
         self.oldH = self.graphicsView.viewport().size().height()#self.GraphSize.height();
