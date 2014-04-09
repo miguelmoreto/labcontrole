@@ -10,6 +10,16 @@ from PyQt4 import QtCore,QtGui, QtSvg
 from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
 
 import MainWindow
+import Sistema
+
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
@@ -25,7 +35,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.GraphSize = QtCore.QSize()
         
         self.setupUi(self)
-        self.statusBar().showMessage('Pronto')
+        #self.statusBar().showMessage('Pronto')
+        self.tabWidget.setCurrentIndex(0)
         
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -37,10 +48,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.graphicsView.setViewport(QtGui.QWidget())
         
-        svg_file = QtCore.QFile('diagrama.svg')
+        svg_file = QtCore.QFile('diagramOpened.svg')
         if not svg_file.exists():
             QtGui.QMessageBox.critical(self, "Open SVG File",
-                    "Could not open file '%s'." % 'diagrama.svg')
+                    "Could not open file '%s'." % 'diagramOpened.svg')
 
             self.outlineAction.setEnabled(False)
             self.backgroundAction.setEnabled(False)
@@ -64,59 +75,68 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.scene.addItem(self.backgroundItem)
         self.scene.addItem(self.svgItem)
         
-        self.SVGRect = self.svgItem.boundingRect()
-        self.GraphSize = self.graphicsView.size()
-        print 'SVG rect'
-        print self.SVGRect.width(), self.SVGRect.height()
-        print 'Graphsize'
-        print self.GraphSize.width(), self.GraphSize.height()
-        #print self.graphicsView.viewport().size()
-        #print self.scene.width()
-        #self.graphicsView.scale(self.GraphSize.width()/self.SVGRect.width(), self.GraphSize.height()/self.SVGRect.height())
-        
-        self.oldW = self.graphicsView.viewport().size().width()#self.GraphSize.width();
-        self.oldH = self.graphicsView.viewport().size().height()#self.GraphSize.height();
-        print self.oldW, self.oldH
-        #self.scene.update (10, 10, 300, 300)
-        #print s.width ()
-        
         x=[0,10,100]
         y=[3,4,5]
 
-        self.mplDiagrama.axes.set_xscale('log') # Nothing Happens 
-        self.mplDiagrama.axes.set_title('GRAPH') # Nothing Happens
+
+        self.mplSimul.axes.set_xscale('log') # Nothing Happens 
+        self.mplSimul.axes.set_title('GRAPH') # Nothing Happens
         
-        self.mplDiagrama.axes.plot(x,y)
+        self.mplSimul.axes.plot(x,y)
         
-        self.mplDiagrama.draw()
+        self.mplSimul.draw()
         
+        # Initializing system
+        self.sys = Sistema.SistemaContinuo()
         
-        QtCore.QObject.connect(self, QtCore.SIGNAL("resize()"), self.onResize)
         
         self.init = 1
         
-    def resizeEvent(self, evt=None):
-        self.emit(QtCore.SIGNAL("resize()"))
+        self.groupBoxC.setStyleSheet("QGroupBox { border:2px solid rgb(175, 198, 233);border-radius: 3px;} QGroupBox::title {background-color: transparent;}")
+        #self.groupBoxC.setStyleSheet("QGroupBox::title {background-color: transparent;padding:2 13px;}")        
         
-    def onResize(self):
-        self.SVGRect = self.svgItem.boundingRect()
-        self.GraphSize = self.graphicsView.size()
-        print 'SVG rect'
-        print self.SVGRect.width(), self.SVGRect.height()
-        print 'Graphsize'
-        print self.GraphSize.width(), self.GraphSize.height()
-        #print self.image.s
-        #print self.scene.width()
-        #print self.graphicsView.size()
-        sx = self.oldW/float(self.graphicsView.viewport().size().width())
-        sy = self.oldH/float(self.graphicsView.viewport().size().height())
-        ##print sx, sy
-        ##self.graphicsView.scale(sx, sy)
-        #print self.graphicsView.viewport().size()
-        self.oldW = self.graphicsView.viewport().size().width()
-        self.oldH = self.graphicsView.viewport().size().height()
-        ##print self.oldW, self.oldH
+        # Connecting events:
+        QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
+        QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
         
+        self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
+        
+               
+    def feedbackOpen(self):
+        """Open Feedback """ 
+        svg_file = QtCore.QFile('diagramOpened.svg')
+        if not svg_file.exists():
+            QtGui.QMessageBox.critical(self, "Open SVG File",
+                                       "Could not open file '%s'." % 'diagramOpened.svg')
+            self.outlineAction.setEnabled(False)
+            self.backgroundAction.setEnabled(False)
+            return   
+        self.sys.Malha = 'Aberta'
+        
+        # Update svg image with open loop.
+        self.scene.clear()
+        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
+        self.scene.addItem(self.svgItem)
+        self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
+        
+    def feedbackClose(self):
+        """Close Feedback """    
+        svg_file = QtCore.QFile('diagramClosed.svg')
+        if not svg_file.exists():
+            QtGui.QMessageBox.critical(self, "Open SVG File",
+                                       "Could not open file '%s'." % 'diagramClosed.svg')
+            self.outlineAction.setEnabled(False)
+            self.backgroundAction.setEnabled(False)
+            return   
+
+        self.sys.Malha = 'Fechada'
+        
+        # Update svg image with closed loop.
+        self.scene.clear()
+        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
+        self.scene.addItem(self.svgItem)
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))        
         
 if __name__ == '__main__':
     app = QtGui.QApplication([])
