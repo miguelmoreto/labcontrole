@@ -117,12 +117,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
         QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
         QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
-
+        # Spinboxes:
         QtCore.QObject.connect(self.doubleSpinBoxKmax, QtCore.SIGNAL("valueChanged(double)"), self.onKmaxChange)
         QtCore.QObject.connect(self.doubleSpinBoxKmin, QtCore.SIGNAL("valueChanged(double)"), self.onKminChange)
         QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
         QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-    
+        # Buttons:
+        QtCore.QObject.connect(self.btnSimul, QtCore.SIGNAL("clicked()"), self.onBtnSimul)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -204,6 +205,47 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)        
         # Update slider position.
         self.updateSliderPosition()
+
+    def onBtnSimul(self):
+        
+        Tmax = self.doubleSpinBoxTmax.value()
+        self.sys.X0r = None
+        self.sys.X0w = None
+        
+        stringR = self.sys.Rt
+        stringW = self.sys.Wt
+        
+        delta_t = 0.01
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Iniciando simulação...", None))
+        # Create the input vectors r(t) and w(t):
+        t,r,w = self.sys.CriaEntrada(stringR, stringW, 0, Tmax, delta_t, 
+                            self.sys.InstRt, self.sys.InstWt)
+        
+        # Perform a time domain simulation:
+        y = self.sys.Simulacao(t, r, w)        
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
+        
+        self.mplSimul.figure.clf()
+        ax = self.mplSimul.figure.add_subplot(111)
+        legend = []
+        flag = 0
+        
+        
+        if (self.checkBoxEntrada.isChecked()):
+            ax.plot(t,r,'b')
+            legend.append(_translate("MainWindow", "Entrada: u(t)", None))
+            flag = 1
+        if (self.checkBoxSaida.isChecked()):
+            ax.plot(t,y,'r')
+            legend.append(_translate("MainWindow", "Saída: y(t)", None))
+            flag = 1
+        
+        
+        self.mplSimul.draw()
+        print Tmax
+        pass
     
     def updateSliderPosition(self):
         position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))

@@ -40,7 +40,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -930,7 +930,7 @@ QGroupBox::title {
                  <string>Numerador da planta G(s)</string>
                 </property>
                 <property name="text">
-                 <string notr="true">1</string>
+                 <string notr="true">2*s+10</string>
                 </property>
                </widget>
               </item>
@@ -981,7 +981,7 @@ QGroupBox::title {
                  <string>Denominador da planta G(s)</string>
                 </property>
                 <property name="text">
-                 <string notr="true">1</string>
+                 <string notr="true">1*s^2+2*s+10</string>
                 </property>
                </widget>
               </item>
@@ -1384,7 +1384,7 @@ QGroupBox::title {
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btnPlot">
+            <widget class="QPushButton" name="btnSimul">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -1397,7 +1397,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="text">
-              <string>Plot</string>
+              <string>Simular</string>
              </property>
             </widget>
            </item>

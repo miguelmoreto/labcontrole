@@ -33,7 +33,7 @@ from scipy import *
 from scipy import signal
 import controls
 from utils import FreqResp,Nyquist
-import types
+#import types
 
 class SistemaContinuo:
     """

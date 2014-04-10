@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Thu Apr 10 16:44:40 2014
+# Created: Thu Apr 10 16:52:41 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -386,7 +386,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.lineEditGnum.setFont(font)
-        self.lineEditGnum.setText(_fromUtf8("1"))
+        self.lineEditGnum.setText(_fromUtf8("2*s+10"))
         self.lineEditGnum.setObjectName(_fromUtf8("lineEditGnum"))
         self.gridLayout_2.addWidget(self.lineEditGnum, 0, 1, 1, 1)
         self.labelGden = QtGui.QLabel(self.groupBoxG)
@@ -404,7 +404,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.lineEditGden.setFont(font)
-        self.lineEditGden.setText(_fromUtf8("1"))
+        self.lineEditGden.setText(_fromUtf8("1*s^2+2*s+10"))
         self.lineEditGden.setObjectName(_fromUtf8("lineEditGden"))
         self.gridLayout_2.addWidget(self.lineEditGden, 1, 1, 1, 1)
         self.horizontalLayout.addWidget(self.groupBoxG)
@@ -563,13 +563,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.checkBoxPert)
         spacerItem2 = QtGui.QSpacerItem(20, 61, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem2)
-        self.btnPlot = QtGui.QPushButton(self.frameSimul)
-        self.btnPlot.setMinimumSize(QtCore.QSize(0, 40))
+        self.btnSimul = QtGui.QPushButton(self.frameSimul)
+        self.btnSimul.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.btnPlot.setFont(font)
-        self.btnPlot.setObjectName(_fromUtf8("btnPlot"))
-        self.verticalLayout_2.addWidget(self.btnPlot)
+        self.btnSimul.setFont(font)
+        self.btnSimul.setObjectName(_fromUtf8("btnSimul"))
+        self.verticalLayout_2.addWidget(self.btnSimul)
         self.btnContinuar = QtGui.QPushButton(self.frameSimul)
         self.btnContinuar.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
@@ -891,7 +891,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuAjuda.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -948,7 +948,7 @@ class Ui_MainWindow(object):
         self.checkBoxErro.setText(_translate("MainWindow", "Erro: e(t)", None))
         self.checkBoxControle.setText(_translate("MainWindow", "Controle: u(t)", None))
         self.checkBoxPert.setText(_translate("MainWindow", "Perturbação: w(t)", None))
-        self.btnPlot.setText(_translate("MainWindow", "Plot", None))
+        self.btnSimul.setText(_translate("MainWindow", "Simular", None))
         self.btnContinuar.setText(_translate("MainWindow", "Continuar", None))
         self.btnLimparSimul.setText(_translate("MainWindow", "Limpar", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabSimul), _translate("MainWindow", "Simulação", None))
