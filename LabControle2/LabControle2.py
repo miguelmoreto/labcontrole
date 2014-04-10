@@ -38,9 +38,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.statusBar().showMessage('Pronto')
         self.tabWidget.setCurrentIndex(0)
         
-        # Adding toolbars
-        self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
-        self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         
         self.image = QtGui.QImage()        
         
@@ -75,16 +72,38 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.scene.addItem(self.backgroundItem)
         self.scene.addItem(self.svgItem)
         
+        
+        # Initial definitions:
+        #self.Kpoints = 200 # Number of the K values to plot root locus        
+        self.KmaxminChangeFlag = False
+        self.SliderMoved = False
+        
+        
         x=[0,10,100]
         y=[3,4,5]
 
 
-        self.mplSimul.figure.set_facecolor('white')
-        self.mplSimul.axes.set_xscale('log') # Nothing Happens 
-        self.mplSimul.axes.set_title('GRAPH') # Nothing Happens
+        # Adding toolbars
+        self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
+        self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
+        self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
+        self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
+        
+        # MATPLOTLIB API AXES CONFIG
+        self.mplSimul.figure.set_facecolor('0.90')
+        self.mplSimul.figure.set_tight_layout(True)
+        self.mplLGR.figure.set_facecolor('0.90')
+        self.mplLGR.figure.set_tight_layout(True)
+
         
         self.mplSimul.axes.plot(x,y)
-        
+        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))
+        self.mplSimul.axes.set_xlim(0, self.doubleSpinBoxTmax.value())
+        self.mplSimul.axes.set_ylim(0, 1)
+        self.mplSimul.axes.grid(True)
+        self.mplSimul.axes.autoscale(True)
         self.mplSimul.draw()
         
         # Initializing system
@@ -97,6 +116,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Connecting events:
         QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
         QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
+        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+
+        QtCore.QObject.connect(self.doubleSpinBoxKmax, QtCore.SIGNAL("valueChanged(double)"), self.onKmaxChange)
+        QtCore.QObject.connect(self.doubleSpinBoxKmin, QtCore.SIGNAL("valueChanged(double)"), self.onKminChange)
+        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+    
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -135,7 +161,56 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
         self.scene.addItem(self.svgItem)
         
-        self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))        
+        self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
+    
+    def onSliderMove(self,value):
+        """Slider change event. 
+        This event is called also when setSliderPosition is called during 
+        Kmax and Kmin changes. Changes in Kmax and Kmin only alters position
+        of the slider and not the gain. This is why there is this test.
+        """
+
+        gain = float(value)*float(abs(self.sys.Kmax)-abs(self.sys.Kmin))/float(self.sys.Kpontos) + self.sys.Kmin        
+        self.sys.K = gain
+        # Disconnect events to not enter in a event loop:
+        QtCore.QObject.disconnect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        QtCore.QObject.disconnect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        # Update spinboxes
+        self.doubleSpinBoxKlgr.setValue(gain)
+        self.doubleSpinBoxK.setValue(gain)
+        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)      
+        
+    def onKmaxChange(self,value):
+        #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmax change
+        self.sys.Kmax = value
+        self.updateSliderPosition()
+    
+    def onKminChange(self,value):
+        #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmin change
+        self.sys.Kmin = value
+        self.updateSliderPosition() # update slider position, this call also the event slider move.
+    
+    def onKChange(self,value):
+        # Save K value in the LTI system.
+        self.sys.K = value
+        # Disconnect events to not enter in a event loop:
+        QtCore.QObject.disconnect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        QtCore.QObject.disconnect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        # Update spinboxes
+        self.doubleSpinBoxKlgr.setValue(value)
+        self.doubleSpinBoxK.setValue(value)
+        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)        
+        # Update slider position.
+        self.updateSliderPosition()
+    
+    def updateSliderPosition(self):
+        position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
+        # Disconnect events to not enter in a event loop:
+        QtCore.QObject.disconnect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+        self.verticalSliderK.setSliderPosition(int(position))
+        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
         
 if __name__ == '__main__':
     app = QtGui.QApplication([])
