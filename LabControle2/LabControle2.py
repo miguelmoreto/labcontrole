@@ -79,6 +79,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         y=[3,4,5]
 
 
+        self.mplSimul.figure.set_facecolor('white')
         self.mplSimul.axes.set_xscale('log') # Nothing Happens 
         self.mplSimul.axes.set_title('GRAPH') # Nothing Happens
         
@@ -92,8 +93,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.init = 1
         
-        self.groupBoxC.setStyleSheet("QGroupBox { border:2px solid rgb(175, 198, 233);border-radius: 3px;} QGroupBox::title {background-color: transparent;}")
-        #self.groupBoxC.setStyleSheet("QGroupBox::title {background-color: transparent;padding:2 13px;}")        
         
         # Connecting events:
         QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
