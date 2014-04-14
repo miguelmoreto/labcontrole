@@ -59,6 +59,7 @@ class SistemaContinuo:
     InstWt = 0
 
     delta_t = 0.01  # Passo de simulação.
+    Tmax = 10   # Tempo máximo de simulação
     
     Malha = 'Aberta' # Estado da malha (aberta ou fechada)
     

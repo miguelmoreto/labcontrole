@@ -57,7 +57,7 @@ def parseeqpoly(dados,listeq=[]) :
 				if (expoente < 1) : raise 'Erro 3 : ' + expoente					
 				if flagdiv : eqt = eqt / (listeq[idx]**int(expoente))
 				else : eqt = eqt * (listeq[idx]**int(expoente))
-			else :							
+			else :				
 				if flagdiv : 
 					eqt = eqt / (float(tt.strip('/'))**expoente)
 				else : 

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Thu Apr 10 16:52:41 2014
+# Created: Mon Apr 14 10:42:28 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -550,6 +550,7 @@ class Ui_MainWindow(object):
         self.checkBoxErro.setObjectName(_fromUtf8("checkBoxErro"))
         self.verticalLayout_2.addWidget(self.checkBoxErro)
         self.checkBoxControle = QtGui.QCheckBox(self.frameSimul)
+        self.checkBoxControle.setEnabled(False)
         font = QtGui.QFont()
         font.setPointSize(12)
         self.checkBoxControle.setFont(font)
@@ -571,6 +572,7 @@ class Ui_MainWindow(object):
         self.btnSimul.setObjectName(_fromUtf8("btnSimul"))
         self.verticalLayout_2.addWidget(self.btnSimul)
         self.btnContinuar = QtGui.QPushButton(self.frameSimul)
+        self.btnContinuar.setEnabled(False)
         self.btnContinuar.setMinimumSize(QtCore.QSize(0, 40))
         font = QtGui.QFont()
         font.setPointSize(12)

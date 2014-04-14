@@ -1348,6 +1348,9 @@ QGroupBox::title {
            </item>
            <item>
             <widget class="QCheckBox" name="checkBoxControle">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -1403,6 +1406,9 @@ QGroupBox::title {
            </item>
            <item>
             <widget class="QPushButton" name="btnContinuar">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
