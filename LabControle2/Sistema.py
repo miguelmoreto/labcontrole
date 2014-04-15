@@ -153,11 +153,16 @@ class SistemaContinuo:
         Monta função de transferência do sistema em malha aberta ou fechada
         considerando com entrada w(t).
         """
-        
-        if self.Malha == 'Aberta':
-            return self.G
-        else:
-            return self.G/(1.000000001 + (self.K*self.H*self.C*self.G))
+        if self.Type == 0:
+            if self.Malha == 'Aberta':
+                return controls.TransferFunction([1],[1])
+            else:
+                return controls.TransferFunction([1],[1])/(controls.TransferFunction([1],[1]) + (self.K*self.H*self.G))                   
+        elif self.Type == 1:
+            if self.Malha == 'Aberta':
+                return self.G
+            else:
+                return self.G/(1.000000001 + (self.K*self.H*self.C*self.G))
         
     def Simulacao(self, t, u, w, X0=0):
         """
