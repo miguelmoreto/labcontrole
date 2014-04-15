@@ -31,6 +31,7 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 #
 from scipy import *
 from scipy import signal
+import numpy
 import controls
 from utils import FreqResp,Nyquist
 #import types
@@ -52,11 +53,15 @@ class SistemaContinuo:
     Hden = [1]      # Denominador de H(s).
     HdenStr = '1'
 
+    Type = 0    # system type.
+
     # Entradas:
     Rt = '1'       # String com a função de entrada r(t)
-    InstRt = 0
+    InstRt = 0.0
+    ruidoRt = 0.0
     Wt = '0'       # String com a função de entrada w(t)
-    InstWt = 0
+    InstWt = 0.0
+    ruidoWt = 0.0
 
     delta_t = 0.01  # Passo de simulação.
     Tmax = 10   # Tempo máximo de simulação
@@ -223,12 +228,18 @@ class SistemaContinuo:
         
         # monta vetor u(t):
         t = t_total[0:(len(t_total)-amostraR)]
-        u[amostraR:] = eval(stringR)
+        if (self.ruidoRt > 0):
+            u[amostraR:] = eval(stringR) + numpy.random.normal(0,self.ruidoRt,(len(t_total)-amostraR))
+        else:
+            u[amostraR:] = eval(stringR)
         u[0:amostraR] = Rinic
 
         # monta vetor w(t)
         t = t_total[0:(len(t_total)-amostraW)]
-        w[amostraW:] = eval(stringW)
+        if (self.ruidoWt > 0):
+            w[amostraW:] = eval(stringW) + numpy.random.normal(0,self.ruidoWt,(len(t_total)-amostraW))
+        else:
+            w[amostraW:] = eval(stringW)
         w[0:amostraW] = Winic
 
        

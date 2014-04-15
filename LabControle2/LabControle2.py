@@ -46,15 +46,15 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.graphicsView.setViewport(QtGui.QWidget())
         
-        svg_file = QtCore.QFile('diagramOpened.svg')
+        # Load initial SVG file
+        svg_file = QtCore.QFile('diagram1Opened.svg')
         if not svg_file.exists():
             QtGui.QMessageBox.critical(self, "Open SVG File",
-                    "Could not open file '%s'." % 'diagramOpened.svg')
+                    "Could not open file '%s'." % 'diagram1Opened.svg')
 
             self.outlineAction.setEnabled(False)
             self.backgroundAction.setEnabled(False)
             return        
-        
         self.scene = self.graphicsView.scene()
         self.scene.clear()
         self.graphicsView.resetTransform()
@@ -64,24 +64,16 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
         #self.svgItem.setZValue(0)
         
-        self.backgroundItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
-        self.backgroundItem.setBrush(QtCore.Qt.gray)
-        self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
-        self.backgroundItem.setVisible(True)
-        self.backgroundItem.setZValue(-1)
+        #self.backgroundItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
+        #self.backgroundItem.setBrush(QtCore.Qt.gray)
+        #self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
+        #self.backgroundItem.setVisible(True)
+        #self.backgroundItem.setZValue(-1)
 
-        #self.scene.addItem(self.backgroundItem)
         self.scene.addItem(self.svgItem)
         
         
         # Initial definitions:
-        #self.Kpoints = 200 # Number of the K values to plot root locus        
-        self.KmaxminChangeFlag = False
-        self.SliderMoved = False
-        
-        
-        #x=[0,10,100]
-        #y=[3,4,5]
 
 
         # Adding toolbars
@@ -109,15 +101,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         # Initializing system
         self.sys = Sistema.SistemaContinuo()
-        
-        
+                
         self.init = 1
-        
-        
+                
         # Connecting events:
         QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
         QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
         QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+        QtCore.QObject.connect(self.comboBoxSys, QtCore.SIGNAL("currentIndexChanged(int)"), self.onChangeSystem)
         # Spinboxes:
         QtCore.QObject.connect(self.doubleSpinBoxKmax, QtCore.SIGNAL("valueChanged(double)"), self.onKmaxChange)
         QtCore.QObject.connect(self.doubleSpinBoxKmin, QtCore.SIGNAL("valueChanged(double)"), self.onKminChange)
@@ -125,7 +116,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
         QtCore.QObject.connect(self.doubleSpinBoxTmax, QtCore.SIGNAL("valueChanged(double)"), self.onTmaxChange)
         QtCore.QObject.connect(self.doubleSpinBoxRtime, QtCore.SIGNAL("valueChanged(double)"), self.onRtimeChange)
+        QtCore.QObject.connect(self.doubleSpinBoxRnoise, QtCore.SIGNAL("valueChanged(double)"), self.onRnoiseChange)
         QtCore.QObject.connect(self.doubleSpinBoxWtime, QtCore.SIGNAL("valueChanged(double)"), self.onWtimeChange)
+        QtCore.QObject.connect(self.doubleSpinBoxWnoise, QtCore.SIGNAL("valueChanged(double)"), self.onWnoiseChange)
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
         QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
@@ -150,39 +143,50 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                
     def feedbackOpen(self):
         """Open Feedback """ 
-        svg_file = QtCore.QFile('diagramOpened.svg')
-        if not svg_file.exists():
-            QtGui.QMessageBox.critical(self, "Open SVG File",
-                                       "Could not open file '%s'." % 'diagramOpened.svg')
-            self.outlineAction.setEnabled(False)
-            self.backgroundAction.setEnabled(False)
-            return   
+
         self.sys.Malha = 'Aberta'
         
-        # Update svg image with open loop.
-        self.scene.clear()
-        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
-        self.scene.addItem(self.svgItem)
-        self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
+        # Change SVG accordingly:        
+        self.updateSystemSVG()
         
+        self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
+    
     def feedbackClose(self):
-        """Close Feedback """    
-        svg_file = QtCore.QFile('diagramClosed.svg')
-        if not svg_file.exists():
-            QtGui.QMessageBox.critical(self, "Open SVG File",
-                                       "Could not open file '%s'." % 'diagramClosed.svg')
-            self.outlineAction.setEnabled(False)
-            self.backgroundAction.setEnabled(False)
-            return   
+        """Close Feedback """
 
         self.sys.Malha = 'Fechada'
         
-        # Update svg image with closed loop.
-        self.scene.clear()
-        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
-        self.scene.addItem(self.svgItem)
+        # Change SVG accordingly:        
+        self.updateSystemSVG()        
         
         self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
+
+    def onChangeSystem(self,sysindex):
+        """
+        Whem user change system topology using the combo box.
+        Update block diagram and anable/disable input groupboxes.
+        """
+       
+        if (sysindex == 0): # LTI system 1 (without C(s))
+            self.groupBoxC.setEnabled(False)
+            self.sys.Type = 0
+            # Disable C(s):
+            self.sys.Cnum = [1]
+            self.sys.Cden = [1]
+            self.sys.Atualiza()            
+            
+        elif (sysindex == 1): # LTI system 2 (with C(s))
+            self.sys.Type = 1
+            self.groupBoxC.setEnabled(True)
+            # Update system if C(s) group box is checked or not.
+            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+        else:
+            self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
+            return
+        
+        self.updateSystemSVG()
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None)) 
+
     
     def onSliderMove(self,value):
         """Slider change event. 
@@ -395,12 +399,24 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         r(t) input time edited handler
         """
         self.sys.InstRt = value
+        
+    def onRnoiseChange(self,value):
+        """
+        r(t) noise edited
+        """
+        self.sys.ruidoRt = value
 
     def onWtimeChange(self,value):
         """
         r(t) input time edited handler
         """
         self.sys.InstWt = value
+
+    def onWnoiseChange(self,value):
+        """
+        w(t) noise edited
+        """
+        self.sys.ruidoWt = value
     
     def onRvalueChange(self,value):
         """
@@ -612,6 +628,40 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None))
         
         return retorno
+    
+    def updateSystemSVG(self):
+        svg_file_name = ''        
+        
+        if (self.sys.Type == 0): # LTI system 1 (without C(s))
+            if self.sys.Malha == 'Fechada':
+                svg_file_name = 'diagram1Closed.svg'
+            else:
+                svg_file_name = 'diagram1Opened.svg'
+        elif (self.sys.Type == 1): # LTI system 2 (with C(s))
+            if self.sys.Malha == 'Fechada':
+                svg_file_name = 'diagramClosed.svg'
+            else:
+                svg_file_name = 'diagramOpened.svg'
+        else:
+            self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
+            return
+
+        # Load svg file.
+        svg_file = QtCore.QFile(svg_file_name)
+        if not svg_file.exists():
+            QtGui.QMessageBox.critical(self, "Open SVG File",
+                                       "Could not open file '%s'." % svg_file_name)
+            self.outlineAction.setEnabled(False)
+            self.backgroundAction.setEnabled(False)
+            return
+        # Update svg image:
+        self.scene.clear()
+        #self.graphicsView.resetTransform()
+        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
+        #self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
+        #self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.scene.addItem(self.svgItem)
+       
 
         
 if __name__ == '__main__':
