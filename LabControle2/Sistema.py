@@ -35,6 +35,7 @@ import numpy
 import controls
 from utils import FreqResp,Nyquist
 #import types
+#import control
 
 class SistemaContinuo:
     """
@@ -44,6 +45,8 @@ class SistemaContinuo:
     GnumStr = '2*s+10'
     Gden = [1,2,10] # Denominador de G(s).
     GdenStr = '1*s^2+2*s+10'
+    G2num = [1,1]
+    G2den = [1,1]
     Cnum = [1]      # Numerador de C(s).
     CnumStr = '1'
     Cden = [1]      # Denominador de C(s).
@@ -87,6 +90,9 @@ class SistemaContinuo:
     # Estados iniciais.
     X0r = None
     X0w = None
+    
+    #sysYR = control.tf([1],[1]) # Transfer function Y(s)/R(s)
+    #sysYW = control.tf([1],[1]) # Transfer function Y(s)/W(s)
 
     def __init__(self):
         """
@@ -102,10 +108,14 @@ class SistemaContinuo:
         
         # FT do controlador:
         self.C = controls.TransferFunction(self.Cnum,self.Cden)
+        #self.tfC = control.tf(self.Cnum,self.Cden)
         # FT da planta:
         self.G = controls.TransferFunction(self.Gnum,self.Gden)       
+        #self.tfG = control.tf(self.Gnum,self.Gden)
+        #self.tfG2 = control.tf(self.G2num,self.G2den)
         # FT da realimentação:
         self.H = controls.TransferFunction(self.Hnum,self.Hden)
+        #self.tfH = control.tf(self.Hnum,self.Hden)
         
         return
     
@@ -143,8 +153,11 @@ class SistemaContinuo:
         """
         
         if self.Malha == 'Aberta':
+            #self.sysYR = self.K * self.tfC * self.tfG
             return self.K*self.C*self.G
         else:
+            #temp = self.K * self.tfC * self.tfG
+            #self.sysYR = temp/(1 + self.tfH * temp)
             S = self.K*self.C*self.G
             return S/(1.00000001 + self.H*S)
     
@@ -155,8 +168,11 @@ class SistemaContinuo:
         """
         if self.Type == 0:
             if self.Malha == 'Aberta':
-                return controls.TransferFunction([1],[1])
+                #self.sysYW = self.tfG2
+                return controls.TransferFunction([1, 1],[1, 1])
             else:
+                #temp = self.K * self.tfC * self.tfG * self.tfH * self.tfG2
+                #self.sysYW = self.tfG2/(1+temp)
                 return controls.TransferFunction([1],[1])/(controls.TransferFunction([1],[1]) + (self.K*self.H*self.G))                   
         elif self.Type == 1:
             if self.Malha == 'Aberta':
@@ -172,22 +188,29 @@ class SistemaContinuo:
 
         Sr = self.SistemaR() # Sistema considerando a entrada r(t)
         Sw = self.SistemaW() # Sistema considerando a entrada w(t)
+
         
         #y = signal.lsim(S, u, t, X0=None)[1]
 
         # Simula separadamente para cada entrada (superposição):
+        #print self.sysYR
+
+        #T,yr,xout1 = control.forced_response(self.sysYR,t,u)
         try:
             yr = signal.lsim(Sr, u, t, self.X0r)
         except:
-            yr = signal.lsim2(Sr, u, t, self.X0r)
-            
+            yr = signal.lsim2(Sr, u, t, self.X0r,full_output=0)
+
+        #T,yw,xout2 = control.forced_response(self.sysYW,t,w)
         try:
             yw = signal.lsim(Sw, w, t, self.X0w)
         except:
-            yw = signal.lsim2(Sw, w, t, self.X0w)
+            yw = signal.lsim2(Sw, w, t, self.X0w,full_output=0)
         
         Xr = yr[-1]
+        #Xr = xout1[-1]
         Xw = yw[-1]
+        #Xw = xout2[-1]
         
         # Armazena condições iniciais:
         self.X0r = Xr[-1]
@@ -200,6 +223,7 @@ class SistemaContinuo:
 
         
         return yr[1] + yw[1]
+        #return yr + yw
 
     
     def CriaEntrada(self, stringR, stringW, tinic=0.0, tmax=5,delta_t=0.01,\
