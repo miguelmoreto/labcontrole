@@ -12,6 +12,7 @@ from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationTo
 import MainWindow
 import Sistema
 import utils
+import numpy
 
 
 try:
@@ -74,7 +75,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         
         # Initial definitions:
-
+        self.checkBoxPert.setDisabled(True) # Perturbation is disabled by default
+        self.checkBoxControle.setDisabled(True) # Control signal is disabled by default
 
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -137,6 +139,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnSimul, QtCore.SIGNAL("clicked()"), self.onBtnSimul)
         QtCore.QObject.connect(self.btnContinuar, QtCore.SIGNAL("clicked()"), self.onBtnContinue)
         QtCore.QObject.connect(self.btnLimparSimul, QtCore.SIGNAL("clicked()"), self.onBtnClearSimul)
+        QtCore.QObject.connect(self.btnPlotLGR, QtCore.SIGNAL("clicked()"), self.onBtnLGR)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -203,6 +206,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(gain)
         self.doubleSpinBoxK.setValue(gain)
+        # Draw Closed Loop Poles:
+        self.DrawCloseLoopPoles(gain)
+        # Reconect events:
         QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
         QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)      
         
@@ -225,6 +231,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(value)
         self.doubleSpinBoxK.setValue(value)
+        # Draw Closed Loop Poles:
+        self.DrawCloseLoopPoles(value)
+        # Reconect events:
         QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
         QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)        
         # Update slider position.
@@ -380,6 +389,100 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Reset initial conditions:
         self.sys.X0r = None
         self.sys.X0w = None
+        
+    def onBtnLGR(self):
+        """
+        Plot LGR graphic.
+        """
+        self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
+        self.sys.LGR(self.mplLGR.figure)
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+        
+        self.axesLGR = self.mplLGR.figure.gca()
+        self.axesLGR.grid(True)
+        self.axesLGR.set_xlabel(_translate("MainWindow", "Eixo real", None))
+        self.axesLGR.set_ylabel(_translate("MainWindow", "Eixo imaginário", None))
+        self.axesLGR.set_title(_translate("MainWindow", "Lugar Geométrico das raízes de C(s)*G(s)*H(s)", None))
+
+        # Tenta apagar a instância dos pólos em malha fechada na figura. Se já
+        # existirem, apaga, senão não faz nada.
+        try:
+            del self.polosLGR
+        except AttributeError:
+            pass        
+        
+        # Draw closed loop poles with current gain:
+        self.DrawCloseLoopPoles(self.sys.K)
+        
+        # Forbidden regions:
+        # GUI parameters:
+        Ribd = abs(self.doubleSpinBoxRibd.value())
+        Rebd = abs(self.doubleSpinBoxRebd.value())
+        Imbd = abs(self.doubleSpinBoxImbd.value())
+        
+        xlimites = self.axesLGR.get_xlim()
+        ylimites = self.axesLGR.get_ylim()
+
+        if Rebd > 0:
+            if Rebd < 0.5:
+                inic = Rebd + 0.5
+            else:
+                inic = 0
+            y = [ylimites[0],ylimites[1],ylimites[1],ylimites[0]]
+            x = [-Rebd,-Rebd,inic,inic]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+        
+        if Ribd > 0:
+            # R = Ribd * I
+            y = [0,ylimites[1],ylimites[1],0,ylimites[0],ylimites[0]]
+            x = [0,-Ribd*ylimites[1],0,0,0,Ribd*ylimites[0]]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+        
+        if Imbd > 0:
+            x = [xlimites[0],xlimites[1],xlimites[1],xlimites[0]]
+            y = [-Imbd,-Imbd,Imbd,Imbd]
+            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)        
+        
+        self.mplLGR.draw()
+        
+    def DrawCloseLoopPoles(self,gain):
+            
+        # Calcula raízes do polinômio 1+k*TF(s):
+        raizes = self.sys.RaizesRL(gain)
+        txt = ''
+        for r in raizes:
+            if numpy.isreal(r):
+                temp = "%.3f, " %(r)
+            else:
+                temp = "%.3f+j%.3f, " %(r.real,r.imag)
+            txt = txt + temp
+        
+        txt = _translate("MainWindow", "Pólos em MF: ", None) + txt
+        self.statusBar().showMessage(txt)
+        
+        # Plotando pólos do sist. realimentado:
+        
+        try: # Se nenhum LGR foi traçado, não faz mais nada.
+            self.polosLGR[0].set_xdata(numpy.real(raizes))
+            self.polosLGR[0].set_ydata(numpy.imag(raizes))
+        except AttributeError:
+            try: # Se nenhum polo foi desenhado, desenha então:
+                self.polosLGR = self.axesLGR.plot(numpy.real(raizes), numpy.imag(raizes),
+                                'xb',ms=7,mew=3)
+            except AttributeError:
+
+                return
+            else:
+                self.mplLGR.draw()
+        else:
+            self.mplLGR.draw()
+
+        finally:
+            pass
+        
+        return        
+        
     
     def updateSliderPosition(self):
         position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
@@ -483,10 +586,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Perturbação desativada.", None))
             self.sys.Wt = '0'
             self.sys.InstWt = 0
+            self.checkBoxPert.setDisabled(True)
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Perturbação ativada.", None))
             self.sys.Wt = str(self.lineEditWvalue.text())
             self.sys.InstWt = self.doubleSpinBoxWtime.value()
+            self.checkBoxPert.setDisabled(False)
 
             
 
