@@ -29,10 +29,11 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 #
 # Desenvolvido por Miguel Moreto
 #
-from scipy import *
+#from scipy import *
+import scipy
 from scipy import signal
 import numpy
-import controls
+import myControls
 from utils import FreqResp,Nyquist
 #import types
 #import control
@@ -107,14 +108,14 @@ class SistemaContinuo:
         """
         
         # FT do controlador:
-        self.C = controls.TransferFunction(self.Cnum,self.Cden)
+        self.C = myControls.TransferFunction(self.Cnum,self.Cden)
         #self.tfC = control.tf(self.Cnum,self.Cden)
         # FT da planta:
-        self.G = controls.TransferFunction(self.Gnum,self.Gden)       
+        self.G = myControls.TransferFunction(self.Gnum,self.Gden)       
         #self.tfG = control.tf(self.Gnum,self.Gden)
         #self.tfG2 = control.tf(self.G2num,self.G2den)
         # FT da realimentação:
-        self.H = controls.TransferFunction(self.Hnum,self.Hden)
+        self.H = myControls.TransferFunction(self.Hnum,self.Hden)
         #self.tfH = control.tf(self.Hnum,self.Hden)
         
         return
@@ -169,11 +170,11 @@ class SistemaContinuo:
         if self.Type == 0:
             if self.Malha == 'Aberta':
                 #self.sysYW = self.tfG2
-                return controls.TransferFunction([1, 1],[1, 1])
+                return myControls.TransferFunction([1, 1],[1, 1])
             else:
                 #temp = self.K * self.tfC * self.tfG * self.tfH * self.tfG2
                 #self.sysYW = self.tfG2/(1+temp)
-                return controls.TransferFunction([1],[1])/(controls.TransferFunction([1],[1]) + (self.K*self.H*self.G))                   
+                return myControls.TransferFunction([1],[1])/(myControls.TransferFunction([1],[1]) + (self.K*self.H*self.G))                   
         elif self.Type == 1:
             if self.Malha == 'Aberta':
                 return self.G
@@ -246,10 +247,10 @@ class SistemaContinuo:
             return 0, 0, 0
         
         # Vetor de tempo:
-        t_total = arange(tinic,tinic+tmax,delta_t)
+        t_total = numpy.arange(tinic,tinic+tmax,delta_t)
            
-        u = zeros_like(t_total)
-        w = zeros_like(t_total)
+        u = numpy.zeros_like(t_total)
+        w = numpy.zeros_like(t_total)
         
         # Numero da amostra correspondente aos tempoR e tempoW:
         amostraR = int(tempoR/delta_t)
@@ -286,13 +287,13 @@ class SistemaContinuo:
         
         
         # FT do controlador:
-        C = controls.TransferFunction(self.Cnum,self.Cden)
+        C = myControls.TransferFunction(self.Cnum,self.Cden)
         
         # FT da planta:
-        G = controls.TransferFunction(self.Gnum,self.Gden)
+        G = myControls.TransferFunction(self.Gnum,self.Gden)
         
         # FT da realimentacao:
-        H = controls.TransferFunction(self.Hnum,self.Hden)
+        H = myControls.TransferFunction(self.Hnum,self.Hden)
         
         # Ganho:
         K = 1
@@ -302,7 +303,7 @@ class SistemaContinuo:
         # Criando vetor de ganhos (sem os pontos críticos).
         # Kmin, Kmax e numero de pontos são atributos desta classe.
         delta_k = (self.Kmax-self.Kmin) / self.Kpontos
-        kvect = arange(self.Kmin,self.Kmax,delta_k)
+        kvect = numpy.arange(self.Kmin,self.Kmax,delta_k)
         
         # Geracao dos pontos de separacao
         # Definicao dos polinomios do numerador e denominador
@@ -310,18 +311,18 @@ class SistemaContinuo:
         dd = self.C.den * self.G.den * self.H.den
 
         # Fazendo d(-1/G(s))/ds = 0
-        deriv = polyder(dd)*nn - polyder(nn)*dd
-        cpss = roots(deriv) # candidatos a ponto de separacao
+        deriv = scipy.polyder(dd)*nn - scipy.polyder(nn)*dd
+        cpss = scipy.roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for raiz in cpss:		
             aux = nn(raiz)
             if aux != 0:
                 Kc = -dd(raiz) / nn(raiz)
-                if (isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
-                        kvect = append(kvect,Kc)
+                if (numpy.isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                        kvect = numpy.append(kvect,Kc)
        
         # Reordena o kvect:
-        kvect = sort(kvect);
+        kvect = numpy.sort(kvect);
         
         raizes = S.RootLocus(kvect, figura, xlim=None, ylim=None)
         
@@ -343,8 +344,8 @@ class SistemaContinuo:
         # Criando vetor de frequencias complexas.
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
-        dec = log10(self.Fmax/self.Fmin) # Número de decadas;
-        f = logspace(log10(self.Fmin),log10(self.Fmax),self.Fpontos*dec)
+        dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
+        f = numpy.logspace(numpy.log10(self.Fmin),numpy.log10(self.Fmax),self.Fpontos*dec)
         
         # Calculando resposta em frequencia do sistema:
         #val = G.FreqResp(f,fignum=None,fig=None)
@@ -401,8 +402,8 @@ class SistemaContinuo:
         # Criando vetor de frequencias complexas.
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
-        dec = log10(self.Fmax/self.Fmin) # Número de decadas;
-        f = logspace(log10(self.Fmin),log10(self.Fmax),self.Fpontos*dec)
+        dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
+        f = numpy.logspace(numpy.log10(self.Fmin),numpy.log10(self.Fmax),self.Fpontos*dec)
         
         preal,pimag = Nyquist(G.num,G.den,f)
         
@@ -412,11 +413,11 @@ class SistemaContinuo:
         [linha1] = ax.plot(preal,pimag)
         if completo : [linha2] = ax.plot(preal,-1*pimag)        
         if comcirculo :
-                cx = arange(-1,1+0.025,0.025)
-                cy = zeros(len(cx))
+                cx = numpy.arange(-1,1+0.025,0.025)
+                cy = numpy.zeros(len(cx))
                 ct = 0
                 for a in cx : 
-                        cy[ct] = sqrt(1-a*a)
+                        cy[ct] = numpy.sqrt(1-a*a)
                         ct = ct+1
        
                 ax.plot(cx,cy,':k')
@@ -438,17 +439,17 @@ class SistemaContinuo:
 
         #print (pimag[idxmarcador+1]-pimag[idxmarcador])
         #print (preal[idxmarcador+1]-preal[idxmarcador])
-        angulo = arctan((pimag[idxmarcador]-pimag[idxmarcador-1])/(preal[idxmarcador]-preal[idxmarcador-1]))
-        if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = pi + angulo 
-        ang1 = angulo+pi-pi/9
-        ang2 = angulo+pi+pi/9             
-        ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*cos(ang1),preal[idxmarcador]+modx*cos(ang2),preal[idxmarcador]],[pimag[idxmarcador],pimag[idxmarcador]+modx*sin(ang1),pimag[idxmarcador]+modx*sin(ang2),pimag[idxmarcador]],edgecolor=linha1.get_color(),facecolor=linha1.get_color())                
+        angulo = numpy.arctan((pimag[idxmarcador]-pimag[idxmarcador-1])/(preal[idxmarcador]-preal[idxmarcador-1]))
+        if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = numpy.pi + angulo 
+        ang1 = angulo+numpy.pi-numpy.pi/9
+        ang2 = angulo+numpy.pi+numpy.pi/9             
+        ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*numpy.cos(ang1),preal[idxmarcador]+modx*numpy.cos(ang2),preal[idxmarcador]],[pimag[idxmarcador],pimag[idxmarcador]+modx*numpy.sin(ang1),pimag[idxmarcador]+modx*numpy.sin(ang2),pimag[idxmarcador]],edgecolor=linha1.get_color(),facecolor=linha1.get_color())                
         if completo :                                        
-                angulo = pi + arctan((-pimag[idxmarcador+1]+pimag[idxmarcador])/(preal[idxmarcador+1]-preal[idxmarcador]))   
-                if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = pi + angulo 
-                ang1 = angulo+pi-pi/9
-                ang2 = angulo+pi+pi/9           
-                ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*cos(ang1),preal[idxmarcador]+modx*cos(ang2),preal[idxmarcador]],[-1*pimag[idxmarcador],-1*pimag[idxmarcador]+modx*sin(ang1),-1*pimag[idxmarcador]+modx*sin(ang2),-1*pimag[idxmarcador]],edgecolor=linha2.get_color(),facecolor=linha2.get_color())        
+                angulo = numpy.pi + numpy.arctan((-pimag[idxmarcador+1]+pimag[idxmarcador])/(preal[idxmarcador+1]-preal[idxmarcador]))   
+                if (preal[idxmarcador+1]-preal[idxmarcador]) < 0 : angulo = numpy.pi + angulo 
+                ang1 = angulo+numpy.pi-numpy.pi/9
+                ang2 = angulo+numpy.pi+numpy.pi/9           
+                ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*numpy.cos(ang1),preal[idxmarcador]+modx*numpy.cos(ang2),preal[idxmarcador]],[-1*pimag[idxmarcador],-1*pimag[idxmarcador]+modx*numpy.sin(ang1),-1*pimag[idxmarcador]+modx*numpy.sin(ang2),-1*pimag[idxmarcador]],edgecolor=linha2.get_color(),facecolor=linha2.get_color())        
                         
         ax.grid(True)
         
