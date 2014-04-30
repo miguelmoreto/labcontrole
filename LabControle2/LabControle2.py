@@ -81,14 +81,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
         self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
+        self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
         self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
+        self.VBoxLayoutBode.addWidget(self.mpltoolbarBode)
         
         # MATPLOTLIB API AXES CONFIG
         self.mplSimul.figure.set_facecolor('0.90')
         self.mplSimul.figure.set_tight_layout(True)
         self.mplLGR.figure.set_facecolor('0.90')
         self.mplLGR.figure.set_tight_layout(True)
+        self.mplBode.figure.set_facecolor('0.90')
+        self.mplBode.figure.set_tight_layout(True)
 
         
         #self.mplSimul.axes.plot(x,y)
@@ -101,8 +105,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.autoscale(True)
         self.mplSimul.draw()
         
+        self.mplBode.figure.clf()
+        
         # Initializing system
         self.sys = Sistema.SistemaContinuo()
+        # Updating values from GUI:
+        self.sys.Fmin = self.doubleSpinFmin.value()
+        self.sys.Fmax = self.doubleSpinFmax.value()
+        self.sys.Fpontos = self.doubleSpinBodeRes.value()
                 
         self.init = 1
                 
@@ -121,6 +131,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinBoxRnoise, QtCore.SIGNAL("valueChanged(double)"), self.onRnoiseChange)
         QtCore.QObject.connect(self.doubleSpinBoxWtime, QtCore.SIGNAL("valueChanged(double)"), self.onWtimeChange)
         QtCore.QObject.connect(self.doubleSpinBoxWnoise, QtCore.SIGNAL("valueChanged(double)"), self.onWnoiseChange)
+        QtCore.QObject.connect(self.doubleSpinFmin, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFminChange)
+        QtCore.QObject.connect(self.doubleSpinFmax, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFmaxChange)
+        QtCore.QObject.connect(self.doubleSpinBodeRes, QtCore.SIGNAL("valueChanged(double)"), self.onBodeResChange)
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
         QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
@@ -140,6 +153,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnContinuar, QtCore.SIGNAL("clicked()"), self.onBtnContinue)
         QtCore.QObject.connect(self.btnLimparSimul, QtCore.SIGNAL("clicked()"), self.onBtnClearSimul)
         QtCore.QObject.connect(self.btnPlotLGR, QtCore.SIGNAL("clicked()"), self.onBtnLGR)
+        QtCore.QObject.connect(self.btnLGRclear, QtCore.SIGNAL("clicked()"), self.onBtnLGRclear)
+        QtCore.QObject.connect(self.btnPlotBode, QtCore.SIGNAL("clicked()"), self.onBtnPlotBode)
+        QtCore.QObject.connect(self.btnBodeClear, QtCore.SIGNAL("clicked()"), self.onBtnBodeClear)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -445,6 +461,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)        
         
         self.mplLGR.draw()
+
+    def onBtnLGRclear(self):
+        # Clear figure:
+
+        self.axesLGR.cla()
+        #self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
+        #self.mplSimul.axes.set_ylim(0, 1)
+        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        #self.mplSimul.axes.grid()
+        self.mplLGR.draw() 
         
     def DrawCloseLoopPoles(self,gain):
             
@@ -490,7 +518,60 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.disconnect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
         self.verticalSliderK.setSliderPosition(int(position))
         QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+
     
+    
+    def onBtnPlotBode(self):
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
+        # Plotting Bode:
+        
+        self.sys.Bode(self.mplBode.figure)
+        [ax1,ax2] = self.mplBode.figure.get_axes()
+        # Ajusting labels e title:
+        
+        ax1.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        ax2.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        ax2.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        ax1.set_title(_translate("MainWindow", "Diagrama de Bode de K*C(s)*G(s)", None))
+        
+        self.mplBode.draw()
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+    
+    def onBtnBodeClear(self):
+        # Clear Bode figure:
+
+        self.mplBode.figure.clf()
+        #self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
+        #self.mplSimul.axes.set_ylim(0, 1)
+        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        #self.mplSimul.axes.grid()
+        self.mplBode.draw() 
+
+
+    def onBodeFminChange(self,value):
+        """
+        Bode Fmin edited handler
+        """
+        self.sys.Fmin = self.doubleSpinFmin.value()
+
+
+    def onBodeFmaxChange(self,value):
+        """
+        Bode Fmax edited handler
+        """
+        self.sys.Fmax = self.doubleSpinFmax.value()
+
+    def onBodeResChange(self,value):
+        """
+        Bode Resolution edited handler
+        """
+        self.sys.Fpontos = self.doubleSpinBodeRes.value()
+
+   
     def onTmaxChange(self,value):
         """
         Tmax edited handler
