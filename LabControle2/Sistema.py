@@ -35,6 +35,7 @@ from scipy import signal
 import numpy
 import myControls
 from utils import FreqResp,Nyquist
+import matplotlib.pyplot as plt
 #import types
 #import control
 
@@ -87,6 +88,11 @@ class SistemaContinuo:
     Fmin = 0.01
     Fmax = 100.0
     Fpontos = 20
+    
+    # Parâmetros para o Diagrama de Nyquist:
+    NyqFmin = 0.01
+    NyqFmax = 100.0
+    NyqFpontos = 100
     
     # Estados iniciais.
     X0r = None
@@ -402,8 +408,8 @@ class SistemaContinuo:
         # Criando vetor de frequencias complexas.
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
-        dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
-        f = numpy.logspace(numpy.log10(self.Fmin),numpy.log10(self.Fmax),self.Fpontos*dec)
+        dec = numpy.log10(self.NyqFmax/self.NyqFmin) # Número de decadas;
+        f = numpy.logspace(numpy.log10(self.NyqFmin),numpy.log10(self.NyqFmax),self.NyqFpontos*dec)
         
         preal,pimag = Nyquist(G.num,G.den,f)
         
@@ -413,15 +419,17 @@ class SistemaContinuo:
         [linha1] = ax.plot(preal,pimag)
         if completo : [linha2] = ax.plot(preal,-1*pimag)        
         if comcirculo :
-                cx = numpy.arange(-1,1+0.025,0.025)
-                cy = numpy.zeros(len(cx))
-                ct = 0
-                for a in cx : 
-                        cy[ct] = numpy.sqrt(1-a*a)
-                        ct = ct+1
-       
-                ax.plot(cx,cy,':k')
-                ax.plot(cx,-1*cy,':k')
+                circ = plt.Circle((0, 0), radius=1, color='r',fill=False)
+                ax.add_patch(circ)
+                #cx = numpy.arange(-1,1+0.025,0.025)
+                #cy = numpy.zeros(len(cx))
+                #ct = 0
+                #for a in cx : 
+                #        cy[ct] = numpy.sqrt(1-a*a)
+                #        ct = ct+1
+                #
+                #ax.plot(cx,cy,':k')
+                #ax.plot(cx,-1*cy,':k')
         
         xl = ax.get_xlim()
         yl = ax.get_ylim()

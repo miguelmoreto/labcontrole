@@ -37,14 +37,17 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.GraphSize = QtCore.QSize()
         
         self.setupUi(self)
-        #self.statusBar().showMessage('Pronto')
+        # Adding toolbar spacer:
+        empty = QtGui.QWidget()
+        empty.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        self.toolBar.insertWidget(self.actionClose,empty)
+        
+        # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
         
         
         self.image = QtGui.QImage()        
-        
         self.graphicsView.setScene(QtGui.QGraphicsScene(self))
-        
         self.graphicsView.setViewport(QtGui.QWidget())
         
         # Load initial SVG file
@@ -82,9 +85,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
         self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
         self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
+        self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
         self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
         self.VBoxLayoutBode.addWidget(self.mpltoolbarBode)
+        self.VBoxLayoutNyquist.addWidget(self.mpltoolbarNyquist)
         
         # MATPLOTLIB API AXES CONFIG
         self.mplSimul.figure.set_facecolor('0.90')
@@ -106,6 +111,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mplSimul.draw()
         
         self.mplBode.figure.clf()
+        self.mplNyquist.figure.clf()
         
         # Initializing system
         self.sys = Sistema.SistemaContinuo()
@@ -134,6 +140,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinFmin, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFminChange)
         QtCore.QObject.connect(self.doubleSpinFmax, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFmaxChange)
         QtCore.QObject.connect(self.doubleSpinBodeRes, QtCore.SIGNAL("valueChanged(double)"), self.onBodeResChange)
+        QtCore.QObject.connect(self.doubleSpinFminNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFminChange)
+        QtCore.QObject.connect(self.doubleSpinFmaxNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFmaxChange)        
+        QtCore.QObject.connect(self.doubleSpinNyqRes, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistResChange)
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
         QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
@@ -156,6 +165,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnLGRclear, QtCore.SIGNAL("clicked()"), self.onBtnLGRclear)
         QtCore.QObject.connect(self.btnPlotBode, QtCore.SIGNAL("clicked()"), self.onBtnPlotBode)
         QtCore.QObject.connect(self.btnBodeClear, QtCore.SIGNAL("clicked()"), self.onBtnBodeClear)
+        QtCore.QObject.connect(self.btnPlotNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquist)
+        QtCore.QObject.connect(self.btnClearNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquistClear)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -510,16 +521,54 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             pass
         
         return        
-        
     
-    def updateSliderPosition(self):
-        position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
-        # Disconnect events to not enter in a event loop:
-        QtCore.QObject.disconnect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
-        self.verticalSliderK.setSliderPosition(int(position))
-        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+    def onBtnNyquist(self):
+        """
+        Plot nyquist diagram Button handler
+        """
+        self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
+        
+        
+        
+        self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
+        
+        [ax] = self.mplNyquist.figure.get_axes()
+        # Setting labels and title:
+        ax.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+        ax.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+        ax.set_title('Diagrama de Nyquist')
+        
+        self.mplNyquist.draw()
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
 
     
+    def onBtnNyquistClear(self):
+        """
+        Clear figure of the Nyquist diagram. Button handler.
+        """
+        self.mplNyquist.figure.clf()
+        self.mplNyquist.draw()
+        pass
+    
+    def onNyquistFminChange(self, value):
+        """
+        Nyquist Fmin edited handler
+        """
+        self.sys.NyqFmin = self.doubleSpinFminNyq.value()
+
+    def onNyquistFmaxChange(self, value):
+        """
+        Nyquist Fmax edited handler
+        """
+        self.sys.NyqFmax = self.doubleSpinFmaxNyq.value()
+    
+    def onNyquistResChange(self, value):
+        """
+        Nyquist Resolution edited handler
+        """
+        self.sys.NyqFpontos = self.doubleSpinNyqRes.value()
+   
     
     def onBtnPlotBode(self):
         
@@ -814,6 +863,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None))
         
         return retorno
+
+    
+    def updateSliderPosition(self):
+        position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
+        # Disconnect events to not enter in a event loop:
+        QtCore.QObject.disconnect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+        self.verticalSliderK.setSliderPosition(int(position))
+        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
     
     def updateSystemSVG(self):
         svg_file_name = ''        
