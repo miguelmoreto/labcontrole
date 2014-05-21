@@ -233,12 +233,12 @@ def MyRootLocus(num,den,kvect):
     return sorted
 
 def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
+    """
+    Remove, from the denominator and numerator the poles and zeros that are
+    equals.
+    """
     nroots = num.r.tolist()
     droots = den.r.tolist()
-    print 'num_in:' 
-    print num
-    print 'den_in:'
-    print den
     
     ncoeff = num[len(num)] # higher order den coefficient
     dcoeff = den[len(den)] # higher order den coefficietn
@@ -269,20 +269,9 @@ def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
         nout = num
         dout = den
 
-    print 'num_out:' 
-    print nout
-    print 'den_out:'
-    print dout
-    
+   
     return nout, dout
-#    nvect = numpoly
-#    dvect = denpoly
-#    if prepend:
-#        nout, dout = prependzeros(nvect, dvect)
-#    else:
-#        nout = nvect
-#        dout = dvect
-#    return nout, dout
+
     
 def in_with_tol(elem, searchlist, rtol=1e-5, atol=1e-10):
     """Determine whether or not elem+/-tol matches an element of

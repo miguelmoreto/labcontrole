@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 2.0</string>
+   <string>LabControle 2.0 - Beta 1</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -595,12 +595,17 @@
              </property>
              <item>
               <property name="text">
-               <string>Sistema LTI 1: K.G(s)</string>
+               <string>Sistema LTI 1: K.G(s) + W(s)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Sistema LTI 2: K.C(s).G(s)</string>
+               <string>Sistema LTI 2: K.C(s).G(s) + W(s)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sistema LTI3: [K.C(s) +W(s)].G(s)</string>
               </property>
              </item>
              <item>

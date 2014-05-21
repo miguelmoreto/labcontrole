@@ -133,6 +133,10 @@ class SistemaContinuo:
         #self.G = myControls.TransferFunction(self.Gnum,self.Gden)
         self.polyGnum = numpy.poly1d(self.Gnum)
         self.polyGden = numpy.poly1d(self.Gden)
+
+        self.polyG2num = numpy.poly1d(self.G2num)
+        self.polyG2den = numpy.poly1d(self.G2den)
+        
         #self.tfG = control.tf(self.Gnum,self.Gden)
         #self.tfG2 = control.tf(self.G2num,self.G2den)
         # FT da realimentação:

@@ -24,17 +24,17 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-MESSAGE = "<p><b>Sobre o LabControle2</b></p>" \
+MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "<p>O LabControle é um software desenvolvido " \
             "para ser utilizado em atividades de laboratório de " \
             "disciplinas de Sistemas de Controle.</p>" \
-            "<p>O LabControle2 foi desenvolvido por Miguel Moreto" \
-            "professor do Departamento de Engenharia Elétrica da UFSC"\
+            "<p>O LabControle2 foi desenvolvido por Miguel Moreto, " \
+            "professor do Departamento de Engenharia Elétrica da UFSC "\
             "para uso nos laboratórios da disciplina EEL7063 - Sistemas "\
             "de Controle.</p>" \
             "<p>O LabControle2 foi desenvolvido em linguagem Python "\
             "e seu código é livre, podendo ser acessado no site:</p>"\
-            "<p><b>http://sites.google.com/site/controlelab/</b></p>"
+            "<p><b>http://sites.google.com/site/controlelab/</b></p>", None)
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     """
@@ -226,6 +226,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.groupBoxC.setEnabled(True)
             # Update system if C(s) group box is checked or not.
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+        elif (sysindex == 2): # LTI system 3 (with G(s) after W(s))
+            self.sys.Type = 2
+            # in this case, G(s) goes to G2(s) in Sistema class while G(s)=1/1
+            self.sys.G2num = self.sys.Gnum
+            self.sys.G2den = self.sys.Gden
+            self.sys.Gnum = [1]
+            self.sys.Gden = [1]
+            self.sys.Atualiza()
+            self.groupBoxC.setEnabled(True)
+            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.onGroupBoxGcheck(self.groupBoxG.isChecked())
+            # Update system if C(s) group box is checked or not.
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return
@@ -720,6 +732,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None))
             self.sys.Gnum = [1]
             self.sys.Gden = [1]
+            self.sys.G2num = [1]
+            self.sys.G2den = [1]
             self.sys.Atualiza()
         else:
             self.onGnumChange(self.lineEditGnum.text())
@@ -768,7 +782,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         else:
             self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self.sys.GnumStr = str(value)
-            self.sys.Gnum = Gnum
+            if self.sys.Type == 2:
+                self.sys.G2num = Gnum
+            else:
+                self.sys.Gnum = Gnum
             self.sys.Atualiza()
     
     def onGdenChange(self,value):
@@ -786,7 +803,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         else:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self.sys.GdenStr = str(value)
-            self.sys.Gden = Gden
+            if self.sys.Type == 2:
+                self.sys.G2den = Gden
+            else:
+                self.sys.Gden = Gden
             self.sys.Atualiza()
 
     def onCnumChange(self,value):
@@ -913,6 +933,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                 svg_file_name = 'diagram2Closed.svg'
             else:
                 svg_file_name = 'diagram2Opened.svg'
+        elif (self.sys.Type == 2): # LTI system 3 (with C(s) and G(s) after W(s))
+            if self.sys.Malha == 'Fechada':
+                svg_file_name = 'diagram3Closed.svg'
+            else:
+                svg_file_name = 'diagram3Opened.svg'
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return

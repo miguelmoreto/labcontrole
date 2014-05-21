@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Wed May 07 18:15:56 2014
+# Created: Wed May 21 15:56:23 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -263,6 +263,7 @@ class Ui_MainWindow(object):
         self.comboBoxSys = QtGui.QComboBox(self.frameEntradas)
         self.comboBoxSys.setSizeAdjustPolicy(QtGui.QComboBox.AdjustToContents)
         self.comboBoxSys.setObjectName(_fromUtf8("comboBoxSys"))
+        self.comboBoxSys.addItem(_fromUtf8(""))
         self.comboBoxSys.addItem(_fromUtf8(""))
         self.comboBoxSys.addItem(_fromUtf8(""))
         self.comboBoxSys.addItem(_fromUtf8(""))
@@ -1295,12 +1296,12 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionClose)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.actionClose, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 1", None))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência", None))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)", None))
         self.labelRvalue.setText(_translate("MainWindow", "Valor:", None))
@@ -1318,10 +1319,11 @@ class Ui_MainWindow(object):
         self.labelWnoise.setText(_translate("MainWindow", "Ruído:", None))
         self.doubleSpinBoxWnoise.setToolTip(_translate("MainWindow", "Desvio padrão do ruído a ser aplicado na entrada w(t)", None))
         self.comboBoxSys.setToolTip(_translate("MainWindow", "Seleção do tipo de sistema a ser analisado", None))
-        self.comboBoxSys.setItemText(0, _translate("MainWindow", "Sistema LTI 1: K.G(s)", None))
-        self.comboBoxSys.setItemText(1, _translate("MainWindow", "Sistema LTI 2: K.C(s).G(s)", None))
-        self.comboBoxSys.setItemText(2, _translate("MainWindow", "Sistema Linear Discreto (N/A)", None))
-        self.comboBoxSys.setItemText(3, _translate("MainWindow", "Sistema não-linear (N/A)", None))
+        self.comboBoxSys.setItemText(0, _translate("MainWindow", "Sistema LTI 1: K.G(s) + W(s)", None))
+        self.comboBoxSys.setItemText(1, _translate("MainWindow", "Sistema LTI 2: K.C(s).G(s) + W(s)", None))
+        self.comboBoxSys.setItemText(2, _translate("MainWindow", "Sistema LTI3: [K.C(s) +W(s)].G(s)", None))
+        self.comboBoxSys.setItemText(3, _translate("MainWindow", "Sistema Linear Discreto (N/A)", None))
+        self.comboBoxSys.setItemText(4, _translate("MainWindow", "Sistema não-linear (N/A)", None))
         self.graphicsView.setToolTip(_translate("MainWindow", "Diagrama de blocos do sistema. Use os controles acima para configurar as entradas e abaixo para as funções de transferência", None))
         self.groupBoxMalha.setToolTip(_translate("MainWindow", "Abre/fecha a malha de realimentação", None))
         self.groupBoxMalha.setTitle(_translate("MainWindow", "Malha", None))

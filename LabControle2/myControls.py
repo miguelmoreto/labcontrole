@@ -401,8 +401,6 @@ class TransferFunction(signal.lti):
         #print('in TransferFunction.__init__, dt=%s' % dt)
         if _realizable(num, den):
             signal.lti.__init__(self, num, den)
-        print num
-        print den
         self.num = numpy.poly1d(num)
         self.den = numpy.poly1d(den)
         self.dt = dt
