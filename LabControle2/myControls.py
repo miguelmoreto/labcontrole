@@ -7,7 +7,7 @@ in s.  TransferFunction is derived from scipy.signal.lti."""
 import glob, pdb
 from math import atan2, log10
 
-#from scipy import *
+from scipy import *
 import numpy
 from scipy import linalg
 from scipy.linalg import inv as inverse
@@ -180,10 +180,10 @@ def polyfactor(num, den, prepend=True, rtol=1e-5, atol=1e-10):
     to represent multiplying through be z^-n where n is the order of
     the denominator.  If prependzeros is Trus, the numerator and
     denominator coefficient vectors will have the same length."""
-    numpoly = numpy.poly1d(num)
-    denpoly = numpy.poly1d(den)
-    nroots = numpy.roots(numpoly).tolist()
-    droots = numpy.roots(denpoly).tolist()
+    numpoly = poly1d(num)
+    denpoly = poly1d(den)
+    nroots = roots(numpoly).tolist()
+    droots = roots(denpoly).tolist()
     n = 0
     while n < len(nroots):
         curn = nroots[n]
@@ -195,8 +195,9 @@ def polyfactor(num, den, prepend=True, rtol=1e-5, atol=1e-10):
             #denpoly, rd = polydiv(denpoly, poly(curn))
         else:
             n += 1
-    numpoly = numpy.poly(nroots)
-    denpoly = numpy.poly(droots)
+    if n > 0:
+        numpoly = poly(nroots)
+        denpoly = poly(droots)
     nvect = numpoly
     dvect = denpoly
     if prepend:
@@ -400,8 +401,10 @@ class TransferFunction(signal.lti):
         #print('in TransferFunction.__init__, dt=%s' % dt)
         if _realizable(num, den):
             signal.lti.__init__(self, num, den)
+        print num
+        print den
         self.num = numpy.poly1d(num)
-        self.den = numpy.poly1d(den) 
+        self.den = numpy.poly1d(den)
         self.dt = dt
         self.myvar = myvar
         self.maxt = maxt

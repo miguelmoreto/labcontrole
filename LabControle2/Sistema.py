@@ -95,8 +95,8 @@ class SistemaContinuo:
     NyqFpontos = 100
     
     # Estados iniciais.
-    X0r = None
-    X0w = None
+    X0r = 0.0
+    X0w = 0.0
     
     #sysYR = control.tf([1],[1]) # Transfer function Y(s)/R(s)
     #sysYW = control.tf([1],[1]) # Transfer function Y(s)/W(s)
@@ -166,7 +166,7 @@ class SistemaContinuo:
             #temp = self.K * self.tfC * self.tfG
             #self.sysYR = temp/(1 + self.tfH * temp)
             S = self.K*self.C*self.G
-            return S/(1.00000001 + self.H*S)
+            return S/(myControls.TransferFunction([1, 1],[1, 1]) + self.H*S)
     
     def SistemaW(self):
         """
@@ -185,7 +185,7 @@ class SistemaContinuo:
             if self.Malha == 'Aberta':
                 return self.G
             else:
-                return self.G/(1.000000001 + (self.K*self.H*self.C*self.G))
+                return self.G/(myControls.TransferFunction([1],[1]) + (self.K*self.H*self.C*self.G))
         
     def Simulacao(self, t, u, w, X0=0):
         """

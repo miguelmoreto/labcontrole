@@ -14,6 +14,7 @@ import Sistema
 import utils
 import numpy
 
+           
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
@@ -23,6 +24,17 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+MESSAGE = "<p><b>Sobre o LabControle2</b></p>" \
+            "<p>O LabControle é um software desenvolvido " \
+            "para ser utilizado em atividades de laboratório de " \
+            "disciplinas de Sistemas de Controle.</p>" \
+            "<p>O LabControle2 foi desenvolvido por Miguel Moreto" \
+            "professor do Departamento de Engenharia Elétrica da UFSC"\
+            "para uso nos laboratórios da disciplina EEL7063 - Sistemas "\
+            "de Controle.</p>" \
+            "<p>O LabControle2 foi desenvolvido em linguagem Python "\
+            "e seu código é livre, podendo ser acessado no site:</p>"\
+            "<p><b>http://sites.google.com/site/controlelab/</b></p>"
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     """
@@ -143,6 +155,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinFminNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFminChange)
         QtCore.QObject.connect(self.doubleSpinFmaxNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFmaxChange)        
         QtCore.QObject.connect(self.doubleSpinNyqRes, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistResChange)
+        QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+        QtCore.QObject.connect(self.doubleSpinBoxLGRpontos, QtCore.SIGNAL("valueChanged(double)"), self.onResLGRchange)
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
         QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
@@ -167,6 +181,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnBodeClear, QtCore.SIGNAL("clicked()"), self.onBtnBodeClear)
         QtCore.QObject.connect(self.btnPlotNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquist)
         QtCore.QObject.connect(self.btnClearNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquistClear)
+        # Actions
+        QtCore.QObject.connect(self.actionHelp, QtCore.SIGNAL("triggered()"), self.onAboutAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -269,8 +285,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     def onBtnSimul(self):
         
         Tmax = self.sys.Tmax
-        self.sys.X0r = None
-        self.sys.X0w = None
+        self.sys.X0r = 0
+        self.sys.X0w = 0
         
         stringR = self.sys.Rt
         stringW = self.sys.Wt
@@ -344,10 +360,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Tinic = self.sys.tfinal
         stringR = self.sys.Rt
         stringW = self.sys.Wt
-        delta_t = 0.01
+        #delta_t = 0.01
         
         # Create time and input vector:
-        t,r,w = self.sys.CriaEntrada(stringR, stringW, Tinic , Tmax, delta_t, 
+        t,r,w = self.sys.CriaEntrada(stringR, stringW, Tinic , Tmax, self.doubleSpinBoxResT.value(), 
                             self.sys.InstRt, self.sys.InstWt,self.sys.Rfinal,
                             self.sys.Wfinal)
         
@@ -416,6 +432,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Reset initial conditions:
         self.sys.X0r = None
         self.sys.X0w = None
+    
+    def onSimluResChange(self,value):
+        """
+        Changed simulation resolution handler
+        """
+        self.sys.delta_t = self.doubleSpinBoxResT.value()
         
     def onBtnLGR(self):
         """
@@ -483,7 +505,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
         #self.mplSimul.axes.grid()
-        self.mplLGR.draw() 
+        self.mplLGR.draw()
+    
+    def onResLGRchange(self,value):
+        """
+        Chagen LGR number of points gain.
+        """
+        self.sys.Kpontos = self.doubleSpinBoxLGRpontos.value()
         
     def DrawCloseLoopPoles(self,gain):
             
@@ -904,6 +932,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         #self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
         #self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
         self.scene.addItem(self.svgItem)
+    
+    def onAboutAction(self):
+        QtGui.QMessageBox.about(self,"Sobre o LabControle2", MESSAGE)
+        
+        
        
 
         

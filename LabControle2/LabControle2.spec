@@ -1,6 +1,6 @@
 # -*- mode: python -*-
 a = Analysis(['LabControle2.py'],
-             pathex=['D:\\Moreto\\Programas\\LabControle2'],
+             pathex=['E:\\Moreto\\Programas\\LabControle2'],
              hiddenimports=['scipy.special._ufuncs_cxx'],
              hookspath=None,
              runtime_hooks=None)
