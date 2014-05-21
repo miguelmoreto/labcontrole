@@ -33,8 +33,8 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 import scipy
 from scipy import signal
 import numpy
-import myControls
-from utils import FreqResp,Nyquist
+#import myControls
+from utils import FreqResp,Nyquist, MyRootLocus, RemoveEqualZeroPole
 import matplotlib.pyplot as plt
 #import types
 #import control
@@ -45,18 +45,29 @@ class SistemaContinuo:
     """
     Gnum = [2,10]   # Numerador de G(s).
     GnumStr = '2*s+10'
+    polyGnum = numpy.poly1d(Gnum)
     Gden = [1,2,10] # Denominador de G(s).
     GdenStr = '1*s^2+2*s+10'
-    G2num = [1,1]
-    G2den = [1,1]
+    polyGden = numpy.poly1d(Gden)
+    G2num = [1]
+    polyG2num = numpy.poly1d(G2num)
+    G2den = [1]
+    polyG2den = numpy.poly1d(G2den)
     Cnum = [1]      # Numerador de C(s).
     CnumStr = '1'
+    polyCnum = numpy.poly1d(Cnum)
     Cden = [1]      # Denominador de C(s).
     CdenStr = '1'
+    polyCden = numpy.poly1d(Cden)
     Hnum = [1]      # Numerador de H(s).
     HnumStr = '1'
+    polyHnum = numpy.poly1d(Hnum)
     Hden = [1]      # Denominador de H(s).
     HdenStr = '1'
+    polyHden = numpy.poly1d(Hden)
+    
+    polyDnum = numpy.poly1d([1]) # numerator polynomial of the direct loop transfer function
+    polyDden = numpy.poly1d([1]) # denominator polynomial of the direct loop transfer function
 
     Type = 0    # system type.
 
@@ -114,15 +125,31 @@ class SistemaContinuo:
         """
         
         # FT do controlador:
-        self.C = myControls.TransferFunction(self.Cnum,self.Cden)
+        #self.C = myControls.TransferFunction(self.Cnum,self.Cden)
+        self.polyCnum = numpy.poly1d(self.Cnum)
+        self.polyCden = numpy.poly1d(self.Cden)
         #self.tfC = control.tf(self.Cnum,self.Cden)
         # FT da planta:
-        self.G = myControls.TransferFunction(self.Gnum,self.Gden)       
+        #self.G = myControls.TransferFunction(self.Gnum,self.Gden)
+        self.polyGnum = numpy.poly1d(self.Gnum)
+        self.polyGden = numpy.poly1d(self.Gden)
         #self.tfG = control.tf(self.Gnum,self.Gden)
         #self.tfG2 = control.tf(self.G2num,self.G2den)
         # FT da realimentação:
-        self.H = myControls.TransferFunction(self.Hnum,self.Hden)
+        #self.H = myControls.TransferFunction(self.Hnum,self.Hden)
+        self.polyHnum = numpy.poly1d(self.Hnum)
+        self.polyHden = numpy.poly1d(self.Hden)
         #self.tfH = control.tf(self.Hnum,self.Hden)
+
+        # Direct loop numerator and denominator. Checking zeros equal to poles
+        
+        # Definicao dos polinomios do numerador e denominador
+        num = self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum
+        den = self.polyCden * self.polyGden * self.polyG2den * self.polyHden
+        
+        # Updating Direct Loop transfer function:
+        self.polyDnum, self.polyDden = RemoveEqualZeroPole(num,den)
+        
         
         return
     
@@ -133,10 +160,12 @@ class SistemaContinuo:
         da FT malha direta e H(s).
         """
         
-        MD = self.C * self.G # FT da malha direta.
+        #MD = self.C * self.G # FT da malha direta.
         
         # Cálculo da equação característica:
-        EqC = MD.den * self.H.den + K * MD.num * self.H.num
+        #EqC = MD.den * self.H.den + K * MD.num * self.H.num
+        #EqC = (self.polyCden * self.polyGden * self.polyG2den *self.polyHden) + (K * self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum)
+        EqC = self.polyDden + K * self.polyDnum
         
         return EqC.roots 
         
@@ -160,32 +189,27 @@ class SistemaContinuo:
         """
         
         if self.Malha == 'Aberta':
-            #self.sysYR = self.K * self.tfC * self.tfG
-            return self.K*self.C*self.G
+            num = self.K * self.polyCnum * self.polyGnum * self.polyG2num
+            den = self.polyCden * self.polyGden * self.polyG2den
+            return signal.lti(num.coeffs,den.coeffs)
         else:
-            #temp = self.K * self.tfC * self.tfG
-            #self.sysYR = temp/(1 + self.tfH * temp)
-            S = self.K*self.C*self.G
-            return S/(myControls.TransferFunction([1, 1],[1, 1]) + self.H*S)
+
+            num = self.K * self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum
+            den = (self.polyCden * self.polyGden * self.polyG2den * self.polyHden) + num
+            return signal.lti(num.coeffs,den.coeffs)
     
     def SistemaW(self):
         """
         Monta função de transferência do sistema em malha aberta ou fechada
         considerando com entrada w(t).
         """
-        if self.Type == 0:
-            if self.Malha == 'Aberta':
-                #self.sysYW = self.tfG2
-                return myControls.TransferFunction([1, 1],[1, 1])
-            else:
-                #temp = self.K * self.tfC * self.tfG * self.tfH * self.tfG2
-                #self.sysYW = self.tfG2/(1+temp)
-                return myControls.TransferFunction([1],[1])/(myControls.TransferFunction([1],[1]) + (self.K*self.H*self.G))                   
-        elif self.Type == 1:
-            if self.Malha == 'Aberta':
-                return self.G
-            else:
-                return self.G/(myControls.TransferFunction([1],[1]) + (self.K*self.H*self.C*self.G))
+
+        if self.Malha == 'Aberta':
+            return signal.lti(self.polyG2num.coeffs,self.polyG2den.coeffs)
+        else:
+            num = self.polyG2num * self.polyCden * self.polyGden * self.polyHden
+            den = (self.polyCden * self.polyGden * self.polyG2den * self.polyHden) + (self.K * self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum)
+            return signal.lti(num.coeffs,den.coeffs)
         
     def Simulacao(self, t, u, w, X0=0):
         """
@@ -209,10 +233,14 @@ class SistemaContinuo:
             yr = signal.lsim2(Sr, u, t, self.X0r,full_output=0)
 
         #T,yw,xout2 = control.forced_response(self.sysYW,t,w)
-        try:
-            yw = signal.lsim(Sw, w, t, self.X0w)
-        except:
-            yw = signal.lsim2(Sw, w, t, self.X0w,full_output=0)
+        if (self.Type == 0 or self.Type == 1) and self.Malha == 'Aberta':
+            # If system is LTI0 with openloop, output is equal to perturbation.
+            yw = [t,w,w]
+        else:
+            try:
+                yw = signal.lsim(Sw, w, t, self.X0w)
+            except:
+                yw = signal.lsim2(Sw, w, t, self.X0w,full_output=0)
         
         Xr = yr[-1]
         #Xr = xout1[-1]
@@ -290,21 +318,9 @@ class SistemaContinuo:
         
         O LGR é traçado sempre com ganho K = 1.
         """
-        
-        
-        # FT do controlador:
-        C = myControls.TransferFunction(self.Cnum,self.Cden)
-        
-        # FT da planta:
-        G = myControls.TransferFunction(self.Gnum,self.Gden)
-        
-        # FT da realimentacao:
-        H = myControls.TransferFunction(self.Hnum,self.Hden)
-        
-        # Ganho:
-        K = 1
-        
-        S = K*C*G*H # A fazer: Mudar para inserir o H. (H inserido, verificar depois se esta certo)
+
+        num = self.polyDnum
+        den = self.polyDden
         
         # Criando vetor de ganhos (sem os pontos críticos).
         # Kmin, Kmax e numero de pontos são atributos desta classe.
@@ -312,27 +328,37 @@ class SistemaContinuo:
         kvect = numpy.arange(self.Kmin,self.Kmax,delta_k)
         
         # Geracao dos pontos de separacao
-        # Definicao dos polinomios do numerador e denominador
-        nn = self.C.num * self.G.num * self.H.num
-        dd = self.C.den * self.G.den * self.H.den
-
         # Fazendo d(-1/G(s))/ds = 0
-        deriv = scipy.polyder(dd)*nn - scipy.polyder(nn)*dd
+        deriv = scipy.polyder(den)*num - scipy.polyder(num)*den
         cpss = scipy.roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for raiz in cpss:		
-            aux = nn(raiz)
+            aux = num(raiz)
             if aux != 0:
-                Kc = -dd(raiz) / nn(raiz)
+                Kc = -den(raiz) / num(raiz)
                 if (numpy.isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
                         kvect = numpy.append(kvect,Kc)
-       
         # Reordena o kvect:
         kvect = numpy.sort(kvect);
         
-        raizes = S.RootLocus(kvect, figura, xlim=None, ylim=None)
+        # Calculate the roots:
+        root_vector = MyRootLocus(num,den,kvect)
         
-        return raizes
+        # Ploting:
+        figura.clf()
+        ax = figura.add_subplot(111)
+        # Open loop poles:
+        poles = numpy.array(den.r)
+        ax.plot(numpy.real(poles), numpy.imag(poles), 'x')
+        # Open loop zeros:
+        zeros = numpy.array(num.r)
+        if zeros.any():
+            ax.plot(numpy.real(zeros), numpy.imag(zeros), 'o')
+        for col in root_vector.T:
+            # Ploting the root locus.
+            ax.plot(numpy.real(col), numpy.imag(col), '-')
+        
+        return root_vector
     
     def Bode(self,figura):
         """
@@ -344,8 +370,8 @@ class SistemaContinuo:
         self.Fpontos por década.
         """
         # Criando sistema da malha direta:
-        G = self.K*self.C*self.G
-        
+        Gnum = self.K * self.polyCnum * self.polyGnum * self.polyG2num
+        Gden = self.polyCden * self.polyGden * self.polyG2den
         
         # Criando vetor de frequencias complexas.
         # Com o logspace, são necessários relativamente poucos pontos
@@ -358,7 +384,7 @@ class SistemaContinuo:
         
         #dBmag = 20*log10(abs(val))
         #fase = angle(val,1)
-        dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(G.num,G.den,f,True)
+        dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(Gnum,Gden,f,True)
                                         
         # Ajustando os valores da fase se der menor do que -180 ou maior do
         # que 180 graus (função angle só retorna valores entre -180 e +180).
@@ -403,15 +429,17 @@ class SistemaContinuo:
         self.Fpontos por década.
         """
         # Criando sistema da malha direta:
-        G = self.K*self.C*self.G
-
+        #G = self.K*self.C*self.G
+        Gnum = self.K * self.polyCnum * self.polyGnum * self.polyG2num
+        Gden = self.polyCden * self.polyGden * self.polyG2den
+        
         # Criando vetor de frequencias complexas.
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
         dec = numpy.log10(self.NyqFmax/self.NyqFmin) # Número de decadas;
         f = numpy.logspace(numpy.log10(self.NyqFmin),numpy.log10(self.NyqFmax),self.NyqFpontos*dec)
         
-        preal,pimag = Nyquist(G.num,G.den,f)
+        preal,pimag = Nyquist(Gnum,Gden,f)
         
         # Plotando a magnitude:
         ax = figura.add_subplot(111)

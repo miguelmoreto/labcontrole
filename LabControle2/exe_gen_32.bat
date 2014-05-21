@@ -5,3 +5,5 @@ copy /Y Microsoft.VC90.MFC.manifest .\dist\LabControle2\Microsoft.VC90.MFC.manif
 echo Manifest updated.
 echo Copying figures..
 copy .\*.svg .\dist\LabControle2\
+mkdir .\dist\LabControle2\images
+copy .\images\*.* .\dist\LabControle2\images\

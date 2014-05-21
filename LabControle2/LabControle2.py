@@ -241,7 +241,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         of the slider and not the gain. This is why there is this test.
         """
 
-        gain = float(value)*float(abs(self.sys.Kmax)-abs(self.sys.Kmin))/float(self.sys.Kpontos) + self.sys.Kmin        
+        gain = float(value)*float((self.sys.Kmax)-(self.sys.Kmin))/float(self.sys.Kpontos) + self.sys.Kmin        
         self.sys.K = gain
         # Disconnect events to not enter in a event loop:
         QtCore.QObject.disconnect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
@@ -910,9 +910,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                 svg_file_name = 'diagram1Opened.svg'
         elif (self.sys.Type == 1): # LTI system 2 (with C(s))
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagramClosed.svg'
+                svg_file_name = 'diagram2Closed.svg'
             else:
-                svg_file_name = 'diagramOpened.svg'
+                svg_file_name = 'diagram2Opened.svg'
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return

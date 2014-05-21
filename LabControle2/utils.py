@@ -1,5 +1,6 @@
 from scipy import *
 from numpy import array,arange
+import numpy
 
 def parseeqpoly(dados,listeq=[]) :
 	dados = dados.replace(' ','').lower()
@@ -187,9 +188,106 @@ def FreqResp(num,den,f,getcrossings=False) :
 	if getcrossings is True : return dBmag, phase/pi*180, crossfreqmag, cfase, crossfreqfase, cmag
 	else : return dBmag, phase
 	
-def Nyquist(num,den,f) :
-	w = 2j*pi*f	
-	fresp = num(w)/den(w)
-	preal = real(fresp)
-	pimag = imag(fresp)	
-	return preal, pimag
+def Nyquist(num,den,f):
+    w = 2j*pi*f	
+    fresp = num(w)/den(w)
+    preal = real(fresp)
+    pimag = imag(fresp)	
+    return preal, pimag
+ 
+def MyRootLocus(num,den,kvect):
+    
+    """
+    calculate the roots to draw the root locus
+    
+    num and den are poly1d numpy objects.
+    """
+    
+    #Find the roots for the root locus:
+    roots = []
+    for k in kvect:
+        curpoly = den+k*num
+        curroots = curpoly.r
+        curroots.sort()
+        roots.append(curroots)
+    mymat = numpy.row_stack(roots)
+    # Sort the roots calculated above, so that the root
+    # locus doesn't show weird pseudo-branches as roots jump from
+    # one branch to another.
+    sorted = numpy.zeros_like(mymat)
+    for n, row in enumerate(mymat):
+         if n==0:
+             sorted[n,:] = row
+         else:
+             #sort the current row by finding the element with the
+             #smallest absolute distance to each root in the
+             #previous row
+             available = range(len(numpy.prevrow))
+             for elem in row:
+                 evect = elem-numpy.prevrow[available]
+                 ind1 = abs(evect).argmin()
+                 ind = available.pop(ind1)
+                 sorted[n,ind] = elem
+         numpy.prevrow = sorted[n,:]
+    # sorted have the roots.
+    return sorted
+
+def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
+    nroots = num.r.tolist()
+    droots = den.r.tolist()
+    print 'num_in:' 
+    print num
+    print 'den_in:'
+    print den
+    
+    ncoeff = num[len(num)] # higher order den coefficient
+    dcoeff = den[len(den)] # higher order den coefficietn
+    
+    flag = 0
+    n = 0
+    while n < len(nroots):
+        curn = nroots[n]
+        ind = in_with_tol(curn, droots, rtol=rtol, atol=atol)
+        if ind > -1:
+            print 'n: %d' %(n)
+            print 'ind: %d' %(ind)
+            nroots.pop(n)
+            droots.pop(ind)
+            flag = 1
+            #numpoly, rn = polydiv(numpoly, poly(curn))
+            #denpoly, rd = polydiv(denpoly, poly(curn))
+        else:
+            n += 1
+    if flag > 0:
+        # When reconstruction polynomial numpy always return with high
+        # order coefficient equal 1. So multiply by the original coef (gain)
+        numcoeffs = numpy.poly(nroots) * ncoeff
+        dencoeffs = numpy.poly(droots) * dcoeff
+        nout = numpy.poly1d(numcoeffs)
+        dout = numpy.poly1d(dencoeffs)
+    else:
+        nout = num
+        dout = den
+
+    print 'num_out:' 
+    print nout
+    print 'den_out:'
+    print dout
+    
+    return nout, dout
+#    nvect = numpoly
+#    dvect = denpoly
+#    if prepend:
+#        nout, dout = prependzeros(nvect, dvect)
+#    else:
+#        nout = nvect
+#        dout = dvect
+#    return nout, dout
+    
+def in_with_tol(elem, searchlist, rtol=1e-5, atol=1e-10):
+    """Determine whether or not elem+/-tol matches an element of
+    searchlist."""
+    for n, item in enumerate(searchlist):
+       if numpy.allclose(item, elem, rtol=rtol, atol=atol):
+            return n
+    return -1

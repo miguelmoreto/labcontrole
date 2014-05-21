@@ -35,7 +35,7 @@ polydenH = np.poly1d(denH)
 numFTR = K*polynumC*polynumG1*polynumG2*polynumH
 denFTR = (polydenC*polydenG1*polydenG2*polydenH) + numFTR
 
-sysFTR = signal.lti(numFTR,denFTR)
+sysFTR = signal.lti(numFTR.coeffs,denFTR.coeffs)
 
 t,y = signal.step2(sysFTR)
 
