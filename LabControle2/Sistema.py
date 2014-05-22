@@ -285,14 +285,14 @@ class SistemaContinuo:
             return 0, 0, 0
         
         # Vetor de tempo:
-        t_total = numpy.arange(tinic,tinic+tmax,delta_t)
+        t_total = numpy.arange(tinic,tinic+tmax,self.delta_t)
            
         u = numpy.zeros_like(t_total)
         w = numpy.zeros_like(t_total)
         
         # Numero da amostra correspondente aos tempoR e tempoW:
-        amostraR = int(tempoR/delta_t)
-        amostraW = int(tempoW/delta_t)
+        amostraR = int(tempoR/self.delta_t)
+        amostraW = int(tempoW/self.delta_t)
         
         # monta vetor u(t):
         t = t_total[0:(len(t_total)-amostraR)]

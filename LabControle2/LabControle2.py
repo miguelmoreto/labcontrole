@@ -34,7 +34,8 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "de Controle.</p>" \
             "<p>O LabControle2 foi desenvolvido em linguagem Python "\
             "e seu código é livre, podendo ser acessado no site:</p>"\
-            "<p><b>http://sites.google.com/site/controlelab/</b></p>", None)
+            "<p><b><a href=\"http://sites.google.com/site/controlelab/\">http://sites.google.com/site/controlelab/</a></b></p>"\
+            "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>", None)
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     """
@@ -47,6 +48,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Init variables:
         self.SVGRect = QtCore.QRectF()
         self.GraphSize = QtCore.QSize()
+        
+        self.currentComboIndex = 0
         
         self.setupUi(self)
         # Adding toolbar spacer:
@@ -183,6 +186,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnClearNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquistClear)
         # Actions
         QtCore.QObject.connect(self.actionHelp, QtCore.SIGNAL("triggered()"), self.onAboutAction)
+        #QtCore.QObject.connect(self.actionSysInfo, QtCore.SIGNAL("triggered()"), self.onSysInfoAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -220,7 +224,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.Cnum = [1]
             self.sys.Cden = [1]
             self.sys.Atualiza()            
-            
         elif (sysindex == 1): # LTI system 2 (with C(s))
             self.sys.Type = 1
             self.groupBoxC.setEnabled(True)
@@ -239,11 +242,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
+            QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
+            self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
             return
         
         self.updateSystemSVG()
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None)) 
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))
+        self.currentComboIndex = sysindex
 
     
     def onSliderMove(self,value):
@@ -316,6 +321,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         self.mplSimul.axes.autoscale(True)        
         
+        # Clear matplotlib toolbar history:
+        self.mpltoolbarSimul._views.clear()
+        self.mpltoolbarSimul._positions.clear()
+        self.mpltoolbarSimul._update_view()        
+        
         #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
         self.mplSimul.axes.hold(True)
@@ -350,6 +360,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         # Set a new y limit, adding 1/10 of the total.
         self.mplSimul.axes.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        #self.mplSimul.axes.set_xlim([0,t[-1]])
         
         # Add legend:
         self.mplSimul.axes.legend(legend, loc=0)
@@ -456,6 +467,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Plot LGR graphic.
         """
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
+        
+        # Clear matplotlib toolbar history:
+        self.mpltoolbarLGR._views.clear()
+        self.mpltoolbarLGR._positions.clear()
+        self.mpltoolbarLGR._update_view() 
+        # Plot LGR:
         self.sys.LGR(self.mplLGR.figure)
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
@@ -568,7 +585,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
         
-        
+        # Clear matplotlib toolbar history:
+        self.mpltoolbarNyquist._views.clear()
+        self.mpltoolbarNyquist._positions.clear()
+        self.mpltoolbarNyquist._update_view()         
         
         self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
         
@@ -613,8 +633,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     def onBtnPlotBode(self):
         
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
-        # Plotting Bode:
+
+        # Clear matplotlib toolbar history:
+        self.mpltoolbarBode._views.clear()
+        self.mpltoolbarBode._positions.clear()
+        self.mpltoolbarBode._update_view()
         
+        # Plotting Bode:
         self.sys.Bode(self.mplBode.figure)
         [ax1,ax2] = self.mplBode.figure.get_axes()
         # Ajusting labels e title:
@@ -961,7 +986,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     def onAboutAction(self):
         QtGui.QMessageBox.about(self,"Sobre o LabControle2", MESSAGE)
         
-        
+    #def onSysInfoAction(self):
+    #    dialog = QtGui.QDialog()
+    #    dialog.ui = DialogSysInfo.Ui_DialogSysInfo()
+    #    dialog.ui.setupUi(dialog)
+    #    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+    #    dialog.exec_()
        
 
         

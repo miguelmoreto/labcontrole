@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -65,10 +65,16 @@
         </property>
         <item>
          <widget class="QFrame" name="frameEntradas">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>100</height>
+            <height>130</height>
            </size>
           </property>
           <property name="frameShape">
@@ -143,6 +149,12 @@
               </item>
               <item row="0" column="1">
                <widget class="QLineEdit" name="lineEditRvalue">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -152,7 +164,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -204,7 +216,7 @@
               <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxRtime">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -218,7 +230,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -278,7 +290,7 @@
               <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxRnoise">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -292,7 +304,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -358,7 +370,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="labelWvalue">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -366,7 +378,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>70</width>
-                  <height>0</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -390,6 +402,12 @@
               </item>
               <item row="0" column="1">
                <widget class="QLineEdit" name="lineEditWvalue">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -399,7 +417,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -418,7 +436,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="labelWtime">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -426,7 +444,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>70</width>
-                  <height>0</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -448,10 +466,10 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1" rowspan="2">
+              <item row="1" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxWtime">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -465,7 +483,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -489,10 +507,10 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0" rowspan="2">
+              <item row="2" column="0">
                <widget class="QLabel" name="labelWnoise">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -500,7 +518,7 @@
                 <property name="minimumSize">
                  <size>
                   <width>70</width>
-                  <height>0</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="maximumSize">
@@ -522,10 +540,10 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxWnoise">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -539,7 +557,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -634,7 +652,7 @@
           <property name="minimumSize">
            <size>
             <width>220</width>
-            <height>0</height>
+            <height>260</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -650,10 +668,22 @@
         </item>
         <item>
          <widget class="QFrame" name="frameSis">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>0</width>
             <height>100</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>120</height>
            </size>
           </property>
           <property name="frameShape">
@@ -775,9 +805,22 @@ QGroupBox::title {
                <number>4</number>
               </property>
               <item>
+               <spacer name="verticalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="labelK">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -809,14 +852,14 @@ QGroupBox::title {
                  <string notr="true">K:</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignCenter</set>
+                 <set>Qt::AlignBottom|Qt::AlignHCenter</set>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QDoubleSpinBox" name="doubleSpinBoxK">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -830,7 +873,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -853,6 +896,19 @@ QGroupBox::title {
                  <double>1.000000000000000</double>
                 </property>
                </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -915,8 +971,14 @@ QGroupBox::title {
               <property name="verticalSpacing">
                <number>1</number>
               </property>
-              <item row="0" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="labelCnum">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>40</width>
@@ -939,10 +1001,10 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="1" column="1">
                <widget class="QLineEdit" name="lineEditCnum">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -956,7 +1018,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -972,8 +1034,14 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="labelCden">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>40</width>
@@ -996,10 +1064,10 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="3" column="1">
                <widget class="QLineEdit" name="lineEditCden">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1013,7 +1081,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1028,6 +1096,45 @@ QGroupBox::title {
                  <string notr="true">1</string>
                 </property>
                </widget>
+              </item>
+              <item row="4" column="1">
+               <spacer name="verticalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <spacer name="verticalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1">
+               <spacer name="verticalSpacer_9">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -1084,7 +1191,7 @@ QGroupBox::title {
               <property name="verticalSpacing">
                <number>1</number>
               </property>
-              <item row="0" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="labelGnum">
                 <property name="minimumSize">
                  <size>
@@ -1108,8 +1215,14 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="1" column="1">
                <widget class="QLineEdit" name="lineEditGnum">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -1119,7 +1232,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1135,7 +1248,7 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="labelGden">
                 <property name="minimumSize">
                  <size>
@@ -1159,18 +1272,24 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="3" column="1">
                <widget class="QLineEdit" name="lineEditGden">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
-                  <height>20</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>20</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1185,6 +1304,45 @@ QGroupBox::title {
                  <string notr="true">1*s^2+2*s+10</string>
                 </property>
                </widget>
+              </item>
+              <item row="4" column="1">
+               <spacer name="verticalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <spacer name="verticalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1">
+               <spacer name="verticalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -1244,7 +1402,7 @@ QGroupBox::title {
               <property name="verticalSpacing">
                <number>1</number>
               </property>
-              <item row="0" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="labelHnum">
                 <property name="minimumSize">
                  <size>
@@ -1271,8 +1429,14 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="1" column="1">
                <widget class="QLineEdit" name="lineEditHnum">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -1282,7 +1446,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1298,7 +1462,7 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="labelHden">
                 <property name="minimumSize">
                  <size>
@@ -1325,8 +1489,14 @@ QGroupBox::title {
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="3" column="1">
                <widget class="QLineEdit" name="lineEditHden">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -1336,7 +1506,7 @@ QGroupBox::title {
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>25</height>
+                  <height>35</height>
                  </size>
                 </property>
                 <property name="font">
@@ -1351,6 +1521,45 @@ QGroupBox::title {
                  <string notr="true">1</string>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="1">
+               <spacer name="verticalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="4" column="1">
+               <spacer name="verticalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="2" column="1">
+               <spacer name="verticalSpacer_15">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </widget>
@@ -1504,7 +1713,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com o tempo máximo de simulação</string>
+              <string>Entre com a resolução da simulação</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -1566,6 +1775,9 @@ QGroupBox::title {
                <bold>false</bold>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Selecione para mostrar o sinal de saída y(t)</string>
+             </property>
              <property name="text">
               <string>Saída: y(t)</string>
              </property>
@@ -1580,6 +1792,9 @@ QGroupBox::title {
               <font>
                <pointsize>12</pointsize>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Selecione para mostrar o sinal de entrada r(t)</string>
              </property>
              <property name="text">
               <string>Entrada: r(t)</string>
@@ -1596,6 +1811,9 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Selecione para mostrar o sinal de erro e(t)</string>
+             </property>
              <property name="text">
               <string>Erro: e(t)</string>
              </property>
@@ -1611,6 +1829,9 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Selecione para mostrar o sinal de controle u(t)</string>
+             </property>
              <property name="text">
               <string>Controle: u(t)</string>
              </property>
@@ -1622,6 +1843,9 @@ QGroupBox::title {
               <font>
                <pointsize>12</pointsize>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Selecione para mostrar o sinal de perturbação w(t)</string>
              </property>
              <property name="text">
               <string>Perturbação: w(t)</string>
@@ -1654,6 +1878,9 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Iniciar simulação no domínio do tempo</string>
+             </property>
              <property name="text">
               <string>Simular</string>
              </property>
@@ -1675,6 +1902,9 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Continuar a simulação</string>
+             </property>
              <property name="text">
               <string>Continuar</string>
              </property>
@@ -1692,6 +1922,9 @@ QGroupBox::title {
               <font>
                <pointsize>12</pointsize>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Limpar a área do gráfico</string>
              </property>
              <property name="text">
               <string>Limpar</string>
@@ -2583,7 +2816,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com a frequência mínima para o cálculo do diagrama de bode</string>
+              <string>Entre com a frequência mínima para o cálculo do diagrama de Bode</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -2655,7 +2888,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com a frequência máxima para o cálculo do diagrama de bode</string>
+              <string>Entre com a frequência máxima para o cálculo do diagrama de Bode</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -2727,7 +2960,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com o número de pontos por década para o traçado do diagrama de bode</string>
+              <string>Entre com o número de pontos por década para o traçado do diagrama de Bode</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -2927,7 +3160,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com a frequência mínima para o cálculo do diagrama de bode</string>
+              <string>Entre com a frequência mínima para o cálculo do diagrama de Nyquist</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -2999,7 +3232,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com a frequência máxima para o cálculo do diagrama de bode</string>
+              <string>Entre com a frequência máxima para o cálculo do diagrama de Nyquist</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3071,7 +3304,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com o número de pontos por década para o traçado do diagrama de bode</string>
+              <string>Entre com o número de pontos por década para o traçado do diagrama de Nyquist</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3103,6 +3336,9 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Selecione para traçar u círculo de raio 1 centrado na origem</string>
+             </property>
              <property name="text">
               <string>Círculo 1</string>
              </property>
@@ -3117,6 +3353,9 @@ QGroupBox::title {
               <font>
                <pointsize>12</pointsize>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Selecione para traçar também o diagrama para frequências negativas</string>
              </property>
              <property name="text">
               <string>Freq. negativa</string>
@@ -3153,7 +3392,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Traçar o Diagrama de Bode</string>
+              <string>Traçar o Diagrama de Nyquist</string>
              </property>
              <property name="text">
               <string>Traçar Nyquist</string>
@@ -3193,6 +3432,222 @@ QGroupBox::title {
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tabInfo">
+       <property name="toolTip">
+        <string>Mostra informações sobre o sistema LIT</string>
+       </property>
+       <attribute name="title">
+        <string>SisInfo</string>
+       </attribute>
+       <widget class="QLabel" name="labelInfoCLpoles">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>260</y>
+          <width>121</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="text">
+         <string>Pólos em malha fechada:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelInfoOLpoles">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>20</y>
+          <width>121</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="text">
+         <string>Pólos em malha aberta:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="listWidgetOLpoles">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>80</y>
+          <width>141</width>
+          <height>151</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelInfoOLzeros">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>20</y>
+          <width>121</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="text">
+         <string>Zeros em malha aberta:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="listWidgetOLzeros">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>80</y>
+          <width>141</width>
+          <height>151</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="listWidgetCLpoles">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>310</y>
+          <width>141</width>
+          <height>151</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelInfoRLpoints">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>20</y>
+          <width>121</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="midLineWidth">
+         <number>0</number>
+        </property>
+        <property name="text">
+         <string>Pontos de separação LGR:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="listWidgetRLpoints">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>80</y>
+          <width>141</width>
+          <height>151</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -3210,7 +3665,7 @@ QGroupBox::title {
    </attribute>
    <addaction name="actionConfig"/>
    <addaction name="separator"/>
-   <addaction name="actionSobre_o_LabControle"/>
+   <addaction name="actionSysInfo"/>
    <addaction name="actionHelp"/>
    <addaction name="separator"/>
    <addaction name="actionClose"/>
@@ -3225,13 +3680,16 @@ QGroupBox::title {
     <string>Carregar sistema</string>
    </property>
   </action>
-  <action name="actionSobre_o_LabControle">
+  <action name="actionSysInfo">
    <property name="icon">
     <iconset>
      <normaloff>images/about.png</normaloff>images/about.png</iconset>
    </property>
    <property name="text">
-    <string>Sobre o LabControle</string>
+    <string>Informações do sistema LIT</string>
+   </property>
+   <property name="toolTip">
+    <string>Informações do sistema LIT</string>
    </property>
   </action>
   <action name="actionConfig">
