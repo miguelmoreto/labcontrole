@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 2.0 - Beta 1</string>
+   <string>LabControle 2.0 - Beta 2</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2541,6 +2541,9 @@ QGroupBox::title {
                   <property name="maximum">
                    <double>1000.000000000000000</double>
                   </property>
+                  <property name="singleStep">
+                   <double>0.050000000000000</double>
+                  </property>
                   <property name="value">
                    <double>1.000000000000000</double>
                   </property>
@@ -3647,6 +3650,27 @@ QGroupBox::title {
          </rect>
         </property>
        </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>390</x>
+          <y>360</y>
+          <width>211</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Esta tela ainda não está implementada!</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -3665,7 +3689,7 @@ QGroupBox::title {
    </attribute>
    <addaction name="actionConfig"/>
    <addaction name="separator"/>
-   <addaction name="actionSysInfo"/>
+   <addaction name="actionCalc"/>
    <addaction name="actionHelp"/>
    <addaction name="separator"/>
    <addaction name="actionClose"/>
@@ -3680,16 +3704,16 @@ QGroupBox::title {
     <string>Carregar sistema</string>
    </property>
   </action>
-  <action name="actionSysInfo">
+  <action name="actionCalc">
    <property name="icon">
     <iconset>
-     <normaloff>images/about.png</normaloff>images/about.png</iconset>
+     <normaloff>images/calc.png</normaloff>images/calc.png</iconset>
    </property>
    <property name="text">
-    <string>Informações do sistema LIT</string>
+    <string>calculadora</string>
    </property>
    <property name="toolTip">
-    <string>Informações do sistema LIT</string>
+    <string>Executa a calculadora do sistema</string>
    </property>
   </action>
   <action name="actionConfig">

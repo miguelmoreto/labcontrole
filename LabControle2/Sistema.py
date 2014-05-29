@@ -106,8 +106,8 @@ class SistemaContinuo:
     NyqFpontos = 100
     
     # Estados iniciais.
-    X0r = 0.0
-    X0w = 0.0
+    X0r = None
+    X0w = None
     
     #sysYR = control.tf([1],[1]) # Transfer function Y(s)/R(s)
     #sysYW = control.tf([1],[1]) # Transfer function Y(s)/W(s)
@@ -224,45 +224,28 @@ class SistemaContinuo:
         Sr = self.SistemaR() # Sistema considerando a entrada r(t)
         Sw = self.SistemaW() # Sistema considerando a entrada w(t)
 
-        
-        #y = signal.lsim(S, u, t, X0=None)[1]
 
-        # Simula separadamente para cada entrada (superposição):
-        #print self.sysYR
+        # Simulation is done separately (input R and input W)
+        # Simulating input R:
+        T,youtR,xoutR = signal.lsim2(Sr, u, t,self.X0r,hmax=1)#, numpy.array([0,0]),full_output=0)
+        # Set hmax=1 of odeint otherwise solver "do not see" when one delay the input.
+        self.X0r = xoutR[-1]
 
-        #T,yr,xout1 = control.forced_response(self.sysYR,t,u)
-        try:
-            yr = signal.lsim(Sr, u, t, self.X0r)
-        except:
-            yr = signal.lsim2(Sr, u, t, self.X0r,full_output=0)
-
-        #T,yw,xout2 = control.forced_response(self.sysYW,t,w)
+        # Simulating input W:
         if (self.Type == 0 or self.Type == 1) and self.Malha == 'Aberta':
-            # If system is LTI0 with openloop, output is equal to perturbation.
-            yw = [t,w,w]
+            # If system is LTI0 or LTI1 and with openloop, output due to W is equal to W.
+            youtW = w
         else:
-            try:
-                yw = signal.lsim(Sw, w, t, self.X0w)
-            except:
-                yw = signal.lsim2(Sw, w, t, self.X0w,full_output=0)
-        
-        Xr = yr[-1]
-        #Xr = xout1[-1]
-        Xw = yw[-1]
-        #Xw = xout2[-1]
-        
-        # Armazena condições iniciais:
-        self.X0r = Xr[-1]
-        self.X0w = Xw[-1]
+            # Set hmax=1 of odeint otherwise solver "do not see" when one delay the input.
+            T,youtW,xoutW = signal.lsim2(Sw, w, t, self.X0w,hmax=1,full_output=0)
+            # Store initial conditions:
+            self.X0w = xoutW[-1]
         
         self.tfinal = t[-1]
         self.Rfinal = u[-1]
         self.Wfinal = w[-1]
-        #print self.X0r, self.X0w, self.tfinal
-
         
-        return yr[1] + yw[1]
-        #return yr + yw
+        return youtR + youtW
 
     
     def CriaEntrada(self, stringR, stringW, tinic=0.0, tmax=5,delta_t=0.01,\
@@ -279,6 +262,7 @@ class SistemaContinuo:
         
         tinic = tempo inicial.
         """
+        
         
         if (tempoR > tmax) or (tempoW > tmax):
             print "O tempo do degrau nao pode ser maior do que o tmax."

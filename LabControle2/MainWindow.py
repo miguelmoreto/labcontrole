@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Thu May 22 15:11:33 2014
+# Created: Thu May 29 17:32:52 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -1002,6 +1002,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBoxKlgr.setAlignment(QtCore.Qt.AlignCenter)
         self.doubleSpinBoxKlgr.setMinimum(-1000.0)
         self.doubleSpinBoxKlgr.setMaximum(1000.0)
+        self.doubleSpinBoxKlgr.setSingleStep(0.05)
         self.doubleSpinBoxKlgr.setProperty("value", 1.0)
         self.doubleSpinBoxKlgr.setObjectName(_fromUtf8("doubleSpinBoxKlgr"))
         self.verticalLayout_7.addWidget(self.doubleSpinBoxKlgr)
@@ -1391,6 +1392,13 @@ class Ui_MainWindow(object):
         self.listWidgetRLpoints = QtGui.QListWidget(self.tabInfo)
         self.listWidgetRLpoints.setGeometry(QtCore.QRect(330, 80, 141, 151))
         self.listWidgetRLpoints.setObjectName(_fromUtf8("listWidgetRLpoints"))
+        self.label = QtGui.QLabel(self.tabInfo)
+        self.label.setGeometry(QtCore.QRect(390, 360, 211, 61))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.label.setFont(font)
+        self.label.setWordWrap(True)
+        self.label.setObjectName(_fromUtf8("label"))
         self.tabWidget.addTab(self.tabInfo, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -1404,11 +1412,11 @@ class Ui_MainWindow(object):
         self.actionSalvar_sistema.setObjectName(_fromUtf8("actionSalvar_sistema"))
         self.actionCarregar_sistema = QtGui.QAction(MainWindow)
         self.actionCarregar_sistema.setObjectName(_fromUtf8("actionCarregar_sistema"))
-        self.actionSysInfo = QtGui.QAction(MainWindow)
+        self.actionCalc = QtGui.QAction(MainWindow)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("images/about.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionSysInfo.setIcon(icon1)
-        self.actionSysInfo.setObjectName(_fromUtf8("actionSysInfo"))
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("images/calc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionCalc.setIcon(icon1)
+        self.actionCalc.setObjectName(_fromUtf8("actionCalc"))
         self.actionConfig = QtGui.QAction(MainWindow)
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap(_fromUtf8("images/config.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -1426,18 +1434,18 @@ class Ui_MainWindow(object):
         self.actionClose.setObjectName(_fromUtf8("actionClose"))
         self.toolBar.addAction(self.actionConfig)
         self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionSysInfo)
+        self.toolBar.addAction(self.actionCalc)
         self.toolBar.addAction(self.actionHelp)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionClose)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QObject.connect(self.actionClose, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 1", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 2", None))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência", None))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)", None))
         self.labelRvalue.setText(_translate("MainWindow", "Valor:", None))
@@ -1562,12 +1570,13 @@ class Ui_MainWindow(object):
         self.labelInfoOLpoles.setText(_translate("MainWindow", "Pólos em malha aberta:", None))
         self.labelInfoOLzeros.setText(_translate("MainWindow", "Zeros em malha aberta:", None))
         self.labelInfoRLpoints.setText(_translate("MainWindow", "Pontos de separação LGR:", None))
+        self.label.setText(_translate("MainWindow", "Esta tela ainda não está implementada!", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabInfo), _translate("MainWindow", "SisInfo", None))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.actionSalvar_sistema.setText(_translate("MainWindow", "Salvar sistema", None))
         self.actionCarregar_sistema.setText(_translate("MainWindow", "Carregar sistema", None))
-        self.actionSysInfo.setText(_translate("MainWindow", "Informações do sistema LIT", None))
-        self.actionSysInfo.setToolTip(_translate("MainWindow", "Informações do sistema LIT", None))
+        self.actionCalc.setText(_translate("MainWindow", "calculadora", None))
+        self.actionCalc.setToolTip(_translate("MainWindow", "Executa a calculadora do sistema", None))
         self.actionConfig.setText(_translate("MainWindow", "Configurações", None))
         self.actionConfig.setToolTip(_translate("MainWindow", "Abre opções de configuração.", None))
         self.actionHelp.setText(_translate("MainWindow", "Ajuda", None))

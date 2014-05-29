@@ -13,9 +13,10 @@ import MainWindow
 import Sistema
 import utils
 import numpy
+import subprocess
+
 
            
-
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
     def _translate(context, text, disambig):
@@ -35,7 +36,8 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "<p>O LabControle2 foi desenvolvido em linguagem Python "\
             "e seu código é livre, podendo ser acessado no site:</p>"\
             "<p><b><a href=\"http://sites.google.com/site/controlelab/\">http://sites.google.com/site/controlelab/</a></b></p>"\
-            "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>", None)
+            "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
+            "<p>Florianópolis, SC, 2014</p>", None)
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     """
@@ -186,6 +188,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.btnClearNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquistClear)
         # Actions
         QtCore.QObject.connect(self.actionHelp, QtCore.SIGNAL("triggered()"), self.onAboutAction)
+        QtCore.QObject.connect(self.actionCalc, QtCore.SIGNAL("triggered()"), self.onCalcAction)
         #QtCore.QObject.connect(self.actionSysInfo, QtCore.SIGNAL("triggered()"), self.onSysInfoAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
@@ -302,8 +305,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     def onBtnSimul(self):
         
         Tmax = self.sys.Tmax
-        self.sys.X0r = 0
-        self.sys.X0w = 0
+        self.sys.X0r = None
+        self.sys.X0w = None
         
         stringR = self.sys.Rt
         stringW = self.sys.Wt
@@ -992,6 +995,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     #    dialog.ui.setupUi(dialog)
     #    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
     #    dialog.exec_()
+    
+    def onCalcAction(self):
+        p=subprocess.Popen('calc.exe')
+        
        
 
         
