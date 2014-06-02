@@ -14,7 +14,8 @@ import Sistema
 import utils
 import numpy
 import subprocess
-
+import pickle
+import encript
 
            
 try:
@@ -189,6 +190,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Actions
         QtCore.QObject.connect(self.actionHelp, QtCore.SIGNAL("triggered()"), self.onAboutAction)
         QtCore.QObject.connect(self.actionCalc, QtCore.SIGNAL("triggered()"), self.onCalcAction)
+        QtCore.QObject.connect(self.actionSalvar_sistema, QtCore.SIGNAL("triggered()"), self.onSaveAction)
+        QtCore.QObject.connect(self.actionCarregar_sistema, QtCore.SIGNAL("triggered()"), self.onLoadAction)
         #QtCore.QObject.connect(self.actionSysInfo, QtCore.SIGNAL("triggered()"), self.onSysInfoAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
@@ -998,8 +1001,80 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     
     def onCalcAction(self):
         p=subprocess.Popen('calc.exe')
+    
+    def onSaveAction(self):
+        fileName = QtCore.QString()
+        fileName = QtGui.QFileDialog.getSaveFileName(self,_translate("MainWindow", "Salvar sistema", None),"sis1",_translate("MainWindow", "Arquivos Dat (*.dat);;Arquivos Dat oculto (*.tst)", None))
+
+        hide = False
         
-       
+
+        if fileName.endsWith("dat"):
+            hide = False
+            #pickle.dump(expSys, open(fileName, "wb" ),pickle.HIGHEST_PROTOCOL)
+            
+        elif fileName.endsWith("tst"):
+            hide = True
+        else:
+            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
+            return
+        
+        expSys = ExportSystem()
+        expSys.Gnum = self.lineEditGnum.text()
+        expSys.Gden = self.lineEditGden.text()
+        expSys.Cnum = self.lineEditCnum.text()
+        expSys.Cden = self.lineEditCden.text()
+        expSys.Hnum = self.lineEditHnum.text()
+        expSys.Hden = self.lineEditHden.text()
+        expSys.K = self.doubleSpinBoxK.value()
+        expSys.Type = self.sys.Type
+        expSys.Malha = self.sys.Malha
+        expSys.Hide = hide
+        
+        key = encript.Crypticle.generate_key_string()
+        cryptobj = encript.Crypticle(key)
+        cryptData = cryptobj.dumps(expSys)
+        
+        tempdata = {"key": key, "safe": cryptData}
+        # Write encrypted file to disk:
+        pickle.dump(tempdata, open(fileName, "wb" ),pickle.HIGHEST_PROTOCOL)
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
+        
+    def onLoadAction(self):
+        fileName = QtGui.QFileDialog.getOpenFileName(self,
+                _translate("MainWindow", "Carregar sistema", None),
+                'sys',
+                _translate("MainWindow", "Arquivos Dat (*.dat);;Arquivos Dat oculto (*.tst)", None))
+        
+        if not fileName:
+            return
+        
+        expSys = ExportSystem()
+        
+        pkl_file = open(fileName, 'rb')
+        tempdata = pickle.load(pkl_file)
+        key = tempdata['key']
+        cryptData = tempdata['safe']
+        cryptobj = encript.Crypticle(key)
+        expSys = cryptobj.loads(cryptData)
+        
+        print expSys.Gnum
+        print expSys.Gden
+            
+
+class ExportSystem:
+    
+    Gnum = QtCore.QString()
+    Gden = QtCore.QString()
+    Cnum = QtCore.QString()
+    Cden = QtCore.QString()
+    Hnum = QtCore.QString()
+    Hden = QtCore.QString()
+    K = 1.0
+    Type = 0
+    Malha = 'Aberta'
+    Hide = False
 
         
 if __name__ == '__main__':

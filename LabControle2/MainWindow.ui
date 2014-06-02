@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -3687,7 +3687,8 @@ QGroupBox::title {
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionConfig"/>
+   <addaction name="actionCarregar_sistema"/>
+   <addaction name="actionSalvar_sistema"/>
    <addaction name="separator"/>
    <addaction name="actionCalc"/>
    <addaction name="actionHelp"/>
@@ -3695,11 +3696,19 @@ QGroupBox::title {
    <addaction name="actionClose"/>
   </widget>
   <action name="actionSalvar_sistema">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/filesave.png</normaloff>images/filesave.png</iconset>
+   </property>
    <property name="text">
     <string>Salvar sistema</string>
    </property>
   </action>
   <action name="actionCarregar_sistema">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/fileopen.png</normaloff>images/fileopen.png</iconset>
+   </property>
    <property name="text">
     <string>Carregar sistema</string>
    </property>

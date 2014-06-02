@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Thu May 29 17:32:52 2014
+# Created: Mon Jun 02 11:07:32 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -1409,30 +1409,37 @@ class Ui_MainWindow(object):
         self.toolBar.setObjectName(_fromUtf8("toolBar"))
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionSalvar_sistema = QtGui.QAction(MainWindow)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("images/filesave.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSalvar_sistema.setIcon(icon1)
         self.actionSalvar_sistema.setObjectName(_fromUtf8("actionSalvar_sistema"))
         self.actionCarregar_sistema = QtGui.QAction(MainWindow)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("images/fileopen.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionCarregar_sistema.setIcon(icon2)
         self.actionCarregar_sistema.setObjectName(_fromUtf8("actionCarregar_sistema"))
         self.actionCalc = QtGui.QAction(MainWindow)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("images/calc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionCalc.setIcon(icon1)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("images/calc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionCalc.setIcon(icon3)
         self.actionCalc.setObjectName(_fromUtf8("actionCalc"))
         self.actionConfig = QtGui.QAction(MainWindow)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("images/config.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionConfig.setIcon(icon2)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("images/config.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionConfig.setIcon(icon4)
         self.actionConfig.setObjectName(_fromUtf8("actionConfig"))
         self.actionHelp = QtGui.QAction(MainWindow)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("images/help.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionHelp.setIcon(icon3)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("images/help.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionHelp.setIcon(icon5)
         self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
         self.actionClose = QtGui.QAction(MainWindow)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap(_fromUtf8("images/cloese.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionClose.setIcon(icon4)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("images/cloese.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionClose.setIcon(icon6)
         self.actionClose.setObjectName(_fromUtf8("actionClose"))
-        self.toolBar.addAction(self.actionConfig)
+        self.toolBar.addAction(self.actionCarregar_sistema)
+        self.toolBar.addAction(self.actionSalvar_sistema)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionCalc)
         self.toolBar.addAction(self.actionHelp)
@@ -1440,7 +1447,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionClose)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QObject.connect(self.actionClose, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
