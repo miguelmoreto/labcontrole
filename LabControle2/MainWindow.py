@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Tue Jun 03 15:16:20 2014
+# Created: Tue Jun 03 16:47:21 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -1458,7 +1458,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 2", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 3", None))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência", None))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)", None))
         self.labelRvalue.setText(_translate("MainWindow", "Valor:", None))
