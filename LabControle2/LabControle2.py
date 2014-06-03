@@ -55,10 +55,22 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.currentComboIndex = 0
         
         self.setupUi(self)
-        # Adding toolbar spacer:
+        
+        # Adding toolbar spacer and a Hidden system label:
         empty = QtGui.QWidget()
+        self.labelHide = QtGui.QLabel()
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        self.labelHide.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.labelHide.setFont(font)
+        self.labelHide.setText('')
+        self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         empty.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
+        self.toolBar.insertWidget(self.actionClose,self.labelHide)
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
@@ -787,13 +799,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Perturbação desativada.", None))
             self.sys.Wt = '0'
             self.sys.InstWt = 0
+            self.sys.ruidoWt = 0
             self.checkBoxPert.setDisabled(True)
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Perturbação ativada.", None))
             self.sys.Wt = str(self.lineEditWvalue.text())
             self.sys.InstWt = self.doubleSpinBoxWtime.value()
+            self.sys.ruidoWt = self.doubleSpinBoxWnoise.value()
             self.checkBoxPert.setDisabled(False)
-
             
 
     def onGnumChange(self,value):
@@ -1074,6 +1087,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.sys.Hide = expSys.Hide        
         
         if expSys.Hide == False:
+            self.labelHide.setText('')
             # Update feedback switch
             if expSys.Malha == 'Aberta':
                 self.radioBtnOpen.setChecked(True)
@@ -1111,6 +1125,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             # Re-enable Root Locus button:
             self.btnPlotLGR.setEnabled(True)
         elif expSys.Hide == True:
+            self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
             # Update feedback switch
             if expSys.Malha == 'Aberta':
                 self.radioBtnOpen.setChecked(True)
@@ -1155,6 +1170,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.btnPlotLGR.setEnabled(False)            
         
     def onResetAction(self):
+        self.labelHide.setText('')
         self.radioBtnOpen.setChecked(True)        
         self.sys.Type = 0
         self.sys.Malha = 'Aberta'
