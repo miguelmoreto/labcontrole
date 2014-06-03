@@ -3689,6 +3689,7 @@ QGroupBox::title {
    </attribute>
    <addaction name="actionCarregar_sistema"/>
    <addaction name="actionSalvar_sistema"/>
+   <addaction name="actionReset"/>
    <addaction name="separator"/>
    <addaction name="actionCalc"/>
    <addaction name="actionHelp"/>
@@ -3759,6 +3760,18 @@ QGroupBox::title {
    </property>
    <property name="toolTip">
     <string>Fechar o programa.</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/refresh.png</normaloff>images/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Resetar systema</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resetar o sistema para o &lt;span style=&quot; font-style:italic;&quot;&gt;default&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

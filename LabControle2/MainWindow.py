@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Mon Jun 02 11:07:32 2014
+# Created: Tue Jun 03 15:16:20 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -1438,8 +1438,14 @@ class Ui_MainWindow(object):
         icon6.addPixmap(QtGui.QPixmap(_fromUtf8("images/cloese.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionClose.setIcon(icon6)
         self.actionClose.setObjectName(_fromUtf8("actionClose"))
+        self.actionReset = QtGui.QAction(MainWindow)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(_fromUtf8("images/refresh.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionReset.setIcon(icon7)
+        self.actionReset.setObjectName(_fromUtf8("actionReset"))
         self.toolBar.addAction(self.actionCarregar_sistema)
         self.toolBar.addAction(self.actionSalvar_sistema)
+        self.toolBar.addAction(self.actionReset)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionCalc)
         self.toolBar.addAction(self.actionHelp)
@@ -1590,6 +1596,8 @@ class Ui_MainWindow(object):
         self.actionHelp.setToolTip(_translate("MainWindow", "Mostra conteúdo de ajuda", None))
         self.actionClose.setText(_translate("MainWindow", "Fechar", None))
         self.actionClose.setToolTip(_translate("MainWindow", "Fechar o programa.", None))
+        self.actionReset.setText(_translate("MainWindow", "Resetar systema", None))
+        self.actionReset.setToolTip(_translate("MainWindow", "<html><head/><body><p>Resetar o sistema para o <span style=\" font-style:italic;\">default</span></p></body></html>", None))
 
 from matplotlibwidget import MatplotlibWidget
 

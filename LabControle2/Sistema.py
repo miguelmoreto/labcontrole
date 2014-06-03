@@ -70,6 +70,7 @@ class SistemaContinuo:
     polyDden = numpy.poly1d([1]) # denominator polynomial of the direct loop transfer function
 
     Type = 0    # system type.
+    Hide = False
 
     # Entradas:
     Rt = '1'       # String com a função de entrada r(t)

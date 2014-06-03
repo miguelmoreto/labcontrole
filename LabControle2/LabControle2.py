@@ -192,6 +192,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.actionCalc, QtCore.SIGNAL("triggered()"), self.onCalcAction)
         QtCore.QObject.connect(self.actionSalvar_sistema, QtCore.SIGNAL("triggered()"), self.onSaveAction)
         QtCore.QObject.connect(self.actionCarregar_sistema, QtCore.SIGNAL("triggered()"), self.onLoadAction)
+        QtCore.QObject.connect(self.actionReset, QtCore.SIGNAL("triggered()"), self.onResetAction)
         #QtCore.QObject.connect(self.actionSysInfo, QtCore.SIGNAL("triggered()"), self.onSysInfoAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
@@ -531,20 +532,16 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mplLGR.draw()
 
     def onBtnLGRclear(self):
+        """
+        Clear figure of the Root Locus diagram. Button handler.
+        """        
         # Clear figure:
-
-        self.axesLGR.cla()
-        #self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
-        #self.mplSimul.axes.set_ylim(0, 1)
-        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
-        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
-        #self.mplSimul.axes.grid()
+        self.mplLGR.figure.clf()
         self.mplLGR.draw()
     
     def onResLGRchange(self,value):
         """
-        Chagen LGR number of points gain.
+        Chage the number of LGR gain points (resolution).
         """
         self.sys.Kpontos = self.doubleSpinBoxLGRpontos.value()
         
@@ -560,8 +557,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                 temp = "%.3f+j%.3f, " %(r.real,r.imag)
             txt = txt + temp
         
-        txt = _translate("MainWindow", "Pólos em MF: ", None) + txt
-        self.statusBar().showMessage(txt)
+        if not self.sys.Hide:
+            txt = _translate("MainWindow", "Pólos em MF: ", None) + txt
+            self.statusBar().showMessage(txt)
         
         # Plotando pólos do sist. realimentado:
         
@@ -919,7 +917,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Return 0 if it has an error.
         Otherwise, returns a list with polynomial coefficients
         """
-        value.replace(',','.')
+        value.remove(' ') # remove spaces
+        value.replace(',','.') # change , to .
+        value.replace(')(',')*(') # insert * between parentesis
         
         retorno = None
         
@@ -1003,17 +1003,25 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         p=subprocess.Popen('calc.exe')
     
     def onSaveAction(self):
+        """
+        Save system data in an external file with encrypted data.
+        
+        If the extension of the file is dat, system data is stored with hide flag = False
+        If the extension is tst the hide flag is True.
+        """
         fileName = QtCore.QString()
-        fileName = QtGui.QFileDialog.getSaveFileName(self,_translate("MainWindow", "Salvar sistema", None),"sis1",_translate("MainWindow", "Arquivos Dat (*.dat);;Arquivos Dat oculto (*.tst)", None))
+        fileName = QtGui.QFileDialog.getSaveFileName(self,
+                                _translate("MainWindow", "Salvar sistema", None),
+                                "sisXX",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None))
 
         hide = False
         
 
-        if fileName.endsWith("dat"):
+        if fileName.endsWith("LCN"):
             hide = False
             #pickle.dump(expSys, open(fileName, "wb" ),pickle.HIGHEST_PROTOCOL)
             
-        elif fileName.endsWith("tst"):
+        elif fileName.endsWith("LCO"):
             hide = True
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
@@ -1030,6 +1038,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         expSys.Type = self.sys.Type
         expSys.Malha = self.sys.Malha
         expSys.Hide = hide
+        # Store groupbox checked status:
+        expSys.Genabled = self.groupBoxG.isChecked()
+        expSys.Cenabled = self.groupBoxC.isChecked()
+        expSys.Henabled = self.groupBoxH.isChecked()
         
         key = encript.Crypticle.generate_key_string()
         cryptobj = encript.Crypticle(key)
@@ -1043,9 +1055,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
     def onLoadAction(self):
         fileName = QtGui.QFileDialog.getOpenFileName(self,
-                _translate("MainWindow", "Carregar sistema", None),
+                _translate("MainWindow", "Abrir arquivo de sistema", None),
                 'sys',
-                _translate("MainWindow", "Arquivos Dat (*.dat);;Arquivos Dat oculto (*.tst)", None))
+                _translate("MainWindow", "Arquivos LabControle (*.LCN *.LCO)", None))
         
         if not fileName:
             return
@@ -1059,9 +1071,116 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         cryptobj = encript.Crypticle(key)
         expSys = cryptobj.loads(cryptData)
         
-        print expSys.Gnum
-        print expSys.Gden
+        self.sys.Hide = expSys.Hide        
+        
+        if expSys.Hide == False:
+            # Update feedback switch
+            if expSys.Malha == 'Aberta':
+                self.radioBtnOpen.setChecked(True)
+            else:
+                self.radioBtnClose.setChecked(True)            
+            # Update system type and SVG:
+            self.sys.Type = expSys.Type
+            self.sys.Malha = expSys.Malha        
+            self.comboBoxSys.setCurrentIndex(expSys.Type)
+            self.onChangeSystem(expSys.Type)
+            # Update groupboxes checkboxes:
+            self.groupBoxG.setChecked(expSys.Genabled)
+            self.groupBoxC.setChecked(expSys.Cenabled)
+            self.groupBoxH.setChecked(expSys.Henabled)
+            # Update UI and call the callbacks to update system.
+            self.lineEditGnum.setText(expSys.Gnum)
+            self.onGnumChange(expSys.Gnum)
+            self.lineEditGden.setText(expSys.Gden)
+            self.onGdenChange(expSys.Gden)
+            self.lineEditCnum.setText(expSys.Cnum)
+            self.onCnumChange(expSys.Cnum)
+            self.lineEditCden.setText(expSys.Cden)
+            self.onCdenChange(expSys.Cden)
+            self.lineEditHnum.setText(expSys.Hnum)
+            self.onHnumChange(expSys.Hnum)
+            self.lineEditHden.setText(expSys.Hden)
+            self.onHdenChange(expSys.Hden)
             
+            # Update gain
+            self.doubleSpinBoxK.setValue(expSys.K)
+            # Enable or re-enable group boxes:
+            self.groupBoxG.setEnabled(True)
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(True)
+            # Re-enable Root Locus button:
+            self.btnPlotLGR.setEnabled(True)
+        elif expSys.Hide == True:
+            # Update feedback switch
+            if expSys.Malha == 'Aberta':
+                self.radioBtnOpen.setChecked(True)
+            else:
+                self.radioBtnClose.setChecked(True)                 
+            # Update system type and SVG:                        
+            self.sys.Type = expSys.Type
+            self.sys.Malha = expSys.Malha
+            self.comboBoxSys.setCurrentIndex(expSys.Type)
+            self.onChangeSystem(expSys.Type)
+            # Update groupboxes checkboxes:
+            self.groupBoxG.setChecked(expSys.Genabled)
+            self.groupBoxC.setChecked(expSys.Cenabled)
+            self.groupBoxH.setChecked(expSys.Henabled)            
+
+            # Call the callbacks to update system.
+            self.onGnumChange(expSys.Gnum)
+            self.onGdenChange(expSys.Gden)
+            self.onCnumChange(expSys.Cnum)
+            self.onCdenChange(expSys.Cden)
+            self.onHnumChange(expSys.Hnum)
+            self.onHdenChange(expSys.Hden)
+            
+            # Update gain
+            self.doubleSpinBoxK.setValue(expSys.K)
+            
+            #self.onChangeSystem(expSys.Type)
+       
+
+            # Update UI:
+            self.lineEditGnum.setText('*****')
+            self.lineEditGden.setText('*****')
+            self.lineEditCnum.setText('*****')
+            self.lineEditCden.setText('*****')
+            self.lineEditHnum.setText('*****')
+            self.lineEditHden.setText('*****')
+            # Disable groupboxes:
+            self.groupBoxG.setEnabled(False) #setHidden
+            self.groupBoxC.setEnabled(False)
+            self.groupBoxH.setEnabled(False)
+            # Disable Root Locus button:
+            self.btnPlotLGR.setEnabled(False)            
+        
+    def onResetAction(self):
+        self.radioBtnOpen.setChecked(True)        
+        self.sys.Type = 0
+        self.sys.Malha = 'Aberta'
+        self.comboBoxSys.setCurrentIndex(0)
+        self.onChangeSystem(0)
+        self.groupBoxG.setEnabled(True)
+        self.groupBoxC.setEnabled(True)
+        self.groupBoxH.setEnabled(True)
+        self.groupBoxC.setChecked(False)
+        self.lineEditGnum.setText(QtCore.QString('2*s+10'))
+        self.onGnumChange(QtCore.QString('2*s+10'))
+        self.lineEditGden.setText(QtCore.QString('1*s^2+2*s+10'))
+        self.onGdenChange(QtCore.QString('1*s^2+2*s+10'))
+        self.lineEditCnum.setText(QtCore.QString('1'))
+        self.onCnumChange(QtCore.QString('1'))
+        self.lineEditCden.setText(QtCore.QString('1'))
+        self.onCdenChange(QtCore.QString('1'))
+        self.lineEditHnum.setText(QtCore.QString('1'))
+        self.onHnumChange(QtCore.QString('1'))
+        self.lineEditHden.setText(QtCore.QString('1'))
+        self.onHdenChange(QtCore.QString('1'))
+        self.doubleSpinBoxK.setValue(1)
+        self.btnPlotLGR.setEnabled(True)
+   
+        
+
 
 class ExportSystem:
     
@@ -1071,6 +1190,9 @@ class ExportSystem:
     Cden = QtCore.QString()
     Hnum = QtCore.QString()
     Hden = QtCore.QString()
+    Genabled = True
+    Cenabled = False
+    Henabled = False
     K = 1.0
     Type = 0
     Malha = 'Aberta'
