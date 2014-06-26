@@ -15,7 +15,8 @@ import utils
 import numpy
 import subprocess
 import pickle
-import encript
+#import encript
+import base64
 
            
 try:
@@ -753,6 +754,15 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         r(t) string input edited handler
         """
+
+        if not value:
+            self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+            return
+        else:
+            self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        
+        value.replace(',','.')   
+        
         self.sys.Wt = str(value)
 
     def onGroupBoxCcheck(self,flag):
@@ -1056,13 +1066,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         expSys.Cenabled = self.groupBoxC.isChecked()
         expSys.Henabled = self.groupBoxH.isChecked()
         
-        key = encript.Crypticle.generate_key_string()
-        cryptobj = encript.Crypticle(key)
-        cryptData = cryptobj.dumps(expSys)
-        
-        tempdata = {"key": key, "safe": cryptData}
-        # Write encrypted file to disk:
-        pickle.dump(tempdata, open(fileName, "wb" ),pickle.HIGHEST_PROTOCOL)
+        # Pickle object into a string:
+        temp = pickle.dumps(expSys,1)
+        # Encode string:
+        temp1 = base64.b64encode(temp)
+        # Write encoded string to disk:
+        f = open(fileName,"wb")
+        f.write(temp1)
+        f.close()
         
         self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
         
@@ -1077,12 +1088,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         expSys = ExportSystem()
         
-        pkl_file = open(fileName, 'rb')
-        tempdata = pickle.load(pkl_file)
-        key = tempdata['key']
-        cryptData = tempdata['safe']
-        cryptobj = encript.Crypticle(key)
-        expSys = cryptobj.loads(cryptData)
+        # Read encoded string from file:
+        f = open(fileName, 'rb')
+        temp1 = f.read()
+        f.close()
+        # Decode string:
+        temp = base64.b64decode(temp1)
+        # Unpickle object from string:
+        expSys = pickle.loads(temp)
         
         self.sys.Hide = expSys.Hide        
         
@@ -1124,6 +1137,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.groupBoxH.setEnabled(True)
             # Re-enable Root Locus button:
             self.btnPlotLGR.setEnabled(True)
+            self.comboBoxSys.setEnabled(True)
         elif expSys.Hide == True:
             self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
             # Update feedback switch
@@ -1167,7 +1181,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.groupBoxC.setEnabled(False)
             self.groupBoxH.setEnabled(False)
             # Disable Root Locus button:
-            self.btnPlotLGR.setEnabled(False)            
+            self.btnPlotLGR.setEnabled(False)
+            # Disable change system combo box:
+            self.comboBoxSys.setEnabled(False)
         
     def onResetAction(self):
         self.labelHide.setText('')
@@ -1194,6 +1210,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.onHdenChange(QtCore.QString('1'))
         self.doubleSpinBoxK.setValue(1)
         self.btnPlotLGR.setEnabled(True)
+        self.comboBoxSys.setEnabled(True)
    
         
 
