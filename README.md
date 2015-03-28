@@ -16,6 +16,7 @@ Para maiores informações sobre o projeto, acesse o site do LabControle: http:/
 
 Labcontrole is written in Python 2.7 language. It depends on the folowing python packges:
 * Matplotlib
-* Scypy
+* Scipy
 * Numpy
 * Pyqt4
+
