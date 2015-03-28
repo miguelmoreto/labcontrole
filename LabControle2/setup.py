@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 13 22:46:15 2014
+
+@author: Moreto
+"""
+
 from distutils.core import setup
-import matplotlib
-import numpy
-import scipy
 import py2exe
-
-excludes = ['_gtkagg', '_tkagg', '_agg2', '_cairo', '_cocoaagg', '_fltkagg', '_gtk', '_gtkcairo', '_wxagg', 'Tkinter']
-includes = ["sip", "PyQt4.QtGui", "numpy", "scipy.signal", "scipy.special", "scipy.linalg", 'scipy.special._ufuncs_cxx', 'scipy.sparse.csgraph._validation']
-
-setup(
-	windows=['LabControle2.py'],
-	options={"py2exe": {"includes": includes}},
-	data_files=matplotlib.get_py2exe_datafiles()
-	)
+import matplotlib
+ 
+setup(windows=['LabControle2.py'],
+      options={"py2exe": {"includes": ["sip", "PyQt4.QtGui", "PyQt4.QtCore"], 'excludes': ['_wxagg', '_gtkagg', '_tkagg', '_agg2', '_cairo', '_cocoaagg', '_fltkagg', '_gtk', '_gtkcairo','Tkinter']}},
+      data_files=matplotlib.get_py2exe_datafiles())
