@@ -521,6 +521,19 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         xlimites = self.axesLGR.get_xlim()
         ylimites = self.axesLGR.get_ylim()
+        
+        if (abs(xlimites[0]-xlimites[1])<0.1):
+            #xlimites[0] = xlimites[0]-1
+            #xlimites[1] = xlimites[1]+1
+            self.axesLGR.set_xlim((xlimites[0]-1,xlimites[1]+1))
+            xlimites = self.axesLGR.get_xlim()
+
+        if (abs(ylimites[0]-ylimites[1])<0.1):
+            #ylimites[0] = ylimites[0]-1
+            #ylimites[1] = ylimites[1]+1
+            self.axesLGR.set_ylim((ylimites[0]-1,ylimites[1]+1))
+            ylimites = self.axesLGR.get_ylim()
+
 
         if Rebd > 0:
             if Rebd < 0.5:

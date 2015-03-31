@@ -16,11 +16,6 @@ os.environ["PATH"] = os.environ["PATH"] + os.path.pathsep + os.path.split(zmq.__
 
 Mydata_files = matplotlib.get_py2exe_datafiles()
 
-#Mydata_files.append([('images', ['./images/about.png']),('images', ['./images/calc.png']),
-#                ('images', ['./images/close.png']),('images', ['./images/config.png']),
-#                ('images', ['./images/fileopen.png']),('images', ['./images/filesave.png']),
-#                ('images', ['./images/help.png']),('images', ['./images/icon1.png'])])
-#Mydata_files.append(('images', ['./images/about.png']))
 
 for files in os.listdir('./images'):
     f1 = './images/' + files
@@ -35,9 +30,6 @@ Mydata_files.append(('', ['./diagram2Opened.svg']))
 Mydata_files.append(('', ['./diagram3Closed.svg']))
 Mydata_files.append(('', ['./diagram3Opened.svg']))
 
-#numpy.core._dotblas
-#
- 
 setup(windows=[{"script": "LabControle2.py","icon_resources": [(1, "./images/labcontrole.ico")]}],
       options={"py2exe": {"includes": ["sip", "PyQt4.QtGui", "PyQt4.QtCore",
                                        "zmq.utils", "zmq.utils.jsonapi", 
