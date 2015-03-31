@@ -38,7 +38,7 @@ Mydata_files.append(('', ['./diagram3Opened.svg']))
 #numpy.core._dotblas
 #
  
-setup(windows=['LabControle2.py'], 
+setup(windows=[{"script": "LabControle2.py","icon_resources": [(1, "./images/labcontrole.ico")]}],
       options={"py2exe": {"includes": ["sip", "PyQt4.QtGui", "PyQt4.QtCore",
                                        "zmq.utils", "zmq.utils.jsonapi", 
                                        "zmq.utils.strtypes",
