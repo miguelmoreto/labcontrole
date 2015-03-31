@@ -35,7 +35,8 @@ from scipy import signal
 import numpy
 #import myControls
 from utils import FreqResp,Nyquist, MyRootLocus, RemoveEqualZeroPole
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
+import matplotlib.patches as plt
 #import types
 #import control
 
