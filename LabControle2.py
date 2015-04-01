@@ -158,6 +158,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
         QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
         QtCore.QObject.connect(self.comboBoxSys, QtCore.SIGNAL("currentIndexChanged(int)"), self.onChangeSystem)
+        QtCore.QObject.connect(self.tabWidget, QtCore.SIGNAL("currentChanged (int)"), self.onTabChange)
         # Spinboxes:
         QtCore.QObject.connect(self.doubleSpinBoxKmax, QtCore.SIGNAL("valueChanged(double)"), self.onKmaxChange)
         QtCore.QObject.connect(self.doubleSpinBoxKmin, QtCore.SIGNAL("valueChanged(double)"), self.onKminChange)
@@ -577,11 +578,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         raizes = self.sys.RaizesRL(gain)
         txt = ''
         for r in raizes:
-            if numpy.isreal(r):
-                temp = "%.3f, " %(r)
+            if (txt == ''):
+                txt = self.createRootString(r)
             else:
-                temp = "%.3f+j%.3f, " %(r.real,r.imag)
-            txt = txt + temp
+                txt = txt + '; ' + self.createRootString(r)
         
         if not self.sys.Hide:
             txt = _translate("MainWindow", "Pólos em MF: ", None) + txt
@@ -1224,7 +1224,63 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxK.setValue(1)
         self.btnPlotLGR.setEnabled(True)
         self.comboBoxSys.setEnabled(True)
-   
+
+    def onTabChange(self, index):
+        # Clearing the lists:
+        self.listWidgetCLpoles.clear()
+        self.listWidgetOLpoles.clear()
+        self.listWidgetOLzeros.clear()
+        self.listWidgetRLpoints.clear()
+        # Check if SysInfo tab:
+        if (index == 5):
+            # Closed loop poles:
+            rootsCL = self.sys.RaizesRL(self.sys.K)
+            for root in rootsCL:
+                item = QtGui.QListWidgetItem()
+                item.setText(self.createRootString(root))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.listWidgetCLpoles.addItem(item)
+            
+            rootsOL = self.sys.RaizesOL()
+            for root in rootsOL:
+                item = QtGui.QListWidgetItem()
+                item.setText(self.createRootString(root))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.listWidgetOLpoles.addItem(item)
+                
+            zerosOL = self.sys.ZerosOL()
+            for zero in zerosOL:
+                item = QtGui.QListWidgetItem()
+                item.setText(self.createRootString(zero))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.listWidgetOLzeros.addItem(item)
+            
+            pontos, ganhos = self.sys.PontosSeparacao()
+            i = 0
+            for ponto in pontos:
+                item = QtGui.QListWidgetItem()
+                item.setText(self.createRootString(ponto) + " com Kc =  %0.3f" %(ganhos[i]))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.listWidgetRLpoints.addItem(item)
+                i = i + 1
+                
+    # Given a numpy number (complex or not) return a formatted string.
+    def createRootString(self, root):
+        root_str = ''
+        r_real = numpy.real(root)
+        r_imag = numpy.imag(root)
+        
+        if (r_imag == 0):
+            root_str = str(numpy.around(r_real, decimals=3))
+        else:
+            if (r_imag > 0):
+                root_str = str(numpy.around(r_real, decimals=3)) + ' + j'+ str(numpy.around(r_imag, decimals=3))
+            else:
+                root_str = str(numpy.around(r_real, decimals=3)) + ' - j'+ str(numpy.around(abs(r_imag), decimals=3))
+        
+        return root_str
+    
+        
         
 
 

@@ -175,6 +175,17 @@ class SistemaContinuo:
         
         return EqC.roots 
         
+    def RaizesOL(self):
+        """
+        Retorna as raízes de malha aberta.
+        """
+        return self.polyDden.roots
+        
+    def ZerosOL(self):
+        """
+        Retorna o valor dos zeros.
+        """
+        return self.polyDnum.roots
     
     def RespostaDegrau(self, tempo_degrau=0.5, delta_t=0.01, tmax=2,**kwargs):
         """
@@ -349,6 +360,31 @@ class SistemaContinuo:
             ax.plot(numpy.real(col), numpy.imag(col), '-')
         
         return root_vector
+    
+    def PontosSeparacao(self):
+        """
+        Calcula os pontos de separação e retorna só os pertinentes.
+        """
+        num = self.polyDnum
+        den = self.polyDden
+
+        pontos = []        
+        ganhos = []
+        
+        # Geracao dos pontos de separacao
+        # Fazendo d(-1/G(s))/ds = 0
+        deriv = scipy.polyder(den)*num - scipy.polyder(num)*den
+        cpss = scipy.roots(deriv) # candidatos a ponto de separacao
+        # Verificacao de quais os candidatos pertinentes
+        for raiz in cpss:		
+            aux = num(raiz)
+            if aux != 0:
+                Kc = -den(raiz) / num(raiz)
+                if (numpy.isreal(Kc)):# and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                    pontos.append(raiz)
+                    ganhos.append(Kc)
+        
+        return pontos, ganhos
     
     def Bode(self,figura):
         """
