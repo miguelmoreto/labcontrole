@@ -10,18 +10,20 @@ import py2exe
 import matplotlib
 import os
 import zmq
+import sys
 #
 
 os.environ["PATH"] = os.environ["PATH"] + os.path.pathsep + os.path.split(zmq.__file__)[0]
+python_dir = sys.exec_prefix
 
 Mydata_files = matplotlib.get_py2exe_datafiles()
 
-
-for files in os.listdir('./images'):
-    f1 = './images/' + files
-    if os.path.isfile(f1): # skip directories
-        f2 = 'images', [f1]
-        Mydata_files.append(f2)
+#
+#for files in os.listdir('./images'):
+#    f1 = './images/' + files
+#    if os.path.isfile(f1): # skip directories
+#        f2 = 'images', [f1]
+#        Mydata_files.append(f2)
 
 Mydata_files.append(('', ['./diagram1Closed.svg']))
 Mydata_files.append(('', ['./diagram1Opened.svg']))
@@ -29,8 +31,10 @@ Mydata_files.append(('', ['./diagram2Closed.svg']))
 Mydata_files.append(('', ['./diagram2Opened.svg']))
 Mydata_files.append(('', ['./diagram3Closed.svg']))
 Mydata_files.append(('', ['./diagram3Opened.svg']))
+Mydata_files.append(('imageformats', [python_dir + r'\Lib\site-packages\PyQt4\plugins\imageformats\qico4.dll']))
 
-setup(windows=[{"script": "LabControle2.py","icon_resources": [(1, "./images/labcontrole.ico")]}],
+#,"icon_resources": [(1, "./images/labcontrole.ico")]
+setup(windows=[{"script": "LabControle2.py"}],
       options={"py2exe": {"includes": ["sip", "PyQt4.QtGui", "PyQt4.QtCore",
                                        "zmq.utils", "zmq.utils.jsonapi", 
                                        "zmq.utils.strtypes",

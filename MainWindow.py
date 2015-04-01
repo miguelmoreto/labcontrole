@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Tue Jun 03 16:47:21 2014
-#      by: PyQt4 UI code generator 4.10.4
+# Created: Wed Apr 01 10:54:29 2015
+#      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         MainWindow.setFont(font)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("images/icon1.svg")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/icon48x48.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setIconSize(QtCore.QSize(24, 24))
         self.centralwidget = QtGui.QWidget(MainWindow)
@@ -1410,17 +1410,17 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionSalvar_sistema = QtGui.QAction(MainWindow)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap(_fromUtf8("images/filesave.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/filesave.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionSalvar_sistema.setIcon(icon1)
         self.actionSalvar_sistema.setObjectName(_fromUtf8("actionSalvar_sistema"))
         self.actionCarregar_sistema = QtGui.QAction(MainWindow)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8("images/fileopen.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/fileopen.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionCarregar_sistema.setIcon(icon2)
         self.actionCarregar_sistema.setObjectName(_fromUtf8("actionCarregar_sistema"))
         self.actionCalc = QtGui.QAction(MainWindow)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap(_fromUtf8("images/calc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/calc.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionCalc.setIcon(icon3)
         self.actionCalc.setObjectName(_fromUtf8("actionCalc"))
         self.actionConfig = QtGui.QAction(MainWindow)
@@ -1430,17 +1430,17 @@ class Ui_MainWindow(object):
         self.actionConfig.setObjectName(_fromUtf8("actionConfig"))
         self.actionHelp = QtGui.QAction(MainWindow)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap(_fromUtf8("images/help.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/help.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionHelp.setIcon(icon5)
         self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
         self.actionClose = QtGui.QAction(MainWindow)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(_fromUtf8("images/cloese.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/cloese.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionClose.setIcon(icon6)
         self.actionClose.setObjectName(_fromUtf8("actionClose"))
         self.actionReset = QtGui.QAction(MainWindow)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(_fromUtf8("images/refresh.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons_UI/images/refresh.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionReset.setIcon(icon7)
         self.actionReset.setObjectName(_fromUtf8("actionReset"))
         self.toolBar.addAction(self.actionCarregar_sistema)
@@ -1458,7 +1458,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 3", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.0 - Beta 4", None))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência", None))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)", None))
         self.labelRvalue.setText(_translate("MainWindow", "Valor:", None))
@@ -1600,6 +1600,7 @@ class Ui_MainWindow(object):
         self.actionReset.setToolTip(_translate("MainWindow", "<html><head/><body><p>Resetar o sistema para o <span style=\" font-style:italic;\">default</span></p></body></html>", None))
 
 from matplotlibwidget import MatplotlibWidget
+import images_rc
 
 if __name__ == "__main__":
     import sys

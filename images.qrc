@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="icons_UI">
+    <file>images/labcontrole.ico</file>
+    <file>images/icon1.svg</file>
+    <file>images/icon48x48.png</file>
+    <file>images/calc.png</file>
+    <file>images/cloese.png</file>
+    <file>images/filesave.png</file>
+    <file>images/help.png</file>
+    <file>images/refresh.png</file>
+    <file>images/fileopen.png</file>
+  </qresource>
+</RCC>

@@ -23,11 +23,11 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 2.0 - Beta 3</string>
+   <string>LabControle 2.0 - Beta 4</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>images/icon1.svg</normaloff>images/icon1.svg</iconset>
+   <iconset resource="images.qrc">
+    <normaloff>:/icons_UI/images/icon48x48.png</normaloff>:/icons_UI/images/icon48x48.png</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -3698,8 +3698,8 @@ QGroupBox::title {
   </widget>
   <action name="actionSalvar_sistema">
    <property name="icon">
-    <iconset>
-     <normaloff>images/filesave.png</normaloff>images/filesave.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/filesave.png</normaloff>:/icons_UI/images/filesave.png</iconset>
    </property>
    <property name="text">
     <string>Salvar sistema</string>
@@ -3707,8 +3707,8 @@ QGroupBox::title {
   </action>
   <action name="actionCarregar_sistema">
    <property name="icon">
-    <iconset>
-     <normaloff>images/fileopen.png</normaloff>images/fileopen.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/fileopen.png</normaloff>:/icons_UI/images/fileopen.png</iconset>
    </property>
    <property name="text">
     <string>Carregar sistema</string>
@@ -3716,8 +3716,8 @@ QGroupBox::title {
   </action>
   <action name="actionCalc">
    <property name="icon">
-    <iconset>
-     <normaloff>images/calc.png</normaloff>images/calc.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/calc.png</normaloff>:/icons_UI/images/calc.png</iconset>
    </property>
    <property name="text">
     <string>calculadora</string>
@@ -3740,8 +3740,8 @@ QGroupBox::title {
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset>
-     <normaloff>images/help.png</normaloff>images/help.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/help.png</normaloff>:/icons_UI/images/help.png</iconset>
    </property>
    <property name="text">
     <string>Ajuda</string>
@@ -3752,8 +3752,8 @@ QGroupBox::title {
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset>
-     <normaloff>images/cloese.png</normaloff>images/cloese.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/cloese.png</normaloff>:/icons_UI/images/cloese.png</iconset>
    </property>
    <property name="text">
     <string>Fechar</string>
@@ -3764,8 +3764,8 @@ QGroupBox::title {
   </action>
   <action name="actionReset">
    <property name="icon">
-    <iconset>
-     <normaloff>images/refresh.png</normaloff>images/refresh.png</iconset>
+    <iconset resource="images.qrc">
+     <normaloff>:/icons_UI/images/refresh.png</normaloff>:/icons_UI/images/refresh.png</iconset>
    </property>
    <property name="text">
     <string>Resetar systema</string>
@@ -3782,7 +3782,9 @@ QGroupBox::title {
    <header>matplotlibwidget</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionClose</sender>
