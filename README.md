@@ -12,6 +12,10 @@ O LabControle é um simulador de sistemas de controle lineares para ser utilizad
 
 Para maiores informações sobre o projeto, acesse o site do LabControle: http://sites.google.com/site/controlelab/
 
+## Download
+
+Se Releases section: https://github.com/miguelmoreto/labcontrole/releases
+
 ## About
 
 Labcontrole is written in Python 2.7 language. It depends on the folowing python packges:
