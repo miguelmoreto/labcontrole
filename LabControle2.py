@@ -1325,9 +1325,12 @@ class ExportSystem:
         
 if __name__ == '__main__':
     app = QtGui.QApplication([])
-    #translator = QtCore.QTranslator()
-    #translator.load("LabControle2_en.qm")
-    #app.installTranslator(translator)
+    locale = QtCore.QLocale.system().name()
+    # If not portuguese, instal english translator:
+    if (locale != 'pt_BR' and locale != 'pt_PT'):
+        translator = QtCore.QTranslator()
+        translator.load("LabControle2_en.qm")
+        app.installTranslator(translator)
     
     win = LabControle2()
     win.show()

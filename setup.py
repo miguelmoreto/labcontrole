@@ -31,6 +31,7 @@ Mydata_files.append(('', ['./diagram2Closed.svg']))
 Mydata_files.append(('', ['./diagram2Opened.svg']))
 Mydata_files.append(('', ['./diagram3Closed.svg']))
 Mydata_files.append(('', ['./diagram3Opened.svg']))
+Mydata_files.append(('', ['./LabControle2_en.qm']))
 #Mydata_files.append(('imageformats', [python_dir + r'\Lib\site-packages\PyQt4\plugins\imageformats\qico4.dll']))
 
 #,"icon_resources": [(1, "./images/labcontrole.ico")]
