@@ -1195,6 +1195,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.groupBoxH.setEnabled(False)
             # Disable Root Locus button:
             self.btnPlotLGR.setEnabled(False)
+
             # Disable change system combo box:
             self.comboBoxSys.setEnabled(False)
         
@@ -1231,6 +1232,27 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.listWidgetOLpoles.clear()
         self.listWidgetOLzeros.clear()
         self.listWidgetRLpoints.clear()
+        
+        if (self.sys.Hide == True):
+            txt = _translate("MainWindow", "Desabilitado", None)
+            item = QtGui.QListWidgetItem()
+            item.setText(txt)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.listWidgetCLpoles.addItem(item)
+            item = QtGui.QListWidgetItem()
+            item.setText(txt)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.listWidgetOLpoles.addItem(item)
+            item = QtGui.QListWidgetItem()
+            item.setText(txt)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.listWidgetOLzeros.addItem(item)
+            item = QtGui.QListWidgetItem()
+            item.setText(txt)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.listWidgetRLpoints.addItem(item)
+            return
+            
         # Check if SysInfo tab:
         if (index == 5):
             # Closed loop poles:

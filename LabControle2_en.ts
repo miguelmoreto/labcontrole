@@ -296,47 +296,47 @@
     <message>
         <location filename="MainWindow.py" line="1140"/>
         <source>Planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Process G(s)</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1141"/>
         <source>Numerador da planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>G(s) process numerator</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1142"/>
         <source>Denominador da planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>G(s) process denominator</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1143"/>
         <source>Habilita/desabilita o sensor</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/disable sensor</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1144"/>
         <source>Sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sensor H(s)</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1148"/>
         <source>Denominador do sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>H(s) sensor denominator</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1146"/>
         <source>Numerador do sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>H(s) sensos numerator</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1151"/>
         <source>Entre com o tempo mÃ¡ximo de simulaÃ§Ã£o</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter the maximum simulation time</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1156"/>
         <source>Controle: u(t)</source>
-        <translation type="unfinished"></translation>
+        <translation>Control: u(t)</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1158"/>
@@ -346,47 +346,47 @@
     <message>
         <location filename="MainWindow.py" line="1163"/>
         <source>Valor mÃ¡ximo de ganho para traÃ§ado do LGR</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximum value of gain for RL plot</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1164"/>
         <source>Valor mÃ­nimo de ganho para traÃ§ado do LGR</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimum value of gain for RL</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1166"/>
         <source>Ajuste de ganho de malha direta K</source>
-        <translation type="unfinished"></translation>
+        <translation>Direct gain K</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1167"/>
         <source>RegiÃ£o proibida de tempo de resposta</source>
-        <translation type="unfinished"></translation>
+        <translation>Forbiden region of response time</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1168"/>
         <source>Valor da restriÃ§Ã£o de tempo de resposta</source>
-        <translation type="unfinished"></translation>
+        <translation>Value of the response time restriction</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1169"/>
         <source>RegiÃ£o proibida de sobresinal percentual</source>
-        <translation type="unfinished"></translation>
+        <translation>Forbiden region of overshoot</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1170"/>
         <source>Valor da restriÃ§Ã£o de sobressinal percentual</source>
-        <translation type="unfinished"></translation>
+        <translation>Value of the overshoot restriction</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1171"/>
         <source>RegiÃ£o proibida de tempo de pico</source>
-        <translation type="unfinished"></translation>
+        <translation>Forbiden region of peak time</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1172"/>
         <source>Valor da restriÃ§Ã£o de tempo de pico</source>
-        <translation type="unfinished"></translation>
+        <translation>Valeu of the peak time restriction</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1173"/>
@@ -401,42 +401,42 @@
     <message>
         <location filename="MainWindow.py" line="1187"/>
         <source>Limpar a Ã¡rea do grÃ¡fico</source>
-        <translation type="unfinished">Linear Discrete System (N/A)</translation>
+        <translation>Clean graphic area</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1179"/>
         <source>Freq. mÃ­nima:</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimum Freq.</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1180"/>
         <source>Entre com a frequÃªncia mÃ­nima para o cÃ¡lculo do diagrama de bode</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter with the minimum frequency value for Bode diagram plot</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1181"/>
         <source>Freq. mÃ¡xima:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximum Freq.</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1182"/>
         <source>Entre com a frequÃªncia mÃ¡xima para o cÃ¡lculo do diagrama de bode</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter with the maximum frequency value for Bode diagram plot</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1183"/>
         <source>ResoluÃ§Ã£o:</source>
-        <translation type="unfinished"></translation>
+        <translation>Resolution:</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1184"/>
         <source>Entre com o nÃºmero de pontos por dÃ©cada para o traÃ§ado do diagrama de bode</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter with the number of points per dacade for Bode diagram plot</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1185"/>
         <source>TraÃ§ar o Diagrama de Bode</source>
-        <translation type="unfinished"></translation>
+        <translation>Plot the Bode diagram</translation>
     </message>
     <message>
         <location filename="MainWindow.py" line="1186"/>
@@ -446,82 +446,82 @@
     <message>
         <location filename="LabControle2.py" line="398"/>
         <source>Tempo [s]</source>
-        <translation type="unfinished"></translation>
+        <translation>Time [s]</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="397"/>
         <source>Valor</source>
-        <translation type="unfinished"></translation>
+        <translation>Value</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="399"/>
         <source>SimulaÃ§Ã£o no tempo</source>
-        <translation type="unfinished"></translation>
+        <translation>Time simulation</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="160"/>
         <source>Pronto.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ready.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="171"/>
         <source>Malha aberta.</source>
-        <translation type="unfinished"></translation>
+        <translation>Open loop.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="181"/>
         <source>Malha fechada.</source>
-        <translation type="unfinished"></translation>
+        <translation>Closed loop.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="833"/>
         <source>Sistema ainda nÃ£o implementado.</source>
-        <translation type="unfinished"></translation>
+        <translation>System not yet implemented.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="207"/>
         <source>Sistema alterado.</source>
-        <translation type="unfinished"></translation>
+        <translation>System updated.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="343"/>
         <source>Simulando, aguarde...</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulating, stand by...</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="348"/>
         <source>SimulaÃ§Ã£o concluÃ­da.</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulation done.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="374"/>
         <source>Nenhum sinal selecionado!</source>
-        <translation type="unfinished"></translation>
+        <translation>No signal selected!</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="413"/>
         <source>Plotando LGR...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ploting RL...</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="541"/>
         <source>ConcluÃ­do.</source>
-        <translation type="unfinished"></translation>
+        <translation>Done.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="420"/>
         <source>Eixo real</source>
-        <translation type="unfinished"></translation>
+        <translation>Real axis</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="421"/>
         <source>Eixo imaginÃ¡rio</source>
-        <translation type="unfinished"></translation>
+        <translation>Imaginary axis</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="422"/>
         <source>Lugar GeomÃ©trico das raÃ­zes de C(s)*G(s)*H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Root Locus of C(s)*G(s)*H(s)</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="490"/>
@@ -536,52 +536,52 @@
     <message>
         <location filename="LabControle2.py" line="534"/>
         <source>Magnitude [dB]</source>
-        <translation type="unfinished"></translation>
+        <translation>Magnitude [dB]</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="535"/>
         <source>Fase [graus]</source>
-        <translation type="unfinished"></translation>
+        <translation>Phase [degree]</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="536"/>
         <source>FrequÃªncia [Hz]</source>
-        <translation type="unfinished"></translation>
+        <translation>Frequency [Hz]</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="537"/>
         <source>Diagrama de Bode de K*C(s)*G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bode diagram of K*C(s)*G(s)</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="632"/>
         <source>C(s) desativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>C(s) disabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="639"/>
         <source>C(s) ativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>C(s) enabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="644"/>
         <source>G(s) desativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>G(s) disabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="651"/>
         <source>G(s) ativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>G(s) enabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="656"/>
         <source>H(s) desativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>H(s) disabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="663"/>
         <source>H(s) ativada.</source>
-        <translation type="unfinished"></translation>
+        <translation>H(s) enabled.</translation>
     </message>
     <message>
         <location filename="LabControle2.py" line="668"/>
