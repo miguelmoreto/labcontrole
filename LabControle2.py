@@ -7,6 +7,9 @@ Created on Tue Apr 01 15:24:20 2014
 
 from PyQt4 import QtCore,QtGui, QtSvg
 
+import matplotlib
+matplotlib.use("Qt4Agg")
+
 from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
 
 import MainWindow
