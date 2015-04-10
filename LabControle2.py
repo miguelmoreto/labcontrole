@@ -7,6 +7,9 @@ Created on Tue Apr 01 15:24:20 2014
 
 from PyQt4 import QtCore,QtGui, QtSvg
 
+import matplotlib
+matplotlib.use("Qt4Agg")
+
 from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
 
 import MainWindow
@@ -240,6 +243,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
        
         if (sysindex == 0): # LTI system 1 (without C(s))
             self.groupBoxC.setEnabled(False)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
             self.sys.Type = 0
             # Disable C(s):
             self.sys.Cnum = [1]
@@ -248,6 +253,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         elif (sysindex == 1): # LTI system 2 (with C(s))
             self.sys.Type = 1
             self.groupBoxC.setEnabled(True)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
             # Update system if C(s) group box is checked or not.
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
         elif (sysindex == 2): # LTI system 3 (with G(s) after W(s))
@@ -259,9 +266,17 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.Gden = [1]
             self.sys.Atualiza()
             self.groupBoxC.setEnabled(True)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
+        elif (sysindex == 3):
+            self.sys.Type = 3
+            self.labelTk.setEnabled(True)
+            self.doubleSpinBoxTk.setEnabled(True) 
+            self.groupBoxC.setEnabled(True)
+            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
         else:
             QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
@@ -1005,6 +1020,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                 svg_file_name = 'diagram3Closed.svg'
             else:
                 svg_file_name = 'diagram3Opened.svg'
+        elif (self.sys.Type == 3):
+            if self.sys.Malha == 'Fechada':
+                svg_file_name = 'diagram4Closed.svg'
+            else:
+                svg_file_name = 'diagram4Opened.svg'
+
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return

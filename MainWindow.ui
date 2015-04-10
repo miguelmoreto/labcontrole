@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -604,39 +604,149 @@
             </spacer>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBoxSys">
-             <property name="toolTip">
-              <string>Seleção do tipo de sistema a ser analisado</string>
-             </property>
-             <property name="sizeAdjustPolicy">
-              <enum>QComboBox::AdjustToContents</enum>
-             </property>
+            <layout class="QVBoxLayout" name="verticalLayout_10">
              <item>
-              <property name="text">
-               <string>Sistema LTI 1: K.G(s) + W(s)</string>
-              </property>
+              <widget class="QLabel" name="labelTk">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Taxa de amostragem do sistema discreto</string>
+               </property>
+               <property name="text">
+                <string>Taxa de amostragem [T]:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
              </item>
              <item>
-              <property name="text">
-               <string>Sistema LTI 2: K.C(s).G(s) + W(s)</string>
-              </property>
+              <widget class="QDoubleSpinBox" name="doubleSpinBoxTk">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Entre com a taxa de amostragem do controlador discreto em segundos</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="suffix">
+                <string> seg</string>
+               </property>
+               <property name="decimals">
+                <number>3</number>
+               </property>
+               <property name="singleStep">
+                <double>0.050000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.100000000000000</double>
+               </property>
+              </widget>
              </item>
              <item>
-              <property name="text">
-               <string>Sistema LTI3: [K.C(s) +W(s)].G(s)</string>
-              </property>
+              <spacer name="verticalSpacer_20">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
-              <property name="text">
-               <string>Sistema Linear Discreto (N/A)</string>
-              </property>
+              <widget class="QComboBox" name="comboBoxSys">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="toolTip">
+                <string>Seleção do tipo de sistema a ser analisado</string>
+               </property>
+               <property name="sizeAdjustPolicy">
+                <enum>QComboBox::AdjustToContents</enum>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Sistema LTI 1: K.G(s) + W(s)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Sistema LTI 2: K.C(s).G(s) + W(s)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Sistema LTI3: [K.C(s) +W(s)].G(s)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Sistema Linear Discreto (N/A)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Sistema não-linear (N/A)</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Sistema não-linear (N/A)</string>
-              </property>
-             </item>
-            </widget>
+            </layout>
            </item>
           </layout>
          </widget>
