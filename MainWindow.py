@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Thu Apr 16 11:25:32 2015
+# Created: Thu Apr 16 14:57:12 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -129,8 +129,9 @@ class Ui_MainWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.doubleSpinBoxRtime.setFont(font)
+        self.doubleSpinBoxRtime.setSuffix(_fromUtf8(" s"))
         self.doubleSpinBoxRtime.setMinimum(0.0)
-        self.doubleSpinBoxRtime.setMaximum(2000.0)
+        self.doubleSpinBoxRtime.setMaximum(10.0)
         self.doubleSpinBoxRtime.setProperty("value", 0.0)
         self.doubleSpinBoxRtime.setObjectName(_fromUtf8("doubleSpinBoxRtime"))
         self.gridLayout_4.addWidget(self.doubleSpinBoxRtime, 1, 1, 1, 1)
@@ -233,8 +234,9 @@ class Ui_MainWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.doubleSpinBoxWtime.setFont(font)
+        self.doubleSpinBoxWtime.setSuffix(_fromUtf8(" s"))
         self.doubleSpinBoxWtime.setMinimum(0.0)
-        self.doubleSpinBoxWtime.setMaximum(2000.0)
+        self.doubleSpinBoxWtime.setMaximum(10.0)
         self.doubleSpinBoxWtime.setProperty("value", 0.0)
         self.doubleSpinBoxWtime.setObjectName(_fromUtf8("doubleSpinBoxWtime"))
         self.gridLayout_5.addWidget(self.doubleSpinBoxWtime, 1, 1, 1, 1)
@@ -383,7 +385,8 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.doubleSpinBoxDeltaRtime.setFont(font)
         self.doubleSpinBoxDeltaRtime.setAlignment(QtCore.Qt.AlignCenter)
-        self.doubleSpinBoxDeltaRtime.setMaximum(9999.99)
+        self.doubleSpinBoxDeltaRtime.setSuffix(_fromUtf8(" s"))
+        self.doubleSpinBoxDeltaRtime.setMaximum(10.0)
         self.doubleSpinBoxDeltaRtime.setSingleStep(0.5)
         self.doubleSpinBoxDeltaRtime.setObjectName(_fromUtf8("doubleSpinBoxDeltaRtime"))
         self.gridLayout_9.addWidget(self.doubleSpinBoxDeltaRtime, 3, 1, 1, 1)
@@ -600,8 +603,13 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setVerticalSpacing(1)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.labelGnum = QtGui.QLabel(self.groupBoxG)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelGnum.sizePolicy().hasHeightForWidth())
+        self.labelGnum.setSizePolicy(sizePolicy)
         self.labelGnum.setMinimumSize(QtCore.QSize(40, 0))
-        self.labelGnum.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.labelGnum.setMaximumSize(QtCore.QSize(50, 16777215))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.labelGnum.setFont(font)
@@ -651,6 +659,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addItem(spacerItem7, 0, 1, 1, 1)
         spacerItem8 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout_2.addItem(spacerItem8, 2, 1, 1, 1)
+        self.gridLayout_2.setColumnStretch(1, 1)
         self.horizontalLayout.addWidget(self.groupBoxG)
         self.groupBoxH = QtGui.QGroupBox(self.frameSis)
         self.groupBoxH.setMinimumSize(QtCore.QSize(150, 0))
@@ -1651,7 +1660,6 @@ class Ui_MainWindow(object):
         self.labelDeltaRtime.setToolTip(_translate("MainWindow", "Instante de tempo em que a variação de entrada será aplicada.", None))
         self.labelDeltaRtime.setText(_translate("MainWindow", "Instante de variação:", None))
         self.doubleSpinBoxDeltaRtime.setToolTip(_translate("MainWindow", "Entre com o instante de tempo em que a variação de entrada é aplicada", None))
-        self.doubleSpinBoxDeltaRtime.setSuffix(_translate("MainWindow", " s", None))
         self.graphicsView.setToolTip(_translate("MainWindow", "Diagrama de blocos do sistema. Use os controles acima para configurar as entradas e abaixo para as funções de transferência", None))
         self.groupBoxMalha.setToolTip(_translate("MainWindow", "Abre/fecha a malha de realimentação", None))
         self.groupBoxMalha.setTitle(_translate("MainWindow", "Malha", None))

@@ -1,9 +1,38 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 01 15:24:20 2014
-
-@author: User
-"""
+#==============================================================================
+# This file is part of LabControle 2.
+# 
+# LabControle 2 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License.
+# 
+# LabControle 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with LabControle 2.  If not, see <http://www.gnu.org/licenses/>.
+#==============================================================================
+#==============================================================================
+# Este arquivo é parte do programa LabControle 2
+# 
+# LabControle 2 é um software livre; você pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+# publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+# Licença.
+# Este programa é distribuido na esperança que possa ser  util, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+# GNU para maiores detalhes.
+# 
+# Você deve ter recebido uma cópia da Licença Pública Geral GNU
+# junto com este programa, se não, escreva para a Fundação do Software
+# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#==============================================================================
+#
+# Developed by Miguel Moreto
+# Florianopolis, Brazil, 2015
 
 from PyQt4 import QtCore,QtGui, QtSvg
 
@@ -132,7 +161,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mplLGR.figure.set_tight_layout(True)
         self.mplBode.figure.set_facecolor('0.90')
         self.mplBode.figure.set_tight_layout(True)
-
         
         #self.mplSimul.axes.plot(x,y)
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -180,6 +208,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinNyqRes, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistResChange)
         QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
         QtCore.QObject.connect(self.doubleSpinBoxLGRpontos, QtCore.SIGNAL("valueChanged(double)"), self.onResLGRchange)
+        QtCore.QObject.connect(self.doubleSpinBoxDeltaR, QtCore.SIGNAL("valueChanged(double)"), self.onRvarChange)
+        QtCore.QObject.connect(self.doubleSpinBoxDeltaRtime, QtCore.SIGNAL("valueChanged(double)"), self.onRvarInstChange)
+
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
         QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
@@ -245,9 +276,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.lineEditGden.show()
             self.labelGden.show()
             self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
+            self.labelGnum.setText(_translate("MainWindow", "Num:", None))
         elif (self.sys.Type == 3 and sysindex != 3):
             self.labelTk.setEnabled(False)
             self.doubleSpinBoxTk.setEnabled(False)
+            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None))
             
         # Check current system choice and enable necessary itens:
         if (sysindex == 0): # LTI system 1 (without C(s))
@@ -280,6 +313,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(True) 
             self.groupBoxC.setEnabled(True)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
         elif (sysindex == 4):
             self.sys.Type = 4
             self.groupBoxC.setEnabled(True)
@@ -287,6 +321,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.lineEditGden.hide()
             self.labelGden.hide()
             self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
+            self.labelGnum.setText(_translate("MainWindow", "f(y,u)=", None))
+            self.groupBoxG.updateGeometry()
         else:
             QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
@@ -347,19 +383,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
 
     def onBtnSimul(self):
         
-        Tmax = self.sys.Tmax
         self.sys.X0r = None
         self.sys.X0w = None
         
-        stringR = self.sys.Rt
-        stringW = self.sys.Wt
-        
-        delta_t = 0.01
-        
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         # Create the input vectors r(t) and w(t):
-        t,r,w = self.sys.CriaEntrada(stringR, stringW, 0, Tmax, delta_t, 
-                            self.sys.InstRt, self.sys.InstWt)
+        t,r,w = self.sys.CriaEntrada(0, self.doubleSpinBoxResT.value())
         
         # Perform a time domain simulation:
         y = self.sys.Simulacao(t, r, w)        
@@ -424,17 +453,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         Continue simulation button
         """        
-        Tmax = self.sys.Tmax
         
         Tinic = self.sys.tfinal
-        stringR = self.sys.Rt
-        stringW = self.sys.Wt
-        #delta_t = 0.01
         
         # Create time and input vector:
-        t,r,w = self.sys.CriaEntrada(stringR, stringW, Tinic , Tmax, self.doubleSpinBoxResT.value(), 
-                            self.sys.InstRt, self.sys.InstWt,self.sys.Rfinal,
-                            self.sys.Wfinal)
+        t,r,w = self.sys.CriaEntrada(Tinic, self.doubleSpinBoxResT.value(), 
+                            self.sys.Rfinal, self.sys.Wfinal)
         
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         
@@ -740,12 +764,15 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         self.sys.Fpontos = self.doubleSpinBodeRes.value()
 
-   
     def onTmaxChange(self,value):
         """
         Tmax edited handler
         """
         self.sys.Tmax = value
+        # Update spinboxes maximum values:
+        self.doubleSpinBoxRtime.setMaximum(value)
+        self.doubleSpinBoxWtime.setMaximum(value)
+        self.doubleSpinBoxDeltaRtime.setMaximum(value)
 
     def onRtimeChange(self,value):
         """
@@ -758,6 +785,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         r(t) noise edited
         """
         self.sys.ruidoRt = value
+    
+    def onRvarChange(self, value):
+        """
+        r(t) input variation value changed
+        """
+        self.sys.RtVar = value
+
+    def onRvarInstChange(self, value):
+        """
+        r(t) input variation time value changed
+        """
+        self.sys.RtVarInstant = value
 
     def onWtimeChange(self,value):
         """

@@ -3,21 +3,37 @@
 __version__ ='$Rev: 34 $'
 __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 
-##    Este arquivo é parte do programa LabControle
-##
-##    LabControle é um software livre; você pode redistribui-lo e/ou 
-##    modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-##    publicada pela Fundação do Software Livre (FSF); na versão 3 da 
-##    Licença.
-##
-##    Este programa é distribuido na esperança que possa ser  util, 
-##    mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
-##    qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
-##    GNU para maiores detalhes.
-##
-##    Você deve ter recebido uma cópia da Licença Pública Geral GNU
-##    junto com este programa, se não, escreva para a Fundação do Software
-##    Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#==============================================================================
+# This file is part of LabControle 2.
+# 
+# LabControle 2 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License.
+# 
+# LabControle 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with LabControle 2.  If not, see <http://www.gnu.org/licenses/>.
+#==============================================================================
+#==============================================================================
+# Este arquivo é parte do programa LabControle 2
+# 
+# LabControle 2 é um software livre; você pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+# publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+# Licença.
+# Este programa é distribuido na esperança que possa ser  util, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+# GNU para maiores detalhes.
+# 
+# Você deve ter recebido uma cópia da Licença Pública Geral GNU
+# junto com este programa, se não, escreva para a Fundação do Software
+# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#==============================================================================
 
 # $Author: miguelmoreto $
 #
@@ -27,7 +43,8 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 #
 # *** Descrever o diagrama de blocos aqui. ***
 #
-# Desenvolvido por Miguel Moreto
+# by Miguel Moreto
+# Florianopolis, Brazil, 2015
 #
 #from scipy import *
 import scipy
@@ -80,6 +97,9 @@ class SistemaContinuo:
     Wt = '0'       # String com a função de entrada w(t)
     InstWt = 0.0
     ruidoWt = 0.0
+    
+    RtVar = 0.0         # Input variation value.
+    RtVarInstant = 0.0  # Input variation instant.
 
     delta_t = 0.01  # Passo de simulação.
     Tmax = 10   # Tempo máximo de simulação
@@ -260,9 +280,7 @@ class SistemaContinuo:
         
         return youtR + youtW
 
-    
-    def CriaEntrada(self, stringR, stringW, tinic=0.0, tmax=5,delta_t=0.01,\
-                    tempoR=0.0, tempoW=0.0, Rinic = 0, Winic = 0):
+    def CriaEntrada(self, tinic=0.0,delta_t=0.01, Rinic = 0, Winic = 0):
         """
         Cria um vetor de tempo e um de entrada a partir de duas strings
         representando qualquer função matemática do python em função da
@@ -270,43 +288,47 @@ class SistemaContinuo:
         
         Uma string para a entrada r(t) e outra para w(t)
         
-        tempoR = instante de início da entrada r(t);
-        tempoW = instante de início da entrada w(t).
+        self.InstRt instante de início da entrada r(t);
+        self.InstWt instante de início da entrada w(t).
         
         tinic = tempo inicial.
         """
         
-        
-        if (tempoR > tmax) or (tempoW > tmax):
+        if (self.InstRt > self.Tmax) or (self.InstWt > self.Tmax):
             print "O tempo do degrau nao pode ser maior do que o tmax."
             return 0, 0, 0
         
-        # Vetor de tempo:
-        t_total = numpy.arange(tinic,tinic+tmax,self.delta_t)
+        # Time vector:
+        t_total = numpy.arange(tinic,tinic+self.Tmax,self.delta_t)
            
         u = numpy.zeros_like(t_total)
         w = numpy.zeros_like(t_total)
         
-        # Numero da amostra correspondente aos tempoR e tempoW:
-        amostraR = int(tempoR/self.delta_t)
-        amostraW = int(tempoW/self.delta_t)
+        # Number of the sanples corresponding to the begining of the inputs:
+        amostraR = int(self.InstRt/self.delta_t)
+        amostraW = int(self.InstWt/self.delta_t)
         
-        # monta vetor u(t):
-        t = t_total[0:(len(t_total)-amostraR)]
+        # create vector u(t):
+        #t = t_total[0:(len(t_total)-amostraR)]
         if (self.ruidoRt > 0):
-            u[amostraR:] = eval(stringR) + numpy.random.normal(0,self.ruidoRt,(len(t_total)-amostraR))
+            u[amostraR:] = eval(self.Rt) + numpy.random.normal(0,self.ruidoRt,(len(t_total)-amostraR))
+            u[0:amostraR] = Rinic + numpy.random.normal(0,self.ruidoRt,amostraR)
         else:
-            u[amostraR:] = eval(stringR)
-        u[0:amostraR] = Rinic
+            u[amostraR:] = eval(self.Rt)
+            u[0:amostraR] = Rinic
 
-        # monta vetor w(t)
-        t = t_total[0:(len(t_total)-amostraW)]
+        # create vector w(t)
         if (self.ruidoWt > 0):
-            w[amostraW:] = eval(stringW) + numpy.random.normal(0,self.ruidoWt,(len(t_total)-amostraW))
+            w[amostraW:] = eval(self.Wt) + numpy.random.normal(0,self.ruidoWt,(len(t_total)-amostraW))
         else:
-            w[amostraW:] = eval(stringW)
+            w[amostraW:] = eval(self.Wt)
         w[0:amostraW] = Winic
 
+        if (self.RtVar != 0):
+            Delta_u = numpy.zeros_like(t_total)
+            Dusample = int(self.RtVarInstant/self.delta_t)
+            Delta_u[Dusample:] = self.RtVar
+            u = u + Delta_u
        
         return t_total, u, w
 

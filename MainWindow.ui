@@ -243,11 +243,14 @@
                 <property name="toolTip">
                  <string>Instante de tempo em que a entrada será aplicada</string>
                 </property>
+                <property name="suffix">
+                 <string notr="true"> s</string>
+                </property>
                 <property name="minimum">
                  <double>0.000000000000000</double>
                 </property>
                 <property name="maximum">
-                 <double>2000.000000000000000</double>
+                 <double>10.000000000000000</double>
                 </property>
                 <property name="value">
                  <double>0.000000000000000</double>
@@ -496,11 +499,14 @@
                 <property name="toolTip">
                  <string>Instante de tempo em que a perturbação será aplicada</string>
                 </property>
+                <property name="suffix">
+                 <string notr="true"> s</string>
+                </property>
                 <property name="minimum">
                  <double>0.000000000000000</double>
                 </property>
                 <property name="maximum">
-                 <double>2000.000000000000000</double>
+                 <double>10.000000000000000</double>
                 </property>
                 <property name="value">
                  <double>0.000000000000000</double>
@@ -899,10 +905,10 @@
                   <set>Qt::AlignCenter</set>
                  </property>
                  <property name="suffix">
-                  <string> s</string>
+                  <string notr="true"> s</string>
                  </property>
                  <property name="maximum">
-                  <double>9999.989999999999782</double>
+                  <double>10.000000000000000</double>
                  </property>
                  <property name="singleStep">
                   <double>0.500000000000000</double>
@@ -1450,7 +1456,7 @@ QGroupBox::title {
              <property name="checkable">
               <bool>true</bool>
              </property>
-             <layout class="QGridLayout" name="gridLayout_2">
+             <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1">
               <property name="leftMargin">
                <number>4</number>
               </property>
@@ -1468,6 +1474,12 @@ QGroupBox::title {
               </property>
               <item row="1" column="0">
                <widget class="QLabel" name="labelGnum">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>40</width>
@@ -1476,7 +1488,7 @@ QGroupBox::title {
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>40</width>
+                  <width>50</width>
                   <height>16777215</height>
                  </size>
                 </property>
