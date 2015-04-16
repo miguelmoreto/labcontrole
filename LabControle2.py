@@ -240,11 +240,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Whem user change system topology using the combo box.
         Update block diagram and anable/disable input groupboxes.
         """
-       
-        if (sysindex == 0): # LTI system 1 (without C(s))
-            self.groupBoxC.setEnabled(False)
+        # Check prvious system type and disable unecessary itens:
+        if (self.sys.Type == 4 and sysindex != 4):
+            self.lineEditGden.show()
+            self.labelGden.show()
+            self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
+        elif (self.sys.Type == 3 and sysindex != 3):
             self.labelTk.setEnabled(False)
             self.doubleSpinBoxTk.setEnabled(False)
+            
+        # Check current system choice and enable necessary itens:
+        if (sysindex == 0): # LTI system 1 (without C(s))
+            self.groupBoxC.setEnabled(False)
             self.sys.Type = 0
             # Disable C(s):
             self.sys.Cnum = [1]
@@ -253,8 +260,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         elif (sysindex == 1): # LTI system 2 (with C(s))
             self.sys.Type = 1
             self.groupBoxC.setEnabled(True)
-            self.labelTk.setEnabled(False)
-            self.doubleSpinBoxTk.setEnabled(False)
             # Update system if C(s) group box is checked or not.
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
         elif (sysindex == 2): # LTI system 3 (with G(s) after W(s))
@@ -266,8 +271,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.Gden = [1]
             self.sys.Atualiza()
             self.groupBoxC.setEnabled(True)
-            self.labelTk.setEnabled(False)
-            self.doubleSpinBoxTk.setEnabled(False)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
@@ -277,6 +280,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(True) 
             self.groupBoxC.setEnabled(True)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+        elif (sysindex == 4):
+            self.sys.Type = 4
+            self.groupBoxC.setEnabled(True)
+            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.lineEditGden.hide()
+            self.labelGden.hide()
+            self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
         else:
             QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
@@ -1025,7 +1035,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
                 svg_file_name = 'diagram4Closed.svg'
             else:
                 svg_file_name = 'diagram4Opened.svg'
-
+        elif (self.sys.Type == 4):
+            if self.sys.Malha == 'Fechada':
+                svg_file_name = 'diagram5Closed.svg'
+            else:
+                svg_file_name = 'diagram5Opened.svg'
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return

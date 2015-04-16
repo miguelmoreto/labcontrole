@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Tue Apr 14 13:45:44 2015
+# Created: Thu Apr 16 11:25:32 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -329,7 +329,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBoxDeltaR.setObjectName(_fromUtf8("doubleSpinBoxDeltaR"))
         self.gridLayout_9.addWidget(self.doubleSpinBoxDeltaR, 2, 1, 1, 1)
         self.doubleSpinBoxTk = QtGui.QDoubleSpinBox(self.frameEntradas)
-        self.doubleSpinBoxTk.setEnabled(True)
+        self.doubleSpinBoxTk.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -349,7 +349,7 @@ class Ui_MainWindow(object):
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout_9.addItem(spacerItem, 4, 0, 1, 1)
         self.labelTk = QtGui.QLabel(self.frameEntradas)
-        self.labelTk.setEnabled(True)
+        self.labelTk.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
