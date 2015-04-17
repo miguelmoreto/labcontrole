@@ -271,16 +271,29 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Whem user change system topology using the combo box.
         Update block diagram and anable/disable input groupboxes.
         """
+        
         # Check prvious system type and disable unecessary itens:
         if (self.sys.Type == 4 and sysindex != 4):
             self.lineEditGden.show()
             self.labelGden.show()
             self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
             self.labelGnum.setText(_translate("MainWindow", "Num:", None))
+            # Restoring saved G(s)
+            self.sys.Type = sysindex
+            self.lineEditGnum.setText(self.sys.GnumStr)
+            # Re-enable buttons:
+            self.btnPlotBode.setEnabled(True)
+            self.btnPlotLGR.setEnabled(True)
+            self.btnPlotNyquist.setEnabled(True)
+
         elif (self.sys.Type == 3 and sysindex != 3):
             self.labelTk.setEnabled(False)
             self.doubleSpinBoxTk.setEnabled(False)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None))
+            # Re-enable buttons:
+            self.btnPlotBode.setEnabled(True)
+            self.btnPlotLGR.setEnabled(True)
+            self.btnPlotNyquist.setEnabled(True)
             
         # Check current system choice and enable necessary itens:
         if (sysindex == 0): # LTI system 1 (without C(s))
@@ -313,15 +326,29 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(True) 
             self.groupBoxC.setEnabled(True)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.btnPlotBode.setEnabled(False)
+            self.btnPlotLGR.setEnabled(False)
+            self.btnPlotNyquist.setEnabled(False)            
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
         elif (sysindex == 4):
             self.sys.Type = 4
             self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(False)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
             self.lineEditGden.hide()
+            # Disable buttons:
+            self.btnPlotBode.setEnabled(False)
+            self.btnPlotLGR.setEnabled(False)
+            self.btnPlotNyquist.setEnabled(False)
             self.labelGden.hide()
+            # Saving previous Gnum string:
+            self.sys.GnumStr = str(self.lineEditGnum.text())
+            self.lineEditGnum.setText(self.sys.sysInputString)
+            self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
             self.labelGnum.setText(_translate("MainWindow", "f(y,u)=", None))
+            self.lineEditGnum.setText(self.sys.sysInputString)
+            self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.updateGeometry()
         else:
             QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
@@ -389,9 +416,21 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         # Create the input vectors r(t) and w(t):
         t,r,w = self.sys.CriaEntrada(0, self.doubleSpinBoxResT.value())
+        self.sys.N = len(t)
         
         # Perform a time domain simulation:
-        y = self.sys.Simulacao(t, r, w)        
+        if (self.sys.Type < 3):
+            y = self.sys.Simulacao(t, r, w)
+        elif (self.sys.Type == 4):
+            if (self.sys.NLsysParseString(self.sys.sysInputString) == 0):
+                self.statusBar().showMessage(_translate("MainWindow", "Erro na função f(y,u)!", None))
+                return
+            self.sys.NLsysReset()
+            #print self.sys.sysString
+            y = self.sys.NLsysSimulate(r)
+        elif (self.sys.Type == 3):
+            print "Discrete simul Not ready yet"
+            return
         
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         self.mplSimul.axes.autoscale(True)        
@@ -410,6 +449,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
 
         if (self.checkBoxEntrada.isChecked()):
             self.mplSimul.axes.plot(t,r,'b')
+            #self.mplSimul.axes.plot([0, 0],[0,r[0]],'b')
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
@@ -435,7 +475,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         # Set a new y limit, adding 1/10 of the total.
         self.mplSimul.axes.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
-        #self.mplSimul.axes.set_xlim([0,t[-1]])
+        self.mplSimul.axes.set_xlim([0,t[-1]])
         
         # Add legend:
         self.mplSimul.axes.legend(legend, loc=0)
@@ -459,11 +499,26 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Create time and input vector:
         t,r,w = self.sys.CriaEntrada(Tinic, self.doubleSpinBoxResT.value(), 
                             self.sys.Rfinal, self.sys.Wfinal)
-        
+        self.sys.N = len(t)
+        #r[0] = self.
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
+
+        # Perform a time domain simulation:
+        if (self.sys.Type < 3):
+            y = self.sys.Simulacao(t, r, w)
+        elif (self.sys.Type == 4):
+            if (self.sys.NLsysParseString(self.sys.sysInputString) == 0):
+                self.statusBar().showMessage(_translate("MainWindow", "Erro na função f(y,u)!", None))
+                return
+            #self.sys.NLsysReset()
+            #print self.sys.sysString
+            y = self.sys.NLsysSimulate(r)
+        elif (self.sys.Type == 3):
+            print "Discrete simul Not ready yet"
+            return
         
         # Simulate the system:
-        y = self.sys.Simulacao(t, r, w)
+        #y = self.sys.Simulacao(t, r, w)
         
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         
@@ -478,6 +533,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
+            print numpy.shape(t)
+            print numpy.shape(y)
             self.mplSimul.axes.plot(t,y,'r')
             legend.append(_translate("MainWindow", "Saída: y(t)", None))
             flag = 1
@@ -495,9 +552,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             return        
         
         self.mplSimul.axes.grid(True)
+        
         ylim = self.mplSimul.axes.get_ylim()
         # Set a new y limit, adding 1/10 of the total.
         self.mplSimul.axes.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        self.mplSimul.axes.set_xlim([0,t[-1]])
         # Add legend:
         self.mplSimul.axes.legend(legend, loc=0)
         
@@ -525,12 +584,17 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Reset initial conditions:
         self.sys.X0r = None
         self.sys.X0w = None
+        
+        # Reset non-linear system:
+        self.sys.NLsysReset()
     
     def onSimluResChange(self,value):
         """
         Changed simulation resolution handler
         """
         self.sys.delta_t = self.doubleSpinBoxResT.value()
+        # Update total number of samples:
+        self.sys.N = self.sys.Tmax/self.sys.delta_t
         
     def onBtnLGR(self):
         """
@@ -769,6 +833,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Tmax edited handler
         """
         self.sys.Tmax = value
+        # Update total number of samples:
+        self.sys.N = self.sys.Tmax/self.sys.delta_t
         # Update spinboxes maximum values:
         self.doubleSpinBoxRtime.setMaximum(value)
         self.doubleSpinBoxWtime.setMaximum(value)
@@ -903,19 +969,36 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         if not value:
             self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
             return
-            
-        Gnum = self.checkTFinput(value)
         
-        if (Gnum == 0):
-            self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-        else:
-            self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
-            self.sys.GnumStr = str(value)
-            if self.sys.Type == 2:
-                self.sys.G2num = Gnum
+        # If is a linear or discrete system, uses G(s):
+        if (self.sys.Type < 4):
+            Gnum = self.checkTFinput(value)
+            
+            if (Gnum == 0):
+                # Change color ro red:
+                self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
             else:
-                self.sys.Gnum = Gnum
-            self.sys.Atualiza()
+                # Change color to green:
+                self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+                self.sys.GnumStr = str(value)
+                if self.sys.Type == 2:
+                    self.sys.G2num = Gnum
+                else:
+                    self.sys.Gnum = Gnum
+                self.sys.Atualiza()
+        elif (self.sys.Type == 4):
+            # Parse and check NL system input string:
+            sysstr = self.sys.NLsysParseString(str(value))
+            
+            if (sysstr):
+                # Change color to green:
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None))
+                self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            else:
+                # Wrong input, change color ro red:
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None))
+                self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+                
     
     def onGdenChange(self,value):
         """
@@ -1307,7 +1390,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.listWidgetOLzeros.clear()
         self.listWidgetRLpoints.clear()
         
-        if (self.sys.Hide == True):
+        if (self.sys.Hide == True or self.sys.Type > 2):
             txt = _translate("MainWindow", "Desabilitado", None)
             item = QtGui.QListWidgetItem()
             item.setText(txt)

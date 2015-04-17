@@ -49,6 +49,7 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 #from scipy import *
 import scipy
 from scipy import signal
+from scipy.integrate import odeint
 import numpy
 #import myControls
 from utils import FreqResp,Nyquist, MyRootLocus, RemoveEqualZeroPole
@@ -103,6 +104,7 @@ class SistemaContinuo:
 
     delta_t = 0.01  # Passo de simulação.
     Tmax = 10   # Tempo máximo de simulação
+    tfinal = 10
     
     Malha = 'Aberta' # Estado da malha (aberta ou fechada)
     
@@ -131,54 +133,53 @@ class SistemaContinuo:
     X0r = None
     X0w = None
     
-    #sysYR = control.tf([1],[1]) # Transfer function Y(s)/R(s)
-    #sysYW = control.tf([1],[1]) # Transfer function Y(s)/W(s)
+    # Non-linear system atributes:    
+    order = 1
+    sysString = '0.7*self.u -0.7*numpy.square(y[0])'
+    sysInputString = '0.7*U -0.7*numpy.square(Y)'
+    u = 1.0                         # Non-linear system instantaneous input value.
+    #     Initial values:
+    e0 = 0.0                        # Initial error value (C(s) input)
+    y0 = numpy.array([0.0])         # Output initial value for 1 order system
+    X0 = [0]                        # C(s) LTI initial states.
+    y00 = numpy.array([0.0,0.0])    # Output initial value for 2 order system
+    N = 0                           # Number of samples
 
     def __init__(self):
         """
         Função de inicialização. É executado ao instanciar a classe.
         """
         self.Atualiza()
-        
+        self.N = self.Tmax/self.delta_t
         
     def Atualiza(self):
         """
-        Atualiza funções de transferência do sistema realimentado.
+        Update the feedback system
         """
         
-        # FT do controlador:
-        #self.C = myControls.TransferFunction(self.Cnum,self.Cden)
+        # C(s) controller TF polynomials:
         self.polyCnum = numpy.poly1d(self.Cnum)
         self.polyCden = numpy.poly1d(self.Cden)
-        #self.tfC = control.tf(self.Cnum,self.Cden)
-        # FT da planta:
-        #self.G = myControls.TransferFunction(self.Gnum,self.Gden)
+
+        # Plant TF:
+        # Polynomials of G(s) and G(s):
         self.polyGnum = numpy.poly1d(self.Gnum)
         self.polyGden = numpy.poly1d(self.Gden)
-
         self.polyG2num = numpy.poly1d(self.G2num)
         self.polyG2den = numpy.poly1d(self.G2den)
-        
-        #self.tfG = control.tf(self.Gnum,self.Gden)
-        #self.tfG2 = control.tf(self.G2num,self.G2den)
-        # FT da realimentação:
-        #self.H = myControls.TransferFunction(self.Hnum,self.Hden)
+
+        # Polynomials of H(s):
         self.polyHnum = numpy.poly1d(self.Hnum)
         self.polyHden = numpy.poly1d(self.Hden)
-        #self.tfH = control.tf(self.Hnum,self.Hden)
 
-        # Direct loop numerator and denominator. Checking zeros equal to poles
-        
-        # Definicao dos polinomios do numerador e denominador
+        # Direct loop polynomials:
         num = self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum
         den = self.polyCden * self.polyGden * self.polyG2den * self.polyHden
         
         # Updating Direct Loop transfer function:
         self.polyDnum, self.polyDden = RemoveEqualZeroPole(num,den)
-        
-        
         return
-    
+        
     def RaizesRL(self,K):
         """
         Cálcula as raízes da equação característica (denominador do sist.
@@ -273,10 +274,7 @@ class SistemaContinuo:
             T,youtW,xoutW = signal.lsim2(Sw, w, t, self.X0w,hmax=1,full_output=0)
             # Store initial conditions:
             self.X0w = xoutW[-1]
-        
-        self.tfinal = t[-1]
-        self.Rfinal = u[-1]
-        self.Wfinal = w[-1]
+
         
         return youtR + youtW
 
@@ -329,6 +327,13 @@ class SistemaContinuo:
             Dusample = int(self.RtVarInstant/self.delta_t)
             Delta_u[Dusample:] = self.RtVar
             u = u + Delta_u
+
+        #u[0] = Rinic
+        #w[0] = Winic
+
+        self.tfinal = t_total[-1]
+        self.Rfinal = u[-1]
+        self.Wfinal = w[-1]
        
         return t_total, u, w
 
@@ -536,7 +541,117 @@ class SistemaContinuo:
                 ax.fill([preal[idxmarcador],preal[idxmarcador]+modx*numpy.cos(ang1),preal[idxmarcador]+modx*numpy.cos(ang2),preal[idxmarcador]],[-1*pimag[idxmarcador],-1*pimag[idxmarcador]+modx*numpy.sin(ang1),-1*pimag[idxmarcador]+modx*numpy.sin(ang2),-1*pimag[idxmarcador]],edgecolor=linha2.get_color(),facecolor=linha2.get_color())        
                         
         ax.grid(True)
-        
-       
-        
         return
+        
+    #==========================================================================
+    # Non-linear system methods:
+    #==========================================================================
+    def NLsysReset(self):
+        """
+        Reset the initial conditions of the Non-linear system.
+        """
+        self.e = 0.0
+        self.e0 = 0.0
+        self.y0 = numpy.array([0.0])
+        self.y00 = numpy.array([0.0, 0.0])
+        self.X0 = [0]
+        self.u = 0
+        return
+        
+    def NLsysParseString(self, string):
+        """
+        Parse the string entered by user.
+        The terms DY,Y and U will be substitued by y[1], y[0] and self.u 
+        respectivelly.
+        After susbstituion, the parsed string is evaluated using the temp
+        vecto y. Is eval fails, this method returns 0, otherwise 1.
+        """
+        
+        sysstr = ''
+        y = numpy.array([1,1]) # temp array to test the equation.
+        self.sysInputString = string
+
+        sysstr = string.replace(',','.')
+        sysstr = sysstr.replace('DY','y[1]')
+        sysstr = sysstr.replace('Y','y[0]')
+        sysstr = sysstr.replace('U','self.u')
+        
+        #print sysstr
+        try:
+            eval(sysstr)
+            #print 'Eval OK'
+        except:
+            #print 'Erro eval'
+            return 0
+            
+        if ('y[1]' in sysstr):
+            self.order = 2
+            #print 'Ordem 2'
+        elif ('y[0]' in sysstr):
+            self.order = 1
+            #print 'Ordem 1'
+        else:
+            #print 'Not ODE'
+            return 0            
+        
+        self.sysString = sysstr
+        return 1
+        
+    def NLsysODE1(self,y,t):
+        """
+        Non linear system ordinary differential equation of order 1.
+        This is the callable function used by scipy.odeint
+        """
+        dy = eval(self.sysString)
+        return dy
+    
+    def NLsysODE2(self,y,t):
+        """
+        Non linear system ordinary differential equation of order 2.
+        This is the callable function used by scipy.odeint
+        """
+        dy0 = y[1]
+        dy1 = eval(self.sysString)
+        return numpy.array([dy0, dy1])
+
+    def NLsysSimulate(self,R):
+        """
+        R is the input vector.
+        """
+
+        y_out = numpy.zeros(self.N)
+
+        for i in numpy.arange(0,self.N):
+            # Calculates the error signal:
+            if (self.Malha == 'Fechada'):
+                e = self.K * (R[i] - self.y0[0])
+            else:
+                e = self.K * R[i]
+
+            # Check if C(s) is defined.
+            if (len(self.Cden) > 1):
+                # Solve one step of the C(s) differential equation:
+                t, yc, xout = signal.lsim((self.Cnum,self.Cden),numpy.array([self.e0,e]),numpy.array([0,self.delta_t]),self.X0)
+                self.u = yc[1]
+                self.X0 = xout[1] # Save the last state.
+            else:
+                self.u = e
+
+            self.e0 = e
+            # Solve one step of the non-linear differential equation:
+            if (self.order == 1):
+                y = odeint(self.NLsysODE1,self.y0[0],numpy.array([0,self.delta_t]))
+                self.y0[0]=y[1]
+                y_out[i] = y[0]
+            elif (self.order == 2):
+                
+                y = odeint(self.NLsysODE2,self.y00,numpy.array([0,self.delta_t]))
+                self.y00=y[1]
+                
+                y_out[i] = y[0][0]
+            
+        #self.tfinal = t[-1]
+        #self.Rfinal = u[-1]
+        #self.Wfinal = w[-1]
+            
+        return y_out        
