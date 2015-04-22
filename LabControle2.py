@@ -42,7 +42,7 @@ matplotlib.use("Qt4Agg")
 from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
 
 import MainWindow
-import Sistema
+import MySystem
 import utils
 import numpy
 import subprocess
@@ -176,7 +176,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mplNyquist.figure.clf()
         
         # Initializing system
-        self.sys = Sistema.SistemaContinuo()
+        self.sys = MySystem.MySystem()
         # Updating values from GUI:
         self.sys.Fmin = self.doubleSpinFmin.value()
         self.sys.Fmax = self.doubleSpinFmax.value()
@@ -210,6 +210,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         QtCore.QObject.connect(self.doubleSpinBoxLGRpontos, QtCore.SIGNAL("valueChanged(double)"), self.onResLGRchange)
         QtCore.QObject.connect(self.doubleSpinBoxDeltaR, QtCore.SIGNAL("valueChanged(double)"), self.onRvarChange)
         QtCore.QObject.connect(self.doubleSpinBoxDeltaRtime, QtCore.SIGNAL("valueChanged(double)"), self.onRvarInstChange)
+        QtCore.QObject.connect(self.doubleSpinBoxTk, QtCore.SIGNAL("valueChanged(double)"), self.onTkChange)
+        QtCore.QObject.connect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
 
         # LineEdits:
         QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
@@ -289,6 +291,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         elif (self.sys.Type == 3 and sysindex != 3):
             self.labelTk.setEnabled(False)
             self.doubleSpinBoxTk.setEnabled(False)
+            self.labelPtTk.setEnabled(False)
+            self.spinBoxPtTk.setEnabled(False)
+            self.doubleSpinBoxResT.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None))
             # Re-enable buttons:
             self.btnPlotBode.setEnabled(True)
@@ -320,17 +325,20 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
-        elif (sysindex == 3):
+        elif (sysindex == 3): # Discrete time controller
             self.sys.Type = 3
             self.labelTk.setEnabled(True)
-            self.doubleSpinBoxTk.setEnabled(True) 
+            self.doubleSpinBoxTk.setEnabled(True)
+            self.labelPtTk.setEnabled(True)
+            self.spinBoxPtTk.setEnabled(True)
             self.groupBoxC.setEnabled(True)
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.doubleSpinBoxResT.setEnabled(False)
             self.btnPlotBode.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.btnPlotNyquist.setEnabled(False)            
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
-        elif (sysindex == 4):
+        elif (sysindex == 4): # Non-linear system
             self.sys.Type = 4
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
@@ -592,9 +600,47 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         Changed simulation resolution handler
         """
-        self.sys.delta_t = self.doubleSpinBoxResT.value()
-        # Update total number of samples:
-        self.sys.N = self.sys.Tmax/self.sys.delta_t
+        if (value > 0):
+            self.sys.delta_t = self.doubleSpinBoxResT.value()
+            # Update total number of samples:
+            self.sys.N = self.sys.Tmax/self.sys.delta_t
+            # Update discrete time points per dT.
+            QtCore.QObject.disconnect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
+            self.sys.Npts_dT = self.sys.dT/self.sys.delta_t
+            self.spinBoxPtTk.setValue(int(self.sys.Npts_dT))
+            QtCore.QObject.connect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
+
+            print value
+            #
+            
+    def onPointsTkChange(self, value):
+        """
+        Changed number of points per dT in discrete time simul.
+        """
+        if (value > 0):
+            self.sys.Npts_dT = value
+            QtCore.QObject.disconnect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            # Change simulation resolution system and UI:
+            self.sys.delta_t = self.sys.dT/value
+            self.sys.N = self.sys.Tmax/self.sys.delta_t
+            self.doubleSpinBoxResT.setValue(self.sys.delta_t)
+            QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            
+    def onTkChange(self, value):
+        """
+        Changed the number of the sample period (dT)
+        """
+        if (value > 0):
+            self.sys.dT = value
+            # Change simulation resolution:
+            QtCore.QObject.disconnect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            # Change simulation resolution system and UI:
+            self.sys.delta_t = value/self.sys.Npts_dT
+            self.sys.N = self.sys.Tmax/self.sys.delta_t
+            self.doubleSpinBoxResT.setValue(self.sys.delta_t)
+            QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+
+            
         
     def onBtnLGR(self):
         """

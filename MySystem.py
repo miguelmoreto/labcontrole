@@ -1,8 +1,4 @@
 # -*- coding: iso-8859-1 -*- 
-
-__version__ ='$Rev: 34 $'
-__date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
-
 #==============================================================================
 # This file is part of LabControle 2.
 # 
@@ -34,33 +30,23 @@ __date__ = '$LastChangedDate: 2008-09-03 19:57:10 -0300 (qua, 03 set 2008) $'
 # junto com este programa, se não, escreva para a Fundação do Software
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #==============================================================================
-
-# $Author: miguelmoreto $
-#
-# Módulo onde é definida uma classe contendo um sistema de controle
-# realimentado e métodos de simulação utilizando o módulo "Controls".
-#
-#
-# *** Descrever o diagrama de blocos aqui. ***
 #
 # by Miguel Moreto
 # Florianopolis, Brazil, 2015
 #
-#from scipy import *
 import scipy
 from scipy import signal
 from scipy.integrate import odeint
 import numpy
-#import myControls
 from utils import FreqResp,Nyquist, MyRootLocus, RemoveEqualZeroPole
-#import matplotlib.pyplot as plt
 import matplotlib.patches as plt
-#import types
-#import control
 
-class SistemaContinuo:
+
+class MySystem:
     """
-    Classe que implementa um sistema contínuo com métodos para simulação.
+    This class implements a LTI system with simulation methods.
+    It also implements a Non-linear system and a LTI system with a discrete
+    controller.
     """
     Gnum = [2,10]   # Numerador de G(s).
     GnumStr = '2*s+10'
@@ -102,34 +88,34 @@ class SistemaContinuo:
     RtVar = 0.0         # Input variation value.
     RtVarInstant = 0.0  # Input variation instant.
 
-    delta_t = 0.01  # Passo de simulação.
-    Tmax = 10   # Tempo máximo de simulação
+    delta_t = 0.005      # Simulation time step value.
+    Tmax = 10           # Max simulation time.
     tfinal = 10
     
     Malha = 'Aberta' # Estado da malha (aberta ou fechada)
     
-    K = 1.0 # Ganho do sistema.
+    K = 1.0             # System gain.
     
-    Kmax = 10.0 # Ganho máximo para o plot do LGR.
-    Kmin = 0.0    # Ganho mínimo para o plot do LGR.
-    Kpontos = 200 # Número de pontos para o traçado do LGR. 
+    Kmax = 10.0         # Max gain for root locus plot.
+    Kmin = 0.0          # Min gain for root locus plot.
+    Kpontos = 200       # Number of K point for root locus plot. 
     
-    # Parâmetros das regiões proibidas do LGR:
+    # Root locus forbidden regions paramethers:
     Rebd = 0.0
     Ribd = 0.0
     Imbd = 0.0
     
-    # Parâmetros para o Diagrama de Bode:
+    # Bode diagram paramethers:
     Fmin = 0.01
     Fmax = 100.0
     Fpontos = 20
     
-    # Parâmetros para o Diagrama de Nyquist:
+    # Nyquist plot paramethers:
     NyqFmin = 0.01
     NyqFmax = 100.0
     NyqFpontos = 100
     
-    # Estados iniciais.
+    # Initial states:
     X0r = None
     X0w = None
     
@@ -144,6 +130,10 @@ class SistemaContinuo:
     X0 = [0]                        # C(s) LTI initial states.
     y00 = numpy.array([0.0,0.0])    # Output initial value for 2 order system
     N = 0                           # Number of samples
+    
+    # System with discrete controller atributes:
+    dT = 0.1        # Sample period
+    Npts_dT = 20    # Number of points for each dT
 
     def __init__(self):
         """
