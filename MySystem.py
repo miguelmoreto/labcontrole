@@ -134,6 +134,7 @@ class MySystem:
     # System with discrete controller atributes:
     dT = 0.1        # Sample period
     Npts_dT = 20    # Number of points for each dT
+    NdT = 100       # Number of discrete periods
 
     def __init__(self):
         """
@@ -644,4 +645,10 @@ class MySystem:
         #self.Rfinal = u[-1]
         #self.Wfinal = w[-1]
             
-        return y_out        
+        return y_out
+    
+    def DiscreteSimulate(self,R):
+        """
+        Simulate a LTI system with a discrete time controller.
+        """
+        pass

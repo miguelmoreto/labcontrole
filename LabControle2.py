@@ -325,19 +325,21 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
-        elif (sysindex == 3): # Discrete time controller
-            self.sys.Type = 3
-            self.labelTk.setEnabled(True)
-            self.doubleSpinBoxTk.setEnabled(True)
-            self.labelPtTk.setEnabled(True)
-            self.spinBoxPtTk.setEnabled(True)
-            self.groupBoxC.setEnabled(True)
-            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-            self.doubleSpinBoxResT.setEnabled(False)
-            self.btnPlotBode.setEnabled(False)
-            self.btnPlotLGR.setEnabled(False)
-            self.btnPlotNyquist.setEnabled(False)            
-            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
+#==============================================================================
+#         elif (sysindex == 3): # Discrete time controller
+#             self.sys.Type = 3
+#             self.labelTk.setEnabled(True)
+#             self.doubleSpinBoxTk.setEnabled(True)
+#             self.labelPtTk.setEnabled(True)
+#             self.spinBoxPtTk.setEnabled(True)
+#             self.groupBoxC.setEnabled(True)
+#             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+#             self.doubleSpinBoxResT.setEnabled(False)
+#             self.btnPlotBode.setEnabled(False)
+#             self.btnPlotLGR.setEnabled(False)
+#             self.btnPlotNyquist.setEnabled(False)            
+#             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
+#==============================================================================
         elif (sysindex == 4): # Non-linear system
             self.sys.Type = 4
             self.groupBoxC.setEnabled(True)
@@ -457,7 +459,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
 
         if (self.checkBoxEntrada.isChecked()):
             self.mplSimul.axes.plot(t,r,'b')
-            #self.mplSimul.axes.plot([0, 0],[0,r[0]],'b')
+            self.mplSimul.axes.plot([0, 0],[0,r[0]], label="_nolegend_", color='b')
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
@@ -538,11 +540,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
 
         if (self.checkBoxEntrada.isChecked()):
             self.mplSimul.axes.plot(t,r,'b')
+            # Draw line
+            self.mplSimul.axes.plot([Tinic, Tinic],[y[0],r[0]], label="_nolegend_", color='b')
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
-            print numpy.shape(t)
-            print numpy.shape(y)
             self.mplSimul.axes.plot(t,y,'r')
             legend.append(_translate("MainWindow", "Saída: y(t)", None))
             flag = 1
@@ -609,8 +611,6 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.Npts_dT = self.sys.dT/self.sys.delta_t
             self.spinBoxPtTk.setValue(int(self.sys.Npts_dT))
             QtCore.QObject.connect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
-
-            print value
             #
             
     def onPointsTkChange(self, value):
@@ -632,6 +632,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if (value > 0):
             self.sys.dT = value
+            self.sys.NdT = int(self.sys.Tmax/value)
             # Change simulation resolution:
             QtCore.QObject.disconnect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
             # Change simulation resolution system and UI:
@@ -885,6 +886,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxRtime.setMaximum(value)
         self.doubleSpinBoxWtime.setMaximum(value)
         self.doubleSpinBoxDeltaRtime.setMaximum(value)
+        # Update the number of discrete sample periods:
+        self.sys.NdT = int(self.sys.Tmax/self.sys.dT)
 
     def onRtimeChange(self,value):
         """
