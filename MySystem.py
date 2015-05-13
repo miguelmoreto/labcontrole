@@ -293,12 +293,12 @@ class MySystem:
         u = numpy.zeros_like(t_total)
         w = numpy.zeros_like(t_total)
         
-        # Number of the sanples corresponding to the begining of the inputs:
+        # Number of the samples corresponding to the begining of the inputs:
         amostraR = int(self.InstRt/self.delta_t)
         amostraW = int(self.InstWt/self.delta_t)
         
         # create vector u(t):
-        #t = t_total[0:(len(t_total)-amostraR)]
+        t = t_total[0:(len(t_total)-amostraR)]
         if (self.ruidoRt > 0):
             u[amostraR:] = eval(self.Rt) + numpy.random.normal(0,self.ruidoRt,(len(t_total)-amostraR))
             u[0:amostraR] = Rinic + numpy.random.normal(0,self.ruidoRt,amostraR)
