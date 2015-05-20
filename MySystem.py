@@ -622,7 +622,7 @@ class MySystem:
             # Check if C(s) is defined.
             if (len(self.Cden) > 1):
                 # Solve one step of the C(s) differential equation:
-                t, yc, xout = signal.lsim((self.Cnum,self.Cden),numpy.array([self.e0,e]),numpy.array([0,self.delta_t]),self.X0)
+                t, yc, xout = signal.lsim2((self.Cnum,self.Cden),numpy.array([self.e0,e]),numpy.array([0,self.delta_t]),self.X0)
                 self.u = yc[1]
                 self.X0 = xout[1] # Save the last state.
             else:
