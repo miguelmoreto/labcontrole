@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 2.1 - Beta 1</string>
+   <string>LabControle 2.1 - Beta 2</string>
   </property>
   <property name="windowIcon">
    <iconset resource="images.qrc">
@@ -50,7 +50,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -597,6 +597,19 @@
             </widget>
            </item>
            <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <layout class="QVBoxLayout" name="verticalLayout_10">
              <property name="spacing">
               <number>2</number>
@@ -662,12 +675,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Sistema Linear Discreto (N/A)</string>
+                 <string>Sistema Linear Discreto</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Sistema não-linear (N/A)</string>
+                 <string>Sistema não-linear</string>
                 </property>
                </item>
               </widget>
@@ -1005,6 +1018,19 @@
          </widget>
         </item>
         <item>
+         <spacer name="verticalSpacer_21">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QGraphicsView" name="graphicsView">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1028,6 +1054,19 @@
            <string>Diagrama de blocos do sistema. Use os controles acima para configurar as entradas e abaixo para as funções de transferência</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_22">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QFrame" name="frameSis">

@@ -288,7 +288,11 @@ class MySystem:
             return 0, 0, 0
         
         # Time vector:
-        t_total = numpy.arange(tinic,tinic+self.Tmax,self.delta_t)
+        if (self.Type == 3):
+            # For discrete simulation it is needed 2 more samples in input vector.
+            t_total = numpy.arange(tinic,tinic+self.Tmax+2*self.delta_t,self.delta_t)
+        else:
+            t_total = numpy.arange(tinic,tinic+self.Tmax,self.delta_t)
            
         u = numpy.zeros_like(t_total)
         w = numpy.zeros_like(t_total)
@@ -651,4 +655,87 @@ class MySystem:
         """
         Simulate a LTI system with a discrete time controller.
         """
-        pass
+        step_dT = self.dT/self.Npts_dT # Sample time used by continuous step function.
+        N = numpy.floor(self.Tmax/self.dT) # Number of discrete steps.
+        Total_Nsamples = N * self.Npts_dT
+
+
+        # Extract only the first Total_Nsamples+2 from input vector.
+        # 
+        R_discrete = R[0:Total_Nsamples+2]
+
+        orderG = self.polyGden.order
+
+        X0G = numpy.zeros(orderG)
+        order_Cnum = len(self.Cnum) # b coeff. order
+        order_Cden = len(self.Cden) # a coeff. order
+        
+        if (order_Cden > 1):
+            a = numpy.delete(self.Cden,0)
+        else:
+            a = numpy.zeros(0)
+            
+        #a = numpy.zeros(order-1)
+        #a[0] = -1
+        #b = numpy.zeros(order)
+        #b[0] = 1
+        #b[1] = -0.96
+        b = self.Cnum
+        
+        R0 = numpy.zeros(order_Cnum)
+        Y0 = numpy.zeros(order_Cnum)
+        U0 = numpy.zeros(order_Cden-1)
+        E0 = numpy.zeros(order_Cnum)
+
+        yk = 0 # initial value of the output
+
+        t_plot = numpy.zeros(Total_Nsamples+2)
+        u_plot = numpy.zeros(N)
+        y_plot = numpy.zeros(Total_Nsamples+2)
+        e_plot = numpy.zeros(Total_Nsamples+2)
+        e_plot_step = numpy.zeros(N)
+        t_step = numpy.arange(0,self.dT+step_dT,step_dT)
+        t_plot_k = numpy.zeros(N)
+        
+        for k in numpy.arange(0,N):
+            R0[0] = R_discrete[k*self.dT]
+            Y0[0] = yk
+            
+            if (self.Malha == 'Fechada'):
+                E0 = R0 - Y0
+            else:
+                E0 = R0
+                
+            e_plot_step[k] = R0[0] - Y0[0]
+            t_plot_k[k] = k * self.dT
+            # Controller diference equation:
+            uk = self.K * numpy.dot(b,E0) - numpy.dot(a,U0)
+            
+            U = uk * numpy.ones(self.dT/step_dT+1) # input vector    
+            t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
+            
+            if (k == 0):
+                #U = uk * np.ones(T/dT) # input vector
+                t_plot[0:(self.Npts_dT+1)] = t_out
+                y_plot[0:(self.Npts_dT+1)] = yout
+                e_plot[0:(self.Npts_dT+1)] = R_discrete[0:(self.Npts_dT+1)] - yout
+                #e_plot = np.append(e_plot,R[k*Npoints_dT:(k+1)*Npoints_dT] - yout)
+        
+            else:
+                t_plot[((k*self.Npts_dT)+1):(((k+1)*self.Npts_dT)+2)] = t_out + k*self.dT
+                y_plot[((k*self.Npts_dT)+1):(((k+1)*self.Npts_dT)+2)] = yout
+                e_plot[((k*self.Npts_dT)+1):(((k+1)*self.Npts_dT)+2)] = R_discrete[((k*self.Npts_dT)+1):(((k+1)*self.Npts_dT)+2)] - yout
+           
+            yk = yout[-1] # Save the final output value. 
+            X0G = xout[-1] # Save the final state.
+            
+            Y0 = numpy.roll(Y0,1)
+            Y0[0] = yk
+            E0 = numpy.roll(E0,1)
+            R0 = numpy.roll(R0,1)
+            if (order_Cden > 1):
+                U0 = numpy.roll(U0,1)
+                U0[0] = uk
+            u_plot[k] = uk
+        
+        return t_plot, t_plot_k, u_plot, y_plot, e_plot, e_plot_step

@@ -278,6 +278,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         if (self.sys.Type == 4 and sysindex != 4):
             self.lineEditGden.show()
             self.labelGden.show()
+            self.groupBoxH.setEnabled(True)
             self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
             self.labelGnum.setText(_translate("MainWindow", "Num:", None))
             # Restoring saved G(s)
@@ -294,6 +295,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.labelPtTk.setEnabled(False)
             self.spinBoxPtTk.setEnabled(False)
             self.doubleSpinBoxResT.setEnabled(True)
+            self.checkBoxControle.setEnabled(False)
+            self.groupBoxH.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None))
             # Re-enable buttons:
             self.btnPlotBode.setEnabled(True)
@@ -326,19 +329,21 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGroupBoxGcheck(self.groupBoxG.isChecked())
             # Update system if C(s) group box is checked or not.
 #==============================================================================
-#         elif (sysindex == 3): # Discrete time controller
-#             self.sys.Type = 3
-#             self.labelTk.setEnabled(True)
-#             self.doubleSpinBoxTk.setEnabled(True)
-#             self.labelPtTk.setEnabled(True)
-#             self.spinBoxPtTk.setEnabled(True)
-#             self.groupBoxC.setEnabled(True)
-#             self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-#             self.doubleSpinBoxResT.setEnabled(False)
-#             self.btnPlotBode.setEnabled(False)
-#             self.btnPlotLGR.setEnabled(False)
-#             self.btnPlotNyquist.setEnabled(False)            
-#             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
+        elif (sysindex == 3): # Discrete time controller
+            self.sys.Type = 3
+            self.labelTk.setEnabled(True)
+            self.doubleSpinBoxTk.setEnabled(True)
+            self.labelPtTk.setEnabled(True)
+            self.spinBoxPtTk.setEnabled(True)
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(False)
+            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
+            self.checkBoxControle.setEnabled(True)
+            self.doubleSpinBoxResT.setEnabled(False)
+            self.btnPlotBode.setEnabled(False)
+            self.btnPlotLGR.setEnabled(False)
+            self.btnPlotNyquist.setEnabled(False)            
+            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
 #==============================================================================
         elif (sysindex == 4): # Non-linear system
             self.sys.Type = 4
@@ -439,8 +444,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             #print self.sys.sysString
             y = self.sys.NLsysSimulate(r)
         elif (self.sys.Type == 3):
-            print "Discrete simul Not ready yet"
-            return
+            t_plot, t_plot_k, u_plot, y_plot, e_plot, e_plot_step = self.sys.DiscreteSimulate(r)
+            
+            #print "Discrete simul Not ready yet"
+            #return
         
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         self.mplSimul.axes.autoscale(True)        
@@ -463,17 +470,29 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
-            self.mplSimul.axes.plot(t,y,'r')
+            if (self.sys.Type == 3):
+                self.mplSimul.axes.plot(t_plot, y_plot, color='r', linewidth=1)
+            else:
+                self.mplSimul.axes.plot(t,y,'r')
             legend.append(_translate("MainWindow", "Saída: y(t)", None))
             flag = 1
         if (self.checkBoxErro.isChecked()):
-            self.mplSimul.axes.plot(t,r-y,'g')
+            if (self.sys.Type == 3):
+                self.mplSimul.axes.plot(t_plot, e_plot, 'y',)
+                self.mplSimul.axes.plot(t_plot_k, e_plot_step, 'yo',)
+            else:
+                self.mplSimul.axes.plot(t,r-y,'g')
             legend.append(_translate("MainWindow", "Erro: e(t)", None))
             flag = 1
         if (self.checkBoxPert.isChecked()):
             self.mplSimul.axes.plot(t,w,'m')
             legend.append(_translate("MainWindow", "Perturbação: w(t)", None))
             flag = 1
+        
+        if (self.checkBoxControle.isChecked()):
+            if (self.sys.Type == 3):
+                self.mplSimul.axes.step(t_plot_k,u_plot, color='m',where='post')
+        
         
         if (flag == 0):
             self.statusBar().showMessage(_translate("MainWindow", "Nenhum sinal selecionado!", None))
@@ -1152,6 +1171,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         value.remove(' ') # remove spaces
         value.replace(',','.') # change , to .
         value.replace(')(',')*(') # insert * between parentesis
+        value.replace('z','s') # change , to .        
         
         retorno = None
         
