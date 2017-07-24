@@ -433,13 +433,20 @@ class MySystem:
         #dBmag = 20*log10(abs(val))
         #fase = angle(val,1)
         dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(Gnum,Gden,f,True)
-                                        
         # Ajustando os valores da fase se der menor do que -180 ou maior do
         # que 180 graus (função angle só retorna valores entre -180 e +180).
         #for i in arange(1, fase.shape[0]):
         #    if abs(fase[i]-fase[i-1]) > 179:
         #        fase[i:] -= 360.        
         
+        # Adding the crossover frequency to the curve
+        if crossfreqmag not in f:
+            f = numpy.append(f, crossfreqmag)
+            f.sort()
+            ix = numpy.where(f == crossfreqmag)
+            dBmag = numpy.insert(dBmag, ix[0][0], [0])
+            fase = numpy.insert(fase, ix[0][0], cfase)
+
         #figura.clf()
            
         # Plotando a magnitude:
@@ -465,7 +472,7 @@ class MySystem:
         ax1.semilogx(crossfreqfase,cmag,'ro')   
         for I in range(len(crossfreqfase)) : ax1.semilogx([crossfreqfase[I],crossfreqfase[I]],[0,cmag[I]],'r');
         
-        return
+        return dBmag, fase, f
     
     def Nyquist(self,figura,completo=False,comcirculo=False):
         """
