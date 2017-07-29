@@ -37,6 +37,12 @@
 import numpy as np
 
 from matplotlib.backends.backend_qt4 import NavigationToolbar2QT
+from matplotlib.backends.qt_compat import (
+    QtCore,
+    QtGui,
+    QtWidgets
+)
+
 
 class CustomNavigationToolbar(NavigationToolbar2QT):
 
@@ -46,6 +52,9 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
         self.error = 0.01
         self.curve_point = {}
         self.last_plot = {}
+        self.siblings = []
+        self.text_coordinates = u''
+        self.last_message = u''
         self.canvas = canvas
         NavigationToolbar2QT.__init__(self, canvas, parent, coordinates)
         self._id_scroll_event = self.canvas.mpl_connect('scroll_event', self._on_mouse_scroll)
@@ -53,66 +62,85 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
 
     def init_curve_point(self, axes):
         if axes:
-            for axe, x, y in axes:
-                self.curve_point[axe] = 0
-                self.curveX[axe] = x
-                self.curveY[axe] = y
-                self.last_plot[axe] = None
+            for axis, x, y in axes:
+                self.curve_point[axis] = 0
+                self.curveX[axis] = x
+                self.curveY[axis] = y
+                self.last_plot[axis] = None
 
-    def _show_points(self, axe):
-        s = 'X: {:.5f}, Y: {:.5f}'.format(self.curveX[axe][self.curve_point[axe]], self.curveY[axe][self.curve_point[axe]])
-        self.set_message(s)
+    def _set_axis_view_points(self, axis):
+        self.text_coordinates = 'X: {:.5f}, Y: {:.5f}'.format(self.curveX[axis][self.curve_point[axis]], self.curveY[axis][self.curve_point[axis]])
 
-    def _draw_curve_point(self, axe):
+    def _show_points(self, axis):
+        self._set_axis_view_points(axis)
+        self.set_message(self.last_message)
+
+    def _draw_curve_point(self, axis):
         # removing any previous plot
-        if axe in self.last_plot and self.last_plot[axe] != None:
-            self.last_plot[axe][0].remove()
+        if axis in self.last_plot and self.last_plot[axis] != None:
+            self.last_plot[axis][0].remove()
         # Finding xy pixel with xy data
-        if self.curve_point[axe] != None:
+        if self.curve_point[axis] != None:
             #print self.canvas.figure.get_axes() 
             #ax = self.canvas.figure.get_axes()[0]
-            xdata, ydata = self.curveX[axe][self.curve_point[axe]], self.curveY[axe][self.curve_point[axe]]
-            xpix, ypix = axe.transData.transform(np.vstack([xdata, ydata]).T).T
+            xdata, ydata = self.curveX[axis][self.curve_point[axis]], self.curveY[axis][self.curve_point[axis]]
+            xpix, ypix = axis.transData.transform(np.vstack([xdata, ydata]).T).T
             #print 'Xdata:', xdata, 'Xpixel:', xpix
             #print 'Ydata:', ydata, 'Ypixel:', ypix
-            self.last_plot[axe] = axe.plot([xdata], [ydata], 'bo')
+            self.last_plot[axis] = axis.plot([xdata], [ydata], 'bo')
             self.draw()
-            self._show_points(axe)
+            self._show_points(axis)
 
-    def _has_curve_axes(self, axe):
-        return (axe in self.curveX and axe in self.curveY) and (len(self.curveX[axe]) and len(self.curveY[axe]))
+    def _draw_curve_axes(self, axis):
+        if self.siblings and axis in self.siblings:
+            for axis_parent in self.siblings:
+                if axis_parent != axis:
+                    self.curve_point[axis_parent] = self.curve_point[axis]
+                self._draw_curve_point(axis_parent)
+            # Show values for this axis
+            self._show_points(axis)
+        else:
+            self._draw_curve_point(axis)
 
-    def _move_curve_point(self, axe, step):
-        if axe in self.curve_point.keys():
+
+    def _has_curve_axes(self, axis):
+        return (axis in self.curveX and axis in self.curveY) and (len(self.curveX[axis]) and len(self.curveY[axis]))
+
+    def _move_curve_point(self, axis, step):
+        if axis in self.curve_point.keys():
             if step < 0:
-                if self.curve_point[axe] > 0:
-                    self.curve_point[axe] -= 1
+                if self.curve_point[axis] > 0:
+                    self.curve_point[axis] -= 1
             elif step > 0:
-                if self.curve_point[axe] < len(self.curveX[axe]):
-                    self.curve_point[axe] += 1
+                if self.curve_point[axis] < len(self.curveX[axis]):
+                    self.curve_point[axis] += 1
 
     def _on_mouse_scroll(self, event):
-        #print 'Step? ', event.step
         if event.inaxes and self._active not in ('PAN', 'ZOOM') and self._has_curve_axes(event.inaxes):
             self._move_curve_point(event.inaxes, event.step)
-            self._draw_curve_point(event.inaxes)
+            self._draw_curve_axes(event.inaxes)
 
     def _on_mouse_button_release(self, event):
-        # event.inaxes is the solution
-        #print event.inaxes.name, ' id:', id(event.inaxes)
-        #print '------'
-        #print 'Event Xdata:', event.xdata, '({})'.format(event.x), 'Event Ydata:', event.ydata, '({})'.format(event.y)
         if event.inaxes and self._active not in ('PAN', 'ZOOM') and self._has_curve_axes(event.inaxes):
             for i, xdata in enumerate(self.curveX[event.inaxes]):
-                ydata = self.curveY[event.inaxes][i]
-                event_ydata = event.ydata
-                #print 'x:', xdata, 'error: ', abs(xdata - event.xdata),
-                #print ' y:', ydata, 'error: ', abs(ydata - event.ydata)
-                if abs(xdata - event.xdata) <= self.error and abs(ydata - event.ydata) <= self.error:
+                if abs(xdata - event.xdata) <= self.error:
                     #print 'Found: Xdata = ', xdata, 'Ydata = ', ydata
                     self.curve_point[event.inaxes] = i
-                    self._draw_curve_point(event.inaxes)
+                    self._draw_curve_axes(event.inaxes)
                     break
 
-    #def mouse_move(self, event):
-    #    self._set_cursor(event)
+    def set_message(self, s):
+        self.message.emit(s)
+        text_label = s
+        if self.coordinates:
+            text_label = s.replace(', ', '\n')
+        if self.text_coordinates:
+            text_label = '{}\n{}'.format(text_label, self.text_coordinates)
+        self.locLabel.setText(text_label)
+        self.last_message = s
+
+    def mouse_move(self, event):
+        if event.inaxes:
+            if self._has_curve_axes(event.inaxes):
+                self._set_axis_view_points(event.inaxes)
+        NavigationToolbar2QT.mouse_move(self, event)

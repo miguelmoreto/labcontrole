@@ -857,11 +857,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Plotting Bode:
         dB, phase, f = self.sys.Bode(self.mplBode.figure)
         [ax1,ax2] = self.mplBode.figure.get_axes()
-        #print 'ax1 = ', ax1, ' id:', id(ax1)
-        #print 'ax2 = ', ax2, ' id:', id(ax2)
         # Custom Navigation
         self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
-        self.mpltoolbarBode.error = 0.2
+        self.mpltoolbarBode.siblings = [ax1, ax2]
+        self.mpltoolbarBode.error = 0.1
 
         # Ajusting labels e title:
         ax1.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
