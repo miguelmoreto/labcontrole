@@ -1,5 +1,5 @@
 ## English Description
-The LabControle is a simulation software for linear control systems. It is designed to be used as an axiliary tool for teaching classical control system theory.
+The LabControle is a simulation software for linear control systems. It is designed to be used as an auxiliary tool for teaching classical control system theory.
 
 LabControle as its own website in Brazilian Portuguese that can be acessed in http://sites.google.com/site/controlelab/
 
