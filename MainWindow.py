@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Mon Jul 31 16:11:11 2017
+# Created: Mon Jul 31 16:42:05 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -1319,7 +1319,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBodeRes.setDecimals(0)
         self.doubleSpinBodeRes.setMinimum(5.0)
         self.doubleSpinBodeRes.setMaximum(1000.0)
-        self.doubleSpinBodeRes.setProperty("value", 20.0)
+        self.doubleSpinBodeRes.setProperty("value", 100.0)
         self.doubleSpinBodeRes.setObjectName(_fromUtf8("doubleSpinBodeRes"))
         self.verticalLayout_8.addWidget(self.doubleSpinBodeRes)
         spacerItem19 = QtGui.QSpacerItem(20, 214, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -1660,7 +1660,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionClose)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
         QtCore.QObject.connect(self.actionClose, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
