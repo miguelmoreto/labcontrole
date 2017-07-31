@@ -53,6 +53,7 @@ import pickle
 #import encript
 import base64
 
+from labnavigationtoolbar import CustomNavigationToolbar
            
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
@@ -148,9 +149,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.checkBoxControle.setDisabled(True) # Control signal is disabled by default
 
         # Adding toolbars
-        self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
+        #self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
+        self.mpltoolbarSimul = CustomNavigationToolbar(self.mplSimul, self)
         self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
-        self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
+        #self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
+        self.mpltoolbarBode = CustomNavigationToolbar(self.mplBode, self)
         self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
         self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
@@ -459,6 +462,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mpltoolbarSimul._views.clear()
         self.mpltoolbarSimul._positions.clear()
         self.mpltoolbarSimul._update_view()        
+
+        # Setting curve navigation
+        self.mpltoolbarSimul.init_curve_point([(self.mplSimul.axes, t, y)])
         
         #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
@@ -852,10 +858,14 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.mpltoolbarBode._update_view()
         
         # Plotting Bode:
-        self.sys.Bode(self.mplBode.figure)
+        dB, phase, f = self.sys.Bode(self.mplBode.figure)
         [ax1,ax2] = self.mplBode.figure.get_axes()
+        # Custom Navigation
+        self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
+        self.mpltoolbarBode.siblings = [ax1, ax2]
+        self.mpltoolbarBode.error = 0.1
+
         # Ajusting labels e title:
-        
         ax1.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
         ax2.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
         ax2.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
