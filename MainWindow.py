@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created: Tue Jun 09 15:46:16 2015
+# Created: Mon Jul 31 16:42:05 2017
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -1319,7 +1319,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBodeRes.setDecimals(0)
         self.doubleSpinBodeRes.setMinimum(5.0)
         self.doubleSpinBodeRes.setMaximum(1000.0)
-        self.doubleSpinBodeRes.setProperty("value", 20.0)
+        self.doubleSpinBodeRes.setProperty("value", 100.0)
         self.doubleSpinBodeRes.setObjectName(_fromUtf8("doubleSpinBodeRes"))
         self.verticalLayout_8.addWidget(self.doubleSpinBodeRes)
         spacerItem19 = QtGui.QSpacerItem(20, 214, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -1660,12 +1660,12 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionClose)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
         QtCore.QObject.connect(self.actionClose, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.1 - Beta 2", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.2 - Beta 1", None))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência", None))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)", None))
         self.labelRvalue.setText(_translate("MainWindow", "Valor:", None))

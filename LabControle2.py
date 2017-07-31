@@ -75,7 +75,9 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "e seu código é livre, podendo ser acessado no site:</p>"\
             "<p><b><a href=\"https://github.com/miguelmoreto/labcontrole\">https://github.com/miguelmoreto/labcontrole</a></b></p>"\
             "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
-            "<p>Florianópolis, SC, 2015</p>", None)
+			"<p>Contribuidores:</p>"\
+			"<p>Anderson Livramento</p>"\
+            "<p>Florianópolis, SC, 2017</p>", None)
 
 class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     """
