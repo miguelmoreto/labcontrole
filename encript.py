@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # PyCrypto-based authenticated symetric encryption
 import cPickle as pickle
 import hashlib

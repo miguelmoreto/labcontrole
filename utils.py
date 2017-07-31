@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from scipy import *
 from numpy import array,arange
 import numpy

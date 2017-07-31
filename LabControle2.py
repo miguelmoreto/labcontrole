@@ -33,6 +33,9 @@
 #
 # Developed by Miguel Moreto
 # Florianopolis, Brazil, 2015
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 from PyQt4 import QtCore,QtGui, QtSvg
 
@@ -1252,7 +1255,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.scene.addItem(self.svgItem)
     
     def onAboutAction(self):
-        QtGui.QMessageBox.about(self,"Sobre o LabControle2", MESSAGE)
+        QtGui.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)
         
     #def onSysInfoAction(self):
     #    dialog = QtGui.QDialog()
@@ -1262,7 +1265,11 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     #    dialog.exec_()
     
     def onCalcAction(self):
-        p=subprocess.Popen('calc.exe')
+        try:
+            p=subprocess.Popen('calc.exe')
+        except OSError:
+            QtGui.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (calc.exe).", None))
+            
     
     def onSaveAction(self):
         """
