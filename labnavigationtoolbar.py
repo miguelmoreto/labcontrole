@@ -56,6 +56,7 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
         self.text_coordinates = u''
         self.last_message = u''
         self.canvas = canvas
+        self._drag_mode = False
         NavigationToolbar2QT.__init__(self, canvas, parent, coordinates)
         self._id_scroll_event = self.canvas.mpl_connect('scroll_event', self._on_mouse_scroll)
         self._id_mouse_button_release = self.canvas.mpl_connect('button_release_event', self._on_mouse_button_release)
@@ -116,18 +117,20 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
                     self.curve_point[axis] += 1
 
     def _on_mouse_scroll(self, event):
-        if event.inaxes and self._active not in ('PAN', 'ZOOM') and self._has_curve_axes(event.inaxes):
+        #if event.inaxes and self._active not in ('PAN', 'ZOOM') and self._has_curve_axes(event.inaxes):
+        if event.inaxes and self._has_curve_axes(event.inaxes):
             self._move_curve_point(event.inaxes, event.step)
             self._draw_curve_axes(event.inaxes)
 
     def _on_mouse_button_release(self, event):
-        if event.inaxes and self._active not in ('PAN', 'ZOOM') and self._has_curve_axes(event.inaxes):
+        if event.button == 1 and event.inaxes and not self._drag_mode and self._has_curve_axes(event.inaxes):
             for i, xdata in enumerate(self.curveX[event.inaxes]):
                 if abs(xdata - event.xdata) <= self.error:
                     #print 'Found: Xdata = ', xdata, 'Ydata = ', ydata
                     self.curve_point[event.inaxes] = i
                     self._draw_curve_axes(event.inaxes)
                     break
+        self._drag_mode = False
 
     def set_message(self, s):
         self.message.emit(s)
@@ -141,6 +144,19 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
 
     def mouse_move(self, event):
         if event.inaxes:
+            self.mode = u''
             if self._has_curve_axes(event.inaxes):
                 self._set_axis_view_points(event.inaxes)
         NavigationToolbar2QT.mouse_move(self, event)
+
+    def press(self, event):
+        self._drag_mode = False
+
+    def drag_pan(self, event):
+        self._drag_mode = True
+        NavigationToolbar2QT.drag_pan(self, event)
+
+    def drag_zoom(self, event):
+        self._drag_mode = True
+        NavigationToolbar2QT.drag_zoom(self, event)
+
