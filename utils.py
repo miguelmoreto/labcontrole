@@ -223,7 +223,7 @@ def MyRootLocus(num,den,kvect):
              #sort the current row by finding the element with the
              #smallest absolute distance to each root in the
              #previous row
-             available = range(len(numpy.prevrow))
+             available = list(range(len(numpy.prevrow)))
              for elem in row:
                  evect = elem-numpy.prevrow[available]
                  ind1 = abs(evect).argmin()
@@ -250,8 +250,8 @@ def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
         curn = nroots[n]
         ind = in_with_tol(curn, droots, rtol=rtol, atol=atol)
         if ind > -1:
-            print 'n: %d' %(n)
-            print 'ind: %d' %(ind)
+            print("n: %d", n)
+            print("ind: %d", ind)
             nroots.pop(n)
             droots.pop(ind)
             flag = 1

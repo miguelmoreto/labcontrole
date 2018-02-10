@@ -36,7 +36,7 @@
 
 import numpy as np
 
-from matplotlib.backends.backend_qt4 import NavigationToolbar2QT
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT
 from matplotlib.backends.qt_compat import (
     QtCore,
     QtGui,

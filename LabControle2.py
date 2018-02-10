@@ -34,15 +34,18 @@
 # Developed by Miguel Moreto
 # Florianopolis, Brazil, 2015
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
-from PyQt4 import QtCore,QtGui, QtSvg
-
+#import importlib
+#importlib.reload(sys)
+#sys.setdefaultencoding('utf8')
+#from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 import matplotlib
-matplotlib.use("Qt4Agg")
+matplotlib.use("Qt5Agg")
 
-from matplotlib.backends.backend_qt4 import NavigationToolbar2QT as NavigationToolbar
+from PyQt5 import QtCore,QtGui, QtSvg, QtWidgets
+
+
+
+from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as NavigationToolbar
 
 import MainWindow
 import MySystem
@@ -56,12 +59,12 @@ import base64
 from labnavigationtoolbar import CustomNavigationToolbar
            
 try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
+    _encoding = QtWidgets.QApplication.UnicodeUTF8
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+        return QtWidgets.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+        return QtWidgets.QApplication.translate(context, text, disambig)
 
 MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "<p>O LabControle é um software desenvolvido " \
@@ -77,9 +80,9 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
 			"<p>Contribuidores:</p>"\
 			"<p>Anderson Livramento</p>"\
-            "<p>Florianópolis, SC, 2017</p>", None)
+            "<p>Florianópolis, SC, 2018</p>", None)
 
-class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
+class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
     """
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
     """
@@ -96,9 +99,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.setupUi(self)
         
         # Adding toolbar spacer and a Hidden system label:
-        empty = QtGui.QWidget()
-        self.labelHide = QtGui.QLabel()
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        empty = QtWidgets.QWidget()
+        self.labelHide = QtWidgets.QLabel()
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         self.labelHide.setSizePolicy(sizePolicy)
@@ -107,7 +110,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.labelHide.setFont(font)
         self.labelHide.setText('')
         self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
-        empty.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Preferred)
+        empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
         
@@ -116,13 +119,13 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         
         self.image = QtGui.QImage()        
-        self.graphicsView.setScene(QtGui.QGraphicsScene(self))
-        self.graphicsView.setViewport(QtGui.QWidget())
+        self.graphicsView.setScene(QtWidgets.QGraphicsScene(self))
+        self.graphicsView.setViewport(QtWidgets.QWidget())
         
         # Load initial SVG file
         svg_file = QtCore.QFile('diagram1Opened.svg')
         if not svg_file.exists():
-            QtGui.QMessageBox.critical(self, "Open SVG File",
+            QtWidgets.QMessageBox.critical(self, "Open SVG File",
                     "Could not open file '%s'." % 'diagram1Opened.svg')
 
             self.outlineAction.setEnabled(False)
@@ -133,8 +136,8 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.graphicsView.resetTransform()
         
         self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())        
-        self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-        self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
+        self.svgItem.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
+        self.svgItem.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
         #self.svgItem.setZValue(0)
         
         #self.backgroundItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
@@ -193,65 +196,64 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.init = 1
                 
         # Connecting events:
-        QtCore.QObject.connect(self.radioBtnOpen, QtCore.SIGNAL("clicked()"), self.feedbackOpen)
-        QtCore.QObject.connect(self.radioBtnClose, QtCore.SIGNAL("clicked()"), self.feedbackClose)
-        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
-        QtCore.QObject.connect(self.comboBoxSys, QtCore.SIGNAL("currentIndexChanged(int)"), self.onChangeSystem)
-        QtCore.QObject.connect(self.tabWidget, QtCore.SIGNAL("currentChanged (int)"), self.onTabChange)
+        self.radioBtnOpen.clicked.connect(self.feedbackOpen)
+        self.radioBtnClose.clicked.connect(self.feedbackClose)
+        self.verticalSliderK.valueChanged.connect(self.onSliderMove)
+        self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
+        self.tabWidget.currentChanged.connect(self.onTabChange)
         # Spinboxes:
-        QtCore.QObject.connect(self.doubleSpinBoxKmax, QtCore.SIGNAL("valueChanged(double)"), self.onKmaxChange)
-        QtCore.QObject.connect(self.doubleSpinBoxKmin, QtCore.SIGNAL("valueChanged(double)"), self.onKminChange)
-        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.connect(self.doubleSpinBoxTmax, QtCore.SIGNAL("valueChanged(double)"), self.onTmaxChange)
-        QtCore.QObject.connect(self.doubleSpinBoxRtime, QtCore.SIGNAL("valueChanged(double)"), self.onRtimeChange)
-        QtCore.QObject.connect(self.doubleSpinBoxRnoise, QtCore.SIGNAL("valueChanged(double)"), self.onRnoiseChange)
-        QtCore.QObject.connect(self.doubleSpinBoxWtime, QtCore.SIGNAL("valueChanged(double)"), self.onWtimeChange)
-        QtCore.QObject.connect(self.doubleSpinBoxWnoise, QtCore.SIGNAL("valueChanged(double)"), self.onWnoiseChange)
-        QtCore.QObject.connect(self.doubleSpinFmin, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFminChange)
-        QtCore.QObject.connect(self.doubleSpinFmax, QtCore.SIGNAL("valueChanged(double)"), self.onBodeFmaxChange)
-        QtCore.QObject.connect(self.doubleSpinBodeRes, QtCore.SIGNAL("valueChanged(double)"), self.onBodeResChange)
-        QtCore.QObject.connect(self.doubleSpinFminNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFminChange)
-        QtCore.QObject.connect(self.doubleSpinFmaxNyq, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistFmaxChange)        
-        QtCore.QObject.connect(self.doubleSpinNyqRes, QtCore.SIGNAL("valueChanged(double)"), self.onNyquistResChange)
-        QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
-        QtCore.QObject.connect(self.doubleSpinBoxLGRpontos, QtCore.SIGNAL("valueChanged(double)"), self.onResLGRchange)
-        QtCore.QObject.connect(self.doubleSpinBoxDeltaR, QtCore.SIGNAL("valueChanged(double)"), self.onRvarChange)
-        QtCore.QObject.connect(self.doubleSpinBoxDeltaRtime, QtCore.SIGNAL("valueChanged(double)"), self.onRvarInstChange)
-        QtCore.QObject.connect(self.doubleSpinBoxTk, QtCore.SIGNAL("valueChanged(double)"), self.onTkChange)
-        QtCore.QObject.connect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
+        self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
+        self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
+        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxTmax.valueChanged.connect(self.onTmaxChange)
+        self.doubleSpinBoxRtime.valueChanged.connect(self.onRtimeChange)
+        self.doubleSpinBoxRnoise.valueChanged.connect(self.onRnoiseChange)
+        self.doubleSpinBoxWtime.valueChanged.connect(self.onWtimeChange)
+        self.doubleSpinBoxWnoise.valueChanged.connect(self.onWnoiseChange)
+        self.doubleSpinFmin.valueChanged.connect(self.onBodeFminChange)
+        self.doubleSpinFmax.valueChanged.connect(self.onBodeFmaxChange)
+        self.doubleSpinBodeRes.valueChanged.connect(self.onBodeResChange)
+        self.doubleSpinFminNyq.valueChanged.connect(self.onNyquistFminChange)
+        self.doubleSpinFmaxNyq.valueChanged.connect(self.onNyquistFmaxChange)
+        self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
+        self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
+        self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
+        self.doubleSpinBoxDeltaR.valueChanged.connect(self.onRvarChange)
+        self.doubleSpinBoxDeltaRtime.valueChanged.connect(self.onRvarInstChange)
+        self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
+        self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
 
         # LineEdits:
-        QtCore.QObject.connect(self.lineEditRvalue, QtCore.SIGNAL("textEdited(QString)"), self.onRvalueChange)
-        QtCore.QObject.connect(self.lineEditWvalue, QtCore.SIGNAL("textEdited(QString)"), self.onWvalueChange)
-        QtCore.QObject.connect(self.lineEditGnum, QtCore.SIGNAL("textEdited(QString)"), self.onGnumChange)
-        QtCore.QObject.connect(self.lineEditGden, QtCore.SIGNAL("textEdited(QString)"), self.onGdenChange)
-        QtCore.QObject.connect(self.lineEditCnum, QtCore.SIGNAL("textEdited(QString)"), self.onCnumChange)
-        QtCore.QObject.connect(self.lineEditCden, QtCore.SIGNAL("textEdited(QString)"), self.onCdenChange)
-        QtCore.QObject.connect(self.lineEditHnum, QtCore.SIGNAL("textEdited(QString)"), self.onHnumChange)
-        QtCore.QObject.connect(self.lineEditHden, QtCore.SIGNAL("textEdited(QString)"), self.onHdenChange)
+        self.lineEditRvalue.textEdited.connect(self.onRvalueChange)
+        self.lineEditWvalue.textEdited.connect(self.onWvalueChange)
+        self.lineEditGnum.textEdited.connect(self.onGnumChange)
+        self.lineEditGden.textEdited.connect(self.onGdenChange)
+        self.lineEditCnum.textEdited.connect(self.onCnumChange)
+        self.lineEditCden.textEdited.connect(self.onCdenChange)
+        self.lineEditCden.textEdited.connect(self.onHnumChange)
+        self.lineEditHden.textEdited.connect(self.onHdenChange)
         # Group Boxes:
-        QtCore.QObject.connect(self.groupBoxC, QtCore.SIGNAL("toggled(bool)"), self.onGroupBoxCcheck)
-        QtCore.QObject.connect(self.groupBoxG, QtCore.SIGNAL("toggled(bool)"), self.onGroupBoxGcheck)
-        QtCore.QObject.connect(self.groupBoxH, QtCore.SIGNAL("toggled(bool)"), self.onGroupBoxHcheck)
-        QtCore.QObject.connect(self.groupBoxWt, QtCore.SIGNAL("toggled(bool)"), self.onGroupBoxWcheck)
+        self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
+        self.groupBoxG.toggled.connect(self.onGroupBoxGcheck)
+        self.groupBoxH.toggled.connect(self.onGroupBoxHcheck)
+        self.groupBoxWt.toggled.connect(self.onGroupBoxWcheck)
         # Buttons:
-        QtCore.QObject.connect(self.btnSimul, QtCore.SIGNAL("clicked()"), self.onBtnSimul)
-        QtCore.QObject.connect(self.btnContinuar, QtCore.SIGNAL("clicked()"), self.onBtnContinue)
-        QtCore.QObject.connect(self.btnLimparSimul, QtCore.SIGNAL("clicked()"), self.onBtnClearSimul)
-        QtCore.QObject.connect(self.btnPlotLGR, QtCore.SIGNAL("clicked()"), self.onBtnLGR)
-        QtCore.QObject.connect(self.btnLGRclear, QtCore.SIGNAL("clicked()"), self.onBtnLGRclear)
-        QtCore.QObject.connect(self.btnPlotBode, QtCore.SIGNAL("clicked()"), self.onBtnPlotBode)
-        QtCore.QObject.connect(self.btnBodeClear, QtCore.SIGNAL("clicked()"), self.onBtnBodeClear)
-        QtCore.QObject.connect(self.btnPlotNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquist)
-        QtCore.QObject.connect(self.btnClearNyquist, QtCore.SIGNAL("clicked()"), self.onBtnNyquistClear)
+        self.btnSimul.clicked.connect(self.onBtnSimul)
+        self.btnContinuar.clicked.connect(self.onBtnContinue)
+        self.btnLimparSimul.clicked.connect(self.onBtnClearSimul)
+        self.btnPlotLGR.clicked.connect(self.onBtnLGR)
+        self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
+        self.btnPlotBode.clicked.connect(self.onBtnPlotBode)
+        self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
+        self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
+        self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
         # Actions
-        QtCore.QObject.connect(self.actionHelp, QtCore.SIGNAL("triggered()"), self.onAboutAction)
-        QtCore.QObject.connect(self.actionCalc, QtCore.SIGNAL("triggered()"), self.onCalcAction)
-        QtCore.QObject.connect(self.actionSalvar_sistema, QtCore.SIGNAL("triggered()"), self.onSaveAction)
-        QtCore.QObject.connect(self.actionCarregar_sistema, QtCore.SIGNAL("triggered()"), self.onLoadAction)
-        QtCore.QObject.connect(self.actionReset, QtCore.SIGNAL("triggered()"), self.onResetAction)
-        #QtCore.QObject.connect(self.actionSysInfo, QtCore.SIGNAL("triggered()"), self.onSysInfoAction)
+        self.actionHelp.triggered.connect(self.onAboutAction)
+        self.actionCalc.triggered.connect(self.onCalcAction)
+        self.actionSalvar_sistema.triggered.connect(self.onSaveAction)
+        self.actionCarregar_sistema.triggered.connect(self.onLoadAction)
+        self.actionReset.triggered.connect(self.onResetAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -374,7 +376,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.updateGeometry()
         else:
-            QtGui.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
             return
         
@@ -393,16 +395,16 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         gain = float(value)*float((self.sys.Kmax)-(self.sys.Kmin))/float(self.sys.Kpontos) + self.sys.Kmin        
         self.sys.K = gain
         # Disconnect events to not enter in a event loop:
-        QtCore.QObject.disconnect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.disconnect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        self.doubleSpinBoxKlgr.valueChanged.disconnect(self.onKChange)
+        self.doubleSpinBoxK.valueChanged.disconnect(self.onKChange)
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(gain)
         self.doubleSpinBoxK.setValue(gain)
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(gain)
         # Reconect events:
-        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)      
+        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
         
     def onKmaxChange(self,value):
         #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmax change
@@ -418,16 +420,16 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Save K value in the LTI system.
         self.sys.K = value
         # Disconnect events to not enter in a event loop:
-        QtCore.QObject.disconnect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.disconnect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
+        self.doubleSpinBoxKlgr.valueChanged.disconnect(self.onKChange)
+        self.doubleSpinBoxK.valueChanged.disconnect(self.onKChange)
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(value)
         self.doubleSpinBoxK.setValue(value)
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(value)
         # Reconect events:
-        QtCore.QObject.connect(self.doubleSpinBoxKlgr, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)
-        QtCore.QObject.connect(self.doubleSpinBoxK, QtCore.SIGNAL("valueChanged(double)"), self.onKChange)        
+        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
         # Update slider position.
         self.updateSliderPosition()
 
@@ -554,7 +556,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             #print self.sys.sysString
             y = self.sys.NLsysSimulate(r)
         elif (self.sys.Type == 3):
-            print "Discrete simul Not ready yet"
+            print("Discrete simul Not ready yet")
             return
         
         # Simulate the system:
@@ -637,10 +639,10 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             # Update total number of samples:
             self.sys.N = self.sys.Tmax/self.sys.delta_t
             # Update discrete time points per dT.
-            QtCore.QObject.disconnect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
+            self.spinBoxPtTk.valueChanged.disconnect(self.onPointsTkChange)
             self.sys.Npts_dT = self.sys.dT/self.sys.delta_t
             self.spinBoxPtTk.setValue(int(self.sys.Npts_dT))
-            QtCore.QObject.connect(self.spinBoxPtTk, QtCore.SIGNAL("valueChanged(int)"), self.onPointsTkChange)
+            self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
             #
             
     def onPointsTkChange(self, value):
@@ -649,12 +651,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if (value > 0):
             self.sys.Npts_dT = value
-            QtCore.QObject.disconnect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            self.doubleSpinBoxResT.valueChanged.disconnect(self.onSimluResChange)
             # Change simulation resolution system and UI:
             self.sys.delta_t = self.sys.dT/value
             self.sys.N = self.sys.Tmax/self.sys.delta_t
             self.doubleSpinBoxResT.setValue(self.sys.delta_t)
-            QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
             
     def onTkChange(self, value):
         """
@@ -664,12 +666,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.dT = value
             self.sys.NdT = int(self.sys.Tmax/value)
             # Change simulation resolution:
-            QtCore.QObject.disconnect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            self.doubleSpinBoxResT.valueChanged.disconnect(self.onSimluResChange)
             # Change simulation resolution system and UI:
             self.sys.delta_t = value/self.sys.Npts_dT
             self.sys.N = self.sys.Tmax/self.sys.delta_t
             self.doubleSpinBoxResT.setValue(self.sys.delta_t)
-            QtCore.QObject.connect(self.doubleSpinBoxResT, QtCore.SIGNAL("valueChanged(double)"), self.onSimluResChange)
+            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
 
             
         
@@ -1183,14 +1185,17 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         Return 0 if it has an error.
         Otherwise, returns a list with polynomial coefficients
         """
-        value.remove(' ') # remove spaces
+        value.replace(' ','') # remove spaces
         value.replace(',','.') # change , to .
         value.replace(')(',')*(') # insert * between parentesis
         value.replace('z','s') # change , to .        
         
         retorno = None
         
-        if value.startsWith('['):
+        if len(value) == 0:
+            return 0
+        
+        if value[0] == '[':
             try:
                 retorno = eval(str(value))
             except:
@@ -1214,9 +1219,9 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
     def updateSliderPosition(self):
         position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
         # Disconnect events to not enter in a event loop:
-        QtCore.QObject.disconnect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+        self.verticalSliderK.valueChanged.disconnect(self.onSliderMove)
         self.verticalSliderK.setSliderPosition(int(position))
-        QtCore.QObject.connect(self.verticalSliderK, QtCore.SIGNAL("valueChanged(int)"), self.onSliderMove)
+        self.verticalSliderK.valueChanged.connect(self.onSliderMove)
     
     def updateSystemSVG(self):
         svg_file_name = ''        
@@ -1253,7 +1258,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         # Load svg file.
         svg_file = QtCore.QFile(svg_file_name)
         if not svg_file.exists():
-            QtGui.QMessageBox.critical(self, "Open SVG File",
+            QtWidgets.QMessageBox.critical(self, "Open SVG File",
                                        "Could not open file '%s'." % svg_file_name)
             self.outlineAction.setEnabled(False)
             self.backgroundAction.setEnabled(False)
@@ -1267,7 +1272,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.scene.addItem(self.svgItem)
     
     def onAboutAction(self):
-        QtGui.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)
+        QtWidgets.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)
         
     #def onSysInfoAction(self):
     #    dialog = QtGui.QDialog()
@@ -1280,7 +1285,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         try:
             p=subprocess.Popen('calc.exe')
         except OSError:
-            QtGui.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (calc.exe).", None))
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (calc.exe).", None))
             
     
     def onSaveAction(self):
@@ -1290,19 +1295,20 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         If the extension of the file is dat, system data is stored with hide flag = False
         If the extension is tst the hide flag is True.
         """
-        fileName = QtCore.QString()
-        fileName = QtGui.QFileDialog.getSaveFileName(self,
+        fileName = str()
+        options = QtWidgets.QFileDialog.Options()
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self,
                                 _translate("MainWindow", "Salvar sistema", None),
-                                "sisXX",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None))
+                                "sisXX.LCN",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None),options=options)
 
         hide = False
         
 
-        if fileName.endsWith("LCN"):
+        if fileName.endswith("LCN"):
             hide = False
             #pickle.dump(expSys, open(fileName, "wb" ),pickle.HIGHEST_PROTOCOL)
             
-        elif fileName.endsWith("LCO"):
+        elif fileName.endswith("LCO"):
             hide = True
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
@@ -1336,7 +1342,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
         
     def onLoadAction(self):
-        fileName = QtGui.QFileDialog.getOpenFileName(self,
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,
                 _translate("MainWindow", "Abrir arquivo de sistema", None),
                 'sys',
                 _translate("MainWindow", "Arquivos LabControle (*.LCN *.LCO)", None))
@@ -1455,18 +1461,18 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         self.groupBoxC.setEnabled(True)
         self.groupBoxH.setEnabled(True)
         self.groupBoxC.setChecked(False)
-        self.lineEditGnum.setText(QtCore.QString('2*s+10'))
-        self.onGnumChange(QtCore.QString('2*s+10'))
-        self.lineEditGden.setText(QtCore.QString('1*s^2+2*s+10'))
-        self.onGdenChange(QtCore.QString('1*s^2+2*s+10'))
-        self.lineEditCnum.setText(QtCore.QString('1'))
-        self.onCnumChange(QtCore.QString('1'))
-        self.lineEditCden.setText(QtCore.QString('1'))
-        self.onCdenChange(QtCore.QString('1'))
-        self.lineEditHnum.setText(QtCore.QString('1'))
-        self.onHnumChange(QtCore.QString('1'))
-        self.lineEditHden.setText(QtCore.QString('1'))
-        self.onHdenChange(QtCore.QString('1'))
+        self.lineEditGnum.setText(str('2*s+10'))
+        self.onGnumChange(str('2*s+10'))
+        self.lineEditGden.setText(str('1*s^2+2*s+10'))
+        self.onGdenChange(str('1*s^2+2*s+10'))
+        self.lineEditCnum.setText(str('1'))
+        self.onCnumChange(str('1'))
+        self.lineEditCden.setText(str('1'))
+        self.onCdenChange(str('1'))
+        self.lineEditHnum.setText(str('1'))
+        self.onHnumChange(str('1'))
+        self.lineEditHden.setText(str('1'))
+        self.onHdenChange(str('1'))
         self.doubleSpinBoxK.setValue(1)
         self.btnPlotLGR.setEnabled(True)
         self.comboBoxSys.setEnabled(True)
@@ -1480,19 +1486,19 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
         
         if (self.sys.Hide == True or self.sys.Type > 2):
             txt = _translate("MainWindow", "Desabilitado", None)
-            item = QtGui.QListWidgetItem()
+            item = QtWidgets.QListWidgetItem()
             item.setText(txt)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             self.listWidgetCLpoles.addItem(item)
-            item = QtGui.QListWidgetItem()
+            item = QtWidgets.QListWidgetItem()
             item.setText(txt)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             self.listWidgetOLpoles.addItem(item)
-            item = QtGui.QListWidgetItem()
+            item = QtWidgets.QListWidgetItem()
             item.setText(txt)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             self.listWidgetOLzeros.addItem(item)
-            item = QtGui.QListWidgetItem()
+            item = QtWidgets.QListWidgetItem()
             item.setText(txt)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             self.listWidgetRLpoints.addItem(item)
@@ -1503,21 +1509,21 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             # Closed loop poles:
             rootsCL = self.sys.RaizesRL(self.sys.K)
             for root in rootsCL:
-                item = QtGui.QListWidgetItem()
+                item = QtWidgets.QListWidgetItem()
                 item.setText(self.createRootString(root))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetCLpoles.addItem(item)
             
             rootsOL = self.sys.RaizesOL()
             for root in rootsOL:
-                item = QtGui.QListWidgetItem()
+                item = QtWidgets.QListWidgetItem()
                 item.setText(self.createRootString(root))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetOLpoles.addItem(item)
                 
             zerosOL = self.sys.ZerosOL()
             for zero in zerosOL:
-                item = QtGui.QListWidgetItem()
+                item = QtWidgets.QListWidgetItem()
                 item.setText(self.createRootString(zero))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetOLzeros.addItem(item)
@@ -1525,7 +1531,7 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
             pontos, ganhos = self.sys.PontosSeparacao()
             i = 0
             for ponto in pontos:
-                item = QtGui.QListWidgetItem()
+                item = QtWidgets.QListWidgetItem()
                 item.setText(self.createRootString(ponto) + " com Kc =  %0.3f" %(ganhos[i]))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetRLpoints.addItem(item)
@@ -1553,12 +1559,12 @@ class LabControle2(QtGui.QMainWindow,MainWindow.Ui_MainWindow):
 
 class ExportSystem:
     
-    Gnum = QtCore.QString()
-    Gden = QtCore.QString()
-    Cnum = QtCore.QString()
-    Cden = QtCore.QString()
-    Hnum = QtCore.QString()
-    Hden = QtCore.QString()
+    Gnum = str()
+    Gden = str()
+    Cnum = str()
+    Cden = str()
+    Hnum = str()
+    Hden = str()
     Genabled = True
     Cenabled = False
     Henabled = False
@@ -1569,7 +1575,7 @@ class ExportSystem:
 
         
 if __name__ == '__main__':
-    app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     locale = QtCore.QLocale.system().name()
     # If not portuguese, instal english translator:
     if (locale != 'pt_BR' and locale != 'pt_PT'):

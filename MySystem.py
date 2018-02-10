@@ -284,7 +284,7 @@ class MySystem:
         """
         
         if (self.InstRt > self.Tmax) or (self.InstWt > self.Tmax):
-            print "O tempo do degrau nao pode ser maior do que o tmax."
+            print("O tempo do degrau nao pode ser maior do que o tmax.")
             return 0, 0, 0
         
         # Time vector:

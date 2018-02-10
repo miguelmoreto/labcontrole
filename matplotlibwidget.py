@@ -18,10 +18,10 @@ Copyright © 2005 Florent Rougon, 2006 Darren Dale
 
 __version__ = "1.0.0"
 
-from PyQt4.QtGui import QSizePolicy
-from PyQt4.QtCore import QSize
+from PyQt5.QtWidgets import QSizePolicy
+from PyQt5.QtCore import QSize
 
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as Canvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
 from matplotlib.figure import Figure
 
 from matplotlib import rcParams
