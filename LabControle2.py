@@ -467,8 +467,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.mpltoolbarSimul._positions.clear()
         self.mpltoolbarSimul._update_view()        
 
-        # Setting curve navigation
-        self.mpltoolbarSimul.init_curve_point([(self.mplSimul.axes, t, y)])
+        # Setting curve navigation (but not for discrete time simulatioin)
+        if (self.sys.Type != 3):
+            self.mpltoolbarSimul.init_curve_point([(self.mplSimul.axes, t, y)])
         
         #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
