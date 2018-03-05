@@ -16,6 +16,12 @@ Para maiores informações sobre o projeto, acesse o site do LabControle: http:/
 
 O LabControle roda em Windows 7, Windows 8 (32 ou 64bits, tando do código fonte como de binários) além de rodar em Linux (pelo código fonte apenas).
 
+## Executar no Linux
+
+Siga os passos abaixo:
+
+
+
 ## Download
 
 Se Releases section: https://github.com/miguelmoreto/labcontrole/releases
