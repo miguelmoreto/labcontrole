@@ -113,7 +113,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
-        self.label.setPixmap(QtGui.QPixmap( "diagram1Closed.png"))
+        self.label.setPixmap(QtGui.QPixmap( "diagram1Opened.png"))
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
