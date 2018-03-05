@@ -16,11 +16,11 @@
    style="fill-rule:evenodd"
    viewBox="0 0 20192.3 5911.9"
    id="svg2985"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.92.3pre0 (f5a6572, 2018-03-03)"
    sodipodi:docname="diagram1Opened.svg"><metadata
    id="metadata3082"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview
    pagecolor="#ffffff"
    bordercolor="#666666"
    borderopacity="1"
@@ -30,7 +30,7 @@
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
    inkscape:window-width="1920"
-   inkscape:window-height="1018"
+   inkscape:window-height="1017"
    id="namedview3080"
    showgrid="false"
    inkscape:zoom="1.7408456"
@@ -579,7 +579,7 @@
      transform-center-x="-1.4292276"
      style="fill:#000000;stroke:#000000;stroke-width:36.23910141;stroke-linecap:round;stroke-linejoin:round" /><path
      transform="matrix(30.005675,0,0,30.005675,-5708.5907,284.64784)"
-     d="m 578.8148,163.00151 c 0,1.12165 -0.90927,2.03093 -2.03093,2.03093 -1.12165,0 -2.03092,-0.90928 -2.03092,-2.03093 0,-1.12165 0.90927,-2.03093 2.03092,-2.03093 1.12166,0 2.03093,0.90928 2.03093,2.03093 z"
+     d="m 578.8148,163.00151 a 2.0309291,2.0309291 0 0 1 -2.03093,2.03093 2.0309291,2.0309291 0 0 1 -2.03092,-2.03093 2.0309291,2.0309291 0 0 1 2.03092,-2.03093 2.0309291,2.0309291 0 0 1 2.03093,2.03093 z"
      sodipodi:ry="2.0309291"
      sodipodi:rx="2.0309291"
      sodipodi:cy="163.00151"
@@ -594,7 +594,7 @@
      sodipodi:cy="163.00151"
      sodipodi:rx="2.0309291"
      sodipodi:ry="2.0309291"
-     d="m 578.8148,163.00151 c 0,1.12165 -0.90927,2.03093 -2.03093,2.03093 -1.12165,0 -2.03092,-0.90928 -2.03092,-2.03093 0,-1.12165 0.90927,-2.03093 2.03092,-2.03093 1.12166,0 2.03093,0.90928 2.03093,2.03093 z"
+     d="m 578.8148,163.00151 a 2.0309291,2.0309291 0 0 1 -2.03093,2.03093 2.0309291,2.0309291 0 0 1 -2.03092,-2.03093 2.0309291,2.0309291 0 0 1 2.03092,-2.03093 2.0309291,2.0309291 0 0 1 2.03093,2.03093 z"
      transform="matrix(30.005675,0,0,30.005675,-5180.8339,284.64784)" /><line
      style="fill:none;stroke:#000000;stroke-width:26.48130035;stroke-linecap:round;stroke-linejoin:round"
      connector-curvature="0"

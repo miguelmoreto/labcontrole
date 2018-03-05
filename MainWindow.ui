@@ -37,16 +37,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="leftMargin">
-     <number>3</number>
-    </property>
-    <property name="topMargin">
-     <number>3</number>
-    </property>
-    <property name="rightMargin">
-     <number>3</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>3</number>
     </property>
     <item>
@@ -69,16 +60,7 @@
         <property name="spacing">
          <number>1</number>
         </property>
-        <property name="leftMargin">
-         <number>1</number>
-        </property>
-        <property name="topMargin">
-         <number>1</number>
-        </property>
-        <property name="rightMargin">
-         <number>1</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>1</number>
         </property>
         <item>
@@ -105,16 +87,7 @@
            <property name="spacing">
             <number>4</number>
            </property>
-           <property name="leftMargin">
-            <number>1</number>
-           </property>
-           <property name="topMargin">
-            <number>1</number>
-           </property>
-           <property name="rightMargin">
-            <number>1</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>1</number>
            </property>
            <item>
@@ -138,16 +111,7 @@
               <string>Entrada: r(t)</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_4">
-              <property name="leftMargin">
-               <number>4</number>
-              </property>
-              <property name="topMargin">
-               <number>4</number>
-              </property>
-              <property name="rightMargin">
-               <number>4</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>4</number>
               </property>
               <item row="0" column="0">
@@ -403,16 +367,7 @@
               <bool>false</bool>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
-              <property name="leftMargin">
-               <number>4</number>
-              </property>
-              <property name="topMargin">
-               <number>4</number>
-              </property>
-              <property name="rightMargin">
-               <number>4</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>4</number>
               </property>
               <item row="0" column="0">
@@ -1076,27 +1031,15 @@
          </spacer>
         </item>
         <item>
-         <widget class="QGraphicsView" name="graphicsView">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QLabel" name="label">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>220</width>
-            <height>260</height>
-           </size>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Diagrama de blocos do sistema. Use os controles acima para configurar as entradas e abaixo para as funções de transferência</string>
+          <property name="alignment">
+           <set>Qt::AlignBottom|Qt::AlignHCenter</set>
           </property>
          </widget>
         </item>
@@ -1140,16 +1083,7 @@
            <enum>QFrame::Raised</enum>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="leftMargin">
-            <number>1</number>
-           </property>
-           <property name="topMargin">
-            <number>1</number>
-           </property>
-           <property name="rightMargin">
-            <number>1</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>1</number>
            </property>
            <item>
@@ -2036,16 +1970,7 @@ QGroupBox::title {
         <string>Simulação</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>4</number>
         </property>
         <item>
@@ -2078,16 +2003,7 @@ QGroupBox::title {
            <number>0</number>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="leftMargin">
-            <number>4</number>
-           </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>4</number>
            </property>
            <item>
@@ -2417,7 +2333,7 @@ QGroupBox::title {
         <item>
          <layout class="QVBoxLayout" name="VBoxLayoutSimul">
           <item>
-           <widget class="MatplotlibWidget" name="mplSimul" native="true"/>
+           <widget class="MatplotlibWidget" name="mplSimul"/>
           </item>
          </layout>
         </item>
@@ -2428,16 +2344,7 @@ QGroupBox::title {
         <string>Lugar das Raízes</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>4</number>
         </property>
         <item>
@@ -2461,16 +2368,7 @@ QGroupBox::title {
            <enum>QFrame::Sunken</enum>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
-           <property name="leftMargin">
-            <number>4</number>
-           </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>4</number>
            </property>
            <item>
@@ -2511,16 +2409,7 @@ QGroupBox::title {
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>0</number>
               </property>
               <item row="0" column="0">
@@ -3215,7 +3104,7 @@ QGroupBox::title {
         <item>
          <layout class="QVBoxLayout" name="VBoxLayoutLGR">
           <item>
-           <widget class="MatplotlibWidget" name="mplLGR" native="true"/>
+           <widget class="MatplotlibWidget" name="mplLGR"/>
           </item>
          </layout>
         </item>
@@ -3226,16 +3115,7 @@ QGroupBox::title {
         <string>Diagrama de Bode</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>4</number>
         </property>
         <item>
@@ -3259,16 +3139,7 @@ QGroupBox::title {
            <enum>QFrame::Sunken</enum>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
-           <property name="leftMargin">
-            <number>4</number>
-           </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>4</number>
            </property>
            <item>
@@ -3577,7 +3448,7 @@ QGroupBox::title {
         <item>
          <layout class="QVBoxLayout" name="VBoxLayoutBode">
           <item>
-           <widget class="MatplotlibWidget" name="mplBode" native="true"/>
+           <widget class="MatplotlibWidget" name="mplBode"/>
           </item>
          </layout>
         </item>
@@ -3588,16 +3459,7 @@ QGroupBox::title {
         <string>Diagrama de Nyquist</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>4</number>
         </property>
         <item>
@@ -3621,16 +3483,7 @@ QGroupBox::title {
            <enum>QFrame::Sunken</enum>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
-           <property name="leftMargin">
-            <number>4</number>
-           </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
+           <property name="margin">
             <number>4</number>
            </property>
            <item>
@@ -3975,7 +3828,7 @@ QGroupBox::title {
         <item>
          <layout class="QVBoxLayout" name="VBoxLayoutNyquist">
           <item>
-           <widget class="MatplotlibWidget" name="mplNyquist" native="true"/>
+           <widget class="MatplotlibWidget" name="mplNyquist"/>
           </item>
          </layout>
         </item>
@@ -3989,16 +3842,7 @@ QGroupBox::title {
         <string>SisInfo</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,1,1,2">
-        <property name="leftMargin">
-         <number>4</number>
-        </property>
-        <property name="topMargin">
-         <number>4</number>
-        </property>
-        <property name="rightMargin">
-         <number>4</number>
-        </property>
-        <property name="bottomMargin">
+        <property name="margin">
          <number>4</number>
         </property>
         <item>

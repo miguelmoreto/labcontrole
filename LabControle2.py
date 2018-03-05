@@ -41,7 +41,7 @@ import sys
 import matplotlib
 matplotlib.use("Qt5Agg")
 
-from PyQt5 import QtCore,QtGui, QtSvg, QtWidgets
+from PyQt5 import QtCore,QtGui, QtWidgets
 
 
 
@@ -91,8 +91,8 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         super(LabControle2,self).__init__(parent)
         
         # Init variables:
-        self.SVGRect = QtCore.QRectF()
-        self.GraphSize = QtCore.QSize()
+        #self.SVGRect = QtCore.QRectF()
+        #self.GraphSize = QtCore.QSize()
         
         self.currentComboIndex = 0
         
@@ -113,31 +113,32 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
+        self.label.setPixmap(QtGui.QPixmap( "diagram1Closed.png"))
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
         
         
         self.image = QtGui.QImage()        
-        self.graphicsView.setScene(QtWidgets.QGraphicsScene(self))
-        self.graphicsView.setViewport(QtWidgets.QWidget())
+        #self.graphicsView.setScene(QtWidgets.QGraphicsScene(self))
+        #self.graphicsView.setViewport(QtWidgets.QWidget())
         
         # Load initial SVG file
-        svg_file = QtCore.QFile('diagram1Opened.svg')
-        if not svg_file.exists():
-            QtWidgets.QMessageBox.critical(self, "Open SVG File",
-                    "Could not open file '%s'." % 'diagram1Opened.svg')
+        #svg_file = QtCore.QFile('diagram1Opened.svg')
+        #if not svg_file.exists():
+        #    QtWidgets.QMessageBox.critical(self, "Open SVG File",
+        #            "Could not open file '%s'." % 'diagram1Opened.svg')
 
-            self.outlineAction.setEnabled(False)
-            self.backgroundAction.setEnabled(False)
-            return        
-        self.scene = self.graphicsView.scene()
-        self.scene.clear()
-        self.graphicsView.resetTransform()
+        #    self.outlineAction.setEnabled(False)
+        #    self.backgroundAction.setEnabled(False)
+        #    return        
+        #self.scene = self.graphicsView.scene()
+        #self.scene.clear()
+        #self.graphicsView.resetTransform()
         
-        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())        
-        self.svgItem.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
-        self.svgItem.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
+        #self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())        
+        #self.svgItem.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
+        #self.svgItem.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
         #self.svgItem.setZValue(0)
         
         #self.backgroundItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
@@ -146,7 +147,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         #self.backgroundItem.setVisible(True)
         #self.backgroundItem.setZValue(-1)
 
-        self.scene.addItem(self.svgItem)
+        #self.scene.addItem(self.svgItem)
         
         
         # Initial definitions:
@@ -1229,48 +1230,49 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         if (self.sys.Type == 0): # LTI system 1 (without C(s))
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram1Closed.svg'
+                svg_file_name = 'diagram1Closed.png'
             else:
-                svg_file_name = 'diagram1Opened.svg'
+                svg_file_name = 'diagram1Opened.png'
         elif (self.sys.Type == 1): # LTI system 2 (with C(s))
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram2Closed.svg'
+                svg_file_name = 'diagram2Closed.png'
             else:
-                svg_file_name = 'diagram2Opened.svg'
+                svg_file_name = 'diagram2Opened.png'
         elif (self.sys.Type == 2): # LTI system 3 (with C(s) and G(s) after W(s))
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram3Closed.svg'
+                svg_file_name = 'diagram3Closed.png'
             else:
-                svg_file_name = 'diagram3Opened.svg'
+                svg_file_name = 'diagram3Opened.png'
         elif (self.sys.Type == 3):
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram4Closed.svg'
+                svg_file_name = 'diagram4Closed.png'
             else:
-                svg_file_name = 'diagram4Opened.svg'
+                svg_file_name = 'diagram4Opened.png'
         elif (self.sys.Type == 4):
             if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram5Closed.svg'
+                svg_file_name = 'diagram5Closed.png'
             else:
-                svg_file_name = 'diagram5Opened.svg'
+                svg_file_name = 'diagram5Opened.png'
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return
 
+        self.label.setPixmap(QtGui.QPixmap(svg_file_name))
         # Load svg file.
-        svg_file = QtCore.QFile(svg_file_name)
-        if not svg_file.exists():
-            QtWidgets.QMessageBox.critical(self, "Open SVG File",
-                                       "Could not open file '%s'." % svg_file_name)
-            self.outlineAction.setEnabled(False)
-            self.backgroundAction.setEnabled(False)
-            return
+        #svg_file = QtCore.QFile(svg_file_name)
+        #if not svg_file.exists():
+        #    QtWidgets.QMessageBox.critical(self, "Open SVG File",
+        #                               "Could not open file '%s'." % svg_file_name)
+        #    self.outlineAction.setEnabled(False)
+        #    self.backgroundAction.setEnabled(False)
+        #    return
         # Update svg image:
-        self.scene.clear()
+        #self.scene.clear()
         #self.graphicsView.resetTransform()
-        self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
+        #self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
         #self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
         #self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
-        self.scene.addItem(self.svgItem)
+        #self.scene.addItem(self.svgItem)
     
     def onAboutAction(self):
         QtWidgets.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)

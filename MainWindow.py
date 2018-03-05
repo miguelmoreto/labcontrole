@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.10
+# Created by: PyQt5 UI code generator 5.9
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -413,16 +413,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.frameEntradas)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem2)
-        self.graphicsView = QtWidgets.QGraphicsView(self.tabDiagrama)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView.sizePolicy().hasHeightForWidth())
-        self.graphicsView.setSizePolicy(sizePolicy)
-        self.graphicsView.setMinimumSize(QtCore.QSize(220, 260))
-        self.graphicsView.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        self.graphicsView.setObjectName("graphicsView")
-        self.verticalLayout_3.addWidget(self.graphicsView)
+        self.label = QtWidgets.QLabel(self.tabDiagrama)
+        self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.label.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
+        self.label.setObjectName("label")
+        self.verticalLayout_3.addWidget(self.label)
         spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem3)
         self.frameSis = QtWidgets.QFrame(self.tabDiagrama)
@@ -1689,7 +1684,7 @@ class Ui_MainWindow(object):
         self.labelDeltaRtime.setToolTip(_translate("MainWindow", "Instante de tempo em que a variação de entrada será aplicada."))
         self.labelDeltaRtime.setText(_translate("MainWindow", "Instante de variação:"))
         self.doubleSpinBoxDeltaRtime.setToolTip(_translate("MainWindow", "Entre com o instante de tempo em que a variação de entrada é aplicada"))
-        self.graphicsView.setToolTip(_translate("MainWindow", "Diagrama de blocos do sistema. Use os controles acima para configurar as entradas e abaixo para as funções de transferência"))
+        self.label.setText(_translate("MainWindow", "<html><head/><body><p>Image</p></body></html>"))
         self.groupBoxMalha.setToolTip(_translate("MainWindow", "Abre/fecha a malha de realimentação"))
         self.groupBoxMalha.setTitle(_translate("MainWindow", "Malha"))
         self.radioBtnOpen.setToolTip(_translate("MainWindow", "Abrir a malha de realimentação"))
@@ -1808,3 +1803,13 @@ class Ui_MainWindow(object):
 
 from matplotlibwidget import MatplotlibWidget
 import images_rc
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
