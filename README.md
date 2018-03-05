@@ -20,7 +20,15 @@ O LabControle roda em Windows 7, Windows 8 (32 ou 64bits, tando do código fonte
 
 Siga os passos abaixo:
 
+1. Baixe o código fonte usando git. Execute a seguinte linha de comando:
 
+`git clone https://github.com/miguelmoreto/labcontrole.git`
+1. Entre na pasta criada:
+
+`cd labcontrole`
+1. Execute o script:
+
+`./run.sh`
 
 ## Download
 
