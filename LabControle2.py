@@ -1,3 +1,4 @@
+#!/usr/bin/ python3
 # -*- coding: utf-8 -*-
 #==============================================================================
 # This file is part of LabControle 2.
@@ -972,8 +973,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             return
         else:
             self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        
-        value.replace(',','.')        
+        value = value.replace(',','.')        
         
         #if (int(value) == 2):
         #    self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: yellow }")
@@ -991,7 +991,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         else:
             self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         
-        value.replace(',','.')   
+        value = value.replace(',','.')   
         
         self.sys.Wt = str(value)
 
@@ -1187,10 +1187,10 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         Return 0 if it has an error.
         Otherwise, returns a list with polynomial coefficients
         """
-        value.replace(' ','') # remove spaces
-        value.replace(',','.') # change , to .
-        value.replace(')(',')*(') # insert * between parentesis
-        value.replace('z','s') # change , to .        
+        value = value.replace(' ','') # remove spaces
+        value = value.replace(',','.') # change , to .
+        value = value.replace(')(',')*(') # insert * between parentesis
+        value = value.replace('z','s') # change , to .        
         
         retorno = None
         
