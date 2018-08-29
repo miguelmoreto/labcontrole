@@ -465,9 +465,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.autoscale(True)        
         
         # Clear matplotlib toolbar history:
-        self.mpltoolbarSimul._views.clear()
-        self.mpltoolbarSimul._positions.clear()
-        self.mpltoolbarSimul._update_view()        
+        #self.mpltoolbarSimul._views.clear()
+        #self.mpltoolbarSimul._positions.clear()
+        #self.mpltoolbarSimul._update_view()        
 
         # Setting curve navigation (but not for discrete time simulatioin)
         if (self.sys.Type != 3):

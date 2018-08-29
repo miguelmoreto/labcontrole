@@ -662,11 +662,11 @@ class MySystem:
         """
         Simulate a LTI system with a discrete time controller.
         """
-        step_dT = self.dT/self.Npts_dT # Sample time used by continuous step function.
-        N = numpy.floor(self.Tmax/self.dT) # Number of discrete steps.
-        Total_Nsamples = N * self.Npts_dT
-
-
+        step_dT = round(self.delta_t,4) #  self.dT/self.Npts_dT # Sample time used by continuous step function.
+        print("stpe dT: ",step_dT)
+        N = int(numpy.floor(self.Tmax/self.dT)) # Number of discrete steps.
+        Total_Nsamples = int(N * self.Npts_dT)
+        
         # Extract only the first Total_Nsamples+2 from input vector.
         # 
         R_discrete = R[0:Total_Nsamples+2]
@@ -705,7 +705,7 @@ class MySystem:
         t_plot_k = numpy.zeros(N)
         
         for k in numpy.arange(0,N):
-            R0[0] = R_discrete[k*self.dT]
+            R0[0] = R_discrete[k*self.Npts_dT]
             Y0[0] = yk
             
             if (self.Malha == 'Fechada'):
@@ -718,7 +718,10 @@ class MySystem:
             # Controller diference equation:
             uk = self.K * numpy.dot(b,E0) - numpy.dot(a,U0)
             
-            U = uk * numpy.ones(self.dT/step_dT+1) # input vector    
+            #U = uk * numpy.ones(self.dT/step_dT+1) # input vector   
+            U = uk * numpy.ones(self.Npts_dT+1) # input vector   
+            print("len U: ",len(U))
+            print("len T: ",len(t_step))
             t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
             if (k == 0):
