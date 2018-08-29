@@ -233,7 +233,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
         self.lineEditCden.textEdited.connect(self.onCdenChange)
-        self.lineEditCden.textEdited.connect(self.onHnumChange)
+        self.lineEditHnum.textEdited.connect(self.onHnumChange)
         self.lineEditHden.textEdited.connect(self.onHdenChange)
         # Group Boxes:
         self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
