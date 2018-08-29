@@ -662,7 +662,7 @@ class MySystem:
         """
         Simulate a LTI system with a discrete time controller.
         """
-        step_dT = round(self.delta_t,4) #  self.dT/self.Npts_dT # Sample time used by continuous step function.
+        step_dT = round(self.delta_t,4) # Sample time used by continuous step function.
         print("stpe dT: ",step_dT)
         N = int(numpy.floor(self.Tmax/self.dT)) # Number of discrete steps.
         Total_Nsamples = int(N * self.Npts_dT)
@@ -719,9 +719,8 @@ class MySystem:
             uk = self.K * numpy.dot(b,E0) - numpy.dot(a,U0)
             
             #U = uk * numpy.ones(self.dT/step_dT+1) # input vector   
-            U = uk * numpy.ones(self.Npts_dT+1) # input vector   
-            print("len U: ",len(U))
-            print("len T: ",len(t_step))
+            U = uk * numpy.ones(len(t_step)) # input vector   
+
             t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
             if (k == 0):
