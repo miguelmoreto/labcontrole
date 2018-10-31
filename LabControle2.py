@@ -541,6 +541,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         Tinic = self.sys.tfinal
         
+        lastRvalue = self.sys.Rfinal
         # Create time and input vector:
         t,r,w = self.sys.CriaEntrada(Tinic, self.doubleSpinBoxResT.value(), 
                             self.sys.Rfinal, self.sys.Wfinal)
@@ -576,7 +577,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         if (self.checkBoxEntrada.isChecked()):
             self.mplSimul.axes.plot(t,r,'b')
             # Draw line
-            self.mplSimul.axes.plot([Tinic, Tinic],[y[0],r[0]], label="_nolegend_", color='b')
+            self.mplSimul.axes.plot([Tinic, Tinic],[lastRvalue,r[0]], label="_nolegend_", color='b')
             legend.append(_translate("MainWindow", "Entrada: u(t)", None))
             flag = 1
         if (self.checkBoxSaida.isChecked()):
@@ -766,6 +767,8 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         Chage the number of LGR gain points (resolution).
         """
         self.sys.Kpontos = self.doubleSpinBoxLGRpontos.value()
+        # Update slider position.
+        self.updateSliderPosition()
         
     def DrawCloseLoopPoles(self,gain):
             

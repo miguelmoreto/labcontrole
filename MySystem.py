@@ -427,11 +427,6 @@ class MySystem:
         dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
         f = numpy.logspace(numpy.log10(self.Fmin),numpy.log10(self.Fmax),self.Fpontos*dec)
         
-        # Calculando resposta em frequencia do sistema:
-        #val = G.FreqResp(f,fignum=None,fig=None)
-        
-        #dBmag = 20*log10(abs(val))
-        #fase = angle(val,1)
         dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(Gnum,Gden,f,True)
         # Ajustando os valores da fase se der menor do que -180 ou maior do
         # que 180 graus (função angle só retorna valores entre -180 e +180).
@@ -440,14 +435,12 @@ class MySystem:
         #        fase[i:] -= 360.        
         
         # Adding the crossover frequency to the curve
-        if crossfreqmag not in f:
+        if crossfreqmag and (crossfreqmag not in f):
             f = numpy.append(f, crossfreqmag)
             f.sort()
             ix = numpy.where(f == crossfreqmag)
             dBmag = numpy.insert(dBmag, ix[0][0], [0])
             fase = numpy.insert(fase, ix[0][0], cfase)
-
-        #figura.clf()
            
         # Plotando a magnitude:
         ax1 = figura.add_subplot(2,1,1)
@@ -462,11 +455,6 @@ class MySystem:
         ax2.grid(True)
         ax2.xaxis.grid(True, which='minor')
 
-        #[freq,index] = G.CrossoverFreq(f)
-        
-        #ax1.hold()
-        #ax1.semilogx([f[index]],[dBmag[index]],'bo')
-        #print G.PhaseMargin(f)
         ax2.semilogx(crossfreqmag,cfase,'ro')
         for I in range(len(crossfreqmag)) : ax2.semilogx([crossfreqmag[I],crossfreqmag[I]],[-180,cfase[I]],'r');
         ax1.semilogx(crossfreqfase,cmag,'ro')   
