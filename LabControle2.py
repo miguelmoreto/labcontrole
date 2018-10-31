@@ -685,9 +685,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
         
         # Clear matplotlib toolbar history:
-        self.mpltoolbarLGR._views.clear()
-        self.mpltoolbarLGR._positions.clear()
-        self.mpltoolbarLGR._update_view() 
+        #self.mpltoolbarLGR._views.clear()
+        #self.mpltoolbarLGR._positions.clear()
+        #self.mpltoolbarLGR._update_view() 
         # Plot LGR:
         self.sys.LGR(self.mplLGR.figure)
         
@@ -811,9 +811,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
         
         # Clear matplotlib toolbar history:
-        self.mpltoolbarNyquist._views.clear()
-        self.mpltoolbarNyquist._positions.clear()
-        self.mpltoolbarNyquist._update_view()         
+        #self.mpltoolbarNyquist._views.clear()
+        #self.mpltoolbarNyquist._positions.clear()
+        #self.mpltoolbarNyquist._update_view()         
         
         self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
         
@@ -860,9 +860,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
 
         # Clear matplotlib toolbar history:
-        self.mpltoolbarBode._views.clear()
-        self.mpltoolbarBode._positions.clear()
-        self.mpltoolbarBode._update_view()
+        #self.mpltoolbarBode._views.clear()
+        #self.mpltoolbarBode._positions.clear()
+        #self.mpltoolbarBode._update_view()
         
         # Plotting Bode:
         dB, phase, f = self.sys.Bode(self.mplBode.figure)
