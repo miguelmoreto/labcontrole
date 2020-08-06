@@ -475,7 +475,12 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
-        self.mplSimul.axes.hold(True)
+        try:
+            self.mplSimul.axes.hold(True)
+        except AttributeError:
+            #print("Ignoring matplotlib hold statement.")
+            pass
+        
         #ax = self.mplSimul.figure.add_subplot(111)
         legend = []
         flag = 0
@@ -519,7 +524,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         ylim = self.mplSimul.axes.get_ylim()
         
         # Set a new y limit, adding 1/10 of the total.
-        self.mplSimul.axes.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
         self.mplSimul.axes.set_xlim([0,t[-1]])
         
         # Add legend:
@@ -601,7 +606,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         ylim = self.mplSimul.axes.get_ylim()
         # Set a new y limit, adding 1/10 of the total.
-        self.mplSimul.axes.set_ylim(ymax=(ylim[1]+(ylim[1]-ylim[0])/10))
+        self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
         self.mplSimul.axes.set_xlim([0,t[-1]])
         # Add legend:
         self.mplSimul.axes.legend(legend, loc=0)

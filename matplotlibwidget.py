@@ -77,7 +77,13 @@ class MatplotlibWidget(Canvas):
             self.axes.set_xlim(*xlim)
         if ylim is not None:
             self.axes.set_ylim(*ylim)
-        self.axes.hold(hold)
+        # Old versions of matplotlib hold:
+        try:
+            self.axes.hold(hold)
+        except AttributeError:
+            pass
+            #print("Ignoring matplotlib hold statement.")
+            
 
         Canvas.__init__(self, self.figure)
         self.setParent(parent)
