@@ -33,18 +33,12 @@
 #==============================================================================
 #
 # Developed by Miguel Moreto
-# Florianopolis, Brazil, 2015
+# Florianopolis, Brazil, 2020
 import sys
-#import importlib
-#importlib.reload(sys)
-#sys.setdefaultencoding('utf8')
-#from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 import matplotlib
 matplotlib.use("Qt5Agg")
 
 from PyQt5 import QtCore,QtGui, QtWidgets
-
-
 
 from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as NavigationToolbar
 
@@ -81,7 +75,7 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControle2</b></p>" \
             "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
 			"<p>Contribuidores:</p>"\
 			"<p>Anderson Livramento</p>"\
-            "<p>Florianópolis, SC, 2018</p>", None)
+            "<p>Florianópolis, SC, 2020</p>", None)
 
 class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
     """
@@ -121,35 +115,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         
         self.image = QtGui.QImage()        
-        #self.graphicsView.setScene(QtWidgets.QGraphicsScene(self))
-        #self.graphicsView.setViewport(QtWidgets.QWidget())
-        
-        # Load initial SVG file
-        #svg_file = QtCore.QFile('diagram1Opened.svg')
-        #if not svg_file.exists():
-        #    QtWidgets.QMessageBox.critical(self, "Open SVG File",
-        #            "Could not open file '%s'." % 'diagram1Opened.svg')
-
-        #    self.outlineAction.setEnabled(False)
-        #    self.backgroundAction.setEnabled(False)
-        #    return        
-        #self.scene = self.graphicsView.scene()
-        #self.scene.clear()
-        #self.graphicsView.resetTransform()
-        
-        #self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())        
-        #self.svgItem.setFlags(QtWidgets.QGraphicsItem.ItemClipsToShape)
-        #self.svgItem.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
-        #self.svgItem.setZValue(0)
-        
-        #self.backgroundItem = QtGui.QGraphicsRectItem(self.svgItem.boundingRect())
-        #self.backgroundItem.setBrush(QtCore.Qt.gray)
-        #self.backgroundItem.setPen(QtGui.QPen(QtCore.Qt.NoPen))
-        #self.backgroundItem.setVisible(True)
-        #self.backgroundItem.setZValue(-1)
-
-        #self.scene.addItem(self.svgItem)
-        
         
         # Initial definitions:
         self.checkBoxPert.setDisabled(True) # Perturbation is disabled by default
@@ -266,7 +231,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.sys.Malha = 'Aberta'
         
         # Change SVG accordingly:        
-        self.updateSystemSVG()
+        self.updateSystemPNG()
         
         self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
@@ -276,7 +241,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.sys.Malha = 'Fechada'
         
         # Change SVG accordingly:        
-        self.updateSystemSVG()        
+        self.updateSystemPNG()        
         
         self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
 
@@ -382,7 +347,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
             return
         
-        self.updateSystemSVG()
+        self.updateSystemPNG()
         self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))
         self.currentComboIndex = sysindex
 
@@ -568,9 +533,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             print("Discrete simul Not ready yet")
             return
         
-        # Simulate the system:
-        #y = self.sys.Simulacao(t, r, w)
-        
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         
         self.mplSimul.axes.autoscale(True)        
@@ -620,7 +582,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         Clear simulation graphic button
         """
         # Clear figure:
-        #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
@@ -680,9 +641,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.delta_t = value/self.sys.Npts_dT
             self.sys.N = self.sys.Tmax/self.sys.delta_t
             self.doubleSpinBoxResT.setValue(self.sys.delta_t)
-            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
-
-            
+            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)     
         
     def onBtnLGR(self):
         """
@@ -690,10 +649,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
         
-        # Clear matplotlib toolbar history:
-        #self.mpltoolbarLGR._views.clear()
-        #self.mpltoolbarLGR._positions.clear()
-        #self.mpltoolbarLGR._update_view() 
         # Plot LGR:
         self.sys.LGR(self.mplLGR.figure)
         
@@ -705,8 +660,8 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.axesLGR.set_ylabel(_translate("MainWindow", "Eixo imaginário", None))
         self.axesLGR.set_title(_translate("MainWindow", "Lugar Geométrico das raízes de C(s)*G(s)*H(s)", None))
 
-        # Tenta apagar a instância dos pólos em malha fechada na figura. Se já
-        # existirem, apaga, senão não faz nada.
+        # Attempt to erase the closed loop poles instance in the figure
+        #  if they exist, erase, else does nothing.
         try:
             del self.polosLGR
         except AttributeError:
@@ -725,14 +680,10 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         ylimites = self.axesLGR.get_ylim()
         
         if (abs(xlimites[0]-xlimites[1])<0.1):
-            #xlimites[0] = xlimites[0]-1
-            #xlimites[1] = xlimites[1]+1
             self.axesLGR.set_xlim((xlimites[0]-1,xlimites[1]+1))
             xlimites = self.axesLGR.get_xlim()
 
         if (abs(ylimites[0]-ylimites[1])<0.1):
-            #ylimites[0] = ylimites[0]-1
-            #ylimites[1] = ylimites[1]+1
             self.axesLGR.set_ylim((ylimites[0]-1,ylimites[1]+1))
             ylimites = self.axesLGR.get_ylim()
 
@@ -818,11 +769,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
         
-        # Clear matplotlib toolbar history:
-        #self.mpltoolbarNyquist._views.clear()
-        #self.mpltoolbarNyquist._positions.clear()
-        #self.mpltoolbarNyquist._update_view()         
-        
         self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
         
         [ax] = self.mplNyquist.figure.get_axes()
@@ -866,11 +812,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
     def onBtnPlotBode(self):
         
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
-
-        # Clear matplotlib toolbar history:
-        #self.mpltoolbarBode._views.clear()
-        #self.mpltoolbarBode._positions.clear()
-        #self.mpltoolbarBode._update_view()
         
         # Plotting Bode:
         dB, phase, f = self.sys.Bode(self.mplBode.figure)
@@ -894,12 +835,6 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         # Clear Bode figure:
 
         self.mplBode.figure.clf()
-        #self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
-        #self.mplSimul.axes.set_ylim(0, 1)
-        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
-        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
-        #self.mplSimul.axes.grid()
         self.mplBode.draw() 
 
 
@@ -1233,7 +1168,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.verticalSliderK.setSliderPosition(int(position))
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
     
-    def updateSystemSVG(self):
+    def updateSystemPNG(self):
         svg_file_name = ''        
         
         if (self.sys.Type == 0): # LTI system 1 (without C(s))
@@ -1266,31 +1201,11 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             return
 
         self.label.setPixmap(QtGui.QPixmap(svg_file_name))
-        # Load svg file.
-        #svg_file = QtCore.QFile(svg_file_name)
-        #if not svg_file.exists():
-        #    QtWidgets.QMessageBox.critical(self, "Open SVG File",
-        #                               "Could not open file '%s'." % svg_file_name)
-        #    self.outlineAction.setEnabled(False)
-        #    self.backgroundAction.setEnabled(False)
-        #    return
-        # Update svg image:
-        #self.scene.clear()
-        #self.graphicsView.resetTransform()
-        #self.svgItem = QtSvg.QGraphicsSvgItem(svg_file.fileName())
-        #self.svgItem.setFlags(QtGui.QGraphicsItem.ItemClipsToShape)
-        #self.svgItem.setCacheMode(QtGui.QGraphicsItem.NoCache)
-        #self.scene.addItem(self.svgItem)
+
     
     def onAboutAction(self):
         QtWidgets.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)
         
-    #def onSysInfoAction(self):
-    #    dialog = QtGui.QDialog()
-    #    dialog.ui = DialogSysInfo.Ui_DialogSysInfo()
-    #    dialog.ui.setupUi(dialog)
-    #    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-    #    dialog.exec_()
     
     def onCalcAction(self):
         try:

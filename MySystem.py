@@ -32,7 +32,7 @@
 #==============================================================================
 #
 # by Miguel Moreto
-# Florianopolis, Brazil, 2015
+# Florianopolis, Brazil, 2020
 #
 import scipy
 from scipy import signal
@@ -425,7 +425,9 @@ class MySystem:
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
         dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
-        f = numpy.logspace(numpy.log10(self.Fmin),numpy.log10(self.Fmax),self.Fpontos*dec)
+        f = numpy.logspace(int(numpy.log10(self.Fmin)),
+                           int(numpy.log10(self.Fmax)),
+                           int(self.Fpontos*dec))
         
         dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(Gnum,Gden,f,True)
         # Ajustando os valores da fase se der menor do que -180 ou maior do
@@ -480,7 +482,9 @@ class MySystem:
         # Com o logspace, são necessários relativamente poucos pontos
         # para o gráfico ficar bom.
         dec = numpy.log10(self.NyqFmax/self.NyqFmin) # Número de decadas;
-        f = numpy.logspace(numpy.log10(self.NyqFmin),numpy.log10(self.NyqFmax),self.NyqFpontos*dec)
+        f = numpy.logspace(int(numpy.log10(self.NyqFmin)),
+                           int(numpy.log10(self.NyqFmax)),
+                           int(self.NyqFpontos*dec))
         
         preal,pimag = Nyquist(Gnum,Gden,f)
         
