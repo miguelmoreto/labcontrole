@@ -89,7 +89,10 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
             #print 'Xdata:', xdata, 'Xpixel:', xpix
             #print 'Ydata:', ydata, 'Ypixel:', ypix
             self.last_plot[axis] = axis.plot([xdata], [ydata], 'bo')
-            self.draw()
+            # draw() was deprecated in Matplotlib 3.3
+            # self.draw()
+            # New method to render canvas
+            self.canvas.draw_idle()
             self._show_points(axis)
 
     def _draw_curve_axes(self, axis):
