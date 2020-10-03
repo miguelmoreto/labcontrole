@@ -911,11 +911,16 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         r(t) string input edited handler
         """
-        if not value:
+        # if not value:
+        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+        #     return
+        # else:
+        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        valid_value = self.checkTFinput(value, expr_var='t')
+        if valid_value == 0:
             self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
             return
-        else:
-            self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         value = value.replace(',','.')        
         
         #if (int(value) == 2):
@@ -928,12 +933,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         r(t) string input edited handler
         """
 
-        if not value:
+        # if not value:
+        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+        #     return
+        # else:
+        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        
+        valid_value = self.checkTFinput(value, expr_var='t')
+        if valid_value == 0:
             self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
             return
-        else:
-            self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        
+        self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         value = value.replace(',','.')   
         
         self.sys.Wt = str(value)
@@ -1123,7 +1133,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.Hden = Hden
             self.sys.Atualiza()
     
-    def checkTFinput(self, value):
+    def checkTFinput(self, value, expr_var='s'):
         """
         Check if input string is correct.
         
@@ -1147,7 +1157,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
                 retorno = 0
         else:
             try:
-                equacao = utils.parseexpr(str(value))
+                equacao = utils.parseexpr(str(value), expr_var=expr_var)
                 retorno = equacao.c.tolist()
                 #self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: green }")
             except:

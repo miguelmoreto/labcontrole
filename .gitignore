@@ -1,9 +1,19 @@
-/*.pyc
-/__pycache__
-/build
-/dist
+# python compiled
+*.egg*
+*.py[cod]
+__pycache__
+.python-version
+
+# build files
+/build/
+/dist/
+
+# Editors
+*.sublime*
+*.vscode
+.idea
+
 /Backup_of_diagrama.cdr
 /*.LCN
 /*.LCO
-/*.sublime*
 /LabControle2.1b2_x64.zip

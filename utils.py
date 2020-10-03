@@ -3,7 +3,7 @@ from scipy import *
 from numpy import array,arange
 import numpy
 
-def parseeqpoly(dados,listeq=[]) :
+def parseeqpoly(dados, listeq=[], expr_var='s') :
 	dados = dados.replace(' ','').lower()
 	termos = []
 	termostemp = dados.split('+')	
@@ -42,39 +42,72 @@ def parseeqpoly(dados,listeq=[]) :
 				expoente = float(tt[ichap+1:])
 				tt = tt[0:ichap]
 			else : expoente = 1
-			if tt.find('s') > -1 :
-				if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + potencia
-				if (expoente < 1) : raise 'Erro 3 : ' + potencia				
-				tt = tt.replace('s','')
-				if tt != '' : raise 'Erro 1 : ' + tt
+			if tt.find(expr_var) > -1:
+				if (int(expoente)-expoente) != 0:
+					raise 'Erro 3 : ' + potencia
+				if (expoente < 1):
+					raise 'Erro 3 : ' + potencia				
+				tt = tt.replace(expr_var,'')
+				if tt != '':
+					raise 'Erro 1 : ' + tt
 				paux = poly1d([1,0])**int(expoente)				
-				if flagdiv : eqt = eqt / paux
-				else : eqt = eqt * paux
-			elif tt.find('#') > -1 :
+				if flagdiv:
+					eqt = eqt / paux
+				else:
+					eqt = eqt * paux
+			elif tt.find('#') > -1:
 				i = tt.find('#')
-				f = tt.find('#',i+1)
-				if f == -1 : raise 'Erro 2 : ' + tt
+				f = tt.find('#', i+1)
+				if f == -1:
+					raise 'Erro 2 : ' + tt
 				idx = int(tt[i+1:f])
-				if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + expoente
-				if (expoente < 1) : raise 'Erro 3 : ' + expoente					
-				if flagdiv : eqt = eqt / (listeq[idx]**int(expoente))
-				else : eqt = eqt * (listeq[idx]**int(expoente))
-			else :				
+				if (int(expoente)-expoente) != 0:
+					raise 'Erro 3 : ' + expoente
+				if (expoente < 1):
+					raise 'Erro 3 : ' + expoente					
+				if flagdiv:
+					eqt = eqt / (listeq[idx]**int(expoente))
+				else:
+					eqt = eqt * (listeq[idx]**int(expoente))
+			else:				
 				if flagdiv : 
 					eqt = eqt / (float(tt.strip('/'))**expoente)
 				else : 
 					eqt = eqt * (float(tt)**expoente)				
+
+			# if tt.find('s') > -1 :
+			# 	if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + potencia
+			# 	if (expoente < 1) : raise 'Erro 3 : ' + potencia				
+			# 	tt = tt.replace('s','')
+			# 	if tt != '' : raise 'Erro 1 : ' + tt
+			# 	paux = poly1d([1,0])**int(expoente)				
+			# 	if flagdiv : eqt = eqt / paux
+			# 	else : eqt = eqt * paux
+			# elif tt.find('#') > -1 :
+			# 	i = tt.find('#')
+			# 	f = tt.find('#',i+1)
+			# 	if f == -1 : raise 'Erro 2 : ' + tt
+			# 	idx = int(tt[i+1:f])
+			# 	if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + expoente
+			# 	if (expoente < 1) : raise 'Erro 3 : ' + expoente					
+			# 	if flagdiv : eqt = eqt / (listeq[idx]**int(expoente))
+			# 	else : eqt = eqt * (listeq[idx]**int(expoente))
+			# else :				
+			# 	if flagdiv : 
+			# 		eqt = eqt / (float(tt.strip('/'))**expoente)
+			# 	else : 
+			# 		eqt = eqt * (float(tt)**expoente)				
 		retorno = retorno + sinal * eqt
 	return retorno
 
-def parseexpr(dados) :	
-	polys = [];
-	neq = 0;
+def parseexpr(dados, expr_var='s') :	
+	polys = []
+	neq = 0
 	dados = dados.replace(' ','').lower()
-	i = dados.find('(');
-	f = dados.find(')');
+	i = dados.find('(')
+	f = dados.find(')')
 	if (i == -1) or (f == -1) :
-		retorno = parseeqpoly(dados)
+		retorno = parseeqpoly(dados, expr_var=expr_var)
 		return retorno
 	else :		
 		while i != -1 :
@@ -85,12 +118,12 @@ def parseexpr(dados) :
 				eqtemp = dados[i:f+1]
 				eqoriginal = eqtemp
 				eqtemp = eqtemp.strip('()')				
-				polys.append(parseeqpoly(eqtemp,polys))				
+				polys.append(parseeqpoly(eqtemp, polys, expr_var=expr_var))				
 				dados = dados.replace(eqoriginal,'#'+str(len(polys)-1)+'#')				
 				i = dados.find('(')
 			else :
 				i = i2
-		retorno = parseeqpoly(dados,polys)
+		retorno = parseeqpoly(dados, polys, expr_var=expr_var)
 		return retorno
 	
 
