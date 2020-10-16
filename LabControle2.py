@@ -38,7 +38,11 @@ import sys
 import matplotlib
 matplotlib.use("Qt5Agg")
 
-from PyQt5 import QtCore,QtGui, QtWidgets
+from PyQt5 import (
+    QtCore,
+    QtGui,
+    QtWidgets
+)
 
 from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as NavigationToolbar
 
@@ -161,6 +165,55 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.sys.Fpontos = self.doubleSpinBodeRes.value()
                 
         self.init = 1
+
+        # Error messages
+        self.expressions_errors = {
+            'r(t)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'w(t)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'G[Num](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'G[Den](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'H[Num](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'H[Den](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'C[Num](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'C[Den](s)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+            'f(y,u)': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
+        }
                 
         # Connecting events:
         self.radioBtnOpen.clicked.connect(self.feedbackOpen)
@@ -224,7 +277,29 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
-               
+    def _has_expressions_errors(self):
+        result = False
+        if any([(self.expressions_errors[e].get('error') and self.expressions_errors[e].get('active'))
+                for e in self.expressions_errors]):
+            result = True
+            # Get error messages
+            msgs = []
+            for e in self.expressions_errors:
+                if self.expressions_errors[e].get('error') and self.expressions_errors[e].get('active'):
+                    msgs.append('<i>{}</i> for <b>{}</b>'.format(
+                        self.expressions_errors[e].get('message'),
+                        e
+                    ))
+            QtWidgets.QMessageBox.critical(self, 'Oops!', '<br />'.join(msgs))
+        return result
+    
+    def _set_expression_error(self, expr, error, message=''):
+        self.expressions_errors[expr]['error'] = error
+        self.expressions_errors[expr]['message'] = message
+
+    def _set_expression_active(self, expr, active):
+        self.expressions_errors[expr]['active'] = active
+    
     def feedbackOpen(self):
         """Open Feedback """ 
 
@@ -241,7 +316,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.sys.Malha = 'Fechada'
         
         # Change SVG accordingly:        
-        self.updateSystemPNG()        
+        self.updateSystemPNG()
         
         self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
 
@@ -261,6 +336,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             # Restoring saved G(s)
             self.sys.Type = sysindex
             self.lineEditGnum.setText(self.sys.GnumStr)
+            self.onGnumChange(self.sys.GnumStr)
             # Re-enable buttons:
             self.btnPlotBode.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
@@ -281,6 +357,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.btnPlotNyquist.setEnabled(True)
             
         # Check current system choice and enable necessary itens:
+        self._set_expression_active('f(y,u)', sysindex == 4)
+        self._set_expression_active('G[Num](s)', sysindex != 4)
+        self._set_expression_active('G[Den](s)', sysindex != 4)
         if (sysindex == 0): # LTI system 1 (without C(s))
             self.groupBoxC.setEnabled(False)
             self.sys.Type = 0
@@ -340,7 +419,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
             self.labelGnum.setText(_translate("MainWindow", "f(y,u)=", None))
             self.lineEditGnum.setText(self.sys.sysInputString)
-            self.onGnumChange(self.sys.sysInputString)
+            # self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.updateGeometry()
         else:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
@@ -402,6 +481,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
 
     def onBtnSimul(self):
         
+        if self._has_expressions_errors():
+            return
+
         self.sys.X0r = None
         self.sys.X0w = None
         
@@ -919,18 +1001,20 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         valid_value = self.checkTFinput(value, expr_var='t')
         if valid_value == 0:
             self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+            self._set_expression_error('r(t)', True, '[{}] is not a valid expression'.format(value))
             return
         self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         value = value.replace(',','.')        
         
         #if (int(value) == 2):
         #    self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: yellow }")
+        self._set_expression_error('r(t)', False)
         self.sys.Rt = str(value)
  
 
     def onWvalueChange(self,value):
         """
-        r(t) string input edited handler
+        w(t) string input edited handler
         """
 
         # if not value:
@@ -942,10 +1026,12 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         valid_value = self.checkTFinput(value, expr_var='t')
         if valid_value == 0:
             self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+            self._set_expression_error('w(t)', True, '[{}] is not a valid expression'.format(value))
             return
         self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         value = value.replace(',','.')   
         
+        self._set_expression_error('w(t)', False)
         self.sys.Wt = str(value)
 
     def onGroupBoxCcheck(self,flag):
@@ -959,7 +1045,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.onCnumChange(self.lineEditCnum.text())
             self.onCdenChange(self.lineEditCden.text())
             self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None))
-    
+        self._set_expression_active('C[Num](s)', flag)
+        self._set_expression_active('C[Den](s)', flag)
+
     def onGroupBoxGcheck(self,flag):
         
         if (flag == False):
@@ -973,7 +1061,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.onGnumChange(self.lineEditGnum.text())
             self.onGdenChange(self.lineEditGden.text())
             self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None))
-            
+        self._set_expression_active('G[Num](s)', flag)
+        self._set_expression_active('G[Den](s)', flag)
+
     def onGroupBoxHcheck(self,flag):
         
         if (flag == False):
@@ -985,6 +1075,8 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.onHnumChange(self.lineEditHnum.text())
             self.onHdenChange(self.lineEditHden.text())
             self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None))
+        self._set_expression_active('H[Num](s)', flag)
+        self._set_expression_active('H[Den](s)', flag)
 
     def onGroupBoxWcheck(self,flag):
         
@@ -1000,7 +1092,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             self.sys.InstWt = self.doubleSpinBoxWtime.value()
             self.sys.ruidoWt = self.doubleSpinBoxWnoise.value()
             self.checkBoxPert.setDisabled(False)
-            
+        self._set_expression_active('w(t)', flag)
 
     def onGnumChange(self,value):
         """
@@ -1017,9 +1109,11 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
             if (Gnum == 0):
                 # Change color ro red:
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+                self._set_expression_error('G[Num](s)', True, '[{}] is not a valid expression'.format(value))
             else:
                 # Change color to green:
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+                self._set_expression_error('G[Num](s)', False)
                 self.sys.GnumStr = str(value)
                 if self.sys.Type == 2:
                     self.sys.G2num = Gnum
@@ -1034,10 +1128,12 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
                 # Change color to green:
                 self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None))
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+                self._set_expression_error('f(y,u)', False)
             else:
                 # Wrong input, change color ro red:
                 self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None))
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+                self._set_expression_error('f(y,u)', True, '[{}] is not a valid expression'.format(value))
                 
     
     def onGdenChange(self,value):
@@ -1046,14 +1142,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('G[Den](s)', True, '[{}] is not a valid expression'.format(value))
             return
             
         Gden = self.checkTFinput(value)
         
         if (Gden == 0):
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('G[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            self._set_expression_error('G[Den](s)', False)
             self.sys.GdenStr = str(value)
             if self.sys.Type == 2:
                 self.sys.G2den = Gden
@@ -1067,14 +1166,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('C[Num](s)', True, '[{}] is not a valid expression'.format(value))
             return
             
         Cnum = self.checkTFinput(value)
         
         if (Cnum == 0):
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('C[Num](s)', True, '[{}] is not a valid expression'.format(value))
         else:
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            self._set_expression_error('C[Num](s)', False)
             self.sys.CnumStr = str(value)
             self.sys.Cnum = Cnum
             self.sys.Atualiza()
@@ -1085,14 +1187,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('C[Den](s)', True, '[{}] is not a valid expression'.format(value))
             return
             
         Cden = self.checkTFinput(value)
         
         if (Cden == 0):
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('C[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            self._set_expression_error('C[Den](s)', False)
             self.sys.CdenStr = str(value)
             self.sys.Cden = Cden
             self.sys.Atualiza()  
@@ -1103,14 +1208,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('H[Num](s)', True, '[{}] is not a valid expression'.format(value))
             return
             
         Hnum = self.checkTFinput(value)
         
         if (Hnum == 0):
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('H[Num](s)', True, '[{}] is not a valid expression'.format(value))
         else:
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            self._set_expression_error('H[Num](s)', False)
             self.sys.HnumStr = str(value)
             self.sys.Hnum = Hnum
             self.sys.Atualiza()
@@ -1121,14 +1229,17 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('H[Den](s)', True, '[{}] is not a valid expression'.format(value))
             return
             
         Hden = self.checkTFinput(value)
         
         if (Hden == 0):
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
+            self._set_expression_error('H[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
+            self._set_expression_error('H[Den](s)', False)
             self.sys.HdenStr = str(value)
             self.sys.Hden = Hden
             self.sys.Atualiza()
