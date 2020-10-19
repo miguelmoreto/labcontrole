@@ -729,6 +729,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         Plot LGR graphic.
         """
+        if self._has_expressions_errors():
+            return
+
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
         
         # Plot LGR:
@@ -849,6 +852,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         """
         Plot nyquist diagram Button handler
         """
+        if self._has_expressions_errors():
+            return
+
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
         
         self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
@@ -892,7 +898,10 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
    
     
     def onBtnPlotBode(self):
-        
+
+        if self._has_expressions_errors():
+            return
+
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
         
         # Plotting Bode:
