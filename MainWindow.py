@@ -1646,6 +1646,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
+        # MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.3 - #develop"))
         MainWindow.setWindowTitle(_translate("MainWindow", "LabControle 2.3 - Beta 1"))
         self.groupBoxRt.setToolTip(_translate("MainWindow", "Parâmetros da entrada de referência"))
         self.groupBoxRt.setTitle(_translate("MainWindow", "Entrada: r(t)"))
