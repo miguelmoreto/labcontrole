@@ -69,6 +69,12 @@ class CustomNavigationToolbar(NavigationToolbar2QT):
                 self.curveY[axis] = y
                 self.last_plot[axis] = None
 
+    def clear_curve_point(self):
+        self.curve_point = {}
+        self.curveX = {}
+        self.curveY = {}
+        self.last_plot = {}
+
     def _set_axis_view_points(self, axis):
         self.text_coordinates = 'X: {:.5f}, Y: {:.5f}'.format(self.curveX[axis][self.curve_point[axis]], self.curveY[axis][self.curve_point[axis]])
 
