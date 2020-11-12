@@ -15,19 +15,19 @@
 # along with LabControle 2.  If not, see <http://www.gnu.org/licenses/>.
 #==============================================================================
 #==============================================================================
-# Este arquivo é parte do programa LabControle 2
+# Este arquivo ï¿½ parte do programa LabControle 2
 # 
-# LabControle 2 é um software livre; você pode redistribui-lo e/ou 
-# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
-# publicada pela Fundação do Software Livre (FSF); na versão 3 da 
-# Licença.
-# Este programa é distribuido na esperança que possa ser  util, 
-# mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
-# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+# LabControle 2 ï¿½ um software livre; vocï¿½ pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licenï¿½a Pï¿½blica Geral GNU como 
+# publicada pela Fundaï¿½ï¿½o do Software Livre (FSF); na versï¿½o 3 da 
+# Licenï¿½a.
+# Este programa ï¿½ distribuido na esperanï¿½a que possa ser  util, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAï¿½ï¿½O a 
+# qualquer MERCADO ou APLICAï¿½ï¿½O EM PARTICULAR. Veja a Licenï¿½a Pï¿½blica Geral
 # GNU para maiores detalhes.
 # 
-# Você deve ter recebido uma cópia da Licença Pública Geral GNU
-# junto com este programa, se não, escreva para a Fundação do Software
+# Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU
+# junto com este programa, se nï¿½o, escreva para a Fundaï¿½ï¿½o do Software
 # Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #==============================================================================
 #
@@ -78,10 +78,10 @@ class MySystem:
     Hide = False
 
     # Entradas:
-    Rt = '1'       # String com a função de entrada r(t)
+    Rt = '1'       # String com a funï¿½ï¿½o de entrada r(t)
     InstRt = 0.0
     ruidoRt = 0.0
-    Wt = '0'       # String com a função de entrada w(t)
+    Wt = '0'       # String com a funï¿½ï¿½o de entrada w(t)
     InstWt = 0.0
     ruidoWt = 0.0
     
@@ -138,7 +138,7 @@ class MySystem:
 
     def __init__(self):
         """
-        Função de inicialização. É executado ao instanciar a classe.
+        Funï¿½ï¿½o de inicializaï¿½ï¿½o. ï¿½ executado ao instanciar a classe.
         """
         self.Atualiza()
         self.N = self.Tmax/self.delta_t
@@ -173,14 +173,14 @@ class MySystem:
         
     def RaizesRL(self,K):
         """
-        Cálcula as raízes da equação característica (denominador do sist.
-        realimentado) aqui representada em função dos numeradores e denominadores
+        Cï¿½lcula as raï¿½zes da equaï¿½ï¿½o caracterï¿½stica (denominador do sist.
+        realimentado) aqui representada em funï¿½ï¿½o dos numeradores e denominadores
         da FT malha direta e H(s).
         """
         
         #MD = self.C * self.G # FT da malha direta.
         
-        # Cálculo da equação característica:
+        # Cï¿½lculo da equaï¿½ï¿½o caracterï¿½stica:
         #EqC = MD.den * self.H.den + K * MD.num * self.H.num
         #EqC = (self.polyCden * self.polyGden * self.polyG2den *self.polyHden) + (K * self.polyCnum * self.polyGnum * self.polyG2num * self.polyHnum)
         EqC = self.polyDden + K * self.polyDnum
@@ -189,7 +189,7 @@ class MySystem:
         
     def RaizesOL(self):
         """
-        Retorna as raízes de malha aberta.
+        Retorna as raï¿½zes de malha aberta.
         """
         return self.polyDden.roots
         
@@ -201,7 +201,7 @@ class MySystem:
     
     def RespostaDegrau(self, tempo_degrau=0.5, delta_t=0.01, tmax=2,**kwargs):
         """
-        Simulação da resposta ao degrau do sistema
+        Simulaï¿½ï¿½o da resposta ao degrau do sistema
         """
         
         S = self.SistemaR()
@@ -213,7 +213,7 @@ class MySystem:
     
     def SistemaR(self):
         """
-        Monta função de transferência do sistema em malha aberta ou fechada
+        Monta funï¿½ï¿½o de transferï¿½ncia do sistema em malha aberta ou fechada
         considerando como entrada r(t).
         """
         
@@ -229,7 +229,7 @@ class MySystem:
     
     def SistemaW(self):
         """
-        Monta função de transferência do sistema em malha aberta ou fechada
+        Monta funï¿½ï¿½o de transferï¿½ncia do sistema em malha aberta ou fechada
         considerando com entrada w(t).
         """
 
@@ -243,7 +243,7 @@ class MySystem:
     def Simulacao(self, t, u, w, X0=0):
         """
         Simula um sistema dado as entradas u e w e um vetor de tempo qualquer
-        para condições iniciais nulas (X0 = 0).
+        para condiï¿½ï¿½es iniciais nulas (X0 = 0).
         """
 
         Sr = self.SistemaR() # Sistema considerando a entrada r(t)
@@ -272,13 +272,13 @@ class MySystem:
     def CriaEntrada(self, tinic=0.0,delta_t=0.01, Rinic = 0, Winic = 0):
         """
         Cria um vetor de tempo e um de entrada a partir de duas strings
-        representando qualquer função matemática do python em função da
-        varíavel t.
+        representando qualquer funï¿½ï¿½o matemï¿½tica do python em funï¿½ï¿½o da
+        varï¿½avel t.
         
         Uma string para a entrada r(t) e outra para w(t)
         
-        self.InstRt instante de início da entrada r(t);
-        self.InstWt instante de início da entrada w(t).
+        self.InstRt instante de inï¿½cio da entrada r(t);
+        self.InstWt instante de inï¿½cio da entrada w(t).
         
         tinic = tempo inicial.
         """
@@ -334,19 +334,19 @@ class MySystem:
 
     def LGR(self,figura):
         """
-        Função para traçado do Lugar Geométrico das Raízes
+        Funï¿½ï¿½o para traï¿½ado do Lugar Geomï¿½trico das Raï¿½zes
         
         kvect: Vetor dos ganhos;
-        figura: referência a uma figura do Matplotlib.
+        figura: referï¿½ncia a uma figura do Matplotlib.
         
-        O LGR é traçado sempre com ganho K = 1.
+        O LGR ï¿½ traï¿½ado sempre com ganho K = 1.
         """
 
         num = self.polyDnum
         den = self.polyDden
         
-        # Criando vetor de ganhos (sem os pontos críticos).
-        # Kmin, Kmax e numero de pontos são atributos desta classe.
+        # Criando vetor de ganhos (sem os pontos crï¿½ticos).
+        # Kmin, Kmax e numero de pontos sï¿½o atributos desta classe.
         delta_k = (self.Kmax-self.Kmin) / self.Kpontos
         kvect = numpy.arange(self.Kmin,self.Kmax,delta_k)
         
@@ -385,7 +385,7 @@ class MySystem:
     
     def PontosSeparacao(self):
         """
-        Calcula os pontos de separação e retorna só os pertinentes.
+        Calcula os pontos de separaï¿½ï¿½o e retorna sï¿½ os pertinentes.
         """
         num = self.polyDnum
         den = self.polyDden
@@ -410,39 +410,41 @@ class MySystem:
     
     def Bode(self,figura):
         """
-        Método para traçado do diagrama de bode.
+        Mï¿½todo para traï¿½ado do diagrama de bode.
         
-        figura: referência a uma figura do Matplotlib.
+        figura: referï¿½ncia a uma figura do Matplotlib.
         
-        O bode é traçado para frequencias de self.Fmin a self.Fmax com
-        self.Fpontos por década.
+        O bode ï¿½ traï¿½ado para frequencias de self.Fmin a self.Fmax com
+        self.Fpontos por dï¿½cada.
         """
         # Criando sistema da malha direta:
         Gnum = self.K * self.polyCnum * self.polyGnum * self.polyG2num
         Gden = self.polyCden * self.polyGden * self.polyG2den
         
         # Criando vetor de frequencias complexas.
-        # Com o logspace, são necessários relativamente poucos pontos
-        # para o gráfico ficar bom.
-        dec = numpy.log10(self.Fmax/self.Fmin) # Número de decadas;
+        # Com o logspace, sï¿½o necessï¿½rios relativamente poucos pontos
+        # para o grï¿½fico ficar bom.
+        dec = numpy.log10(self.Fmax/self.Fmin) # Nï¿½mero de decadas;
         f = numpy.logspace(int(numpy.log10(self.Fmin)),
                            int(numpy.log10(self.Fmax)),
                            int(self.Fpontos*dec))
         
         dBmag,fase,crossfreqmag,cfase,crossfreqfase,cmag = FreqResp(Gnum,Gden,f,True)
         # Ajustando os valores da fase se der menor do que -180 ou maior do
-        # que 180 graus (função angle só retorna valores entre -180 e +180).
+        # que 180 graus (funï¿½ï¿½o angle sï¿½ retorna valores entre -180 e +180).
         #for i in arange(1, fase.shape[0]):
         #    if abs(fase[i]-fase[i-1]) > 179:
         #        fase[i:] -= 360.        
         
         # Adding the crossover frequency to the curve
-        if crossfreqmag and (crossfreqmag not in f):
-            f = numpy.append(f, crossfreqmag)
-            f.sort()
-            ix = numpy.where(f == crossfreqmag)
-            dBmag = numpy.insert(dBmag, ix[0][0], [0])
-            fase = numpy.insert(fase, ix[0][0], cfase)
+        if crossfreqmag:
+            for i, xfreqmag in enumerate(crossfreqmag):
+                if xfreqmag not in f:
+                    f = numpy.append(f, [xfreqmag])
+                    f.sort()
+                    ix = numpy.where(f == [xfreqmag])
+                    dBmag = numpy.insert(dBmag, ix[0][0], [0])
+                    fase = numpy.insert(fase, ix[0][0], [cfase[i]])
            
         # Plotando a magnitude:
         ax1 = figura.add_subplot(2,1,1)
@@ -466,12 +468,12 @@ class MySystem:
     
     def Nyquist(self,figura,completo=False,comcirculo=False):
         """
-        Método para traçado do diagrama de nyquist.
+        Mï¿½todo para traï¿½ado do diagrama de nyquist.
 
-        figura: referência a uma figura do Matplotlib.
+        figura: referï¿½ncia a uma figura do Matplotlib.
 
-        O bode é traçado para frequencias de self.Fmin a self.Fmax com
-        self.Fpontos por década.
+        O bode ï¿½ traï¿½ado para frequencias de self.Fmin a self.Fmax com
+        self.Fpontos por dï¿½cada.
         """
         # Criando sistema da malha direta:
         #G = self.K*self.C*self.G
@@ -479,9 +481,9 @@ class MySystem:
         Gden = self.polyCden * self.polyGden * self.polyG2den
         
         # Criando vetor de frequencias complexas.
-        # Com o logspace, são necessários relativamente poucos pontos
-        # para o gráfico ficar bom.
-        dec = numpy.log10(self.NyqFmax/self.NyqFmin) # Número de decadas;
+        # Com o logspace, sï¿½o necessï¿½rios relativamente poucos pontos
+        # para o grï¿½fico ficar bom.
+        dec = numpy.log10(self.NyqFmax/self.NyqFmin) # Nï¿½mero de decadas;
         f = numpy.logspace(int(numpy.log10(self.NyqFmin)),
                            int(numpy.log10(self.NyqFmax)),
                            int(self.NyqFpontos*dec))
