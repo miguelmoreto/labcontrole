@@ -19,7 +19,7 @@ def parseeqpoly(dados, listeq=[], expr_var='s') :
 	retorno = 0
 	for termosoma in termostemp :
 		if termosoma == '' : continue
-		eqt = poly1d([1])
+		eqt = numpy.poly1d([1])
 		if termosoma.startswith('-') : 
 			sinal = -1
 			termosoma = termosoma.strip('-')
@@ -50,7 +50,7 @@ def parseeqpoly(dados, listeq=[], expr_var='s') :
 				tt = tt.replace(expr_var,'')
 				if tt != '':
 					raise 'Erro 1 : ' + tt
-				paux = poly1d([1,0])**int(expoente)				
+				paux = numpy.poly1d([1,0])**int(expoente)
 				if flagdiv:
 					eqt = eqt / paux
 				else:
@@ -80,7 +80,7 @@ def parseeqpoly(dados, listeq=[], expr_var='s') :
 			# 	if (expoente < 1) : raise 'Erro 3 : ' + potencia				
 			# 	tt = tt.replace('s','')
 			# 	if tt != '' : raise 'Erro 1 : ' + tt
-			# 	paux = poly1d([1,0])**int(expoente)				
+			# 	paux = numpy.poly1d([1,0])**int(expoente)
 			# 	if flagdiv : eqt = eqt / paux
 			# 	else : eqt = eqt * paux
 			# elif tt.find('#') > -1 :
