@@ -858,9 +858,9 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
 
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
         
-        self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
+        ax = self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
         
-        [ax] = self.mplNyquist.figure.get_axes()
+        #[ax] = self.mplNyquist.figure.get_axes()
         # Setting labels and title:
         ax.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
         ax.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
@@ -907,7 +907,7 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         
         # Plotting Bode:
         dB, phase, f, ax1, ax2 = self.sys.Bode(self.mplBode.figure)
-        
+
         # Custom Navigation
         self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         self.mpltoolbarBode.siblings = [ax1, ax2]
