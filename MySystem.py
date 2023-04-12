@@ -464,7 +464,7 @@ class MySystem:
         ax1.semilogx(crossfreqfase,cmag,'ro')   
         for I in range(len(crossfreqfase)) : ax1.semilogx([crossfreqfase[I],crossfreqfase[I]],[0,cmag[I]],'r');
         
-        return dBmag, fase, f
+        return dBmag, fase, f, ax1, ax2
     
     def Nyquist(self,figura,completo=False,comcirculo=False):
         """

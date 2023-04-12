@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from scipy import *
+#from scipy import *
+import scipy as sp
 from numpy import array,arange
 import numpy
 
@@ -129,21 +130,21 @@ def parseexpr(dados, expr_var='s') :
 
 def FreqResp(num,den,f,getcrossings=False) :	
 
-	w = 2j*pi*f	
+	w = 2j*numpy.pi*f	
 	fresp = num(w)/den(w)	
-	dBmag = 20*log10(abs(fresp))
-	phase = zeros(len(fresp))
+	dBmag = 20*numpy.log10(abs(fresp))
+	phase = numpy.zeros(len(fresp))
 	rnum = num.r
 	rden = den.r	
-	for I in range(len(w)) : phase[I] = sum(angle(w[I]-rnum))-sum(angle(w[I]-rden))
+	for I in range(len(w)) : phase[I] = sum(numpy.angle(w[I]-rnum))-sum(numpy.angle(w[I]-rden))
 
 	if getcrossings :
 		# Cruzamentos em magnitude (0dB) e fase correspondente
 		crossmagidx = []
-		lastsign = 20*log10(abs(fresp[0]))/abs(20*log10(abs(fresp[0])))
+		lastsign = 20*numpy.log10(abs(fresp[0]))/abs(20*numpy.log10(abs(fresp[0])))
 		ix = 1
 		for item in fresp[1:] :
-			mag = 20*log10(abs(item))
+			mag = 20*numpy.log10(abs(item))
 			if lastsign != (mag/abs(mag)) :	crossmagidx.append(ix)
 			lastsign = (mag/abs(mag))
 			ix = ix + 1
@@ -158,8 +159,8 @@ def FreqResp(num,den,f,getcrossings=False) :
 			ct = 0
 			while (ct < 50) and (abs(aux) > 1e-10) :
 				fm = (fd+fu)/2
-				aa = num(2j*pi*fm)/den(2j*pi*fm)
-				aux = 20*log10(abs(aa))
+				aa = num(2j*numpy.pi*fm)/den(2j*numpy.pi*fm)
+				aux = 20*numpy.log10(abs(aa))
 				if vd == (aux/abs(aux)) :
 					vd = aux/abs(aux)
 					fd = fm
@@ -169,12 +170,12 @@ def FreqResp(num,den,f,getcrossings=False) :
 				ct = ct + 1
 			crossfreqmag.append(fm)			
 			ph = (phase[idx]-phase[idx-1])/(f[idx]-f[idx-1]) * (fm-f[idx-1]) + phase[idx-1]
-			if angle(aa) < 0 : 
-				angx = floor((-1*ph)/(2*pi))
-				cfase.append((angle(aa)-angx*2*pi)/pi*180)
+			if numpy.angle(aa) < 0 : 
+				angx = numpy.floor((-1*ph)/(2*numpy.pi))
+				cfase.append((numpy.angle(aa)-angx*2*numpy.pi)/numpy.pi*180)
 			else : 
-				angx = floor((-1*ph)/(2*pi))+1
-				cfase.append((angle(aa)-angx*2*pi)/pi*180)
+				angx = numpy.floor((-1*ph)/(2*numpy.pi))+1
+				cfase.append((numpy.angle(aa)-angx*2*numpy.pi)/numpy.pi*180)
 		
 		if len(crossfreqmag) > 15 : 
 			crossfreqmag = []
@@ -183,10 +184,10 @@ def FreqResp(num,den,f,getcrossings=False) :
 			
 		# Cruzamentos na fase e ganho correspondente
 		crossfaseidx = []
-		lastsign = ((phase[0])+pi)/abs(phase[0]+pi)
+		lastsign = ((phase[0])+numpy.pi)/abs(phase[0]+numpy.pi)
 		ix = 1
 		for item in phase[1:] :
-			mfase = item+pi
+			mfase = item+numpy.pi
 			if lastsign != (mfase/abs(mfase)) :	crossfaseidx.append(ix)
 			lastsign = (mfase/abs(mfase))
 			ix = ix + 1
@@ -194,15 +195,15 @@ def FreqResp(num,den,f,getcrossings=False) :
 		cmag = []
 		for idx in crossfaseidx :		
 			fd = f[idx-1]
-			vd = (phase[idx-1]+pi)/abs(phase[idx-1]+pi)
+			vd = (phase[idx-1]+numpy.pi)/abs(phase[idx-1]+numpy.pi)
 			fu = f[idx]
-			vu = (phase[idx]+pi)/abs(phase[idx]+pi)
+			vu = (phase[idx]+numpy.pi)/abs(phase[idx]+numpy.pi)
 			aux = 1
 			ct = 0
 			while (ct < 50) and (abs(aux) > 1e-10) :
 				fm = (fd+fu)/2
-				aa = num(2j*pi*fm)/den(2j*pi*fm)
-				aux = angle(aa)+pi
+				aa = num(2j*numpy.pi*fm)/den(2j*numpy.pi*fm)
+				aux = numpy.angle(aa)+numpy.pi
 				if vd == (aux/abs(aux)) :
 					vd = aux/abs(aux)
 					fd = fm
@@ -211,7 +212,7 @@ def FreqResp(num,den,f,getcrossings=False) :
 					fu = fm                        
 				ct = ct + 1
 			crossfreqfase.append(fm)
-			cmag.append(20*log10(abs(aa)))
+			cmag.append(20*numpy.log10(abs(aa)))
 		
 		if len(crossfreqfase) > 15 : 
 			crossfreqfase = []
@@ -219,14 +220,14 @@ def FreqResp(num,den,f,getcrossings=False) :
 		#print crossfreqfase
 		#print cmag	
 	
-	if getcrossings is True : return dBmag, phase/pi*180, crossfreqmag, cfase, crossfreqfase, cmag
+	if getcrossings is True : return dBmag, phase/numpy.pi*180, crossfreqmag, cfase, crossfreqfase, cmag
 	else : return dBmag, phase
 	
 def Nyquist(num,den,f):
-    w = 2j*pi*f	
+    w = 2j*numpy.pi*f	
     fresp = num(w)/den(w)
-    preal = real(fresp)
-    pimag = imag(fresp)	
+    preal = numpy.real(fresp)
+    pimag = numpy.imag(fresp)	
     return preal, pimag
  
 def MyRootLocus(num,den,kvect):

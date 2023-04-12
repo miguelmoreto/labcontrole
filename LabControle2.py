@@ -906,8 +906,8 @@ class LabControle2(QtWidgets.QMainWindow,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
         
         # Plotting Bode:
-        dB, phase, f = self.sys.Bode(self.mplBode.figure)
-        [ax1,ax2] = self.mplBode.figure.get_axes()
+        dB, phase, f, ax1, ax2 = self.sys.Bode(self.mplBode.figure)
+        
         # Custom Navigation
         self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         self.mpltoolbarBode.siblings = [ax1, ax2]
