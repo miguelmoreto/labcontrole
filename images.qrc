@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="icons_UI">
+    <file>images/addsys.png</file>
+    <file>images/refreshsys.png</file>
+    <file>images/removesys.png</file>
     <file>images/labcontrole.ico</file>
     <file>images/icon1.svg</file>
     <file>images/icon48x48.png</file>
