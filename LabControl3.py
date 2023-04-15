@@ -332,8 +332,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if (self.sysCurrentIndex == 0):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Ao menos um sistema deve ser mantido na lista. Remoção não efetuada.", None))
             return
-        self.listSystem.takeItem(self.sysCurrentIndex)
-        self.sysCurrentIndex = self.listSystem.currentRow()
+        del(self.sysList[self.sysCurrentIndex]) # Remove the system object from de list.
+        self.listSystem.takeItem(self.sysCurrentIndex) # Remove the UI list item.
+        self.sysCurrentIndex = self.listSystem.currentRow() # Update current system index.
 
     def onBtnSysClear(self):
         ## To do

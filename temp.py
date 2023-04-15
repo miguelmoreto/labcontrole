@@ -1,3 +1,7 @@
+#!/usr/bin/ python3
+# -*- coding: utf-8 -*-
+#
+# Testing control system module.
 import control as ct
 import pandas as pd
 import numpy as np

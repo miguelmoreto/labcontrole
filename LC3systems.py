@@ -5,6 +5,7 @@
 
 import numpy as np
 import control as ct
+import pandas as pd
 
 class LTIsystem:
     """
@@ -15,6 +16,7 @@ class LTIsystem:
         1   K.C(s).G(s) direct loop with H(s) in feedback. Perturbation after G(s)
         2   K.C(s).G(s) direct loop with H(s) in feedback. Perturbation before G(s)
     """
+    K = 1.0         # System gain.
     Gnum = [2,10]   # G(s) numerator polynomial coefficients.
     #polyGnum = np.poly1d(Gnum)
     Gden = [1,2,10] # G(s) denominator polynomial coefficients.
@@ -58,8 +60,6 @@ class LTIsystem:
     Loop = 'open'       # Feedback loop state (open or closed)
     Hide = False        # Hide system data (used for experimental system identification exercises)
     
-    K = 1.0             # System gain.
-    
     Kmax = 10.0         # Max gain for root locus plot.
     Kmin = 0.0          # Min gain for root locus plot.
     Kpoints = 200       # Number of K point for root locus plot. 
@@ -90,6 +90,10 @@ class LTIsystem:
     y00 = np.array([0.0,0.0])    # Output initial value for 2 order system
     N = 0                        # Number of samples
 
+    # Time Domain simulation data
+    TimeSimList = []                # List to store a collection of Pandas DataFrames
+    TimeSimData = pd.DataFrame()    # A DataFrame to store time simulation data.
+
     def __init__(self,index,systype):
         """
         Init function. Updates
@@ -102,6 +106,12 @@ class LTIsystem:
     def updateSystem(self):
         """
         Update the system transfer functions (open and closed loop)
+        according with the poynomial coefficients stored in
+        the class properties Xnum and Xdem.
+
+        For time domain simulation it is used a MIMO system
+        Transfer Function object. The inputs are r(t) and w(t) 
+        while outpus are y(t) and u(t)
         """
         self.N = self.Tmax/self.delta_t
         self.G_tf = ct.tf(self.Gnum,self.Gden)
@@ -111,15 +121,45 @@ class LTIsystem:
         # Compute OpenLoop and ClosedLoop transfer functions accordingly with
         # the system type.
         if (self.Type == 0):
-            self.OLTF_r = self.K * self.G_tf
-            self.CLTF_r = (self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)
+            self.OLTF_r = (self.K * self.G_tf).minreal(0.0001)
+            self.CLTF_r = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
             self.OLTF_w = ct.tf(1,1)
-            self.CLTF_w = 1/(1+self.K * self.G_tf * self.H_tf)
+            self.CLTF_w = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 1):
-            self.OLTF_r = self.K * self.C_tf * self.G_tf
-            self.CLTF_r = (self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
+            self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
+            self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
             self.OLTF_w = ct.tf(1,1)
-            self.CLTF_w = 1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
+            self.CLTF_w = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 2):
-            self.OLTF_r = self.K * self.C_tf * self.G_tf
-            self.CLTF_r = (self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
+            self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
+            self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+        
+        # Computing MIMO system Transfer Matrix polynomial coefficients.
+        # This is a 2x2 MIMO system, therefore there are 4 transfer functions.
+        if (self.Type == 0):
+            if (self.Loop == 'open'):   # Open Loop
+                YR_tf = (self.K * self.G_tf).minreal(0.0001)    # Y(s)/R(s) transfer function
+                YW_tf = ct.tf(1,1)                              # Y(s)/W(s) transfer function
+                UR_tf = self.K * ct.tf(1,1)                     # U(s)/R(s) transfer function
+                UW_tf = 0.0                                     # U(s)/W(s) transfer function
+            else:   # Closed Loop
+                YR_tf = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
+                YW_tf = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
+                UR_tf = (self.K/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
+                UW_tf = (-(self.K * self.H_tf)/(1 + self.K * self.G_tf * self.H_tf) ).minreal(0.0001)
+        elif (self.Type == 1):
+            if (self.Loop == 'open'):   # Open Loop
+                YR_tf = (self.K * self.C_tf * self.G_tf).minreal(0.0001)    # Y(s)/R(s) transfer function
+                YW_tf = ct.tf(1,1)                                          # Y(s)/W(s) transfer function
+                UR_tf = self.K * self.C_tf * ct.tf(1,1)                     # U(s)/R(s) transfer function
+                UW_tf = 0.0                                                 # U(s)/W(s) transfer function
+            else:   # Closed Loop
+                YR_tf = ((self.K * self.C_tf * self.G_tf)/(1+self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                YW_tf = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                UR_tf = ((self.K * self.C_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                UW_tf = (-(self.K * self.C_tf * self.H_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf) ).minreal(0.0001)
+        else:
+            return 0 # System type not recognized.
+
+    def changeSystemType(self, newtype):
+        pass
