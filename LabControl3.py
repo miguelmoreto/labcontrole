@@ -42,6 +42,7 @@ from PyQt5 import (
     QtGui,
     QtWidgets
 )
+from PyQt5.Qt import Qt
 from PyQt5.uic import loadUi
 import images_rc
 
@@ -118,8 +119,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.image = QtGui.QImage()        
         
         # Initial definitions:
-        self.checkBoxPert.setDisabled(True) # Perturbation is disabled by default
-        self.checkBoxControle.setDisabled(True) # Control signal is disabled by default
 
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -227,6 +226,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.onTabChange)
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
+        self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
@@ -250,8 +250,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
         self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
-        self.lineEditRvalue.textEdited.connect(self.onRvalueChange)
-        self.lineEditWvalue.textEdited.connect(self.onWvalueChange)
+        self.lineEditRvalueFinal.textEdited.connect(self.onRvalueFinalChange)
+        self.lineEditWvalueFinal.textEdited.connect(self.onWvalueFinalChange)
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
@@ -265,7 +265,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.groupBoxWt.toggled.connect(self.onGroupBoxWcheck)
         # Buttons:
         self.btnSimul.clicked.connect(self.onBtnSimul)
-        self.btnContinuar.clicked.connect(self.onBtnContinue)
         self.btnLimparSimul.clicked.connect(self.onBtnClearSimul)
         self.btnPlotLGR.clicked.connect(self.onBtnLGR)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
@@ -522,16 +521,87 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
         # Update slider position.
         self.updateSliderPosition()
+    
+    def onTreeSimulClicked(self,item,column):
+        parent = item.parent()
+        if not parent: # I'am interested in only child itens.
+            return
+        line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+        simulname = parent.text(1)
+        signal = item.text(1)
+        if (column == 0): # The first column has the checkboxes
+            label = '{s}:{sg}'.format(s=simulname,sg=signal)
+            if (item.checkState(column) == Qt.Unchecked):
+                print('Item {s} enabled to plot.'.format(s=label))
+                self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
+                item.setCheckState(0,Qt.Checked)
+            elif (item.checkState(column) == Qt.Checked):
+                print('Item {s} disabled to plot.'.format(s=label))
+                for line in self.mplSimul.axes.get_lines():
+                    if (line.get_label() == label):
+                        print(line_index)
+                        line.remove()
+                    line_index = line_index + 1
+                item.setCheckState(0,Qt.Unchecked)
+            else:
+                print('Item check state not changed.')
+                return
+            self.mplSimul.axes.legend(loc='upper right')
+            self.mplSimul.draw()
+        else:
+            print('Not clicked in the checkbox.')
 
     def onBtnSimul(self):
         
         if self._has_expressions_errors():
             return
 
-        self.sys.X0r = None
-        self.sys.X0w = None
-        
+        currentItem = self.treeWidgetSimul.currentItem()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if not currentItem:
+            print('Adding a simulation')
+            self.sysList[self.sysCurrentIndex].addSimul()   # Adding a TimeSimul data to LC3systems object.
+            simulname  = self.sysList[self.sysCurrentIndex].CurrentSimulName
+            currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetSimul)
+            currentItem.setText(0, str(self.sysCurrentIndex))
+            currentItem.setText(1, simulname)
+            currentItem.setSelected(True)
+        else:
+            simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName
+            print('Using the selected item')
+        print(self.treeWidgetSimul.topLevelItemCount())
+
+        # Perform a time domain simulation:
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
+        self.sysList[self.sysCurrentIndex].TimeSimulationTesting()
+
+        # Add
+        for signal in self.sysList[self.sysCurrentIndex].TimeSimData[simulname]:
+            if signal != 'time':
+                item = QtWidgets.QTreeWidgetItem(currentItem)   # Creat the child itens in the tree.
+                item.setText(1,signal)
+                item.setFlags(item.flags() & ~Qt.ItemIsUserCheckable) # Checkbox handling is done in the clicked event handler.
+                if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
+                    label = '{s}:{sg}'.format(s=simulname,sg=signal)
+                    self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
+                    item.setCheckState(0, Qt.Checked)
+                else:
+                    item.setCheckState(0, Qt.Unchecked)                
+                print(signal)
+        self.treeWidgetSimul.expandAll()
+
+        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
+        
+        self.mplSimul.axes.autoscale(True)     
+        self.mplSimul.axes.grid(True)
+        self.mplSimul.axes.legend(loc='upper right')
+        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        self.mplSimul.draw()
+
+        return
+
         # Create the input vectors r(t) and w(t):
         t,r,w = self.sys.CriaEntrada(0, self.doubleSpinBoxResT.value())
         self.sys.N = len(t)
@@ -567,44 +637,39 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         #self.mplSimul.figure.clf()
         self.mplSimul.axes.cla()
-        try:
-            self.mplSimul.axes.hold(True)
-        except AttributeError:
-            #print("Ignoring matplotlib hold statement.")
-            pass
         
         #ax = self.mplSimul.figure.add_subplot(111)
         legend = []
         flag = 0
 
-        if (self.checkBoxEntrada.isChecked()):
-            self.mplSimul.axes.plot(t,r,'b')
-            self.mplSimul.axes.plot([0, 0],[0,r[0]], label="_nolegend_", color='b')
-            legend.append(_translate("MainWindow", "Entrada: u(t)", None))
-            flag = 1
-        if (self.checkBoxSaida.isChecked()):
-            if (self.sys.Type == 3):
-                self.mplSimul.axes.plot(t_plot, y_plot, color='r', linewidth=1)
-            else:
-                self.mplSimul.axes.plot(t,y,'r')
-            legend.append(_translate("MainWindow", "Saída: y(t)", None))
-            flag = 1
-        if (self.checkBoxErro.isChecked()):
-            if (self.sys.Type == 3):
-                self.mplSimul.axes.plot(t_plot, e_plot, 'y',)
-                self.mplSimul.axes.plot(t_plot_k, e_plot_step, 'yo',)
-            else:
-                self.mplSimul.axes.plot(t,r-y,'g')
-            legend.append(_translate("MainWindow", "Erro: e(t)", None))
-            flag = 1
-        if (self.checkBoxPert.isChecked()):
-            self.mplSimul.axes.plot(t,w,'m')
-            legend.append(_translate("MainWindow", "Perturbação: w(t)", None))
-            flag = 1
-        
-        if (self.checkBoxControle.isChecked()):
-            if (self.sys.Type == 3):
-                self.mplSimul.axes.step(t_plot_k,u_plot, color='m',where='post')
+        #if (self.checkBoxEntrada.isChecked()):
+        self.mplSimul.axes.plot(t,r,'b')
+        self.mplSimul.axes.plot([0, 0],[0,r[0]], label="_nolegend_", color='b')
+        legend.append(_translate("MainWindow", "Entrada: u(t)", None))
+        flag = 1
+        #if (self.checkBoxSaida.isChecked()):
+        if (self.sys.Type == 3):
+            self.mplSimul.axes.plot(t_plot, y_plot, color='r', linewidth=1)
+        else:
+            self.mplSimul.axes.plot(t,y,'r')
+        legend.append(_translate("MainWindow", "Saída: y(t)", None))
+        flag = 1
+        #if (self.checkBoxErro.isChecked()):
+        #    if (self.sys.Type == 3):
+        #        self.mplSimul.axes.plot(t_plot, e_plot, 'y',)
+        #        self.mplSimul.axes.plot(t_plot_k, e_plot_step, 'yo',)
+        #    else:
+        #        self.mplSimul.axes.plot(t,r-y,'g')
+        #    legend.append(_translate("MainWindow", "Erro: e(t)", None))
+        #    flag = 1
+        #if (self.checkBoxPert.isChecked()):
+        #    self.mplSimul.axes.plot(t,w,'m')
+        #    legend.append(_translate("MainWindow", "Perturbação: w(t)", None))
+        #    flag = 1
+        #
+        #if (self.checkBoxControle.isChecked()):
+        #    if (self.sys.Type == 3):
+        #        self.mplSimul.axes.step(t_plot_k,u_plot, color='m',where='post')
         
         
         if (flag == 0):
@@ -624,10 +689,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))
-        
-        # Enable continue button:
-        self.btnContinuar.setEnabled(True)
-        
         
         self.mplSimul.draw()
         
@@ -1043,7 +1104,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         self.sys.ruidoWt = value
     
-    def onRvalueChange(self,value):
+    def onRvalueFinalChange(self,value):
         """
         r(t) string input edited handler
         """
@@ -1066,7 +1127,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sys.Rt = str(value)
  
 
-    def onWvalueChange(self,value):
+    def onWvalueFinalChange(self,value):
         """
         w(t) string input edited handler
         """

@@ -23,10 +23,10 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 2.3 - Beta 1</string>
+   <string notr="true">LabControl 3 - Beta 1</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="images.qrc">
+   <iconset resource="../labcontrol3/images.qrc">
     <normaloff>:/icons_UI/images/icon48x48.png</normaloff>:/icons_UI/images/icon48x48.png</iconset>
   </property>
   <property name="iconSize">
@@ -59,13 +59,13 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
         <string>Diagrama</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,1,0">
         <property name="spacing">
          <number>1</number>
         </property>
@@ -92,7 +92,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>130</height>
+            <height>100</height>
            </size>
           </property>
           <property name="frameShape">
@@ -121,7 +121,7 @@
             <widget class="QGroupBox" name="groupBoxRt">
              <property name="minimumSize">
               <size>
-               <width>220</width>
+               <width>240</width>
                <height>0</height>
               </size>
              </property>
@@ -137,7 +137,7 @@
              <property name="title">
               <string>Entrada: r(t)</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_4">
+             <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0" columnminimumwidth="0,0">
               <property name="leftMargin">
                <number>4</number>
               </property>
@@ -150,41 +150,8 @@
               <property name="bottomMargin">
                <number>4</number>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="labelRvalue">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Valor:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEditRvalue">
+               <widget class="QLineEdit" name="lineEditRvalueInit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                   <horstretch>0</horstretch>
@@ -200,7 +167,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="font">
@@ -212,12 +179,12 @@
                  <string>Valor do degrau ou função do tempo da entrada</string>
                 </property>
                 <property name="text">
-                 <string notr="true">1</string>
+                 <string notr="true">0</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="labelRtime">
+              <item row="0" column="0">
+               <widget class="QLabel" name="labelRvalueInit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -226,13 +193,13 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>70</width>
+                  <width>90</width>
                   <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>70</width>
+                  <width>120</width>
                   <height>25</height>
                  </size>
                 </property>
@@ -242,14 +209,14 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Instante:</string>
+                 <string>Valor inicial:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxRtime">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -266,7 +233,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="font">
@@ -294,7 +261,7 @@
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QLabel" name="labelRnoise">
+               <widget class="QLabel" name="labelRtime">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -303,13 +270,13 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>70</width>
+                  <width>90</width>
                   <height>0</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>70</width>
+                  <width>120</width>
                   <height>25</height>
                  </size>
                 </property>
@@ -319,14 +286,14 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Ruído:</string>
+                 <string>Instante:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="3" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxRnoise">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -343,7 +310,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="font">
@@ -373,14 +340,104 @@
                 </property>
                </widget>
               </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labelRnoise">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Ruído:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelRvalueFinal">
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <italic>false</italic>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Valor final:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEditRvalueFinal">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string notr="true">1</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBoxWt">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>220</width>
+               <width>240</width>
                <height>0</height>
               </size>
              </property>
@@ -397,7 +454,7 @@
               <string>Perturbação: w(t)</string>
              </property>
              <property name="checkable">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -415,183 +472,7 @@
               <property name="bottomMargin">
                <number>4</number>
               </property>
-              <item row="0" column="0">
-               <widget class="QLabel" name="labelWvalue">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Valor:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEditWvalue">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>35</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>Valor do degrau ou função do tempo da perturbação</string>
-                </property>
-                <property name="text">
-                 <string notr="true">1</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="labelWtime">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Instante:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxWtime">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>35</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="toolTip">
-                 <string>Instante de tempo em que a perturbação será aplicada</string>
-                </property>
-                <property name="suffix">
-                 <string notr="true"> s</string>
-                </property>
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>10.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="labelWnoise">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>70</width>
-                  <height>25</height>
-                 </size>
-                </property>
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Ruído:</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
+              <item row="3" column="1">
                <widget class="QDoubleSpinBox" name="doubleSpinBoxWnoise">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -608,7 +489,7 @@
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>35</height>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="font">
@@ -635,6 +516,233 @@
                 </property>
                 <property name="value">
                  <double>0.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="labelWvalueInit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Valor inicial:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="lineEditWvalueInit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Valor do degrau ou função do tempo da perturbação</string>
+                </property>
+                <property name="text">
+                 <string notr="true">0</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labelWnoise">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Ruído:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labelWtime">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Instante:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QDoubleSpinBox" name="doubleSpinBoxWtime">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Instante de tempo em que a perturbação será aplicada</string>
+                </property>
+                <property name="suffix">
+                 <string notr="true"> s</string>
+                </property>
+                <property name="minimum">
+                 <double>0.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labelWvalueFinal">
+                <property name="minimumSize">
+                 <size>
+                  <width>90</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Valor final:</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEditWvalueFinal">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="baseSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string notr="true">0</string>
                 </property>
                </widget>
               </item>
@@ -1134,7 +1242,7 @@
                   <string>...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
+                  <iconset resource="../labcontrol3/images.qrc">
                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
                  </property>
                 </widget>
@@ -1148,7 +1256,7 @@
                   <string>...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
+                  <iconset resource="../labcontrol3/images.qrc">
                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
                  </property>
                 </widget>
@@ -1162,7 +1270,7 @@
                   <string>Add</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
+                  <iconset resource="../labcontrol3/images.qrc">
                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
                  </property>
                 </widget>
@@ -2121,7 +2229,7 @@ QGroupBox::title {
        <attribute name="title">
         <string>Simulação</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_12">
+       <layout class="QVBoxLayout" name="verticalLayout_12" stretch="0,1">
         <property name="spacing">
          <number>4</number>
         </property>
@@ -2274,51 +2382,6 @@ QGroupBox::title {
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btnSimul">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>Iniciar simulação no domínio do tempo</string>
-             </property>
-             <property name="text">
-              <string>Simular</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="btnContinuar">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>Continuar a simulação</string>
-             </property>
-             <property name="text">
-              <string>Continuar</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="btnLimparSimul">
              <property name="minimumSize">
               <size>
@@ -2336,6 +2399,27 @@ QGroupBox::title {
              </property>
              <property name="text">
               <string>Limpar</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnSimul">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>Iniciar simulação no domínio do tempo</string>
+             </property>
+             <property name="text">
+              <string>Simular</string>
              </property>
             </widget>
            </item>
@@ -2368,179 +2452,115 @@ QGroupBox::title {
              <enum>QFrame::Sunken</enum>
             </property>
             <property name="lineWidth">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="midLineWidth">
              <number>0</number>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="leftMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>4</number>
+              <number>0</number>
              </property>
              <item>
-              <widget class="QLabel" name="labelSimulTit">
+              <widget class="QTreeWidget" name="treeWidgetSimul">
+               <column>
+                <property name="text">
+                 <string>Sistema</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Simulação</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frameSimulBtn">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>20</height>
+                 <height>30</height>
                 </size>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
                </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
                </property>
-               <property name="text">
-                <string>Configuração</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>4</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>4</number>
+                </property>
+                <item>
+                 <widget class="QToolButton" name="btnSimulAdd">
+                  <property name="toolTip">
+                   <string>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../labcontrol3/images.qrc">
+                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnSimulRemove">
+                  <property name="toolTip">
+                   <string>Remove da lisa o sistema selecionado</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../labcontrol3/images.qrc">
+                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnSimulClear">
+                  <property name="toolTip">
+                   <string>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</string>
+                  </property>
+                  <property name="text">
+                   <string>Add</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../labcontrol3/images.qrc">
+                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>60</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelMostrar">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Mostrar:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxSaida">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                 <weight>50</weight>
-                 <italic>false</italic>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Selecione para mostrar o sinal de saída y(t)</string>
-               </property>
-               <property name="text">
-                <string>Saída: y(t)</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxEntrada">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Selecione para mostrar o sinal de entrada r(t)</string>
-               </property>
-               <property name="text">
-                <string>Entrada: r(t)</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxErro">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Selecione para mostrar o sinal de erro e(t)</string>
-               </property>
-               <property name="text">
-                <string>Erro: e(t)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxControle">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Selecione para mostrar o sinal de controle u(t)</string>
-               </property>
-               <property name="text">
-                <string>Controle: u(t)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxPert">
-               <property name="font">
-                <font>
-                 <pointsize>12</pointsize>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>Selecione para mostrar o sinal de perturbação w(t)</string>
-               </property>
-               <property name="text">
-                <string>Perturbação: w(t)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>61</height>
-                </size>
-               </property>
-              </spacer>
              </item>
             </layout>
            </widget>
@@ -4432,7 +4452,7 @@ QGroupBox::title {
   </widget>
   <action name="actionSalvar_sistema">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/filesave.png</normaloff>:/icons_UI/images/filesave.png</iconset>
    </property>
    <property name="text">
@@ -4441,7 +4461,7 @@ QGroupBox::title {
   </action>
   <action name="actionCarregar_sistema">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/fileopen.png</normaloff>:/icons_UI/images/fileopen.png</iconset>
    </property>
    <property name="text">
@@ -4450,7 +4470,7 @@ QGroupBox::title {
   </action>
   <action name="actionCalc">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/calc.png</normaloff>:/icons_UI/images/calc.png</iconset>
    </property>
    <property name="text">
@@ -4463,7 +4483,7 @@ QGroupBox::title {
   <action name="actionConfig">
    <property name="icon">
     <iconset>
-     <normaloff>images/config.png</normaloff>images/config.png</iconset>
+     <normaloff>../labcontrol3/images/config.png</normaloff>../labcontrol3/images/config.png</iconset>
    </property>
    <property name="text">
     <string>Configurações</string>
@@ -4474,7 +4494,7 @@ QGroupBox::title {
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/help.png</normaloff>:/icons_UI/images/help.png</iconset>
    </property>
    <property name="text">
@@ -4486,7 +4506,7 @@ QGroupBox::title {
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/cloese.png</normaloff>:/icons_UI/images/cloese.png</iconset>
    </property>
    <property name="text">
@@ -4498,7 +4518,7 @@ QGroupBox::title {
   </action>
   <action name="actionReset">
    <property name="icon">
-    <iconset resource="images.qrc">
+    <iconset resource="../labcontrol3/images.qrc">
      <normaloff>:/icons_UI/images/refresh.png</normaloff>:/icons_UI/images/refresh.png</iconset>
    </property>
    <property name="text">
@@ -4517,7 +4537,7 @@ QGroupBox::title {
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="images.qrc"/>
+  <include location="../labcontrol3/images.qrc"/>
  </resources>
  <connections>
   <connection>

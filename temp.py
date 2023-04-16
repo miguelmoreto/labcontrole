@@ -11,10 +11,6 @@ sys = ct.tf([2,10],[1,2,10])
 FTMF = sys/(1+sys)
 data = ct.step_response(sys,10)
 
-topandas = {'time': data.time}
-topandas.update({'u' : data.inputs})
-topandas.update({'y' : data.outputs})
-serie = pd.DataFrame(topandas)
 
 
 fig,ax = plt.subplots(figsize=(6, 5),layout='constrained')
@@ -33,9 +29,23 @@ z[1][3:] = 1
 y = z.transpose()
 a = np.arange(0,10,1)
 
-ax.plot(a, y, linewidth=2.0)
+TimeSimData = {}
+
+time = np.arange(0,1,0.01)
+y = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time)
+u = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time+np.pi/2)
+r = np.ones(len(time))
+w = 0.5*np.ones(len(time))
+TimeSimData['simul1'] = {'time':time,'r(t)':r,'w(t)':w,'y(t)':y,'u(t)':u}
+
+
+#ax.plot(time, y, linewidth=2.0)
+ret1 = ax.plot('time', 'y(t)', data=TimeSimData['simul1'])
+ret2 = ax.plot('time', 'u(t)', data=TimeSimData['simul1'])
+ax.legend(loc=1)
 #ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
 #       ylim=(0, 8), yticks=np.arange(1, 8))
 
 #roots, gains = ct.root_locus(sys,kvect=np.linspace(0,20,100),plot=True,ax=ax)
 plt.show()
+

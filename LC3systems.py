@@ -102,7 +102,7 @@ class LTIsystem:
     # Time Domain simulation data
     TimeSimList = []                # List to store a collection of Data Dictionaries
     TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
-    CurrentTimeSimIndex = 0         # An index for time simulation data. The LC3systems
+    CurrentTimeSimIndex = -1        # An index for time simulation data. The LC3systems
                                     # object can store several simulations.
     CurrentSimulName = ''
     # TimeSimData dictionary structure:
@@ -189,9 +189,19 @@ class LTIsystem:
 
 
     def changeSystemType(self, newtype):
+        # This method should do:
+        #  Change CurrentSimulName
+        #  Update the transfer matrix (if LTI)
+        #  Add a new TimeSimData or overwrite the current one?
         pass
 
-    def CreateInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
+    def addSimul(self):
+        # Format simul name string:
+        self.CurrentTimeSimIndex = self.CurrentTimeSimIndex + 1
+        self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimIndex)
+        self.TimeSimData['Name'].append(self.CurrentSimulName)
+    
+    def createInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
         """
         Create a time and an input vector from two strings representing
         any python mathematical function as a function of the variable t.        
@@ -250,13 +260,23 @@ class LTIsystem:
         self.tfinal = t_total[-1]
         self.Rfinal = r[0][-1]
         self.Wfinal = w[0][-1]
-        
-        # Format simul name string:
-        self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimIndex)
-        self.TimeSimData['Name'].append(self.CurrentSimulName)
-        self.TimeSimData[self.CurrentSimulName] = {'time':t_total,'r':r,'w':w}
+
+        self.TimeSimData[self.CurrentSimulName] = {'time':t_total,'r(t)':r,'w(t)':w}
        
         #return t_total, r, w
+
+    def TimeSimulationTesting(self):
+        """
+        Temporary method only to test the UI and multiplot feature
+        """
+        time = np.arange(0,1,0.01)
+        y = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time)
+        u = 2*np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time+np.pi/2)
+        r = np.ones(len(time))
+        w = 0.5*np.ones(len(time))
+        e = r - y
+        self.TimeSimData[self.CurrentSimulName] = {'time':time,'r(t)':r,'w(t)':w,'y(t)':y,'u(t)':u,'e(t)':e}
+
     
     def TimeSimulation(self):
         """
@@ -265,7 +285,7 @@ class LTIsystem:
 
         T = self.TimeSimData[self.CurrentSimulName]['time']
         U = np.append(self.TimeSimData[self.CurrentSimulName]['r'],self.TimeSimData[self.CurrentSimulName]['w'],axis=0)
-        T,Y,X = ct.forced_response(self.TM,T,U,return_x=True)
+        T,Y = ct.forced_response(self.TM,T,U,return_x=False)
         self.TimeSimData[self.CurrentSimulName]['y'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['u'] = Y[1]
 
