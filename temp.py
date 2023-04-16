@@ -20,7 +20,22 @@ serie = pd.DataFrame(topandas)
 fig,ax = plt.subplots(figsize=(6, 5),layout='constrained')
 fig.suptitle('Grafico')
 
-serie.plot(x='time',ax=ax)
+#serie.plot(x='time',ax=ax)
+
+
+# make data
+x = np.linspace(0, 10, 100)
+y = 4 + 2 * np.sin(2 * x)
+
+z = np.zeros((2,10))
+z[0][5:] = 2
+z[1][3:] = 1
+y = z.transpose()
+a = np.arange(0,10,1)
+
+ax.plot(a, y, linewidth=2.0)
+#ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+#       ylim=(0, 8), yticks=np.arange(1, 8))
 
 #roots, gains = ct.root_locus(sys,kvect=np.linspace(0,20,100),plot=True,ax=ax)
 plt.show()

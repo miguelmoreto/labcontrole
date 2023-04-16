@@ -313,9 +313,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         User clicked in the list of stored system data.
         """
-        print(item.text())
         self.sysCurrentIndex = self.listSystem.currentRow()
-        print('Sys index: {i}'.format(i=self.sysCurrentIndex))
+        print('Sys index: {i}, name: {n}'.format(i=self.sysCurrentIndex,n=self.sysList[self.sysCurrentIndex].Name))
     
     def addSystem(self,systype):
         index = len(self.sysList)
@@ -504,6 +503,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.updateSliderPosition() # update slider position, this call also the event slider move.
     
     def onKChange(self,value):
+        ####### LabControl 3: 
+        self.sysList[self.sysCurrentIndex].K = value
+        ####################################        
+        #  
         # Save K value in the LTI system.
         self.sys.K = value
         # Disconnect events to not enter in a event loop:
@@ -1156,6 +1159,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # If is a linear or discrete system, uses G(s):
         if (self.sys.Type < 4):
             Gnum = self.checkTFinput(value)
+            print(Gnum)
             
             if (Gnum == 0):
                 # Change color ro red:
@@ -1166,6 +1170,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
                 self._set_expression_error('G[Num](s)', False)
                 self.sys.GnumStr = str(value)
+                ####### LabControl 3: 
+                self.sysList[self.sysCurrentIndex].Gnum = Gnum
+                self.sysList[self.sysCurrentIndex].GnumStr = str(value)
+                self.sysList[self.sysCurrentIndex].updateSystem()
+                ####################################
                 if self.sys.Type == 2:
                     self.sys.G2num = Gnum
                 else:
@@ -1205,6 +1214,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('G[Den](s)', False)
             self.sys.GdenStr = str(value)
+            ####### LabControl 3: 
+            self.sysList[self.sysCurrentIndex].Gden = Gden
+            self.sysList[self.sysCurrentIndex].GdenStr = str(value)
+            self.sysList[self.sysCurrentIndex].updateSystem()
+            ####################################            
             if self.sys.Type == 2:
                 self.sys.G2den = Gden
             else:
@@ -1231,6 +1245,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.CnumStr = str(value)
             self.sys.Cnum = Cnum
             self.sys.Atualiza()
+            ####### LabControl 3: 
+            self.sysList[self.sysCurrentIndex].Cnum = Cnum
+            self.sysList[self.sysCurrentIndex].CnumStr = str(value)
+            self.sysList[self.sysCurrentIndex].updateSystem()
+            ####################################            
     
     def onCdenChange(self,value):
         """
@@ -1251,7 +1270,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self._set_expression_error('C[Den](s)', False)
             self.sys.CdenStr = str(value)
             self.sys.Cden = Cden
-            self.sys.Atualiza()  
+            self.sys.Atualiza()
+            ####### LabControl 3: 
+            self.sysList[self.sysCurrentIndex].Cden = Cden
+            self.sysList[self.sysCurrentIndex].CdenStr = str(value)
+            self.sysList[self.sysCurrentIndex].updateSystem()
+            ####################################                
       
     def onHnumChange(self,value):
         """
@@ -1273,6 +1297,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.HnumStr = str(value)
             self.sys.Hnum = Hnum
             self.sys.Atualiza()
+            ####### LabControl 3: 
+            self.sysList[self.sysCurrentIndex].Hnum = Hnum
+            self.sysList[self.sysCurrentIndex].HnumStr = str(value)
+            self.sysList[self.sysCurrentIndex].updateSystem()
+            ####################################             
     
     def onHdenChange(self,value):
         """
@@ -1294,6 +1323,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.HdenStr = str(value)
             self.sys.Hden = Hden
             self.sys.Atualiza()
+            ####### LabControl 3: 
+            self.sysList[self.sysCurrentIndex].Hden = Hden
+            self.sysList[self.sysCurrentIndex].HdenStr = str(value)
+            self.sysList[self.sysCurrentIndex].updateSystem()
+            ####################################             
     
     def checkTFinput(self, value, expr_var='s'):
         """
