@@ -565,7 +565,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         return currentItem
 
     def onBtnSimulRemove(self):
-        pass
+        selectItemList = self.treeWidgetSimul.selectedItems()
+        if not selectItemList:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação para ser removida.", None))
+            return
+        else:
+            currentItem = selectItemList[0]
+        
+        if not currentItem.childCount(): # A child item is selected.
+            item = currentItem.parent()
+        else:
+            item = currentItem
+
+        root = self.treeWidgetSimul.invisibleRootItem()
+        # Removing the selected item:
+        index = root.indexOfChild(item)
+        if (index > 0):
+            itemabove = root.child(index - 1)
+            itemabove.setSelected(True) # Selects the previous simul
+        # Removing the item from list
+        root.removeChild(item)
+        # To do:
+        # Remove simulation data from the LC3object.
+
 
     def onBtnSimulClear(self):
         pass
@@ -581,16 +603,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if not selectItemList:
            # Creating new simulation data:
             currentItem = self.onBtnSimulAdd()
-            addnewflag = 1
+            
         else:
             currentItem = selectItemList[0]
             print('Using the selected item')
         
+        if not currentItem.childCount():    # Check if the simulation item in the list is empty.
+            addnewflag = 1
+
         #print(self.treeWidgetSimul.topLevelItemCount())
         simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName
 
-        # Perform a time domain simulation:
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
+        # Perform a time domain simulation:
         self.sysList[self.sysCurrentIndex].TimeSimulationTesting()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
@@ -609,6 +634,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     #print(signal)
 
         # Update the graph, according to the itens selected in the list:
+        for i in range(currentItem.childCount()):
+            item = currentItem.child(i)
+            signal = item.text(1)
+            label = '{s}:{sg}'.format(s=simulname,sg=signal)
+            if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                # Remove the existing ploted line:
+                self.removeExistingPlot(self.mplSimul.axes,label)
+                # Plot the new data
+                self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
+                print(label)
 
         self.treeWidgetSimul.expandAll()
 
