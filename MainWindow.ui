@@ -26,7 +26,7 @@
    <string notr="true">LabControl 3 - Beta 1</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../labcontrol3/images.qrc">
+   <iconset resource="images.qrc">
     <normaloff>:/icons_UI/images/icon48x48.png</normaloff>:/icons_UI/images/icon48x48.png</iconset>
   </property>
   <property name="iconSize">
@@ -1242,7 +1242,7 @@
                   <string>...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../labcontrol3/images.qrc">
+                  <iconset resource="images.qrc">
                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
                  </property>
                 </widget>
@@ -1256,7 +1256,7 @@
                   <string>...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../labcontrol3/images.qrc">
+                  <iconset resource="images.qrc">
                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
                  </property>
                 </widget>
@@ -1270,7 +1270,7 @@
                   <string>Add</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="../labcontrol3/images.qrc">
+                  <iconset resource="images.qrc">
                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
                  </property>
                 </widget>
@@ -2526,7 +2526,7 @@ QGroupBox::title {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="../labcontrol3/images.qrc">
+                   <iconset resource="images.qrc">
                     <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
                   </property>
                  </widget>
@@ -2540,7 +2540,7 @@ QGroupBox::title {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="../labcontrol3/images.qrc">
+                   <iconset resource="images.qrc">
                     <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
                   </property>
                  </widget>
@@ -2554,7 +2554,7 @@ QGroupBox::title {
                    <string>Add</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="../labcontrol3/images.qrc">
+                   <iconset resource="images.qrc">
                     <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
                   </property>
                  </widget>
@@ -4452,7 +4452,7 @@ QGroupBox::title {
   </widget>
   <action name="actionSalvar_sistema">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/filesave.png</normaloff>:/icons_UI/images/filesave.png</iconset>
    </property>
    <property name="text">
@@ -4461,7 +4461,7 @@ QGroupBox::title {
   </action>
   <action name="actionCarregar_sistema">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/fileopen.png</normaloff>:/icons_UI/images/fileopen.png</iconset>
    </property>
    <property name="text">
@@ -4470,7 +4470,7 @@ QGroupBox::title {
   </action>
   <action name="actionCalc">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/calc.png</normaloff>:/icons_UI/images/calc.png</iconset>
    </property>
    <property name="text">
@@ -4494,7 +4494,7 @@ QGroupBox::title {
   </action>
   <action name="actionHelp">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/help.png</normaloff>:/icons_UI/images/help.png</iconset>
    </property>
    <property name="text">
@@ -4506,7 +4506,7 @@ QGroupBox::title {
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/cloese.png</normaloff>:/icons_UI/images/cloese.png</iconset>
    </property>
    <property name="text">
@@ -4518,7 +4518,7 @@ QGroupBox::title {
   </action>
   <action name="actionReset">
    <property name="icon">
-    <iconset resource="../labcontrol3/images.qrc">
+    <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/refresh.png</normaloff>:/icons_UI/images/refresh.png</iconset>
    </property>
    <property name="text">
@@ -4537,7 +4537,7 @@ QGroupBox::title {
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../labcontrol3/images.qrc"/>
+  <include location="images.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -49,7 +49,9 @@ class LTIsystem:
 
     Type = 1    # system type.
     Index = 0   # System index within a list.
-    Name = ""
+    Name = ''
+    TypeStrList = ['LTI_1','LTI_2', 'LTI_3']    # List with string for the system types.
+    TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
     Rt = '1'        # String with the r(t) input function.
@@ -118,6 +120,7 @@ class LTIsystem:
         self.Type = systype
         self.Index = index
         self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
+        self.TypeStr = self.TypeStrList[systype-1]
         self.updateSystem()
 
     def updateSystem(self):

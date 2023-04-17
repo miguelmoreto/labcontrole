@@ -166,6 +166,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
         self.sysCurrentIndex = 0
         self.addSystem(1)
+        self.treeWidgetSimul.setColumnWidth(0, 60)
 
         ########################
 
@@ -275,6 +276,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
         self.btnSysRemove.clicked.connect(self.onBtnSysRemove)
         self.btnSysClear.clicked.connect(self.onBtnSysClear)
+        self.btnSimulAdd.clicked.connect(self.onBtnSimulAdd)
+        self.btnSimulRemove.clicked.connect(self.onBtnSimulRemove)
+        self.btnSimulClear.clicked.connect(self.onBtnSimulClear)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
         self.actionCalc.triggered.connect(self.onCalcAction)
@@ -526,23 +530,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         parent = item.parent()
         if not parent: # I'am interested in only child itens.
             return
-        line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+        #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
         simulname = parent.text(1)
         signal = item.text(1)
-        if (column == 0): # The first column has the checkboxes
+        if (column == 1): # The second column has the checkboxes
             label = '{s}:{sg}'.format(s=simulname,sg=signal)
-            if (item.checkState(column) == Qt.Unchecked):
+            if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
                 print('Item {s} enabled to plot.'.format(s=label))
                 self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
-                item.setCheckState(0,Qt.Checked)
-            elif (item.checkState(column) == Qt.Checked):
+                item.setCheckState(1,Qt.Checked)
+            elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
                 print('Item {s} disabled to plot.'.format(s=label))
-                for line in self.mplSimul.axes.get_lines():
-                    if (line.get_label() == label):
-                        print(line_index)
-                        line.remove()
-                    line_index = line_index + 1
-                item.setCheckState(0,Qt.Unchecked)
+                self.removeExistingPlot(self.mplSimul.axes,label)
+                item.setCheckState(1,Qt.Unchecked)
             else:
                 print('Item check state not changed.')
                 return
@@ -551,43 +551,65 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             print('Not clicked in the checkbox.')
 
+    def onBtnSimulAdd(self):
+        print('Adding a simulation')
+        self.treeWidgetSimul.clearSelection()
+        self.sysList[self.sysCurrentIndex].addSimul()   # Adding a TimeSimul data to LC3systems object.
+        simulname  = self.sysList[self.sysCurrentIndex].CurrentSimulName
+        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetSimul)
+        currentItem.setText(0, str(self.sysCurrentIndex))
+        currentItem.setText(1, simulname)
+        currentItem.setToolTip(0,'Sys ID: {i}, type: {t}'.format(i=self.sysList[self.sysCurrentIndex].Index,t=self.sysList[self.sysCurrentIndex].TypeStr))
+        currentItem.setToolTip(1,'K={k}'.format(k=self.sysList[self.sysCurrentIndex].K))
+        currentItem.setSelected(True)
+        return currentItem
+
+    def onBtnSimulRemove(self):
+        pass
+
+    def onBtnSimulClear(self):
+        pass
+
     def onBtnSimul(self):
         
         if self._has_expressions_errors():
             return
 
-        currentItem = self.treeWidgetSimul.currentItem()
+        addnewflag = 0
+        selectItemList = self.treeWidgetSimul.selectedItems()
         # Check if a simulation data already exists in the treeWidgetSimul
-        if not currentItem:
-            print('Adding a simulation')
-            self.sysList[self.sysCurrentIndex].addSimul()   # Adding a TimeSimul data to LC3systems object.
-            simulname  = self.sysList[self.sysCurrentIndex].CurrentSimulName
-            currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetSimul)
-            currentItem.setText(0, str(self.sysCurrentIndex))
-            currentItem.setText(1, simulname)
-            currentItem.setSelected(True)
+        if not selectItemList:
+           # Creating new simulation data:
+            currentItem = self.onBtnSimulAdd()
+            addnewflag = 1
         else:
-            simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName
+            currentItem = selectItemList[0]
             print('Using the selected item')
-        print(self.treeWidgetSimul.topLevelItemCount())
+        
+        #print(self.treeWidgetSimul.topLevelItemCount())
+        simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName
 
         # Perform a time domain simulation:
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         self.sysList[self.sysCurrentIndex].TimeSimulationTesting()
 
-        # Add
-        for signal in self.sysList[self.sysCurrentIndex].TimeSimData[simulname]:
-            if signal != 'time':
-                item = QtWidgets.QTreeWidgetItem(currentItem)   # Creat the child itens in the tree.
-                item.setText(1,signal)
-                item.setFlags(item.flags() & ~Qt.ItemIsUserCheckable) # Checkbox handling is done in the clicked event handler.
-                if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
-                    label = '{s}:{sg}'.format(s=simulname,sg=signal)
-                    self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
-                    item.setCheckState(0, Qt.Checked)
-                else:
-                    item.setCheckState(0, Qt.Unchecked)                
-                print(signal)
+        if (addnewflag): # It is a new simul in the list. Add child itens to it:
+            for signal in self.sysList[self.sysCurrentIndex].TimeSimData[simulname]:
+                if signal != 'time':
+                    item = QtWidgets.QTreeWidgetItem(currentItem)   # Creat the child itens in the tree.
+                    item.setText(1,signal)
+                    #item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable | Qt.ItemIsSelectable)) # Checkbox handling is done in the clicked event handler.
+                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
+                        label = '{s}:{sg}'.format(s=simulname,sg=signal)
+                        self.mplSimul.axes.plot(self.sysList[self.sysCurrentIndex].TimeSimData[simulname]['time'],self.sysList[self.sysCurrentIndex].TimeSimData[simulname][signal],label=label)
+                        item.setCheckState(1, Qt.Checked)
+                    else:
+                        item.setCheckState(1, Qt.Unchecked)                
+                    #print(signal)
+
+        # Update the graph, according to the itens selected in the list:
+
         self.treeWidgetSimul.expandAll()
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
@@ -691,6 +713,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))
         
         self.mplSimul.draw()
+    
+    def removeExistingPlot(self,ax,label):
+        line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+        for line in ax.get_lines():
+            if (line.get_label() == label):
+                #print(line_index)
+                line.remove()
+            line_index = line_index + 1
         
     def onBtnContinue(self):
         """
@@ -1769,6 +1799,7 @@ class ExportSystem:
         
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
+    app.setStyle('Fusion')
     locale = QtCore.QLocale.system().name()
     # If not portuguese, instal english translator:
     if (locale != 'pt_BR' and locale != 'pt_PT'):
