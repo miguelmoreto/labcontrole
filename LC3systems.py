@@ -203,6 +203,25 @@ class LTIsystem:
         self.CurrentTimeSimIndex = self.CurrentTimeSimIndex + 1
         self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimIndex)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
+        self.TimeSimData[self.CurrentSimulName] = {}
+    
+    def removeSimul(self, name):
+        self.TimeSimData['Name'].remove(name) # Remove the simulation name
+        del self.TimeSimData[name] # Remove the data from the dictionary.
+
+        # if the removed simulation data was the only one stored
+        # resets the CurrentTimeSimIndex.
+        if not len(self.TimeSimData['Name']):
+            self.CurrentTimeSimIndex = -1
+        else:
+            if self.CurrentSimulName == name:   # If the removed is the current one:
+                # The new current data will be the prior one:
+                self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
+            else: # If not, find the index of current SimulName in the list.
+                self.CurrentTimeSimIndex = self.TimeSimData['Name'].index(self.CurrentSimulName)
+
+            # Updates the new current simulation data name:
+            self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
     
     def createInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
         """

@@ -572,21 +572,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             currentItem = selectItemList[0]
         
-        if not currentItem.childCount(): # A child item is selected.
-            item = currentItem.parent()
-        else:
-            item = currentItem
-
+        
+        # If no index is readed from column 0, then the selected item is a child item.
+        # Thus the parent is used:
+        if not currentItem.text(0):
+            currentItem = currentItem.parent()
+            print('Using parent item: {s}'.format(s=currentItem.text(1)))
+            
+        sysindex = int(currentItem.text(0)) # The sys index of the simul to remove (column 0)
+        simnameremove = currentItem.text(1)
         root = self.treeWidgetSimul.invisibleRootItem()
         # Removing the selected item:
-        index = root.indexOfChild(item)
+        index = root.indexOfChild(currentItem)
         if (index > 0):
             itemabove = root.child(index - 1)
             itemabove.setSelected(True) # Selects the previous simul
-        # Removing the item from list
-        root.removeChild(item)
+        # Remove simulation data from the LC3systems object:
+        self.sysList[sysindex].removeSimul(simnameremove)
+        # Removing the item from list:
+        root.removeChild(currentItem)
         # To do:
-        # Remove simulation data from the LC3object.
+        # Remove plotted lines from the graphic.
 
 
     def onBtnSimulClear(self):
