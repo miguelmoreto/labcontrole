@@ -103,15 +103,25 @@ class LTIsystem:
 
     # Time Domain simulation data
     TimeSimList = []                # List to store a collection of Data Dictionaries
-    TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
-    CurrentTimeSimIndex = -1        # An index for time simulation data. The LC3systems
+    CurrentTimeSimId = -1
+    #CurrentTimeSimIndex = -1        # An index for time simulation data. The LC3systems
                                     # object can store several simulations.
-    CurrentSimulName = ''
+    TimeSimCounter = -1             # An absolute time simulation counter 
     # TimeSimData dictionary structure:
     #  key 'Name': a list containing the name of each simulation data
     #  Each name in the list will be a key in the dictionary. This key
-    #  will contain also a dictionary with the keys 'time', 'r', 'w', 'y' and 'u'
+    #  will contain also a dictionary with the following keys:
+    #       'data' : a dictionary with the keys:
+    #                'time' : time array
+    #                'r' : array of the reference input signal
+    #                'w' : array of the perturbation input signal
+    #                'y' : array of the main system output signal
+    #                'u' : array of the control action output signal
+    #       'id' : the id number of the simulation
+    #       'info' : a dictionary with the following keys:
     #  that contains the numpy arrays with the plotting data.
+    TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
+    CurrentSimulName = ''
 
     def __init__(self,index,systype):
         """
@@ -199,29 +209,42 @@ class LTIsystem:
         pass
 
     def addSimul(self):
-        # Format simul name string:
-        self.CurrentTimeSimIndex = self.CurrentTimeSimIndex + 1
-        self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimIndex)
+
+        self.TimeSimCounter = self.TimeSimCounter + 1
+        # Format simul name string. The simulation number is 1 plus the last one:
+        self.CurrentTimeSimId = self.TimeSimCounter
+        self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
         self.TimeSimData[self.CurrentSimulName] = {}
+        # Store this simul ID:
+        self.TimeSimData[self.CurrentSimulName]['id'] = self.CurrentTimeSimId
+        # Store this simul infos:
+        self.TimeSimData[self.CurrentSimulName]['info'] = 'K = {k}'.format(k=self.K)
+        
     
     def removeSimul(self, name):
-        self.TimeSimData['Name'].remove(name) # Remove the simulation name
+        # Find in wich position the removed data is in the dictionary:
+        removedIdx = self.TimeSimData['Name'].index(name)
+        self.TimeSimData['Name'].remove(name) # Remove the simulation name from the list.
         del self.TimeSimData[name] # Remove the data from the dictionary.
 
         # if the removed simulation data was the only one stored
-        # resets the CurrentTimeSimIndex.
+        # resets the CurrentTimeSimIndex and TimeSimCounter.
         if not len(self.TimeSimData['Name']):
             self.CurrentTimeSimIndex = -1
-        else:
+            self.TimeSimCounter = -1
+        else: # simul to remove is not the only one.
             if self.CurrentSimulName == name:   # If the removed is the current one:
                 # The new current data will be the prior one:
-                self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
-            else: # If not, find the index of current SimulName in the list.
-                self.CurrentTimeSimIndex = self.TimeSimData['Name'].index(self.CurrentSimulName)
+                self.CurrentSimulName = self.TimeSimData['Name'][removedIdx - 1]
+                self.CurrentTimeSimId = self.TimeSimData[self.CurrentSimulName]['id'] # Gets the previous simuldataId.
+                #self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
+            #else: # If not, find the index of current SimulName in the list.
+            #    self.CurrentTimeSimId = self.TimeSimData[self.CurrentSimulName]['id']
+            #    currentIdx = self.TimeSimData['Name'].index(self.CurrentSimulName)
 
             # Updates the new current simulation data name:
-            self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
+            #self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
     
     def createInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
         """
@@ -283,7 +306,7 @@ class LTIsystem:
         self.Rfinal = r[0][-1]
         self.Wfinal = w[0][-1]
 
-        self.TimeSimData[self.CurrentSimulName] = {'time':t_total,'r(t)':r,'w(t)':w}
+        self.TimeSimData[self.CurrentSimulName]['data'] = {'time':t_total,'r(t)':r,'w(t)':w}
        
         #return t_total, r, w
 
@@ -297,7 +320,7 @@ class LTIsystem:
         r = np.ones(len(time))
         w = 0.5*np.ones(len(time))
         e = r - y
-        self.TimeSimData[self.CurrentSimulName] = {'time':time,'r(t)':r,'w(t)':w,'y(t)':y,'u(t)':u,'e(t)':e}
+        self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w,'y(t)':y,'u(t)':u,'e(t)':e}
 
     
     def TimeSimulation(self):
@@ -308,7 +331,7 @@ class LTIsystem:
         T = self.TimeSimData[self.CurrentSimulName]['time']
         U = np.append(self.TimeSimData[self.CurrentSimulName]['r'],self.TimeSimData[self.CurrentSimulName]['w'],axis=0)
         T,Y = ct.forced_response(self.TM,T,U,return_x=False)
-        self.TimeSimData[self.CurrentSimulName]['y'] = Y[0]
-        self.TimeSimData[self.CurrentSimulName]['u'] = Y[1]
+        self.TimeSimData[self.CurrentSimulName]['data']['y'] = Y[0]
+        self.TimeSimData[self.CurrentSimulName]['data']['u'] = Y[1]
 
         pass
