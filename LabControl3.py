@@ -587,18 +587,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             itemabove = root.child(index - 1)
             itemabove.setSelected(True) # Selects the previous simul tree item
 
-        # Remove plotted lines:
-        for signal in self.sysList[sysindex].TimeSimData[simnameremove]['data'].keys():
-            label = '{s}:{sg}'.format(s=simnameremove,sg=signal)
-            print(label)
-            self.removeExistingPlot(self.mplSimul.axes,label)
+        if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
+            # Remove plotted lines:
+            for signal in self.sysList[sysindex].TimeSimData[simnameremove]['data'].keys():
+                label = '{s}:{sg}'.format(s=simnameremove,sg=signal)
+                print(label)
+                self.removeExistingPlot(self.mplSimul.axes,label)
+                    # Redraw the graphic area:
+            self.mplSimul.axes.legend(loc='upper right')
+            self.mplSimul.draw()
         # Remove simulation data from the LC3systems object:
         self.sysList[sysindex].removeSimul(simnameremove)
         # Removing the item from list:
         root.removeChild(currentItem)
-        # Redraw the graphic area:
-        self.mplSimul.axes.legend(loc='upper right')
-        self.mplSimul.draw()
+
 
 
     def onBtnSimulClear(self):
