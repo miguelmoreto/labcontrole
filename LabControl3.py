@@ -589,6 +589,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
             # Remove plotted lines:
+            print('Item to remove: {s}'.format(s=simnameremove))
             for signal in self.sysList[sysindex].TimeSimData[simnameremove]['data'].keys():
                 label = '{s}:{sg}'.format(s=simnameremove,sg=signal)
                 print(label)
