@@ -617,7 +617,28 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         itemabove.setSelected(True) # Selects the previous simul tree item
 
     def onBtnSimulClear(self):
-        pass
+        """
+        Erase all the simulation data:
+            - Erase the treewidget list
+            - Erase the all the simulation data in the LC3Systems objects.
+            - Clear the graphic area.
+        """
+        # Remove all the itens in the treewidget:
+        root = self.treeWidgetSimul.invisibleRootItem()
+        root.takeChildren()
+
+        for sys in self.sysList:
+            sys.clearTimeSimulData()
+
+        # Clear plot area:
+        self.mplSimul.axes.cla()
+        self.mplSimul.axes.set_xlim(0, self.sysList[self.sysCurrentIndex].Tmax)
+        self.mplSimul.axes.set_ylim(0, 1)
+        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        self.mplSimul.axes.grid()
+        self.mplSimul.draw()
 
     def onBtnSimul(self):
         

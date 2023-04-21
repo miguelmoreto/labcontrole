@@ -207,6 +207,16 @@ class LTIsystem:
         #  Update the transfer matrix (if LTI)
         #  Add a new TimeSimData or overwrite the current one?
         pass
+    
+    def clearTimeSimulData(self):
+        """
+        Clear all the time simulation data stored.
+        """
+        self.TimeSimData = {'Name':[]}
+        self.CurrentSimulName = ''
+        self.CurrentTimeSimId = -1
+        self.TimeSimCounter = -1 
+
 
     def setAtiveTimeSimul(self,simulname):
         """
