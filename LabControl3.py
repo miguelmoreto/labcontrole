@@ -529,10 +529,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onTreeSimulClicked(self,item,column):
         parent = item.parent()
         if not parent: # I'am interested in only child itens.
+            self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(item.text(1))
             return
         #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
         simulname = parent.text(1)
         signal = item.text(1)
+        self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(simulname)
         if (column == 1): # The second column has the checkboxes
             label = '{s}:{sg}'.format(s=simulname,sg=signal)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
@@ -565,6 +567,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         return currentItem
 
     def onBtnSimulRemove(self):
+        """
+        Removes a simulation from the list:
+            - remove the treewidget item
+            - remove the correct data form the LC3systems object
+            - remove the selected plotted lines from the graph
+            - select the previos simul and activates it.
+        """
         selectItemList = self.treeWidgetSimul.selectedItems()
         if not selectItemList:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação para ser removida.", None))
@@ -583,26 +592,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         root = self.treeWidgetSimul.invisibleRootItem()
         # Select the item above to the one that will be removed (if exists: index > 0):
         index = root.indexOfChild(currentItem)
-        if (index > 0):
-            itemabove = root.child(index - 1)
-            itemabove.setSelected(True) # Selects the previous simul tree item
 
         if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
             # Remove plotted lines:
             print('Item to remove: {s}'.format(s=simnameremove))
             for signal in self.sysList[sysindex].TimeSimData[simnameremove]['data'].keys():
                 label = '{s}:{sg}'.format(s=simnameremove,sg=signal)
-                print(label)
+                #print(label)
                 self.removeExistingPlot(self.mplSimul.axes,label)
                     # Redraw the graphic area:
             self.mplSimul.axes.legend(loc='upper right')
             self.mplSimul.draw()
         # Remove simulation data from the LC3systems object:
         self.sysList[sysindex].removeSimul(simnameremove)
+        if (index > 0):
+            itemabove = root.child(index - 1)
+            #print('Item above: {s}'.format(s=itemabove.text(1)))
+            # Setting the active simuldata in the object as the previous one in the list:
+            self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(itemabove.text(1))
         # Removing the item from list:
         root.removeChild(currentItem)
-
-
+        # Selecting the item above:
+        self.treeWidgetSimul.clearSelection()
+        itemabove.setSelected(True) # Selects the previous simul tree item
 
     def onBtnSimulClear(self):
         pass
@@ -618,19 +630,23 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if not selectItemList:
            # Creating new simulation data:
             currentItem = self.onBtnSimulAdd()
-            
         else:
             currentItem = selectItemList[0]
-            print('Using the selected item')
+            
+            #self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(simulname)
         
-        if not currentItem.childCount():    # Check if the simulation item in the list is empty.
-            addnewflag = 1
+        simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName # Get the simulname
+        print('Using the Simulation Name: {s}'.format(s=simulname))
 
-        #print(self.treeWidgetSimul.topLevelItemCount())
-        simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName
+        if not currentItem.childCount():  # Check if the simulation item in the list is empty.
+            if not currentItem.parent():  # Check if the selected item is not a child item.
+                addnewflag = 1
+            else:
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         # Perform a time domain simulation:
+        print(simulname)
         self.sysList[self.sysCurrentIndex].TimeSimulationTesting()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:

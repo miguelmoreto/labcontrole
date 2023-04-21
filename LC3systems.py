@@ -208,6 +208,16 @@ class LTIsystem:
         #  Add a new TimeSimData or overwrite the current one?
         pass
 
+    def setAtiveTimeSimul(self,simulname):
+        """
+        Sets the current time simul data
+        """
+        if simulname in self.TimeSimData['Name']:
+            self.CurrentSimulName = simulname
+            self.CurrentTimeSimId = self.TimeSimData[simulname]['id']
+        else:
+            print('Simulname {s} not found in TimeSimulData.'.format(s=simulname))
+
     def addSimul(self):
 
         self.TimeSimCounter = self.TimeSimCounter + 1
