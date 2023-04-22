@@ -165,6 +165,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         ######################## LabControl 3 stuff:
         self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
         self.sysCurrentIndex = 0
+        self.sysCounter = -1
         self.addSystem(1)
         self.treeWidgetSimul.setColumnWidth(0, 60)
 
@@ -317,21 +318,23 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         User clicked in the list of stored system data.
         """
         self.sysCurrentIndex = self.listSystem.currentRow()
-        print('Sys index: {i}, name: {n}'.format(i=self.sysCurrentIndex,n=self.sysList[self.sysCurrentIndex].Name))
+        print('Sys id: {i}, name: {n}'.format(i=self.sysList[self.sysCurrentIndex].Index,n=self.sysList[self.sysCurrentIndex].Name))
     
     def addSystem(self,systype):
-        index = len(self.sysList)
-        sys = LC3systems.LTIsystem(index,systype)
+        self.sysCounter = self.sysCounter + 1#len(self.sysList)
+        sys = LC3systems.LTIsystem(self.sysCounter,systype)
         self.sysList.append(sys)
         self.listSystem.addItem(sys.Name)
-        self.listSystem.setCurrentRow(index)
+        self.listSystem.setCurrentRow(len(self.sysList)-1)
+        
     
     def onBtnSysAdd(self):
-        self.addSystem(self.currentComboIndex + 1)
+        self.addSystem(self.currentComboIndex + 1)  # System type from the comboBox
         self.sysCurrentIndex = self.listSystem.currentRow()
+        print('Current sysIndex: {s}'.format(s=self.sysCurrentIndex))
 
     def onBtnSysRemove(self):
-        if (self.sysCurrentIndex == 0):
+        if (len(self.sysList) <= 1):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Ao menos um sistema deve ser mantido na lista. Remoção não efetuada.", None))
             return
         del(self.sysList[self.sysCurrentIndex]) # Remove the system object from de list.
@@ -339,8 +342,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCurrentIndex = self.listSystem.currentRow() # Update current system index.
 
     def onBtnSysClear(self):
-        ## To do
-        pass
+        self.listSystem.clear()
+        self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
+        self.sysCurrentIndex = 0
+        self.sysCounter = -1
+        self.addSystem(1)
+        
     #################################   
     
     def feedbackOpen(self):
@@ -554,10 +561,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             print('Not clicked in the checkbox.')
 
     def onBtnSimulAdd(self):
-        print('Adding a simulation')
         self.treeWidgetSimul.clearSelection()
         self.sysList[self.sysCurrentIndex].addSimul()   # Adding a TimeSimul data to LC3systems object.
         simulname  = self.sysList[self.sysCurrentIndex].CurrentSimulName
+        print('Adding a simulation on SysIndex {i} with simulname {n}'.format(i=self.sysCurrentIndex,n=simulname))
         currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetSimul)
         currentItem.setText(0, str(self.sysCurrentIndex))
         currentItem.setText(1, simulname)
@@ -593,6 +600,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Select the item above to the one that will be removed (if exists: index > 0):
         index = root.indexOfChild(currentItem)
 
+        print(simnameremove)
+        print(sysindex)
+        print(self.sysList[sysindex].TimeSimData['Name'])
+
         if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
             # Remove plotted lines:
             print('Item to remove: {s}'.format(s=simnameremove))
@@ -604,6 +615,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.axes.legend(loc='upper right')
             self.mplSimul.draw()
         # Remove simulation data from the LC3systems object:
+
         self.sysList[sysindex].removeSimul(simnameremove)
         if (index > 0):
             itemabove = root.child(index - 1)
@@ -657,7 +669,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             #self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(simulname)
         
         simulname = self.sysList[self.sysCurrentIndex].CurrentSimulName # Get the simulname
-        print('Using the Simulation Name: {s}'.format(s=simulname))
+        print('Performing Simulation Name: {s} in Sysindex {i}'.format(s=simulname,i=self.sysCurrentIndex))
 
         if not currentItem.childCount():  # Check if the simulation item in the list is empty.
             if not currentItem.parent():  # Check if the selected item is not a child item.
