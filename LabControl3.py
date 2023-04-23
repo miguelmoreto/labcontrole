@@ -55,6 +55,7 @@ import subprocess
 import pickle
 #import encript
 import base64
+import logging as lg
 import LC3systems
 
 from labnavigationtoolbar import CustomNavigationToolbar
@@ -152,7 +153,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         self.mplBode.figure.clf()
         self.mplNyquist.figure.clf()
-        
+        lg.basicConfig(level=lg.DEBUG)
         # Initializing system
         self.sys = MySystem.MySystem()
         # Updating values from GUI:
@@ -163,8 +164,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.init = 1
 
         ######################## LabControl 3 stuff:
-        self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
-        self.sysCurrentIndex = 0
+        self.sysDict = {}   # A dictionary that contains the LC3systems objects and the corresponding data.
+        self.sysCurrentName = ''
         self.sysCounter = -1
         self.addSystem(1)
         self.treeWidgetSimul.setColumnWidth(0, 60)
@@ -317,34 +318,41 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         User clicked in the list of stored system data.
         """
-        self.sysCurrentIndex = self.listSystem.currentRow()
-        print('Sys id: {i}, name: {n}'.format(i=self.sysList[self.sysCurrentIndex].Index,n=self.sysList[self.sysCurrentIndex].Name))
+        lg.info('Current system is now {s}'.format(s=item.text()))
+        self.sysCurrentName = item.text() # Gets the name of the selected system.
     
     def addSystem(self,systype):
-        self.sysCounter = self.sysCounter + 1#len(self.sysList)
+        self.sysCounter = self.sysCounter + 1
         sys = LC3systems.LTIsystem(self.sysCounter,systype)
-        self.sysList.append(sys)
+        self.sysDict[sys.Name] = sys
+        self.sysCurrentName = sys.Name
         self.listSystem.addItem(sys.Name)
-        self.listSystem.setCurrentRow(len(self.sysList)-1)
-        
+        self.listSystem.setCurrentRow(self.listSystem.count() - 1)    
     
     def onBtnSysAdd(self):
         self.addSystem(self.currentComboIndex + 1)  # System type from the comboBox
-        self.sysCurrentIndex = self.listSystem.currentRow()
-        print('Current sysIndex: {s}'.format(s=self.sysCurrentIndex))
+        #self.sysCurrentIndex = self.listSystem.currentRow()
+        lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
     def onBtnSysRemove(self):
-        if (len(self.sysList) <= 1):
+        itens = self.listSystem.selectedItems()
+        if (self.listSystem.count() <= 1):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Ao menos um sistema deve ser mantido na lista. Remoção não efetuada.", None))
             return
-        del(self.sysList[self.sysCurrentIndex]) # Remove the system object from de list.
-        self.listSystem.takeItem(self.sysCurrentIndex) # Remove the UI list item.
-        self.sysCurrentIndex = self.listSystem.currentRow() # Update current system index.
+        if not itens:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhum sistema selecionado para remoção.", None))
+            return
+
+        row = self.listSystem.currentRow()
+        del(self.sysDict[itens[0].text()]) # Removes from the dictionary the system with the name of the selected item in the list.
+        self.listSystem.takeItem(row)
+
+        self.sysCurrentName = self.listSystem.currentItem().text()
+        lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
     def onBtnSysClear(self):
         self.listSystem.clear()
-        self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
-        self.sysCurrentIndex = 0
+        self.sysDict = {}
         self.sysCounter = -1
         self.addSystem(1)
         
@@ -353,15 +361,21 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def feedbackOpen(self):
         """Open Feedback """ 
 
-        self.sys.Malha = 'Aberta'
+        # Change System Diagram accordingly:        
+        self.sysDict[self.sysCurrentName].Loop = 'open'
+
+
+        self.sys.Malha = 'Aberta'       
         
-        # Change SVG accordingly:        
         self.updateSystemPNG()
         
         self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
     def feedbackClose(self):
         """Close Feedback """
+
+        # Change System Diagram accordingly:        
+        self.sysDict[self.sysCurrentName].Loop = 'closed'
 
         self.sys.Malha = 'Fechada'
         
@@ -514,7 +528,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     
     def onKChange(self,value):
         ####### LabControl 3: 
-        self.sysList[self.sysCurrentIndex].K = value
+        self.sysDict[self.sysCurrentName].K = value
         ####################################        
         #  
         # Save K value in the LTI system.
@@ -536,42 +550,45 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onTreeSimulClicked(self,item,column):
         parent = item.parent()
         if not parent: # I'am interested in only child itens.
-            sysindex = int(item.text(0))
-            self.sysList[sysindex].setAtiveTimeSimul(item.text(1))
+            lg.debug('Clicked in parent: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
+            sysname = item.text(0)
+            self.sysDict[sysname].setAtiveTimeSimul(item.text(1))
             return
-        sysindex = int(parent.text(0))
+        sysname = parent.text(0)
         #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
         simulname = parent.text(1)
         signal = item.text(1)
-        self.sysList[sysindex].setAtiveTimeSimul(simulname)
+        lg.debug('Clicked on child from: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
+        self.sysDict[sysname].setAtiveTimeSimul(simulname)
         if (column == 1): # The second column has the checkboxes
-            label = '{id}:{s}:{sg}'.format(id=sysindex,s=simulname,sg=signal)
+            label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
-                print('Item {s} enabled to plot.'.format(s=label))
-                self.mplSimul.axes.plot(self.sysList[sysindex].TimeSimData[simulname]['data']['time'],self.sysList[sysindex].TimeSimData[simulname]['data'][signal],label=label)
+                lg.debug('Item {s} enabled to plot.'.format(s=label))
+                self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
-                print('Item {s} disabled to plot.'.format(s=label))
+                lg.debug('Item {s} disabled to plot.'.format(s=label))
                 self.removeExistingPlot(self.mplSimul.axes,label)
                 item.setCheckState(1,Qt.Unchecked)
             else:
-                print('Item check state not changed.')
+                lg.debug('Item check state not changed.')
                 return
             self.mplSimul.axes.legend(loc='upper right')
             self.mplSimul.draw()
         else:
-            print('Not clicked in the checkbox.')
+            lg.info('Not clicked in the checkbox.')
 
     def onBtnSimulAdd(self):
         self.treeWidgetSimul.clearSelection()
-        self.sysList[self.sysCurrentIndex].addSimul()   # Adding a TimeSimul data to LC3systems object.
-        simulname  = self.sysList[self.sysCurrentIndex].CurrentSimulName
-        print('Adding a simulation on SysIndex {i} with simulname {n}'.format(i=self.sysCurrentIndex,n=simulname))
+        self.sysDict[self.sysCurrentName].addSimul()    # Adding a TimeSimul data to LC3systems object.
+        simulname  = self.sysDict[self.sysCurrentName].CurrentSimulName
+        lg.debug('Adding a simulation on System {s} with simulname {n}'.format(s=self.sysCurrentName,n=simulname))
         currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetSimul)
-        currentItem.setText(0, str(self.sysCurrentIndex))
+        currentItem.setText(0, self.sysCurrentName)
         currentItem.setText(1, simulname)
-        currentItem.setToolTip(0,'Sys ID: {i}, type: {t}'.format(i=self.sysList[self.sysCurrentIndex].Index,t=self.sysList[self.sysCurrentIndex].TypeStr))
-        currentItem.setToolTip(1,'K={k}'.format(k=self.sysList[self.sysCurrentIndex].K))
+        # Setting a simulation tooltip:
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
+        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
         currentItem.setSelected(True)
         return currentItem
 
@@ -594,23 +611,21 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Thus the parent is used:
         if not currentItem.text(0):
             currentItem = currentItem.parent()
-            print('Using parent item: {s}'.format(s=currentItem.text(1)))
+            lg.debug('Removing parent simul item {s} from system {sys}'.format(s=currentItem.text(1),sys=currentItem.text(0)))
             
-        sysindex = int(currentItem.text(0)) # The sys index of the simul to remove (column 0)
+        sysname = currentItem.text(0) # The sys index of the simul to remove (column 0)
         simnameremove = currentItem.text(1) # The simulation name to remove
-        root = self.treeWidgetSimul.invisibleRootItem()
-        # Select the item above to the one that will be removed (if exists: index > 0):
-        index = root.indexOfChild(currentItem)
 
-        print(simnameremove)
-        print(sysindex)
-        print(self.sysList[sysindex].TimeSimData['Name'])
+        lg.debug(simnameremove)
+        lg.debug(sysname)
+        lg.debug(self.sysDict[sysname].TimeSimData['Name'])
+        lg.debug('Removing simul item {s} from system {sys}'.format(s=simnameremove,sys=sysname))
 
         if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
             # Remove plotted lines:
-            print('Item to remove: {s}'.format(s=simnameremove))
-            for signal in self.sysList[sysindex].TimeSimData[simnameremove]['data'].keys():
-                label = '{id}:{s}:{sg}'.format(id=sysindex,s=simnameremove,sg=signal)
+            lg.debug('Item to remove: {s}'.format(s=simnameremove))
+            for signal in self.sysDict[sysname].TimeSimData[simnameremove]['data'].keys():
+                label = '{id}:{s}:{sg}'.format(id=sysname,s=simnameremove,sg=signal)
                 #print(label)
                 self.removeExistingPlot(self.mplSimul.axes,label)
                     # Redraw the graphic area:
@@ -618,25 +633,35 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
-        self.sysList[sysindex].removeSimul(simnameremove)
+        self.sysDict[sysname].removeSimul(simnameremove)
+        # Clear list selection:
+        self.treeWidgetSimul.clearSelection()
+        root = self.treeWidgetSimul.invisibleRootItem()
+        index = root.indexOfChild(currentItem)
+        # Select the item above to the one that will be removed (if exists: index > 0):
         if (index > 0):
-            itemabove = root.child(index - 1)
+            newitem = root.child(index - 1)
             #print('Item above: {s}'.format(s=itemabove.text(1)))
             # Setting the active simuldata in the object as the previous one in the list:
-            newindex = int(itemabove.text(0)) # Get the itemabove system id.
-            self.sysList[newindex].setAtiveTimeSimul(itemabove.text(1))
-            
-        else:
-            currentItem.setSelected(True)
+            newsysname = newitem.text(0) # Get the itemabove system name.
+            lg.debug('The active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+            self.sysDict[newsysname].setAtiveTimeSimul(newitem.text(1))
+        else: # There is only one item (the one to be removed) or it is the first of the list (index=0)
+            if root.childCount() > 1: # There is an item below to the one to be removed.
+                newitem = root.child(index + 1)
+                newsysname = newitem.text(0) # Get the item below system name.
+                lg.debug('The active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+                self.sysDict[newsysname].setAtiveTimeSimul(newitem.text(1))
+                #else: # There is only on item left in the list.
+
+                #currentItem.setSelected(True)
 
         # Removing the item from list:
         root.removeChild(currentItem)
-        # Selecting the item above:
-        self.treeWidgetSimul.clearSelection()
+        # Selecting the item above (or below):
         if index:
             # If not index, there is nothing else to select in the treelist
-            itemabove.setSelected(True) # Selects the previous simul tree item
-        
+            newitem.setSelected(True) # Selects the previous simul tree item
         
     def onBtnSimulClear(self):
         """
@@ -649,12 +674,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         root = self.treeWidgetSimul.invisibleRootItem()
         root.takeChildren()
 
-        for sys in self.sysList:
-            sys.clearTimeSimulData()
+        for key in self.sysDict:
+            self.sysDict[key].clearTimeSimulData()
 
         # Clear plot area:
         self.mplSimul.axes.cla()
-        self.mplSimul.axes.set_xlim(0, self.sysList[self.sysCurrentIndex].Tmax)
+        self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -675,8 +700,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             currentItem = self.onBtnSimulAdd()
         else:
             currentItem = selectItemList[0]
-            
-            #self.sysList[self.sysCurrentIndex].setAtiveTimeSimul(simulname)
         
         if not currentItem.childCount():  # Check if the simulation item in the list is empty.
             if not currentItem.parent():  # Check if the selected item is not a child item.
@@ -684,25 +707,24 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
 
-        sysindex = int(currentItem.text(0))
-        simulname = self.sysList[sysindex].CurrentSimulName # Get the simulname
-        print('Performing Simulation Name: {s} in Sysindex {i}'.format(s=simulname,i=sysindex))
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
+        lg.info('Performing Simulation Name: {s} in System {i}'.format(s=simulname,i=sysname))
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         # Perform a time domain simulation:
-        print(simulname)
-        self.sysList[sysindex].TimeSimulationTesting()
+        
+        self.sysDict[sysname].TimeSimulationTesting()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
-            for signal in self.sysList[sysindex].TimeSimData[simulname]['data']:
+            for signal in self.sysDict[sysname].TimeSimData[simulname]['data']:
                 if signal != 'time':
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Creat the child itens in the tree.
                     item.setText(1,signal)
-                    #item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable | Qt.ItemIsSelectable)) # Checkbox handling is done in the clicked event handler.
                     item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
                     if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
-                        label = '{id}:{s}:{sg}'.format(id=sysindex,s=simulname,sg=signal)
-                        self.mplSimul.axes.plot(self.sysList[sysindex].TimeSimData[simulname]['data']['time'],self.sysList[sysindex].TimeSimData[simulname]['data'][signal],label=label)
+                        label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                         item.setCheckState(1, Qt.Checked)
                     else:
                         item.setCheckState(1, Qt.Unchecked)                
@@ -712,13 +734,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         for i in range(currentItem.childCount()):
             item = currentItem.child(i)
             signal = item.text(1)
-            label = '{id}:{s}:{sg}'.format(id=sysindex,s=simulname,sg=signal)
+            label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
             if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
                 # Remove the existing ploted line:
                 self.removeExistingPlot(self.mplSimul.axes,label)
                 # Plot the new data
-                self.mplSimul.axes.plot(self.sysList[sysindex].TimeSimData[simulname]['data']['time'],self.sysList[sysindex].TimeSimData[simulname]['data'][signal],label=label)
-                print(label)
+                self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                #print(label)
 
         self.treeWidgetSimul.expandAll()
 
@@ -1372,9 +1394,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self._set_expression_error('G[Num](s)', False)
                 self.sys.GnumStr = str(value)
                 ####### LabControl 3: 
-                self.sysList[self.sysCurrentIndex].Gnum = Gnum
-                self.sysList[self.sysCurrentIndex].GnumStr = str(value)
-                self.sysList[self.sysCurrentIndex].updateSystem()
+                self.sysDict[self.sysCurrentName].Gnum = Gnum
+                self.sysDict[self.sysCurrentName].GnumStr = str(value)
+                self.sysDict[self.sysCurrentName].updateSystem()
                 ####################################
                 if self.sys.Type == 2:
                     self.sys.G2num = Gnum
@@ -1416,9 +1438,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self._set_expression_error('G[Den](s)', False)
             self.sys.GdenStr = str(value)
             ####### LabControl 3: 
-            self.sysList[self.sysCurrentIndex].Gden = Gden
-            self.sysList[self.sysCurrentIndex].GdenStr = str(value)
-            self.sysList[self.sysCurrentIndex].updateSystem()
+            self.sysDict[self.sysCurrentName].Gden = Gden
+            self.sysDict[self.sysCurrentName].GdenStr = str(value)
+            self.sysDict[self.sysCurrentName].updateSystem()
             ####################################            
             if self.sys.Type == 2:
                 self.sys.G2den = Gden
@@ -1447,9 +1469,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.Cnum = Cnum
             self.sys.Atualiza()
             ####### LabControl 3: 
-            self.sysList[self.sysCurrentIndex].Cnum = Cnum
-            self.sysList[self.sysCurrentIndex].CnumStr = str(value)
-            self.sysList[self.sysCurrentIndex].updateSystem()
+            self.sysDict[self.sysCurrentName].Cnum = Cnum
+            self.sysDict[self.sysCurrentName].CnumStr = str(value)
+            self.sysDict[self.sysCurrentName].updateSystem()
             ####################################            
     
     def onCdenChange(self,value):
@@ -1473,9 +1495,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.Cden = Cden
             self.sys.Atualiza()
             ####### LabControl 3: 
-            self.sysList[self.sysCurrentIndex].Cden = Cden
-            self.sysList[self.sysCurrentIndex].CdenStr = str(value)
-            self.sysList[self.sysCurrentIndex].updateSystem()
+            self.sysDict[self.sysCurrentName].Cden = Cden
+            self.sysDict[self.sysCurrentName].CdenStr = str(value)
+            self.sysDict[self.sysCurrentName].updateSystem()
             ####################################                
       
     def onHnumChange(self,value):
@@ -1499,9 +1521,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.Hnum = Hnum
             self.sys.Atualiza()
             ####### LabControl 3: 
-            self.sysList[self.sysCurrentIndex].Hnum = Hnum
-            self.sysList[self.sysCurrentIndex].HnumStr = str(value)
-            self.sysList[self.sysCurrentIndex].updateSystem()
+            self.sysDict[self.sysCurrentName].Hnum = Hnum
+            self.sysDict[self.sysCurrentName].HnumStr = str(value)
+            self.sysDict[self.sysCurrentName].updateSystem()
             ####################################             
     
     def onHdenChange(self,value):
@@ -1525,9 +1547,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sys.Hden = Hden
             self.sys.Atualiza()
             ####### LabControl 3: 
-            self.sysList[self.sysCurrentIndex].Hden = Hden
-            self.sysList[self.sysCurrentIndex].HdenStr = str(value)
-            self.sysList[self.sysCurrentIndex].updateSystem()
+            self.sysDict[self.sysCurrentName].Hden = Hden
+            self.sysDict[self.sysCurrentName].HdenStr = str(value)
+            self.sysDict[self.sysCurrentName].updateSystem()
             ####################################             
     
     def checkTFinput(self, value, expr_var='s'):
@@ -1916,7 +1938,7 @@ if __name__ == '__main__':
         translator = QtCore.QTranslator()
         translator.load("LabControl3_en.qm")
         app.installTranslator(translator)
-    
     win = LabControl3()
     win.show()
     app.exec_()
+    

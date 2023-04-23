@@ -6,6 +6,7 @@
 import numpy as np
 import control as ct
 #import pandas as pd
+import logging as lg
 
 class LTIsystem:
     """
@@ -129,9 +130,11 @@ class LTIsystem:
         """
         self.Type = systype
         self.Index = index
-        self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
+        #self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
+        self.Name = 'SYS {i}'.format(i=index)   # Format name string
         self.TypeStr = self.TypeStrList[systype-1]
         self.updateSystem()
+        self.clearTimeSimulData()
 
     def updateSystem(self):
         """
@@ -194,10 +197,10 @@ class LTIsystem:
         # Transfer Matrix:
         #  input 0: r(t)   output 0: y(t)
         #  input 1: w(t)   output 1: u(t)
-        print(YR_tf.num)
+        lg.debug('YR_tf numerator: {n}'.format(n=YR_tf.num))
         num = [[YR_tf.num[0][0],YW_tf.num[0][0]], [UR_tf.num[0][0],UW_tf.num[0][0]]] # array rows corresponds to outputs, columns to inputs
         den = [[YR_tf.den[0][0],YW_tf.den[0][0]], [UR_tf.den[0][0],UW_tf.den[0][0]]]
-        print(num)
+        lg.debug('Closed loop TF matrix numerator: {n}'.format(n=num))
         self.TM = ct.tf(num,den)
 
 
@@ -223,10 +226,11 @@ class LTIsystem:
         Sets the current time simul data
         """
         if simulname in self.TimeSimData['Name']:
+            lg.debug('Setting active simul in Sysname: {s} SimulName: {sm} List: {l}'.format(s=self.Name,sm=simulname,l=self.TimeSimData['Name']))
             self.CurrentSimulName = simulname
             self.CurrentTimeSimId = self.TimeSimData[simulname]['id']
         else:
-            print('Simulname {s} not found in TimeSimulData.'.format(s=simulname))
+            lg.info('Simulname {s} not found in TimeSimulData.'.format(s=simulname))
 
     def addSimul(self):
 
@@ -243,8 +247,8 @@ class LTIsystem:
         
     
     def removeSimul(self, name):
-        print('Removing simul {s} from sys index {i}'.format(s=name,i=self.Index))
-        print('Simul names stored: {s}'.format(s=self.TimeSimData['Name']))
+        lg.debug('Removing simul {s} from sys index {i}'.format(s=name,i=self.Index))
+        lg.debug('Simul names stored: {s}'.format(s=self.TimeSimData['Name']))
         # Find in wich position the removed data is in the dictionary:
         removedIdx = self.TimeSimData['Name'].index(name)
 
@@ -256,8 +260,11 @@ class LTIsystem:
         else: # simul to remove is not the only one.
             if self.CurrentSimulName == name:   # If the removed is the current one:
                 # The new current data will be the prior one:
+                lg.debug('Removing current selected simul:')
+                lg.debug('Sysname: {s} SimulName: {sm} Index in the list: {i}'.format(s=self.Name,sm=name,i=removedIdx))
                 self.CurrentSimulName = self.TimeSimData['Name'][removedIdx - 1]
                 #print(self.TimeSimData)
+                lg.debug('Current simul name: {n}'.format(n=self.CurrentSimulName))
                 self.CurrentTimeSimId = self.TimeSimData[self.CurrentSimulName]['id'] # Gets the previous simuldataId.
                 #self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
             #else: # If not, find the index of current SimulName in the list.
