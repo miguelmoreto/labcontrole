@@ -243,10 +243,10 @@ class LTIsystem:
         
     
     def removeSimul(self, name):
+        print('Removing simul {s} from sys index {i}'.format(s=name,i=self.Index))
+        print('Simul names stored: {s}'.format(s=self.TimeSimData['Name']))
         # Find in wich position the removed data is in the dictionary:
         removedIdx = self.TimeSimData['Name'].index(name)
-        self.TimeSimData['Name'].remove(name) # Remove the simulation name from the list.
-        del self.TimeSimData[name] # Remove the data from the dictionary.
 
         # if the removed simulation data was the only one stored
         # resets the CurrentTimeSimIndex and TimeSimCounter.
@@ -257,6 +257,7 @@ class LTIsystem:
             if self.CurrentSimulName == name:   # If the removed is the current one:
                 # The new current data will be the prior one:
                 self.CurrentSimulName = self.TimeSimData['Name'][removedIdx - 1]
+                #print(self.TimeSimData)
                 self.CurrentTimeSimId = self.TimeSimData[self.CurrentSimulName]['id'] # Gets the previous simuldataId.
                 #self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
             #else: # If not, find the index of current SimulName in the list.
@@ -265,7 +266,9 @@ class LTIsystem:
 
             # Updates the new current simulation data name:
             #self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
-    
+        self.TimeSimData['Name'].pop(removedIdx) # Remove the simulation name from the list.
+        del self.TimeSimData[name] # Remove the data from the dictionary.
+
     def createInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
         """
         Create a time and an input vector from two strings representing
