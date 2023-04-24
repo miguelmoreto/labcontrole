@@ -225,8 +225,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.radioBtnOpen.clicked.connect(self.feedbackOpen)
         self.radioBtnClose.clicked.connect(self.feedbackClose)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
-        self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
         self.tabWidget.currentChanged.connect(self.onTabChange)
+        # ComboBoxes:
+        self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
+        self.comboBoxRinit.currentIndexChanged.connect(self.onChangeInputType)
+        self.comboBoxRfinal.currentIndexChanged.connect(self.onChangeInputType)
+        self.comboBoxWinit.currentIndexChanged.connect(self.onChangeInputType)
+        self.comboBoxWfinal.currentIndexChanged.connect(self.onChangeInputType)
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
         self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
@@ -314,12 +319,23 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.expressions_errors[expr]['active'] = active
     
     ########### LabControl 3 stuff:
+    def onChangeInputType(self, index):
+        """
+        Read the input types from the UI and store them
+        in the current system.
+        """
+        self.sysDict[self.sysCurrentName].Rt_initType = self.comboBoxRinit.currentIndex()
+        self.sysDict[self.sysCurrentName].Rt_finalType = self.comboBoxRfinal.currentIndex()
+        self.sysDict[self.sysCurrentName].Wt_initType = self.comboBoxWinit.currentIndex()
+        self.sysDict[self.sysCurrentName].Wt_finalType = self.comboBoxWfinal.currentIndex()
+
     def onSysItemClicked(self,item):
         """
         User clicked in the list of stored system data.
         """
         lg.info('Current system is now {s}'.format(s=item.text()))
         self.sysCurrentName = item.text() # Gets the name of the selected system.
+        self.updateUIfromSystem(self.sysCurrentName)
     
     def addSystem(self,systype):
         self.sysCounter = self.sysCounter + 1
@@ -355,7 +371,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict = {}
         self.sysCounter = -1
         self.addSystem(1)
-        
+    
+    def updateUIfromSystem(self,sysname):
+        """
+        Updates the User Interface from the parameters stored in the LC3systems object.
+        """
+        self.lineEditGnum.setText(self.sysDict[sysname].GnumStr)
+        self.lineEditGden.setText(self.sysDict[sysname].GdenStr)
+        self.lineEditCnum.setText(self.sysDict[sysname].CnumStr)
+        self.lineEditCden.setText(self.sysDict[sysname].CdenStr)
+        self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
+        self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
+
+
     #################################   
     
     def feedbackOpen(self):

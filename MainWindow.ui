@@ -760,7 +760,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBoxWend">
+              <widget class="QComboBox" name="comboBoxWfinal">
                <property name="minimumSize">
                 <size>
                  <width>90</width>
@@ -2359,7 +2359,7 @@ QGroupBox::title {
          <number>4</number>
         </property>
         <item>
-         <widget class="QFrame" name="frame">
+         <widget class="QFrame" name="frameSimulHeader">
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>

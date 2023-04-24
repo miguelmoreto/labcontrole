@@ -57,16 +57,18 @@ class LTIsystem:
     # Inputs (reference and perturbation):
     Rt_initStr = '0'    # String with the r(t) input function for initial segment.
     Rt_finalStr = '1'   # String with the r(t) input function for final segment.
-    InstRt = 0.0    # Time instant of r(t).
-    noiseRt = 0.0   # Noise standard deviation for r(t) input.
+    Rt_initType = 0     # Type of the r(t) function during initial period
+    Rt_finalType = 0    # Type of the r(t) function during final period
+    InstRt = 0.0        # Time instant of r(t) changing.
+    noiseRt = 0.0       # Noise standard deviation for r(t) input.
     Wt_initStr = '0'    # String with the w(t) input function for initial segment.
     Wt_finalStr = '0'   # String with the w(t) input function for final segment.
-    InstWt = 0.0    # Time instant of w(t).
-    noiseWt = 0.0   # Noise standard deviation for w(t) input.
-    
-    RtVar = 0.0         # Input variation value.
-    RtVarInstant = 0.0  # Input variation instant.
+    Wt_initType = 0     # Type of the w(t) function during initial period
+    Wt_finalType = 0    # Type of the w(t) function during final period
+    InstWt = 0.0        # Time instant of w(t) changing.
+    noiseWt = 0.0       # Noise standard deviation for w(t) input.
 
+    # Time simulation configuration:
     delta_t = 0.005     # Time domain simulation time step value.
     Tmax = 10           # Time domain max simulation time.
     tfinal = 10         # Time domain simulation final time value.
