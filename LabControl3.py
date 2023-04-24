@@ -248,8 +248,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
         self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
         self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
-        self.doubleSpinBoxDeltaR.valueChanged.connect(self.onRvarChange)
-        self.doubleSpinBoxDeltaRtime.valueChanged.connect(self.onRvarInstChange)
+        #self.doubleSpinBoxDeltaR.valueChanged.connect(self.onRvarChange)
+        #self.doubleSpinBoxDeltaRtime.valueChanged.connect(self.onRvarInstChange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
         self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
@@ -265,7 +265,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
         self.groupBoxG.toggled.connect(self.onGroupBoxGcheck)
         self.groupBoxH.toggled.connect(self.onGroupBoxHcheck)
-        self.groupBoxWt.toggled.connect(self.onGroupBoxWcheck)
+        #self.groupBoxWt.toggled.connect(self.onGroupBoxWcheck)
         # Buttons:
         self.btnSimul.clicked.connect(self.onBtnSimul)
         self.btnLimparSimul.clicked.connect(self.onBtnClearSimul)
@@ -634,8 +634,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeSimul(simnameremove)
-        # Clear list selection:
-        self.treeWidgetSimul.clearSelection()
+        
         root = self.treeWidgetSimul.invisibleRootItem()
         index = root.indexOfChild(currentItem)
         # Select the item above to the one that will be removed (if exists: index > 0):
@@ -644,24 +643,24 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             #print('Item above: {s}'.format(s=itemabove.text(1)))
             # Setting the active simuldata in the object as the previous one in the list:
             newsysname = newitem.text(0) # Get the itemabove system name.
-            lg.debug('The active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+            lg.debug('The up active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
             self.sysDict[newsysname].setAtiveTimeSimul(newitem.text(1))
         else: # There is only one item (the one to be removed) or it is the first of the list (index=0)
-            if root.childCount() > 1: # There is an item below to the one to be removed.
+            if (root.childCount() > 1) and index == 0: # There is an item below to the one to be removed.
                 newitem = root.child(index + 1)
                 newsysname = newitem.text(0) # Get the item below system name.
-                lg.debug('The active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+                lg.debug('The down active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
                 self.sysDict[newsysname].setAtiveTimeSimul(newitem.text(1))
-                #else: # There is only on item left in the list.
-
-                #currentItem.setSelected(True)
 
         # Removing the item from list:
         root.removeChild(currentItem)
         # Selecting the item above (or below):
         if index:
             # If not index, there is nothing else to select in the treelist
-            newitem.setSelected(True) # Selects the previous simul tree item
+            # Clear list selection:
+            self.treeWidgetSimul.clearSelection()
+            self.treeWidgetSimul.setCurrentItem(newitem)
+            #newitem.setSelected(True) # Selects the previous simul tree item
         
     def onBtnSimulClear(self):
         """

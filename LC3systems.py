@@ -55,12 +55,14 @@ class LTIsystem:
     TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
-    Rt = '1'        # String with the r(t) input function.
+    Rt_initStr = '0'    # String with the r(t) input function for initial segment.
+    Rt_finalStr = '1'   # String with the r(t) input function for final segment.
     InstRt = 0.0    # Time instant of r(t).
-    noiseRt = 0.0   # Noise standard deviation.
-    Wt = '0'        # String with the w(t) input function.
+    noiseRt = 0.0   # Noise standard deviation for r(t) input.
+    Wt_initStr = '0'    # String with the w(t) input function for initial segment.
+    Wt_finalStr = '0'   # String with the w(t) input function for final segment.
     InstWt = 0.0    # Time instant of w(t).
-    noiseWt = 0.0   # Noise standard deviation.
+    noiseWt = 0.0   # Noise standard deviation for w(t) input.
     
     RtVar = 0.0         # Input variation value.
     RtVarInstant = 0.0  # Input variation instant.
@@ -77,9 +79,9 @@ class LTIsystem:
     Kpoints = 200       # Number of K point for root locus plot. 
     
     # Root locus forbidden regions paramethers:
-    Rebd = 0.0
-    Ribd = 0.0
-    Imbd = 0.0
+    LR_FR_R = 0.0
+    LR_FR_RI = 0.0
+    LR_FR_I = 0.0
     
     # Bode diagram paramethers:
     Fmin = 0.01
@@ -276,7 +278,7 @@ class LTIsystem:
         self.TimeSimData['Name'].pop(removedIdx) # Remove the simulation name from the list.
         del self.TimeSimData[name] # Remove the data from the dictionary.
 
-    def createInputVectors(self, tinic=0.0, Rinic = 0, Winic = 0):
+    def createInputVectors(self):
         """
         Create a time and an input vector from two strings representing
         any python mathematical function as a function of the variable t.        
@@ -289,38 +291,38 @@ class LTIsystem:
         """
         
         if (self.InstRt > self.Tmax) or (self.InstWt > self.Tmax):
-            print("Step time cannot be larger than Tmax.")
+            lg.warning("Step time cannot be larger than Tmax.")
             return 0
         
         # Time vector:
         if (self.Type == 3):
             # For discrete simulation it is needed 2 more samples in input vector.
-            t_total = np.arange(tinic,tinic+self.Tmax+2*self.delta_t,self.delta_t)
+            t_total = np.arange(0,self.Tmax+2*self.delta_t,self.delta_t)
         else:
-            t_total = np.arange(tinic,tinic+self.Tmax,self.delta_t)
+            t_total = np.arange(0,self.Tmax,self.delta_t)
            
         r = np.zeros((1,len(t_total)))
         w = np.zeros((1,len(t_total)))
         
-        # Number of the samples corresponding to the begining of the inputs:
+        # Number of the sample corresponding to the begining of the inputs:
         sampleR = int(self.InstRt/self.delta_t)
         sampleW = int(self.InstWt/self.delta_t)
         
         # create vector r(t):
         t = t_total[0:(len(t_total)-sampleR)] # This is necessary to eval expressions with 't'
         if (self.ruidoRt > 0):
-            r[0][sampleR:] = eval(self.Rt) + np.random.normal(0,self.ruidoRt,(len(t_total)-sampleR))
-            r[0][0:sampleR] = Rinic + np.random.normal(0,self.ruidoRt,sampleR)
+            r[0][sampleR:] = eval(self.Rt_finalStr) + np.random.normal(0,self.ruidoRt,(len(t_total)-sampleR))
+            r[0][0:sampleR] = 0 + np.random.normal(0,self.ruidoRt,sampleR)
         else:
-            r[0][sampleR:] = eval(self.Rt)
-            r[0][0:sampleR] = Rinic
+            r[0][sampleR:] = eval(self.Rt_finalStr)
+            r[0][0:sampleR] = 0 # TO DO: use the intial string.
 
         # create vector w(t)
         if (self.ruidoWt > 0):
-            w[1][sampleW:] = eval(self.Wt) + np.random.normal(0,self.ruidoWt,(len(t_total)-sampleW))
+            w[1][sampleW:] = eval(self.Wt_finalStr) + np.random.normal(0,self.ruidoWt,(len(t_total)-sampleW))
         else:
-            w[1][sampleW:] = eval(self.Wt)
-            w[1][0:sampleW] = Winic
+            w[1][sampleW:] = eval(self.Wt_finalStr)
+            w[1][0:sampleW] = 0 # TO DO: use the intial string.
 
         # Input variation (will be deprecated):
         if (self.RtVar != 0):
