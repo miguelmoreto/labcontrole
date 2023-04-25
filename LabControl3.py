@@ -270,7 +270,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
         self.groupBoxG.toggled.connect(self.onGroupBoxGcheck)
         self.groupBoxH.toggled.connect(self.onGroupBoxHcheck)
-        #self.groupBoxWt.toggled.connect(self.onGroupBoxWcheck)
         # Buttons:
         self.btnSimul.clicked.connect(self.onBtnSimul)
         self.btnLimparSimul.clicked.connect(self.onBtnClearSimul)
@@ -346,7 +345,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.listSystem.setCurrentRow(self.listSystem.count() - 1)    
     
     def onBtnSysAdd(self):
-        self.addSystem(self.currentComboIndex + 1)  # System type from the comboBox
+        self.addSystem(self.comboBoxSys.currentIndex() + 1)  # System type from the comboBox
         #self.sysCurrentIndex = self.listSystem.currentRow()
         lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
@@ -383,20 +382,83 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
         self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
 
+        systype = self.sysDict[sysname].Type
+        # Blocking events, otherwise this will trigger the System
+        #   type ComboBox CurrentIndexChange event:
+        self.comboBoxSys.blockSignals(True) 
+        self.comboBoxSys.setCurrentIndex(systype)
+        #self.currentComboIndex = self.sysDict[sysname].Type
+        self.comboBoxSys.blockSignals(False)
+        # Update gain value e root locus slider:
+        self.onKChange(self.sysDict[sysname].K)
+        self.doubleSpinBoxKmax.setValue(self.sysDict[sysname].Kmax)
+        self.doubleSpinBoxKmin.setValue(self.sysDict[sysname].Kmin)
+        # This will also trigger onResLGRchange event handler, to update slider:
+        self.doubleSpinBoxLGRpontos.setValue(self.sysDict[sysname].Kpoints)
 
-    #################################   
-    
+        self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
+        self.groupBoxG.setChecked(self.sysDict[sysname].Genable)
+        self.groupBoxH.setChecked(self.sysDict[sysname].Henable)
+        if (systype < 3): # LTI system
+            if (systype == 0): # LTI system 1 (without C(s))
+                self.groupBoxC.setEnabled(False)
+            else: # LTI system 2 or 3 (with C(s))
+                self.groupBoxC.setEnabled(True)
+            self.lineEditGden.show()
+            self.labelGden.show()
+            self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
+            self.labelGnum.setText(_translate("MainWindow", "Num:", None))                
+            self.groupBoxH.setEnabled(True)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
+            self.labelPtTk.setEnabled(False)
+            self.spinBoxPtTk.setEnabled(False)
+            self.doubleSpinBoxResT.setEnabled(True)
+            self.btnPlotBode.setEnabled(True)
+            self.btnPlotLGR.setEnabled(True)
+            self.btnPlotNyquist.setEnabled(True)
+            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
+        elif (systype == 3): # Discrete time controler system.
+            self.labelGden.show()
+            self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
+            self.labelGnum.setText(_translate("MainWindow", "Num:", None))                
+            self.labelTk.setEnabled(True)
+            self.doubleSpinBoxTk.setEnabled(True)
+            self.labelPtTk.setEnabled(True)
+            self.spinBoxPtTk.setEnabled(True)
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(False)
+            self.doubleSpinBoxResT.setEnabled(False)
+            self.btnPlotBode.setEnabled(False)
+            self.btnPlotLGR.setEnabled(False)
+            self.btnPlotNyquist.setEnabled(False)            
+            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
+        elif (systype == 4):
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(False)
+            self.lineEditGden.hide()
+            # Disable buttons:
+            self.btnPlotBode.setEnabled(False)
+            self.btnPlotLGR.setEnabled(False)
+            self.btnPlotNyquist.setEnabled(False)
+            self.labelGden.hide()
+            self.lineEditGnum.setText(self.sysDict[sysname].NLsysInputString)
+            #self.onGnumChange(self.sys.sysInputString)
+            self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
+            self.labelGnum.setText(_translate("MainWindow", "f(Y,U)=", None))
+            self.groupBoxG.updateGeometry()   
+        else:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
+            #self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
+            return
+        self.updateSystemPNG()                 
+
     def feedbackOpen(self):
         """Open Feedback """ 
 
         # Change System Diagram accordingly:        
         self.sysDict[self.sysCurrentName].Loop = 'open'
-
-
-        self.sys.Malha = 'Aberta'       
-        
         self.updateSystemPNG()
-        
         self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
     def feedbackClose(self):
@@ -404,174 +466,72 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         # Change System Diagram accordingly:        
         self.sysDict[self.sysCurrentName].Loop = 'closed'
-
-        self.sys.Malha = 'Fechada'
-        
-        # Change SVG accordingly:        
+        # Change PNG accordingly:        
         self.updateSystemPNG()
-        
         self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
 
     def onChangeSystem(self,sysindex):
         """
-        Whem user change system topology using the combo box.
-        Update block diagram and anable/disable input groupboxes.
+        When user change system topology using the combo box.
+        Change the system type in the current LC3system object and
+        update the UI.
         """
-        
-        # Check prvious system type and disable unecessary itens:
-        if (self.sys.Type == 4 and sysindex != 4):
-            self.lineEditGden.show()
-            self.labelGden.show()
-            self.groupBoxH.setEnabled(True)
-            self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
-            self.labelGnum.setText(_translate("MainWindow", "Num:", None))
-            # Restoring saved G(s)
-            self.sys.Type = sysindex
-            self.lineEditGnum.setText(self.sys.GnumStr)
-            self.onGnumChange(self.sys.GnumStr)
-            # Re-enable buttons:
-            self.btnPlotBode.setEnabled(True)
-            self.btnPlotLGR.setEnabled(True)
-            self.btnPlotNyquist.setEnabled(True)
-
-        elif (self.sys.Type == 3 and sysindex != 3):
-            self.labelTk.setEnabled(False)
-            self.doubleSpinBoxTk.setEnabled(False)
-            self.labelPtTk.setEnabled(False)
-            self.spinBoxPtTk.setEnabled(False)
-            self.doubleSpinBoxResT.setEnabled(True)
-            self.checkBoxControle.setEnabled(False)
-            self.groupBoxH.setEnabled(True)
-            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None))
-            # Re-enable buttons:
-            self.btnPlotBode.setEnabled(True)
-            self.btnPlotLGR.setEnabled(True)
-            self.btnPlotNyquist.setEnabled(True)
-            
-        # Check current system choice and enable necessary itens:
-        self._set_expression_active('f(y,u)', sysindex == 4)
-        self._set_expression_active('G[Num](s)', sysindex != 4)
-        self._set_expression_active('G[Den](s)', sysindex != 4)
-        if (sysindex == 0): # LTI system 1 (without C(s))
-            self.groupBoxC.setEnabled(False)
-            self.sys.Type = 0
-            # Disable C(s):
-            self.sys.Cnum = [1]
-            self.sys.Cden = [1]
-            self.sys.Atualiza()            
-        elif (sysindex == 1): # LTI system 2 (with C(s))
-            self.sys.Type = 1
-            self.groupBoxC.setEnabled(True)
-            # Update system if C(s) group box is checked or not.
-            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-        elif (sysindex == 2): # LTI system 3 (with G(s) after W(s))
-            self.sys.Type = 2
-            # in this case, G(s) goes to G2(s) in Sistema class while G(s)=1/1
-            self.sys.G2num = self.sys.Gnum
-            self.sys.G2den = self.sys.Gden
-            self.sys.Gnum = [1]
-            self.sys.Gden = [1]
-            self.sys.Atualiza()
-            self.groupBoxC.setEnabled(True)
-            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-            self.onGroupBoxGcheck(self.groupBoxG.isChecked())
-            # Update system if C(s) group box is checked or not.
-#==============================================================================
-        elif (sysindex == 3): # Discrete time controller
-            self.sys.Type = 3
-            self.labelTk.setEnabled(True)
-            self.doubleSpinBoxTk.setEnabled(True)
-            self.labelPtTk.setEnabled(True)
-            self.spinBoxPtTk.setEnabled(True)
-            self.groupBoxC.setEnabled(True)
-            self.groupBoxH.setEnabled(False)
-            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-            self.checkBoxControle.setEnabled(True)
-            self.doubleSpinBoxResT.setEnabled(False)
-            self.btnPlotBode.setEnabled(False)
-            self.btnPlotLGR.setEnabled(False)
-            self.btnPlotNyquist.setEnabled(False)            
-            self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
-#==============================================================================
-        elif (sysindex == 4): # Non-linear system
-            self.sys.Type = 4
-            self.groupBoxC.setEnabled(True)
-            self.groupBoxH.setEnabled(False)
-            self.onGroupBoxCcheck(self.groupBoxC.isChecked())
-            self.lineEditGden.hide()
-            # Disable buttons:
-            self.btnPlotBode.setEnabled(False)
-            self.btnPlotLGR.setEnabled(False)
-            self.btnPlotNyquist.setEnabled(False)
-            self.labelGden.hide()
-            # Saving previous Gnum string:
-            self.sys.GnumStr = str(self.lineEditGnum.text())
-            self.lineEditGnum.setText(self.sys.sysInputString)
-            self.onGnumChange(self.sys.sysInputString)
-            self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
-            self.labelGnum.setText(_translate("MainWindow", "f(y,u)=", None))
-            self.lineEditGnum.setText(self.sys.sysInputString)
-            # self.onGnumChange(self.sys.sysInputString)
-            self.groupBoxG.updateGeometry()
-        else:
-            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
-            self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
-            return
-        
-        self.updateSystemPNG()
+        self.sysDict[self.sysCurrentName].changeSystemType(sysindex)
+        self.updateUIfromSystem(self.sysCurrentName)
         self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))
-        self.currentComboIndex = sysindex
 
-    
+    #################################     
+
     def onSliderMove(self,value):
         """Slider change event. 
         This event is called also when setSliderPosition is called during 
         Kmax and Kmin changes. Changes in Kmax and Kmin only alters position
         of the slider and not the gain. This is why there is this test.
         """
+        Kmax = self.sysDict[self.sysCurrentName].Kmax
+        Kmin = self.sysDict[self.sysCurrentName].Kmin
+        Kpoints = self.sysDict[self.sysCurrentName].Kpoints
 
-        gain = float(value)*float((self.sys.Kmax)-(self.sys.Kmin))/float(self.sys.Kpontos) + self.sys.Kmin        
-        self.sys.K = gain
-        # Disconnect events to not enter in a event loop:
-        self.doubleSpinBoxKlgr.valueChanged.disconnect(self.onKChange)
-        self.doubleSpinBoxK.valueChanged.disconnect(self.onKChange)
+        gain = float(value)*float((Kmax)-(Kmin))/float(Kpoints) + Kmin        
+        self.sysDict[self.sysCurrentName].K = gain
+        # Disable events to not enter in a event loop:
+        self.doubleSpinBoxKlgr.blockSignals(True)#valueChanged.disconnect(self.onKChange)
+        self.doubleSpinBoxK.blockSignals(True)#valueChanged.disconnect(self.onKChange)
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(gain)
         self.doubleSpinBoxK.setValue(gain)
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(gain)
-        # Reconect events:
-        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
-        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
+        # Re-enable events:
+        self.doubleSpinBoxKlgr.blockSignals(False)#valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxK.blockSignals(False)#valueChanged.connect(self.onKChange)
         
     def onKmaxChange(self,value):
         #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmax change
-        self.sys.Kmax = value
+        self.sysDict[self.sysCurrentName].Kmax = value
         self.updateSliderPosition()
     
     def onKminChange(self,value):
         #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmin change
-        self.sys.Kmin = value
+        self.sysDict[self.sysCurrentName].Kmin = value
         self.updateSliderPosition() # update slider position, this call also the event slider move.
     
     def onKChange(self,value):
-        ####### LabControl 3: 
+
+        # Save K value in the system object:
         self.sysDict[self.sysCurrentName].K = value
-        ####################################        
-        #  
-        # Save K value in the LTI system.
-        self.sys.K = value
-        # Disconnect events to not enter in a event loop:
-        self.doubleSpinBoxKlgr.valueChanged.disconnect(self.onKChange)
-        self.doubleSpinBoxK.valueChanged.disconnect(self.onKChange)
+        
+        # Disable events to not enter in a event loop:
+        self.doubleSpinBoxKlgr.blockSignals(True)# valueChanged.disconnect(self.onKChange)
+        self.doubleSpinBoxK.blockSignals(True)#valueChanged.disconnect(self.onKChange)
         # Update spinboxes
         self.doubleSpinBoxKlgr.setValue(value)
         self.doubleSpinBoxK.setValue(value)
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(value)
-        # Reconect events:
-        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
-        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
+        # Re-enable events:
+        self.doubleSpinBoxKlgr.blockSignals(False)#valueChanged.connect(self.onKChange)
+        self.doubleSpinBoxK.blockSignals(False)#valueChanged.connect(self.onKChange)
         # Update slider position.
         self.updateSliderPosition()
     
@@ -1102,7 +1062,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Chage the number of LGR gain points (resolution).
         """
-        self.sys.Kpontos = self.doubleSpinBoxLGRpontos.value()
+        self.sysDict[self.sysCurrentName].Kpontos = self.doubleSpinBoxLGRpontos.value()
         # Update slider position.
         self.updateSliderPosition()
         
@@ -1342,13 +1302,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if (flag == False):
             self.statusBar().showMessage(_translate("MainWindow", "C(s) desativada.", None))
-            self.sys.Cnum = [1]
-            self.sys.Cden = [1]
-            self.sys.Atualiza()
         else:
-            self.onCnumChange(self.lineEditCnum.text())
-            self.onCdenChange(self.lineEditCden.text())
             self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None))
+        
+        self.sysDict[self.sysCurrentName].Cenable = flag
         self._set_expression_active('C[Num](s)', flag)
         self._set_expression_active('C[Den](s)', flag)
 
@@ -1356,15 +1313,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if (flag == False):
             self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None))
-            self.sys.Gnum = [1]
-            self.sys.Gden = [1]
-            self.sys.G2num = [1]
-            self.sys.G2den = [1]
-            self.sys.Atualiza()
         else:
-            self.onGnumChange(self.lineEditGnum.text())
-            self.onGdenChange(self.lineEditGden.text())
             self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None))
+        self.sysDict[self.sysCurrentName].Genable = flag
         self._set_expression_active('G[Num](s)', flag)
         self._set_expression_active('G[Den](s)', flag)
 
@@ -1372,31 +1323,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if (flag == False):
             self.statusBar().showMessage(_translate("MainWindow", "H(s) desativada.", None))
-            self.sys.Hnum = [1]
-            self.sys.Hden = [1]
-            self.sys.Atualiza()
         else:
-            self.onHnumChange(self.lineEditHnum.text())
-            self.onHdenChange(self.lineEditHden.text())
             self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None))
+        self.sysDict[self.sysCurrentName].Henable = flag
         self._set_expression_active('H[Num](s)', flag)
         self._set_expression_active('H[Den](s)', flag)
 
-    def onGroupBoxWcheck(self,flag):
+    # def onGroupBoxWcheck(self,flag):
         
-        if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "Perturbação desativada.", None))
-            self.sys.Wt = '0'
-            self.sys.InstWt = 0
-            self.sys.ruidoWt = 0
-            self.checkBoxPert.setDisabled(True)
-        else:
-            self.statusBar().showMessage(_translate("MainWindow", "Perturbação ativada.", None))
-            self.sys.Wt = str(self.lineEditWvalue.text())
-            self.sys.InstWt = self.doubleSpinBoxWtime.value()
-            self.sys.ruidoWt = self.doubleSpinBoxWnoise.value()
-            self.checkBoxPert.setDisabled(False)
-        self._set_expression_active('w(t)', flag)
+    #     if (flag == False):
+    #         self.statusBar().showMessage(_translate("MainWindow", "Perturbação desativada.", None))
+    #         self.sys.Wt = '0'
+    #         self.sys.InstWt = 0
+    #         self.sys.ruidoWt = 0
+    #         self.checkBoxPert.setDisabled(True)
+    #     else:
+    #         self.statusBar().showMessage(_translate("MainWindow", "Perturbação ativada.", None))
+    #         self.sys.Wt = str(self.lineEditWvalue.text())
+    #         self.sys.InstWt = self.doubleSpinBoxWtime.value()
+    #         self.sys.ruidoWt = self.doubleSpinBoxWnoise.value()
+    #         self.checkBoxPert.setDisabled(False)
+    #     self._set_expression_active('w(t)', flag)
 
     def onGnumChange(self,value):
         """
@@ -1618,45 +1565,52 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     
     def updateSliderPosition(self):
-        position = (float(self.sys.Kpontos) * (self.sys.K - self.sys.Kmin))/(abs(self.sys.Kmax)+abs(self.sys.Kmin))
+        Kmax = self.sysDict[self.sysCurrentName].Kmax
+        Kmin = self.sysDict[self.sysCurrentName].Kmin
+        Kpoints = self.sysDict[self.sysCurrentName].Kpoints
+        K = self.sysDict[self.sysCurrentName].K
+
+        position = (float(Kpoints) * (K - Kmin))/(abs(Kmax)+abs(Kmin))
         # Disconnect events to not enter in a event loop:
-        self.verticalSliderK.valueChanged.disconnect(self.onSliderMove)
+        self.verticalSliderK.blockSignals(True)#valueChanged.disconnect(self.onSliderMove)
         self.verticalSliderK.setSliderPosition(int(position))
-        self.verticalSliderK.valueChanged.connect(self.onSliderMove)
+        self.verticalSliderK.blockSignals(False)#valueChanged.connect(self.onSliderMove)
     
     def updateSystemPNG(self):
-        svg_file_name = ''        
+        png_file_name = ''  
+        systype = self.sysDict[self.sysCurrentName].Type
+        loop = self.sysDict[self.sysCurrentName].Loop
         
-        if (self.sys.Type == 0): # LTI system 1 (without C(s))
-            if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram1Closed.png'
+        if (systype == 0): # LTI system 1 (without C(s))
+            if loop == 'closed':
+                png_file_name = 'diagram1Closed.png'
             else:
-                svg_file_name = 'diagram1Opened.png'
-        elif (self.sys.Type == 1): # LTI system 2 (with C(s))
-            if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram2Closed.png'
+                png_file_name = 'diagram1Opened.png'
+        elif (systype == 1): # LTI system 2 (with C(s))
+            if loop == 'closed':
+                png_file_name = 'diagram2Closed.png'
             else:
-                svg_file_name = 'diagram2Opened.png'
-        elif (self.sys.Type == 2): # LTI system 3 (with C(s) and G(s) after W(s))
-            if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram3Closed.png'
+                png_file_name = 'diagram2Opened.png'
+        elif (systype == 2): # LTI system 3 (with C(s) and G(s) after W(s))
+            if loop == 'closed':
+                png_file_name = 'diagram3Closed.png'
             else:
-                svg_file_name = 'diagram3Opened.png'
-        elif (self.sys.Type == 3):
-            if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram4Closed.png'
+                png_file_name = 'diagram3Opened.png'
+        elif (systype == 3):
+            if loop == 'closed':
+                png_file_name = 'diagram4Closed.png'
             else:
-                svg_file_name = 'diagram4Opened.png'
-        elif (self.sys.Type == 4):
-            if self.sys.Malha == 'Fechada':
-                svg_file_name = 'diagram5Closed.png'
+                png_file_name = 'diagram4Opened.png'
+        elif (systype == 4):
+            if loop == 'closed':
+                png_file_name = 'diagram5Closed.png'
             else:
-                svg_file_name = 'diagram5Opened.png'
+                png_file_name = 'diagram5Opened.png'
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return
 
-        self.label.setPixmap(QtGui.QPixmap(svg_file_name))
+        self.label.setPixmap(QtGui.QPixmap(png_file_name))
 
     
     def onAboutAction(self):

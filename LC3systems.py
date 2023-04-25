@@ -17,25 +17,24 @@ class LTIsystem:
         1   K.C(s).G(s) direct loop with H(s) in feedback. Perturbation after G(s)
         2   K.C(s).G(s) direct loop with H(s) in feedback. Perturbation before G(s)
     """
-    K = 1.0         # System gain.
-    Gnum = [2,10]           # G(s) numerator polynomial coefficients.
-    GnumStr = '2*s+10'     # G(s) numerator polynomial string
-    #polyGnum = np.poly1d(Gnum)
+    K = 1.0                     # System gain.
+    Gnum = [2,10]               # G(s) numerator polynomial coefficients.
+    GnumStr = '2*s+10'          # G(s) numerator polynomial string
     Gden = [1,2,10]             # G(s) denominator polynomial coefficients.
     GdenStr = '1*s^2+2*s+10'    # G(s) denominator polynomial string.
-    #polyGden = np.poly1d(Gden)
-    Cnum = [1]      # C(s) numerator polynomial coefficients.
+    Genable = True
+    
+    Cnum = [1]          # C(s) numerator polynomial coefficients.
     CnumStr = '1'
-    #polyCnum = np.poly1d(Cnum)
-    Cden = [1]      # C(s) denominator polynomial coefficients.
+    Cden = [1]          # C(s) denominator polynomial coefficients.
     CdenStr = '1'
-    #polyCden = np.poly1d(Cden)
-    Hnum = [1]      # H(s) numerator polynomial coefficients.
+    Cenable = False     # Flag to indicate if transfer function C(s) is enabled or not
+    
+    Hnum = [1]          # H(s) numerator polynomial coefficients.
     HnumStr = '1'
-    #polyHnum = np.poly1d(Hnum)
-    Hden = [1]      # H(s) denominator polynomial coefficients.
+    Hden = [1]          # H(s) denominator polynomial coefficients.
     HdenStr = '1'
-    #polyHden = np.poly1d(Hden)
+    Henable = False     # Flag to indicate if transfer function H(s) is enabled or not
     
     OLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
     CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
@@ -45,8 +44,9 @@ class LTIsystem:
     TM = ct.tf(1,1) # Transfer Matrix (MIMO system)
     #TM = ct.tf(1,1) # Closed Loop Transfer Matrix (MIMO system)
 
-    #polyDnum = np.poly1d([1]) # numerator polynomial of the direct loop transfer function
-    #polyDden = np.poly1d([1]) # denominator polynomial of the direct loop transfer function
+    # Non linear system stuff:
+    NLsysString = '0.7*self.u-0.7*numpy.square(y[0])'
+    NLsysInputString = '0.7*U-0.7*numpy.square(Y)'
 
     Type = 1    # system type.
     Index = 0   # System index within a list.
@@ -75,7 +75,8 @@ class LTIsystem:
     
     Loop = 'open'       # Feedback loop state (open or closed)
     Hide = False        # Hide system data (used for experimental system identification exercises)
-    
+
+    # Root Locus stuff:    
     Kmax = 10.0         # Max gain for root locus plot.
     Kmin = 0.0          # Min gain for root locus plot.
     Kpoints = 200       # Number of K point for root locus plot. 
@@ -213,7 +214,11 @@ class LTIsystem:
         #  Change CurrentSimulName
         #  Update the transfer matrix (if LTI)
         #  Add a new TimeSimData or overwrite the current one?
-        pass
+        if newtype <= 4:
+            lg.debug('Changing system type to {t}'.format(t=newtype))
+            self.Type = newtype
+        else:
+            lg.info('System type {t} no implemented yet!'.format(t=newtype))
     
     def clearTimeSimulData(self):
         """
