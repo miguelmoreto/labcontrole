@@ -271,7 +271,13 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Valor do degrau ou função do tempo da entrada</string>
+                <string>Valor inicial da entrada r(t)</string>
+               </property>
+               <property name="inputMethodHints">
+                <set>Qt::ImhNone</set>
+               </property>
+               <property name="inputMask">
+                <string/>
                </property>
                <property name="text">
                 <string notr="true">0</string>

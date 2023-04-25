@@ -48,7 +48,7 @@ class LTIsystem:
     NLsysString = '0.7*self.u-0.7*numpy.square(y[0])'
     NLsysInputString = '0.7*U-0.7*numpy.square(Y)'
 
-    Type = 1    # system type.
+    Type = 0    # system type.
     Index = 0   # System index within a list.
     Name = ''
     TypeStrList = ['LTI_1','LTI_2', 'LTI_3']    # List with string for the system types.
@@ -57,19 +57,23 @@ class LTIsystem:
     # Inputs (reference and perturbation):
     Rt_initStr = '0'    # String with the r(t) input function for initial segment.
     Rt_finalStr = '1'   # String with the r(t) input function for final segment.
+    Rt_initValue = 0
     Rt_initType = 0     # Type of the r(t) function during initial period
     Rt_finalType = 0    # Type of the r(t) function during final period
+    Rt_finalValue = 0
     InstRt = 0.0        # Time instant of r(t) changing.
-    noiseRt = 0.0       # Noise standard deviation for r(t) input.
+    NoiseRt = 0.0       # Noise standard deviation for r(t) input.
     Wt_initStr = '0'    # String with the w(t) input function for initial segment.
     Wt_finalStr = '0'   # String with the w(t) input function for final segment.
+    Wt_initValue = 0
     Wt_initType = 0     # Type of the w(t) function during initial period
     Wt_finalType = 0    # Type of the w(t) function during final period
+    Wt_finalValue = 0
     InstWt = 0.0        # Time instant of w(t) changing.
-    noiseWt = 0.0       # Noise standard deviation for w(t) input.
+    NoiseWt = 0.0       # Noise standard deviation for w(t) input.
 
     # Time simulation configuration:
-    delta_t = 0.005     # Time domain simulation time step value.
+    Delta_t = 0.005     # Time domain simulation time step value.
     Tmax = 10           # Time domain max simulation time.
     tfinal = 10         # Time domain simulation final time value.
     
@@ -95,6 +99,12 @@ class LTIsystem:
     NyqFmin = 0.01
     NyqFmax = 100.0
     NyqFpoints = 100
+
+    # System with discrete controller stuff:
+    dT = 0.1        # Sample period
+    Npts_dT = 20    # Number of points for each dT
+    NdT = 100       # Number of discrete periods
+
     
     # Initial states:
     X0r = None
@@ -151,7 +161,7 @@ class LTIsystem:
         Transfer Function object. The inputs are r(t) and w(t) 
         while outpus are y(t) and u(t)
         """
-        self.N = self.Tmax/self.delta_t
+        self.N = self.Tmax/self.Delta_t
         self.G_tf = ct.tf(self.Gnum,self.Gden)
         self.C_tf = ct.tf(self.Cnum,self.Cden)
         self.H_tf = ct.tf(self.Hnum,self.Hden)
@@ -304,39 +314,32 @@ class LTIsystem:
         # Time vector:
         if (self.Type == 3):
             # For discrete simulation it is needed 2 more samples in input vector.
-            t_total = np.arange(0,self.Tmax+2*self.delta_t,self.delta_t)
+            t_total = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
         else:
-            t_total = np.arange(0,self.Tmax,self.delta_t)
+            t_total = np.arange(0,self.Tmax,self.Delta_t)
            
         r = np.zeros((1,len(t_total)))
         w = np.zeros((1,len(t_total)))
         
         # Number of the sample corresponding to the begining of the inputs:
-        sampleR = int(self.InstRt/self.delta_t)
-        sampleW = int(self.InstWt/self.delta_t)
+        sampleR = int(self.InstRt/self.Delta_t)
+        sampleW = int(self.InstWt/self.Delta_t)
         
         # create vector r(t):
         t = t_total[0:(len(t_total)-sampleR)] # This is necessary to eval expressions with 't'
         if (self.ruidoRt > 0):
-            r[0][sampleR:] = eval(self.Rt_finalStr) + np.random.normal(0,self.ruidoRt,(len(t_total)-sampleR))
-            r[0][0:sampleR] = 0 + np.random.normal(0,self.ruidoRt,sampleR)
+            r[0][sampleR:] = eval(self.Rt_finalStr) + np.random.normal(0,self.NoiseRt,(len(t_total)-sampleR))
+            r[0][0:sampleR] = 0 + np.random.normal(0,self.NoiseRt,sampleR)
         else:
             r[0][sampleR:] = eval(self.Rt_finalStr)
             r[0][0:sampleR] = 0 # TO DO: use the intial string.
 
         # create vector w(t)
         if (self.ruidoWt > 0):
-            w[1][sampleW:] = eval(self.Wt_finalStr) + np.random.normal(0,self.ruidoWt,(len(t_total)-sampleW))
+            w[1][sampleW:] = eval(self.Wt_finalStr) + np.random.normal(0,self.NoiseWt,(len(t_total)-sampleW))
         else:
             w[1][sampleW:] = eval(self.Wt_finalStr)
             w[1][0:sampleW] = 0 # TO DO: use the intial string.
-
-        # Input variation (will be deprecated):
-        if (self.RtVar != 0):
-            Delta_r = np.zeros_like(t_total)
-            Dusample = int(self.RtVarInstant/self.delta_t)
-            Delta_r[Dusample:] = self.RtVar
-            r = r + Delta_r
 
         #u[0] = Rinic
         #w[0] = Winic

@@ -118,8 +118,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         
         self.image = QtGui.QImage()        
-        
+
+        self.doubleValidator = QtGui.QDoubleValidator()
+        self.doubleValidator.setNotation(self.doubleValidator.StandardNotation)
+        self.doubleValidator.setDecimals(2)
         # Initial definitions:
+        self.lineEditRvalueInit.setValidator(self.doubleValidator)
+        self.lineEditWvalueInit.setValidator(self.doubleValidator)
+        self.lineEditRvalueFinal.setValidator(self.doubleValidator)
+        self.lineEditWvalueFinal.setValidator(self.doubleValidator)
+        #self.lineEditRvalueInit.setInputMask('00.000')
 
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -167,7 +175,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict = {}   # A dictionary that contains the LC3systems objects and the corresponding data.
         self.sysCurrentName = ''
         self.sysCounter = -1
-        self.addSystem(1)
+        self.addSystem(0)
         self.treeWidgetSimul.setColumnWidth(0, 60)
 
         ########################
@@ -228,10 +236,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.onTabChange)
         # ComboBoxes:
         self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
-        self.comboBoxRinit.currentIndexChanged.connect(self.onChangeInputType)
-        self.comboBoxRfinal.currentIndexChanged.connect(self.onChangeInputType)
-        self.comboBoxWinit.currentIndexChanged.connect(self.onChangeInputType)
-        self.comboBoxWfinal.currentIndexChanged.connect(self.onChangeInputType)
+        self.comboBoxRinit.currentIndexChanged.connect(self.onChangeRinitInputType)
+        self.comboBoxRfinal.currentIndexChanged.connect(self.onChangeRfinalInputType)
+        self.comboBoxWinit.currentIndexChanged.connect(self.onChangeWinitInputType)
+        self.comboBoxWfinal.currentIndexChanged.connect(self.onChangeWfinalInputType)
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
         self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
@@ -258,8 +266,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
         self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
+        self.lineEditRvalueInit.textEdited.connect(self.onRvalueInitChange)
+        self.lineEditWvalueInit.textEdited.connect(self.onWvalueInitChange)
         self.lineEditRvalueFinal.textEdited.connect(self.onRvalueFinalChange)
         self.lineEditWvalueFinal.textEdited.connect(self.onWvalueFinalChange)
+
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
@@ -272,7 +283,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.groupBoxH.toggled.connect(self.onGroupBoxHcheck)
         # Buttons:
         self.btnSimul.clicked.connect(self.onBtnSimul)
-        self.btnLimparSimul.clicked.connect(self.onBtnClearSimul)
         self.btnPlotLGR.clicked.connect(self.onBtnLGR)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
         self.btnPlotBode.clicked.connect(self.onBtnPlotBode)
@@ -318,15 +328,40 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.expressions_errors[expr]['active'] = active
     
     ########### LabControl 3 stuff:
-    def onChangeInputType(self, index):
+    def onChangeRinitInputType(self, index):
         """
         Read the input types from the UI and store them
         in the current system.
         """
-        self.sysDict[self.sysCurrentName].Rt_initType = self.comboBoxRinit.currentIndex()
-        self.sysDict[self.sysCurrentName].Rt_finalType = self.comboBoxRfinal.currentIndex()
-        self.sysDict[self.sysCurrentName].Wt_initType = self.comboBoxWinit.currentIndex()
-        self.sysDict[self.sysCurrentName].Wt_finalType = self.comboBoxWfinal.currentIndex()
+        if (index > 4):
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Atenção!", None),_translate("MainWindow", "Tipo de entrada ainda não implementado.", None))
+            self.comboBoxRinit.setCurrentIndex(0)
+            return
+        print('ok')
+        self.sysDict[self.sysCurrentName].Rt_initType = index
+    
+    def onChangeWinitInputType(self, index):
+        if (index > 4):
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Atenção!", None),_translate("MainWindow", "Tipo de entrada ainda não implementado.", None))
+            self.comboBoxWinit.setCurrentIndex(0)
+            return        
+        self.sysDict[self.sysCurrentName].Wt_initType = index
+
+    def onChangeRfinalInputType(self, index):
+        if (index > 4):
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Atenção!", None),_translate("MainWindow", "Tipo de entrada ainda não implementado.", None))
+            self.comboBoxRfinal.setCurrentIndex(0)
+            return
+        self.sysDict[self.sysCurrentName].Rt_finalType = index
+
+    def onChangeWfinalInputType(self, index):
+        if (index > 4):
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Atenção!", None),_translate("MainWindow", "Tipo de entrada ainda não implementado.", None))
+            self.comboBoxWfinal.setCurrentIndex(0)
+            return
+        self.sysDict[self.sysCurrentName].Wt_finalType = index
+
+
 
     def onSysItemClicked(self,item):
         """
@@ -343,9 +378,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCurrentName = sys.Name
         self.listSystem.addItem(sys.Name)
         self.listSystem.setCurrentRow(self.listSystem.count() - 1)    
+        self.updateUIfromSystem(self.sysCurrentName)
     
     def onBtnSysAdd(self):
-        self.addSystem(self.comboBoxSys.currentIndex() + 1)  # System type from the comboBox
+        self.addSystem(self.comboBoxSys.currentIndex())  # System type from the comboBox
         #self.sysCurrentIndex = self.listSystem.currentRow()
         lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
@@ -369,7 +405,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.listSystem.clear()
         self.sysDict = {}
         self.sysCounter = -1
-        self.addSystem(1)
+        self.addSystem(0)
     
     def updateUIfromSystem(self,sysname):
         """
@@ -387,15 +423,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #   type ComboBox CurrentIndexChange event:
         self.comboBoxSys.blockSignals(True) 
         self.comboBoxSys.setCurrentIndex(systype)
-        #self.currentComboIndex = self.sysDict[sysname].Type
         self.comboBoxSys.blockSignals(False)
-        # Update gain value e root locus slider:
-        self.onKChange(self.sysDict[sysname].K)
+        # Spinboxes update:
+        # The spinboxes setValue calls will also trigger the corresponding event handlers:
+        self.doubleSpinBoxK.setValue(self.sysDict[sysname].K)
         self.doubleSpinBoxKmax.setValue(self.sysDict[sysname].Kmax)
         self.doubleSpinBoxKmin.setValue(self.sysDict[sysname].Kmin)
-        # This will also trigger onResLGRchange event handler, to update slider:
         self.doubleSpinBoxLGRpontos.setValue(self.sysDict[sysname].Kpoints)
+        self.doubleSpinBoxResT.setValue(self.sysDict[sysname].Delta_t)
+        self.doubleSpinBoxTmax.setValue(self.sysDict[sysname].Tmax)
+        self.doubleSpinBoxRtime.setValue(self.sysDict[sysname].InstRt)
+        self.doubleSpinBoxWtime.setValue(self.sysDict[sysname].InstWt)
+        self.doubleSpinBoxRnoise.setValue(self.sysDict[sysname].NoiseRt)
+        self.doubleSpinBoxWnoise.setValue(self.sysDict[sysname].NoiseWt)
 
+        #LineEdits:
+        self.lineEditRvalueInit.setText(str(self.sysDict[sysname].Rt_initValue))
+        self.lineEditWvalueInit.setText(str(self.sysDict[sysname].Wt_initValue))
+        self.lineEditRvalueFinal.setText(str(self.sysDict[sysname].Rt_finalValue))
+        self.lineEditWvalueFinal.setText(str(self.sysDict[sysname].Wt_finalValue))
+
+        # System type specific changes in the UI:
         self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
         self.groupBoxG.setChecked(self.sysDict[sysname].Genable)
         self.groupBoxH.setChecked(self.sysDict[sysname].Henable)
@@ -478,9 +526,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         self.sysDict[self.sysCurrentName].changeSystemType(sysindex)
         self.updateUIfromSystem(self.sysCurrentName)
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))
-
-    #################################     
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))  
 
     def onSliderMove(self,value):
         """Slider change event. 
@@ -536,6 +582,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.updateSliderPosition()
     
     def onTreeSimulClicked(self,item,column):
+        """
+        When the user clicks in a item from the time simulation treewidget list.
+        """
         parent = item.parent()
         if not parent: # I'am interested in only child itens.
             lg.debug('Clicked in parent: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
@@ -561,12 +610,21 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 lg.debug('Item check state not changed.')
                 return
+            self.mplSimul.axes.autoscale()
+            # Getting the actual plot limits:
+            ylim = self.mplSimul.axes.get_ylim()
+            # Set a new y limit, adding 1/10 of the total:
+            #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
+            self.mplSimul.axes.set_xlim(xmin = 0)        
             self.mplSimul.axes.legend(loc='upper right')
             self.mplSimul.draw()
         else:
             lg.info('Not clicked in the checkbox.')
 
     def onBtnSimulAdd(self):
+        """
+        Button event handler to add a simulation in the list.
+        """
         self.treeWidgetSimul.clearSelection()
         self.sysDict[self.sysCurrentName].addSimul()    # Adding a TimeSimul data to LC3systems object.
         simulname  = self.sysDict[self.sysCurrentName].CurrentSimulName
@@ -582,6 +640,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def onBtnSimulRemove(self):
         """
+        Button event handler.
         Removes a simulation from the list:
             - remove the treewidget item
             - remove the correct data form the LC3systems object
@@ -648,10 +707,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Clear list selection:
             self.treeWidgetSimul.clearSelection()
             self.treeWidgetSimul.setCurrentItem(newitem)
-            #newitem.setSelected(True) # Selects the previous simul tree item
         
     def onBtnSimulClear(self):
         """
+        Button event handler.
         Erase all the simulation data:
             - Erase the treewidget list
             - Erase the all the simulation data in the LC3Systems objects.
@@ -675,7 +734,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.draw()
 
     def onBtnSimul(self):
+        """
+        The main simulation button handler.
+        """
         
+        # Is the system definition has errors, show the error and finish:
         if self._has_expressions_errors():
             return
 
@@ -732,253 +795,75 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetSimul.expandAll()
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
-        
-        self.mplSimul.axes.autoscale(True)     
+        # Format the plotting area:
+        self.mplSimul.axes.autoscale()     
         self.mplSimul.axes.grid(True)
+
+        # Getting the actual plot limits:
+        #ylim = self.mplSimul.axes.get_ylim()
+        # Set a new y limit, adding 1/10 of the total:
+        #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
+        self.mplSimul.axes.set_xlim(xmin = 0)        
         self.mplSimul.axes.legend(loc='upper right')
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
         self.mplSimul.draw()
 
-        return
-
-        # Create the input vectors r(t) and w(t):
-        t,r,w = self.sys.CriaEntrada(0, self.doubleSpinBoxResT.value())
-        self.sys.N = len(t)
-        
-        # Perform a time domain simulation:
-        if (self.sys.Type < 3):
-            y = self.sys.Simulacao(t, r, w)
-        elif (self.sys.Type == 4):
-            if (self.sys.NLsysParseString(self.sys.sysInputString) == 0):
-                self.statusBar().showMessage(_translate("MainWindow", "Erro na função f(y,u)!", None))
-                return
-            self.sys.NLsysReset()
-            #print self.sys.sysString
-            y = self.sys.NLsysSimulate(r)
-        elif (self.sys.Type == 3):
-            t_plot, t_plot_k, u_plot, y_plot, e_plot, e_plot_step = self.sys.DiscreteSimulate(r)
-            
-            #print "Discrete simul Not ready yet"
-            #return
-        
-        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
-        self.mplSimul.axes.autoscale(True)        
-        
-        # Clear matplotlib toolbar history:
-        #self.mpltoolbarSimul._views.clear()
-        #self.mpltoolbarSimul._positions.clear()
-        #self.mpltoolbarSimul._update_view()        
-
-        # Setting curve navigation (but not for discrete time simulatioin or if output is disable)
-        #self.mpltoolbarSimul.clear_curve_point()
-        #if self.sys.Type != 3 and self.checkBoxSaida.isChecked():
-        #    self.mpltoolbarSimul.init_curve_point([(self.mplSimul.axes, t, y)])
-        
-        #self.mplSimul.figure.clf()
-        self.mplSimul.axes.cla()
-        
-        #ax = self.mplSimul.figure.add_subplot(111)
-        legend = []
-        flag = 0
-
-        #if (self.checkBoxEntrada.isChecked()):
-        self.mplSimul.axes.plot(t,r,'b')
-        self.mplSimul.axes.plot([0, 0],[0,r[0]], label="_nolegend_", color='b')
-        legend.append(_translate("MainWindow", "Entrada: u(t)", None))
-        flag = 1
-        #if (self.checkBoxSaida.isChecked()):
-        if (self.sys.Type == 3):
-            self.mplSimul.axes.plot(t_plot, y_plot, color='r', linewidth=1)
-        else:
-            self.mplSimul.axes.plot(t,y,'r')
-        legend.append(_translate("MainWindow", "Saída: y(t)", None))
-        flag = 1
-        #if (self.checkBoxErro.isChecked()):
-        #    if (self.sys.Type == 3):
-        #        self.mplSimul.axes.plot(t_plot, e_plot, 'y',)
-        #        self.mplSimul.axes.plot(t_plot_k, e_plot_step, 'yo',)
-        #    else:
-        #        self.mplSimul.axes.plot(t,r-y,'g')
-        #    legend.append(_translate("MainWindow", "Erro: e(t)", None))
-        #    flag = 1
-        #if (self.checkBoxPert.isChecked()):
-        #    self.mplSimul.axes.plot(t,w,'m')
-        #    legend.append(_translate("MainWindow", "Perturbação: w(t)", None))
-        #    flag = 1
-        #
-        #if (self.checkBoxControle.isChecked()):
-        #    if (self.sys.Type == 3):
-        #        self.mplSimul.axes.step(t_plot_k,u_plot, color='m',where='post')
-        
-        
-        if (flag == 0):
-            self.statusBar().showMessage(_translate("MainWindow", "Nenhum sinal selecionado!", None))
-            return
-        
-        self.mplSimul.axes.grid()
-        
-        ylim = self.mplSimul.axes.get_ylim()
-        
-        # Set a new y limit, adding 1/10 of the total.
-        self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-        self.mplSimul.axes.set_xlim([0,t[-1]])
-        
-        # Add legend:
-        self.mplSimul.axes.legend(legend, loc=0)
-        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
-        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))
-        
-        self.mplSimul.draw()
     
     def removeExistingPlot(self,ax,label):
+        """
+        Remove an existem plot line from the graph, based on the label.
+        """
         line_index = 0  # Index used to find, using label, an specific plotted line to remove.
         for line in ax.get_lines():
             if (line.get_label() == label):
                 #print(line_index)
                 line.remove()
             line_index = line_index + 1
-        
-    def onBtnContinue(self):
-        """
-        Continue simulation button
-        """        
-        
-        Tinic = self.sys.tfinal
-        
-        lastRvalue = self.sys.Rfinal
-        # Create time and input vector:
-        t,r,w = self.sys.CriaEntrada(Tinic, self.doubleSpinBoxResT.value(), 
-                            self.sys.Rfinal, self.sys.Wfinal)
-        self.sys.N = len(t)
-        #r[0] = self.
-        self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
 
-        # Perform a time domain simulation:
-        if (self.sys.Type < 3):
-            y = self.sys.Simulacao(t, r, w)
-        elif (self.sys.Type == 4):
-            if (self.sys.NLsysParseString(self.sys.sysInputString) == 0):
-                self.statusBar().showMessage(_translate("MainWindow", "Erro na função f(y,u)!", None))
-                return
-            #self.sys.NLsysReset()
-            #print self.sys.sysString
-            y = self.sys.NLsysSimulate(r)
-        elif (self.sys.Type == 3):
-            print("Discrete simul Not ready yet")
-            return
-        
-        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
-        
-        self.mplSimul.axes.autoscale(True)        
-        
-        legend = []
-        
-        flag = 0
-
-        if (self.checkBoxEntrada.isChecked()):
-            self.mplSimul.axes.plot(t,r,'b')
-            # Draw line
-            self.mplSimul.axes.plot([Tinic, Tinic],[lastRvalue,r[0]], label="_nolegend_", color='b')
-            legend.append(_translate("MainWindow", "Entrada: u(t)", None))
-            flag = 1
-        if (self.checkBoxSaida.isChecked()):
-            self.mplSimul.axes.plot(t,y,'r')
-            legend.append(_translate("MainWindow", "Saída: y(t)", None))
-            flag = 1
-        if (self.checkBoxErro.isChecked()):
-            self.mplSimul.axes.plot(t,r-y,'g')
-            legend.append(_translate("MainWindow", "Erro: e(t)", None))
-            flag = 1
-        if (self.checkBoxPert.isChecked()):
-            self.mplSimul.axes.plot(t,w,'m')
-            legend.append(_translate("MainWindow", "Perturbação: w(t)", None))
-            flag = 1
-        
-        if (flag == 0):
-            self.statusBar().showMessage(_translate("MainWindow", "Nenhum sinal selecionado!", None))
-            return        
-        
-        self.mplSimul.axes.grid(True)
-        
-        ylim = self.mplSimul.axes.get_ylim()
-        # Set a new y limit, adding 1/10 of the total.
-        self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-        self.mplSimul.axes.set_xlim([0,t[-1]])
-        # Add legend:
-        self.mplSimul.axes.legend(legend, loc=0)
-        
-        # Draw the graphic:
-        self.mplSimul.draw()
-
-    
-    def onBtnClearSimul(self):
-        """
-        Clear simulation graphic button
-        """
-        # Clear figure:
-        self.mplSimul.axes.cla()
-        self.mplSimul.axes.set_xlim(0, self.sys.Tmax)
-        self.mplSimul.axes.set_ylim(0, 1)
-        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
-        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
-        self.mplSimul.axes.grid()
-        self.mplSimul.draw()
-        # Disable continue button:
-        self.btnContinuar.setEnabled(False)
-        
-        # Reset initial conditions:
-        self.sys.X0r = None
-        self.sys.X0w = None
-        
-        # Reset non-linear system:
-        self.sys.NLsysReset()
     
     def onSimluResChange(self,value):
         """
-        Changed simulation resolution handler
+        DoubleSpinBox event handler.
+        Changed simulation resolution
         """
         if (value > 0):
-            self.sys.delta_t = self.doubleSpinBoxResT.value()
-            # Update total number of samples:
-            self.sys.N = self.sys.Tmax/self.sys.delta_t
+            self.sysDict[self.sysCurrentName].Delta_t = self.doubleSpinBoxResT.value()
             # Update discrete time points per dT.
-            self.spinBoxPtTk.valueChanged.disconnect(self.onPointsTkChange)
-            self.sys.Npts_dT = self.sys.dT/self.sys.delta_t
-            self.spinBoxPtTk.setValue(int(self.sys.Npts_dT))
-            self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
-            #
+            self.spinBoxPtTk.blockSignals(True)#  valueChanged.disconnect(self.onPointsTkChange)
+            self.sysDict[self.sysCurrentName].Npts_dT = self.sysDict[self.sysCurrentName].dT/self.sysDict[self.sysCurrentName].Delta_t
+            self.spinBoxPtTk.setValue(int(self.sysDict[self.sysCurrentName].Npts_dT))
+            self.spinBoxPtTk.blockSignals(False)#valueChanged.connect(self.onPointsTkChange)
             
     def onPointsTkChange(self, value):
         """
-        Changed number of points per dT in discrete time simul.
+        DoubleSpinBox event handler.
+        Changed number of points per dT in discrete time simulation.
         """
         if (value > 0):
-            self.sys.Npts_dT = value
-            self.doubleSpinBoxResT.valueChanged.disconnect(self.onSimluResChange)
+            self.sysDict[self.sysCurrentName].Npts_dT = value
+            self.doubleSpinBoxResT.blockSignals(True) #valueChanged.disconnect(self.onSimluResChange)
             # Change simulation resolution system and UI:
-            self.sys.delta_t = self.sys.dT/value
-            self.sys.N = self.sys.Tmax/self.sys.delta_t
-            self.doubleSpinBoxResT.setValue(self.sys.delta_t)
-            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
+            self.sysDict[self.sysCurrentName].Delta_t = self.sysDict[self.sysCurrentName].dT/value
+            #self.sys.N = self.sys.Tmax/self.sys.delta_t
+            self.doubleSpinBoxResT.setValue(self.sysDict[self.sysCurrentName].Delta_t)
+            self.doubleSpinBoxResT.blockSignals(False) #valueChanged.connect(self.onSimluResChange)
             
     def onTkChange(self, value):
         """
         Changed the number of the sample period (dT)
         """
         if (value > 0):
-            self.sys.dT = value
-            self.sys.NdT = int(self.sys.Tmax/value)
+            self.sysDict[self.sysCurrentName].dT = value
+            self.sysDict[self.sysCurrentName].NdT = int(self.sysDict[self.sysCurrentName].Tmax/value)
             # Change simulation resolution:
-            self.doubleSpinBoxResT.valueChanged.disconnect(self.onSimluResChange)
+            self.doubleSpinBoxResT.blockSignals(True) #valueChanged.disconnect(self.onSimluResChange)
             # Change simulation resolution system and UI:
-            self.sys.delta_t = value/self.sys.Npts_dT
-            self.sys.N = self.sys.Tmax/self.sys.delta_t
-            self.doubleSpinBoxResT.setValue(self.sys.delta_t)
-            self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)     
+            self.sysDict[self.sysCurrentName].Delta_t = value/self.sysDict[self.sysCurrentName].Npts_dT
+            #self.sys.N = self.sys.Tmax/self.sys.delta_t
+            self.doubleSpinBoxResT.setValue(self.sysDict[self.sysCurrentName].Delta_t)
+            self.doubleSpinBoxResT.blockSignals(False) #valueChanged.connect(self.onSimluResChange)     
         
     def onBtnLGR(self):
         """
@@ -1207,96 +1092,99 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Tmax edited handler
         """
-        self.sys.Tmax = value
+        self.sysDict[self.sysCurrentName].Tmax = value
         # Update total number of samples:
-        self.sys.N = self.sys.Tmax/self.sys.delta_t
+        #self.sys.N = self.sys.Tmax/self.sys.delta_t
         # Update spinboxes maximum values:
         self.doubleSpinBoxRtime.setMaximum(value)
         self.doubleSpinBoxWtime.setMaximum(value)
-        self.doubleSpinBoxDeltaRtime.setMaximum(value)
         # Update the number of discrete sample periods:
-        self.sys.NdT = int(self.sys.Tmax/self.sys.dT)
+        # TO DO: this kind of stuff shoulg go to LC3systems object:
+        self.sysDict[self.sysCurrentName].NdT = int(self.sysDict[self.sysCurrentName].Tmax/self.sysDict[self.sysCurrentName].dT)
 
     def onRtimeChange(self,value):
         """
         r(t) input time edited handler
         """
-        self.sys.InstRt = value
+        self.sysDict[self.sysCurrentName].InstRt = value
         
     def onRnoiseChange(self,value):
         """
         r(t) noise edited
         """
-        self.sys.ruidoRt = value
+        self.sysDict[self.sysCurrentName].NoiseRt = value
     
-    def onRvarChange(self, value):
-        """
-        r(t) input variation value changed
-        """
-        self.sys.RtVar = value
-
-    def onRvarInstChange(self, value):
-        """
-        r(t) input variation time value changed
-        """
-        self.sys.RtVarInstant = value
-
     def onWtimeChange(self,value):
         """
         r(t) input time edited handler
         """
-        self.sys.InstWt = value
+        self.sysDict[self.sysCurrentName].InstWt = value
 
     def onWnoiseChange(self,value):
         """
         w(t) noise edited
         """
-        self.sys.ruidoWt = value
+        self.sysDict[self.sysCurrentName].NoiseWt = value
     
+    def onRvalueInitChange(self, value):
+        """
+        Event handler of the line edit. Update the system property.
+        """
+        print('Rinit changed: {s}'.format(s=(float(value) + 1)))
+        self.sysDict[self.sysCurrentName].Rt_initValue = value
+
+    def onWvalueInitChange(self, value):
+        """
+        Event handler of the line edit. Update the system property.
+        """
+        self.sysDict[self.sysCurrentName].Wt_initValue = value
+
+
     def onRvalueFinalChange(self,value):
         """
-        r(t) string input edited handler
+        Event handler of the line edit. Update the system property.
         """
+        self.sysDict[self.sysCurrentName].Rt_finalValue = value
         # if not value:
         #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
         #     return
         # else:
         #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        valid_value = self.checkTFinput(value, expr_var='t')
-        if valid_value == 0:
-            self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-            self._set_expression_error('r(t)', True, '[{}] is not a valid expression'.format(value))
-            return
-        self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        value = value.replace(',','.')        
+        # valid_value = self.checkTFinput(value, expr_var='t')
+        # if valid_value == 0:
+        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+        #     self._set_expression_error('r(t)', True, '[{}] is not a valid expression'.format(value))
+        #     return
+        # self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        # value = value.replace(',','.')        
         
-        #if (int(value) == 2):
-        #    self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: yellow }")
-        self._set_expression_error('r(t)', False)
-        self.sys.Rt = str(value)
+        # #if (int(value) == 2):
+        # #    self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: yellow }")
+        # self._set_expression_error('r(t)', False)
+        # self.sys.Rt = str(value)
  
 
     def onWvalueFinalChange(self,value):
         """
-        w(t) string input edited handler
+        Event handler of the line edit. Update the system property.
         """
-
+        self.sysDict[self.sysCurrentName].Wt_finalValue = value
         # if not value:
         #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
         #     return
         # else:
         #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
         
-        valid_value = self.checkTFinput(value, expr_var='t')
-        if valid_value == 0:
-            self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-            self._set_expression_error('w(t)', True, '[{}] is not a valid expression'.format(value))
-            return
-        self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        value = value.replace(',','.')   
+        # valid_value = self.checkTFinput(value, expr_var='t')
+        # if valid_value == 0:
+        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
+        #     self._set_expression_error('w(t)', True, '[{}] is not a valid expression'.format(value))
+        #     return
+        # self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
+        # value = value.replace(',','.')   
         
-        self._set_expression_error('w(t)', False)
-        self.sys.Wt = str(value)
+        # self._set_expression_error('w(t)', False)
+        # self.sys.Wt = str(value)
 
     def onGroupBoxCcheck(self,flag):
         
