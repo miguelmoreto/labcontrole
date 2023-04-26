@@ -119,15 +119,25 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         self.image = QtGui.QImage()        
 
-        self.doubleValidator = QtGui.QDoubleValidator()
-        self.doubleValidator.setNotation(self.doubleValidator.StandardNotation)
-        self.doubleValidator.setDecimals(2)
         # Initial definitions:
+        # Setting locale to display numbers in the QtextEdits:
+        self.locale = QtCore.QLocale.system()
+        self.locale.setNumberOptions(self.locale.OmitGroupSeparator | self.locale.RejectGroupSeparator)
+        lg.info('Locale used: {s}'.format(s=self.locale.name()))
+        self.doubleValidator = QtGui.QDoubleValidator()
+        self.doubleValidator.setLocale(self.locale)  # Using system locale for number notation.
+        self.doubleValidator.setNotation(self.doubleValidator.StandardNotation)
+        self.doubleValidator.setDecimals(4)
         self.lineEditRvalueInit.setValidator(self.doubleValidator)
         self.lineEditWvalueInit.setValidator(self.doubleValidator)
         self.lineEditRvalueFinal.setValidator(self.doubleValidator)
         self.lineEditWvalueFinal.setValidator(self.doubleValidator)
-        #self.lineEditRvalueInit.setInputMask('00.000')
+        self.lineEditK.setValidator(self.doubleValidator)
+        self.lineEditKlgr.setValidator(self.doubleValidator)
+        self.lineEditFmin.setValidator(self.doubleValidator)
+        self.lineEditFmax.setValidator(self.doubleValidator)
+        self.lineEditFminNyq.setValidator(self.doubleValidator)
+        self.lineEditFmaxNyq.setValidator(self.doubleValidator)        
 
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -164,10 +174,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.basicConfig(level=lg.DEBUG)
         # Initializing system
         self.sys = MySystem.MySystem()
-        # Updating values from GUI:
-        self.sys.Fmin = self.doubleSpinFmin.value()
-        self.sys.Fmax = self.doubleSpinFmax.value()
-        self.sys.Fpontos = self.doubleSpinBodeRes.value()
+
                 
         self.init = 1
 
@@ -246,23 +253,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
-        self.doubleSpinBoxKlgr.valueChanged.connect(self.onKChange)
-        self.doubleSpinBoxK.valueChanged.connect(self.onKChange)
         self.doubleSpinBoxTmax.valueChanged.connect(self.onTmaxChange)
         self.doubleSpinBoxRtime.valueChanged.connect(self.onRtimeChange)
         self.doubleSpinBoxRnoise.valueChanged.connect(self.onRnoiseChange)
         self.doubleSpinBoxWtime.valueChanged.connect(self.onWtimeChange)
         self.doubleSpinBoxWnoise.valueChanged.connect(self.onWnoiseChange)
-        self.doubleSpinFmin.valueChanged.connect(self.onBodeFminChange)
-        self.doubleSpinFmax.valueChanged.connect(self.onBodeFmaxChange)
         self.doubleSpinBodeRes.valueChanged.connect(self.onBodeResChange)
-        self.doubleSpinFminNyq.valueChanged.connect(self.onNyquistFminChange)
-        self.doubleSpinFmaxNyq.valueChanged.connect(self.onNyquistFmaxChange)
         self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
         self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
         self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
-        #self.doubleSpinBoxDeltaR.valueChanged.connect(self.onRvarChange)
-        #self.doubleSpinBoxDeltaRtime.valueChanged.connect(self.onRvarInstChange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
         self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
@@ -270,6 +269,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditWvalueInit.textEdited.connect(self.onWvalueInitChange)
         self.lineEditRvalueFinal.textEdited.connect(self.onRvalueFinalChange)
         self.lineEditWvalueFinal.textEdited.connect(self.onWvalueFinalChange)
+        self.lineEditK.textEdited.connect(self.onKChange)
+        self.lineEditKlgr.textEdited.connect(self.onKChange)
+        self.lineEditFmin.textEdited.connect(self.onBodeFminChange)
+        self.lineEditFmax.textEdited.connect(self.onBodeFmaxChange)
+        self.lineEditFminNyq.textEdited.connect(self.onNyquistFminChange)
+        self.lineEditFmaxNyq.textEdited.connect(self.onNyquistFmaxChange)
 
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
@@ -426,7 +431,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.comboBoxSys.blockSignals(False)
         # Spinboxes update:
         # The spinboxes setValue calls will also trigger the corresponding event handlers:
-        self.doubleSpinBoxK.setValue(self.sysDict[sysname].K)
+        #self.doubleSpinBoxK.setValue(self.sysDict[sysname].K)
         self.doubleSpinBoxKmax.setValue(self.sysDict[sysname].Kmax)
         self.doubleSpinBoxKmin.setValue(self.sysDict[sysname].Kmin)
         self.doubleSpinBoxLGRpontos.setValue(self.sysDict[sysname].Kpoints)
@@ -438,10 +443,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxWnoise.setValue(self.sysDict[sysname].NoiseWt)
 
         #LineEdits:
-        self.lineEditRvalueInit.setText(str(self.sysDict[sysname].Rt_initValue))
-        self.lineEditWvalueInit.setText(str(self.sysDict[sysname].Wt_initValue))
-        self.lineEditRvalueFinal.setText(str(self.sysDict[sysname].Rt_finalValue))
-        self.lineEditWvalueFinal.setText(str(self.sysDict[sysname].Wt_finalValue))
+        self.lineEditRvalueInit.setText(self.locale.toString(self.sysDict[sysname].Rt_initValue))
+        self.lineEditWvalueInit.setText(self.locale.toString(self.sysDict[sysname].Wt_initValue))
+        self.lineEditRvalueFinal.setText(self.locale.toString(self.sysDict[sysname].Rt_finalValue))
+        self.lineEditWvalueFinal.setText(self.locale.toString(self.sysDict[sysname].Wt_finalValue))
+        self.lineEditK.setText(self.locale.toString(self.sysDict[sysname].K))
+        self.lineEditKlgr.setText(self.locale.toString(self.sysDict[sysname].K))
+        self.onKChange(self.locale.toString(self.sysDict[sysname].K))
+        self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
+        self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+        self.lineEditFminNyq.setText(self.locale.toString(self.sysDict[sysname].FminNyq))
+        self.lineEditFmaxNyq.setText(self.locale.toString(self.sysDict[sysname].FmaxNyq))        
 
         # System type specific changes in the UI:
         self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
@@ -540,17 +552,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         gain = float(value)*float((Kmax)-(Kmin))/float(Kpoints) + Kmin        
         self.sysDict[self.sysCurrentName].K = gain
-        # Disable events to not enter in a event loop:
-        self.doubleSpinBoxKlgr.blockSignals(True)#valueChanged.disconnect(self.onKChange)
-        self.doubleSpinBoxK.blockSignals(True)#valueChanged.disconnect(self.onKChange)
         # Update spinboxes
-        self.doubleSpinBoxKlgr.setValue(gain)
-        self.doubleSpinBoxK.setValue(gain)
+        self.lineEditK.setText(self.locale.toString(gain))
+        self.lineEditKlgr.setText(self.locale.toString(gain))
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(gain)
-        # Re-enable events:
-        self.doubleSpinBoxKlgr.blockSignals(False)#valueChanged.connect(self.onKChange)
-        self.doubleSpinBoxK.blockSignals(False)#valueChanged.connect(self.onKChange)
         
     def onKmaxChange(self,value):
         #self.KmaxminChangeFlag = True # To signal onSliderMove that it is a Kmax change
@@ -562,22 +568,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].Kmin = value
         self.updateSliderPosition() # update slider position, this call also the event slider move.
     
-    def onKChange(self,value):
-
+    def onKChange(self,val):
+        #print('Val is {s} of type {t}'.format(s=val,t=type(val)))
+        value,_ = self.locale.toDouble(val)
         # Save K value in the system object:
         self.sysDict[self.sysCurrentName].K = value
         
-        # Disable events to not enter in a event loop:
-        self.doubleSpinBoxKlgr.blockSignals(True)# valueChanged.disconnect(self.onKChange)
-        self.doubleSpinBoxK.blockSignals(True)#valueChanged.disconnect(self.onKChange)
         # Update spinboxes
-        self.doubleSpinBoxKlgr.setValue(value)
-        self.doubleSpinBoxK.setValue(value)
+        self.lineEditK.setText(val)
+        self.lineEditKlgr.setText(val)
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(value)
-        # Re-enable events:
-        self.doubleSpinBoxKlgr.blockSignals(False)#valueChanged.connect(self.onKChange)
-        self.doubleSpinBoxK.blockSignals(False)#valueChanged.connect(self.onKChange)
         # Update slider position.
         self.updateSliderPosition()
     
@@ -1022,19 +1023,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Nyquist Fmin edited handler
         """
-        self.sys.NyqFmin = self.doubleSpinFminNyq.value()
+        self.sysDict[self.sysCurrentName].FminNyq,_ = self.locale.toDouble(value)
 
     def onNyquistFmaxChange(self, value):
         """
         Nyquist Fmax edited handler
         """
-        self.sys.NyqFmax = self.doubleSpinFmaxNyq.value()
+        self.sysDict[self.sysCurrentName].FmaxNyq,_ = self.locale.toDouble(value)
     
     def onNyquistResChange(self, value):
         """
         Nyquist Resolution edited handler
         """
-        self.sys.NyqFpontos = self.doubleSpinNyqRes.value()
+        self.sysDict[self.sysCurrentName].FpointsNyq = value
    
     
     def onBtnPlotBode(self):
@@ -1073,20 +1074,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Bode Fmin edited handler
         """
-        self.sys.Fmin = self.doubleSpinFmin.value()
+        self.sysDict[self.sysCurrentName].Fmin,_ = self.locale.toDouble(value)
 
 
     def onBodeFmaxChange(self,value):
         """
         Bode Fmax edited handler
         """
-        self.sys.Fmax = self.doubleSpinFmax.value()
+        self.sysDict[self.sysCurrentName].Fmax,_ = self.locale.toDouble(value)
 
     def onBodeResChange(self,value):
         """
         Bode Resolution edited handler
         """
-        self.sys.Fpontos = self.doubleSpinBodeRes.value()
+        self.sysDict[self.sysCurrentName].Fpoints = value
 
     def onTmaxChange(self,value):
         """
@@ -1130,21 +1131,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Event handler of the line edit. Update the system property.
         """
-        print('Rinit changed: {s}'.format(s=(float(value) + 1)))
-        self.sysDict[self.sysCurrentName].Rt_initValue = value
+        self.sysDict[self.sysCurrentName].Rt_initValue,_ = self.locale.toDouble(value)
 
     def onWvalueInitChange(self, value):
         """
         Event handler of the line edit. Update the system property.
         """
-        self.sysDict[self.sysCurrentName].Wt_initValue = value
+        self.sysDict[self.sysCurrentName].Wt_initValue,_ = self.locale.toDouble(value)
 
 
     def onRvalueFinalChange(self,value):
         """
         Event handler of the line edit. Update the system property.
         """
-        self.sysDict[self.sysCurrentName].Rt_finalValue = value
+        self.sysDict[self.sysCurrentName].Rt_finalValue,_ = self.locale.toDouble(value)
         # if not value:
         #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
         #     return
@@ -1168,7 +1168,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Event handler of the line edit. Update the system property.
         """
-        self.sysDict[self.sysCurrentName].Wt_finalValue = value
+        self.sysDict[self.sysCurrentName].Wt_finalValue,_ = self.locale.toDouble(value)
         # if not value:
         #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
         #     return
@@ -1545,7 +1545,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         expSys.Cden = self.lineEditCden.text()
         expSys.Hnum = self.lineEditHnum.text()
         expSys.Hden = self.lineEditHden.text()
-        expSys.K = self.doubleSpinBoxK.value()
+        expSys.K = float(self.lineEditK.text())
         expSys.Type = self.sys.Type
         expSys.Malha = self.sys.Malha
         expSys.Hide = hide
@@ -1618,7 +1618,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.onHdenChange(expSys.Hden)
             
             # Update gain
-            self.doubleSpinBoxK.setValue(expSys.K)
+            self.lineEditK.setText(str(expSys.K))
             # Enable or re-enable group boxes:
             self.groupBoxG.setEnabled(True)
             self.groupBoxC.setEnabled(True)
@@ -1652,7 +1652,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.onHdenChange(expSys.Hden)
             
             # Update gain
-            self.doubleSpinBoxK.setValue(expSys.K)
+            self.lineEditK.setText(str(expSys.K))
             
             #self.onChangeSystem(expSys.Type)
        
@@ -1697,7 +1697,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.onHnumChange(str('1'))
         self.lineEditHden.setText(str('1'))
         self.onHdenChange(str('1'))
-        self.doubleSpinBoxK.setValue(1)
+        self.lineEditK.setText(str(1.00))
+        #self.doubleSpinBoxK.setValue(1)
         self.btnPlotLGR.setEnabled(True)
         self.comboBoxSys.setEnabled(True)
 

@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -255,7 +255,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -709,7 +709,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>50</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -1534,7 +1534,7 @@
             <widget class="QGroupBox" name="groupBoxK">
              <property name="minimumSize">
               <size>
-               <width>80</width>
+               <width>90</width>
                <height>0</height>
               </size>
              </property>
@@ -1589,7 +1589,7 @@ QGroupBox::title {
               <item>
                <widget class="QLabel" name="labelK">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -1602,7 +1602,7 @@ QGroupBox::title {
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>200</width>
+                  <width>90</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -1626,43 +1626,38 @@ QGroupBox::title {
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBoxK">
+               <widget class="QLineEdit" name="lineEditK">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>0</width>
+                  <width>80</width>
                   <height>25</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>16777215</width>
-                  <height>35</height>
+                  <width>0</width>
+                  <height>25</height>
                  </size>
                 </property>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
                  </font>
                 </property>
-                <property name="toolTip">
-                 <string>Ajuste do ganho de malha direta K</string>
+                <property name="text">
+                 <string>1</string>
                 </property>
-                <property name="minimum">
-                 <double>-200.000000000000000</double>
+                <property name="cursorPosition">
+                 <number>1</number>
                 </property>
-                <property name="maximum">
-                 <double>200.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>1.000000000000000</double>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -3292,19 +3287,7 @@ QGroupBox::title {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="doubleSpinBoxKlgr">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>25</height>
-                   </size>
-                  </property>
+                 <widget class="QLineEdit" name="lineEditKlgr">
                   <property name="maximumSize">
                    <size>
                     <width>16777215</width>
@@ -3314,27 +3297,16 @@ QGroupBox::title {
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
                    </font>
                   </property>
-                  <property name="toolTip">
-                   <string>Ajuste do ganho de malha direta K</string>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                  <property name="cursorPosition">
+                   <number>1</number>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="minimum">
-                   <double>-1000.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>1000.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.050000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>1.000000000000000</double>
                   </property>
                  </widget>
                 </item>
@@ -3605,7 +3577,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. mínima:</string>
+              <string>Freq. mínima [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3613,7 +3585,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinFmin">
+            <widget class="QLineEdit" name="lineEditFmin">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3625,29 +3597,11 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
-             <property name="toolTip">
-              <string>Entre com a frequência mínima para o cálculo do diagrama de Bode</string>
+             <property name="text">
+              <string>0,0100</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="suffix">
-              <string notr="true"> Hz</string>
-             </property>
-             <property name="decimals">
-              <number>4</number>
-             </property>
-             <property name="minimum">
-              <double>0.000100000000000</double>
-             </property>
-             <property name="maximum">
-              <double>2000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.010000000000000</double>
              </property>
             </widget>
            </item>
@@ -3677,7 +3631,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. máxima:</string>
+              <string>Freq. máxima [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3685,7 +3639,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinFmax">
+            <widget class="QLineEdit" name="lineEditFmax">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3697,29 +3651,11 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
-             <property name="toolTip">
-              <string>Entre com a frequência máxima para o cálculo do diagrama de Bode</string>
+             <property name="text">
+              <string>100,0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="suffix">
-              <string notr="true"> Hz</string>
-             </property>
-             <property name="decimals">
-              <number>1</number>
-             </property>
-             <property name="minimum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>100.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -3967,7 +3903,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. mínima:</string>
+              <string>Freq. mínima [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3975,7 +3911,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinFminNyq">
+            <widget class="QLineEdit" name="lineEditFminNyq">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3987,29 +3923,11 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
-             <property name="toolTip">
-              <string>Entre com a frequência mínima para o cálculo do diagrama de Nyquist</string>
+             <property name="text">
+              <string>0,0100</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="suffix">
-              <string notr="true"> Hz</string>
-             </property>
-             <property name="decimals">
-              <number>4</number>
-             </property>
-             <property name="minimum">
-              <double>0.000100000000000</double>
-             </property>
-             <property name="maximum">
-              <double>2000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.010000000000000</double>
              </property>
             </widget>
            </item>
@@ -4039,7 +3957,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. máxima:</string>
+              <string>Freq. máxima [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -4047,7 +3965,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinFmaxNyq">
+            <widget class="QLineEdit" name="lineEditFmaxNyq">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -4059,29 +3977,11 @@ QGroupBox::title {
                <pointsize>12</pointsize>
               </font>
              </property>
-             <property name="toolTip">
-              <string>Entre com a frequência máxima para o cálculo do diagrama de Nyquist</string>
+             <property name="text">
+              <string>100,0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
-             </property>
-             <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::UpDownArrows</enum>
-             </property>
-             <property name="suffix">
-              <string notr="true"> Hz</string>
-             </property>
-             <property name="decimals">
-              <number>1</number>
-             </property>
-             <property name="minimum">
-              <double>0.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>100000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>100.000000000000000</double>
              </property>
             </widget>
            </item>
