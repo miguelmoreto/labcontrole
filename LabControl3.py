@@ -524,6 +524,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         # Change System Diagram accordingly:        
         self.sysDict[self.sysCurrentName].Loop = 'open'
+        self.sysDict[self.sysCurrentName].updateSystem()
         self.updateSystemPNG()
         self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
@@ -532,6 +533,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         # Change System Diagram accordingly:        
         self.sysDict[self.sysCurrentName].Loop = 'closed'
+        self.sysDict[self.sysCurrentName].updateSystem()
         # Change PNG accordingly:        
         self.updateSystemPNG()
         self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
@@ -544,6 +546,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         self.sysDict[self.sysCurrentName].changeSystemType(sysindex)
         self.updateUIfromSystem(self.sysCurrentName)
+        self.sysDict[self.sysCurrentName].updateSystem()
         self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))  
 
     def onSliderMove(self,value):
@@ -561,6 +564,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Update spinboxes
         self.lineEditK.setText(self.locale.toString(gain))
         self.lineEditKlgr.setText(self.locale.toString(gain))
+        # Update system transfer matrix:
+        self.sysDict[self.sysCurrentName].updateSystem()
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(gain)
         
@@ -579,10 +584,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         value,_ = self.locale.toDouble(val)
         # Save K value in the system object:
         self.sysDict[self.sysCurrentName].K = value
+        # Update system transfer matrix:
+        self.sysDict[self.sysCurrentName].updateSystem()
         
         # Update spinboxes
         self.lineEditK.setText(val)
         self.lineEditKlgr.setText(val)
+        
         # Draw Closed Loop Poles:
         self.DrawCloseLoopPoles(value)
         # Update slider position.
