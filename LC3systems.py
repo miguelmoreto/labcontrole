@@ -5,7 +5,7 @@
 
 import numpy as np
 import control as ct
-#import pandas as pd
+import scipy as sp
 import logging as lg
 
 class LTIsystem:
@@ -38,8 +38,8 @@ class LTIsystem:
     
     OLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
     CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
-    OLTF_w = ct.tf(1,1) # Open Loop Transfer Function for w input
-    CLTF_w = ct.tf(1,1) # Closed Loop Transfer Function for w input    
+    #OLTF_w = ct.tf(1,1) # Open Loop Transfer Function for w input
+    #CLTF_w = ct.tf(1,1) # Closed Loop Transfer Function for w input    
     
     TM = ct.tf(1,1) # Transfer Matrix (MIMO system)
     #TM = ct.tf(1,1) # Closed Loop Transfer Matrix (MIMO system)
@@ -60,7 +60,7 @@ class LTIsystem:
     Rt_initValue = 0
     Rt_initType = 0     # Type of the r(t) function during initial period
     Rt_finalType = 0    # Type of the r(t) function during final period
-    Rt_finalValue = 0
+    Rt_finalValue = 1
     InstRt = 0.0        # Time instant of r(t) changing.
     NoiseRt = 0.0       # Noise standard deviation for r(t) input.
     Wt_initStr = '0'    # String with the w(t) input function for initial segment.
@@ -171,13 +171,13 @@ class LTIsystem:
         if (self.Type == 0):
             self.OLTF_r = (self.K * self.G_tf).minreal(0.0001)
             self.CLTF_r = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
-            self.OLTF_w = ct.tf(1,1)
-            self.CLTF_w = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
+            #self.OLTF_w = ct.tf(1,1)
+            #self.CLTF_w = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 1):
             self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
             self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
-            self.OLTF_w = ct.tf(1,1)
-            self.CLTF_w = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+            #self.OLTF_w = ct.tf(1,1)
+            #self.CLTF_w = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 2):
             self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
             self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
@@ -414,8 +414,37 @@ class LTIsystem:
         T = self.TimeSimData[self.CurrentSimulName]['data']['time']
         U = np.append(np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['r(t)'],(1,self.N)),np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['w(t)'],(1,self.N)),axis=0)
         T,Y = ct.forced_response(self.TM,T,U,return_x=False)
-        print(np.shape(T))
-        print(np.shape(U))
-        print(np.shape(Y))
+        #print(np.shape(T))
+        #print(np.shape(U))
+        #print(np.shape(Y))
         self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
+        self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = U[0]-Y[0]
+    
+    def RootLocus(self):
+        """
+        Calculate the root locus
+
+        """
+
+        num = np.poly1d(self.OLTF_r.num[0][0]) #self.polyDnum
+        den = np.poly1d(self.OLTF_r.den[0][0]) #self.polyDden
+        
+        
+        # Creating a gain vector (without the critical points):
+        delta_k = (self.Kmax-self.Kmin) / self.Kpoints
+        kvect = np.arange(self.Kmin,self.Kmax,delta_k)
+        # Calculating the RL separation points by polynomial derivative:
+        # d(-1/G(s))/ds = 0
+        deriv = sp.polyder(den)*num - sp.polyder(num)*den
+        cpss = sp.roots(deriv) # candidatos a ponto de separacao
+        # Verificacao de quais os candidatos pertinentes
+        for root in cpss:		
+            aux = num(root)
+            if aux != 0:
+                Kc = -den(root) / num(root)
+                if (np.isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                        #print(Kc)
+                        kvect = np.append(kvect,Kc)
+        # Reorder kvect:
+        kvect = np.sort(kvect)

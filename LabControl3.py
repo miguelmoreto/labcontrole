@@ -300,6 +300,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimulAdd.clicked.connect(self.onBtnSimulAdd)
         self.btnSimulRemove.clicked.connect(self.onBtnSimulRemove)
         self.btnSimulClear.clicked.connect(self.onBtnSimulClear)
+        self.btnSimulClearAxis.clicked.connect(self.onBtnSimulClearAxis)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
         self.actionCalc.triggered.connect(self.onCalcAction)
@@ -723,6 +724,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.treeWidgetSimul.clearSelection()
             self.treeWidgetSimul.setCurrentItem(newitem)
         
+    def onBtnSimulClearAxis(self):
+        # Clear plot area:
+        self.mplSimul.axes.cla()
+        self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
+        self.mplSimul.axes.set_ylim(0, 1)
+        self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        self.mplSimul.axes.grid()
+        self.mplSimul.draw()
+        
+    
     def onBtnSimulClear(self):
         """
         Button event handler.
@@ -891,6 +904,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
         
         # Plot LGR:
+        self.sysDict[self.sysCurrentName].RootLocus()
         self.sys.LGR(self.mplLGR.figure)
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))

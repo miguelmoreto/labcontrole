@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2496,7 +2496,7 @@ QGroupBox::title {
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="btnLimparSimul">
+            <widget class="QPushButton" name="btnSimulClearAxis">
              <property name="minimumSize">
               <size>
                <width>0</width>
