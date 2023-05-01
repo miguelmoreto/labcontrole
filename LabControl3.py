@@ -480,6 +480,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
         elif (systype == 3): # Discrete time controler system.
             self.labelGden.show()
+            self.lineEditGden.show()
             self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
             self.labelGnum.setText(_translate("MainWindow", "Num:", None))                
             self.labelTk.setEnabled(True)
