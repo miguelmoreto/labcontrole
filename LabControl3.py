@@ -424,14 +424,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
 
         systype = self.sysDict[sysname].Type
+        # Comboboxes:
         # Blocking events, otherwise this will trigger the System
         #   type ComboBox CurrentIndexChange event:
         self.comboBoxSys.blockSignals(True) 
         self.comboBoxSys.setCurrentIndex(systype)
         self.comboBoxSys.blockSignals(False)
+        self.comboBoxRinit.setCurrentIndex(self.sysDict[sysname].Rt_initType)
+        self.comboBoxRfinal.setCurrentIndex(self.sysDict[sysname].Rt_finalType)
+        self.comboBoxWinit.setCurrentIndex(self.sysDict[sysname].Wt_initType)
+        self.comboBoxWfinal.setCurrentIndex(self.sysDict[sysname].Wt_finalType)
+
         # Spinboxes update:
         # The spinboxes setValue calls will also trigger the corresponding event handlers:
-        #self.doubleSpinBoxK.setValue(self.sysDict[sysname].K)
         self.doubleSpinBoxKmax.setValue(self.sysDict[sysname].Kmax)
         self.doubleSpinBoxKmin.setValue(self.sysDict[sysname].Kmin)
         self.doubleSpinBoxLGRpontos.setValue(self.sysDict[sysname].Kpoints)
@@ -766,7 +771,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
         # Perform a time domain simulation:
         
-        self.sysDict[sysname].TimeSimulationTesting()
+        #self.sysDict[sysname].TimeSimulationTesting()
+        self.sysDict[sysname].TimeSimulation()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
             for signal in self.sysDict[sysname].TimeSimData[simulname]['data']:

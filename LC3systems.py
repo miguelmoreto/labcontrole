@@ -72,7 +72,7 @@ class LTIsystem:
     InstWt = 0.0        # Time instant of w(t) changing.
     NoiseWt = 0.0       # Noise standard deviation for w(t) input.
 
-    # Time simulation configuration:
+    # Time simulation stuff:
     Delta_t = 0.005     # Time domain simulation time step value.
     Tmax = 10           # Time domain max simulation time.
     tfinal = 10         # Time domain simulation final time value.
@@ -129,10 +129,10 @@ class LTIsystem:
     #  will contain also a dictionary with the following keys:
     #       'data' : a dictionary with the keys:
     #                'time' : time array
-    #                'r' : array of the reference input signal
-    #                'w' : array of the perturbation input signal
-    #                'y' : array of the main system output signal
-    #                'u' : array of the control action output signal
+    #                'r(t)' : array of the reference input signal
+    #                'w(t)' : array of the perturbation input signal
+    #                'y(t)' : array of the main system output signal
+    #                'u(t)' : array of the control action output signal
     #       'id' : the id number of the simulation
     #       'info' : a dictionary with the following keys:
     #  that contains the numpy arrays with the plotting data.
@@ -314,66 +314,108 @@ class LTIsystem:
         # Time vector:
         if (self.Type == 3):
             # For discrete simulation it is needed 2 more samples in input vector.
-            t_total = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
+            time = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
         else:
-            t_total = np.arange(0,self.Tmax,self.Delta_t)
+            time = np.arange(0,self.Tmax,self.Delta_t)
            
-        r = np.zeros((1,len(t_total)))
-        w = np.zeros((1,len(t_total)))
+        r = np.zeros((len(time)))
+        w = np.zeros((len(time)))
+        self.N = len(time)
+        #time = np.reshape(time,(1,len(time)))
         
         # Number of the sample corresponding to the begining of the inputs:
         sampleR = int(self.InstRt/self.Delta_t)
         sampleW = int(self.InstWt/self.Delta_t)
         
-        # create vector r(t):
-        t = t_total[0:(len(t_total)-sampleR)] # This is necessary to eval expressions with 't'
-        if (self.ruidoRt > 0):
-            r[0][sampleR:] = eval(self.Rt_finalStr) + np.random.normal(0,self.NoiseRt,(len(t_total)-sampleR))
-            r[0][0:sampleR] = 0 + np.random.normal(0,self.NoiseRt,sampleR)
+        # Create vector r(t):
+        # r(t) initial part (between 0 and InstRt seconds):
+        if (self.Rt_initType == 0): # 0 => Constant value.
+            r[0:sampleR] = self.Rt_initValue
+        elif (self.Rt_initType == 1): # 1 => Ramp 
+            r[0:sampleR] = self.Rt_initValue * time[0:sampleR]
+        elif (self.Rt_initType == 2): # 2 => Parabolic
+            r[0:sampleR] = self.Rt_initValue * np.square(time[0:sampleR])
+        elif (self.Rt_initType == 3): # 3 => Sin
+            r[0:sampleR] = np.sin(2*np.pi*self.Rt_initValue*time[0:sampleR])
+        elif (self.Rt_initType == 4): # 3 => Sin
+            r[0:sampleR] = np.cos(2*np.pi*self.Rt_initValue*time[0:sampleR])
         else:
-            r[0][sampleR:] = eval(self.Rt_finalStr)
-            r[0][0:sampleR] = 0 # TO DO: use the intial string.
-
-        # create vector w(t)
-        if (self.ruidoWt > 0):
-            w[1][sampleW:] = eval(self.Wt_finalStr) + np.random.normal(0,self.NoiseWt,(len(t_total)-sampleW))
+            lg.error('r(t) intial signal type {t} not recognized.'.format(t=self.Rt_initType))
+        # r(t) final part (between InstRt and Tmax seconds):
+        if (self.Rt_finalType == 0): # 0 => Constant value.
+            r[sampleR:] = self.Rt_finalValue
+        elif (self.Rt_finalType == 1): # 1 => Ramp 
+            r[sampleR:] = self.Rt_finalValue * (time[sampleR:] - self.InstRt)
+        elif (self.Rt_finalType == 2): # 2 => Parabolic
+            r[sampleR:] = self.Rt_finalValue * np.square((time[sampleR:] - self.InstRt))
+        elif (self.Rt_finalType == 3): # 3 => Sin
+            r[sampleR:] = np.sin(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
+        elif (self.Rt_finalType == 4): # 3 => Sin
+            r[sampleR:] = np.cos(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
         else:
-            w[1][sampleW:] = eval(self.Wt_finalStr)
-            w[1][0:sampleW] = 0 # TO DO: use the intial string.
+            lg.error('r(t) final signal type {t} not recognized.'.format(t=self.Rt_finalType))
 
-        #u[0] = Rinic
-        #w[0] = Winic
+        # Create vector w(t):
+        # w(t) initial part (between 0 and InstWt seconds):
+        if (self.Wt_initType == 0): # 0 => Constant value.
+            w[0:sampleW] = self.Wt_initValue
+        elif (self.Wt_initType == 1): # 1 => Ramp 
+            w[0:sampleW] = self.Wt_initValue * time[0:sampleW]
+        elif (self.Wt_initType == 2): # 2 => Parabolic
+            w[0:sampleW] = self.Wt_initValue * np.square(time[0:sampleW])
+        elif (self.Wt_initType == 3): # 3 => Sin
+            w[0:sampleW] = np.sin(2*np.pi*self.Wt_initValue*time[0:sampleW])
+        elif (self.Wt_initType == 4): # 3 => Sin
+            w[0:sampleW] = np.cos(2*np.pi*self.Wt_initValue*time[0:sampleW])
+        else:
+            lg.error('r(t) intial signal type {t} not recognized.'.format(t=self.Wt_initType))
+        # w(t) final part (between InstWt and Tmax seconds):
+        if (self.Wt_finalType == 0): # 0 => Constant value.
+            w[sampleW:] = self.Wt_finalValue
+        elif (self.Wt_finalType == 1): # 1 => Ramp 
+            w[sampleW:] = self.Wt_finalValue * (time[sampleW:] - self.InstWt)
+        elif (self.Wt_finalType == 2): # 2 => Parabolic
+            w[sampleW:] = self.Wt_finalValue * np.square((time[sampleW:] - self.InstWt))
+        elif (self.Wt_finalType == 3): # 3 => Sin
+            w[sampleW:] = np.sin(2*np.pi*self.Wt_finalValue*(time[sampleW:] - self.InstWt))
+        elif (self.Wt_finalType == 4): # 3 => Sin
+            w[sampleW:] = np.cos(2*np.pi*self.Wt_finalValue*(time[sampleW:] - self.InstWt))
+        else:
+            lg.error('r(t) final signal type {t} not recognized.'.format(t=self.Wt_finalType))
 
-        self.tfinal = t_total[-1]
-        self.Rfinal = r[0][-1]
-        self.Wfinal = w[0][-1]
-
-        self.TimeSimData[self.CurrentSimulName]['data'] = {'time':t_total,'r(t)':r,'w(t)':w}
-       
-        #return t_total, r, w
+        # Creating Time Simulation Data with the inputs vectors:
+        self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w}
 
     def TimeSimulationTesting(self):
         """
         Temporary method only to test the UI and multiplot feature
         """
-        time = np.arange(0,1,0.01)
-        y = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time)
-        u = 2*np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time+np.pi/2)
-        r = np.ones(len(time))
-        w = 0.5*np.ones(len(time))
+        self.createInputVectors()
+        #time = np.arange(0,1,0.01)
+        #y = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time)
+        #u = 2*np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time+np.pi/2)
+        #r = np.ones(len(time))
+        #w = 0.5*np.ones(len(time))
+        r = self.TimeSimData[self.CurrentSimulName]['data']['r(t)']
+        y = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'] * 2
+        u = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'] * 1.5
+
         e = r - y
-        self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w,'y(t)':y,'u(t)':u,'e(t)':e}
+        self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = y
+        self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u
+        self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e
 
     
     def TimeSimulation(self):
         """
         Performs a time domain simulation.
         """
-
-        T = self.TimeSimData[self.CurrentSimulName]['time']
-        U = np.append(self.TimeSimData[self.CurrentSimulName]['r'],self.TimeSimData[self.CurrentSimulName]['w'],axis=0)
+        self.createInputVectors()
+        T = self.TimeSimData[self.CurrentSimulName]['data']['time']
+        U = np.append(np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['r(t)'],(1,self.N)),np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['w(t)'],(1,self.N)),axis=0)
         T,Y = ct.forced_response(self.TM,T,U,return_x=False)
-        self.TimeSimData[self.CurrentSimulName]['data']['y'] = Y[0]
-        self.TimeSimData[self.CurrentSimulName]['data']['u'] = Y[1]
-
-        pass
+        print(np.shape(T))
+        print(np.shape(U))
+        print(np.shape(Y))
+        self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
+        self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
