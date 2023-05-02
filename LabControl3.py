@@ -447,6 +447,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxWtime.setValue(self.sysDict[sysname].InstWt)
         self.doubleSpinBoxRnoise.setValue(self.sysDict[sysname].NoiseRt)
         self.doubleSpinBoxWnoise.setValue(self.sysDict[sysname].NoiseWt)
+        self.doubleSpinBoxRebd.setValue(self.sysDict[self.sysCurrentName].RL_FR_R)
+        self.doubleSpinBoxRibd.setValue(self.sysDict[self.sysCurrentName].RL_FR_RI)
+        self.doubleSpinBoxImbd.setValue(self.sysDict[self.sysCurrentName].RL_FR_I)
 
         #LineEdits:
         self.lineEditRvalueInit.setText(self.locale.toString(self.sysDict[sysname].Rt_initValue))
@@ -905,15 +908,24 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         # Plot LGR:
         self.sysDict[self.sysCurrentName].RootLocus()
-        self.sys.LGR(self.mplLGR.figure)
+        # Ploting:
+        self.mplLGR.figure.clf()
+        self.LGRaxis = self.mplLGR.figure.add_subplot(111)
+        # Open loop poles:
+        self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_poles), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_poles), 'x')
+        # Open loop zeros:
+        if self.sysDict[self.sysCurrentName].DLTF_zeros.any():
+            self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_zeros), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_zeros), 'o')
+        for col in self.sysDict[self.sysCurrentName].RL_root_vector.T:
+            # Ploting the root locus.
+            self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-')
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
         
-        self.axesLGR = self.mplLGR.figure.gca()
-        self.axesLGR.grid(True)
-        self.axesLGR.set_xlabel(_translate("MainWindow", "Eixo real", None))
-        self.axesLGR.set_ylabel(_translate("MainWindow", "Eixo imaginário", None))
-        self.axesLGR.set_title(_translate("MainWindow", "Lugar Geométrico das raízes de C(s)*G(s)*H(s)", None))
+        self.LGRaxis.grid(True)
+        self.LGRaxis.set_xlabel(_translate("MainWindow", "Eixo real", None))
+        self.LGRaxis.set_ylabel(_translate("MainWindow", "Eixo imaginário", None))
+        self.LGRaxis.set_title(_translate("MainWindow", "Lugar Geométrico das Raízes de ", None)+'{s}'.format(s=self.sysDict[self.sysCurrentName].Name))
 
         # Attempt to erase the closed loop poles instance in the figure
         #  if they exist, erase, else does nothing.
@@ -923,45 +935,49 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             pass        
         
         # Draw closed loop poles with current gain:
-        self.DrawCloseLoopPoles(self.sys.K)
+        self.DrawCloseLoopPoles(self.sysDict[self.sysCurrentName].K)
         
         # Forbidden regions:
         # GUI parameters:
-        Ribd = abs(self.doubleSpinBoxRibd.value())
-        Rebd = abs(self.doubleSpinBoxRebd.value())
-        Imbd = abs(self.doubleSpinBoxImbd.value())
+        RI = abs(self.doubleSpinBoxRibd.value())
+        Re = abs(self.doubleSpinBoxRebd.value())
+        Im = abs(self.doubleSpinBoxImbd.value())
+
+        self.sysDict[self.sysCurrentName].RL_FR_R = self.doubleSpinBoxRebd.value()
+        self.sysDict[self.sysCurrentName].RL_FR_RI = self.doubleSpinBoxRibd.value()
+        self.sysDict[self.sysCurrentName].RL_FR_I = self.doubleSpinBoxImbd.value()
         
-        xlimites = self.axesLGR.get_xlim()
-        ylimites = self.axesLGR.get_ylim()
+        xlimites = self.LGRaxis.get_xlim()
+        ylimites = self.LGRaxis.get_ylim()
         
         if (abs(xlimites[0]-xlimites[1])<0.1):
-            self.axesLGR.set_xlim((xlimites[0]-1,xlimites[1]+1))
-            xlimites = self.axesLGR.get_xlim()
+            self.LGRaxis.set_xlim((xlimites[0]-1,xlimites[1]+1))
+            xlimites = self.LGRaxis.get_xlim()
 
         if (abs(ylimites[0]-ylimites[1])<0.1):
-            self.axesLGR.set_ylim((ylimites[0]-1,ylimites[1]+1))
-            ylimites = self.axesLGR.get_ylim()
+            self.LGRaxis.set_ylim((ylimites[0]-1,ylimites[1]+1))
+            ylimites = self.self.LGRaxis.get_ylim()
 
 
-        if Rebd > 0:
-            if Rebd < 0.5:
-                inic = Rebd + 0.5
+        if Re > 0:
+            if Re < 0.5:
+                inic = Re + 0.5
             else:
                 inic = 0
             y = [ylimites[0],ylimites[1],ylimites[1],ylimites[0]]
-            x = [-Rebd,-Rebd,inic,inic]
-            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+            x = [-Re,-Re,inic,inic]
+            self.LGRaxis.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
         
-        if Ribd > 0:
+        if RI > 0:
             # R = Ribd * I
             y = [0,ylimites[1],ylimites[1],0,ylimites[0],ylimites[0]]
-            x = [0,-Ribd*ylimites[1],0,0,0,Ribd*ylimites[0]]
-            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+            x = [0,-RI*ylimites[1],0,0,0,RI*ylimites[0]]
+            self.LGRaxis.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
         
-        if Imbd > 0:
+        if Im > 0:
             x = [xlimites[0],xlimites[1],xlimites[1],xlimites[0]]
-            y = [-Imbd,-Imbd,Imbd,Imbd]
-            self.axesLGR.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)        
+            y = [-Im,-Im,Im,Im]
+            self.LGRaxis.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)        
         
         self.mplLGR.draw()
 
@@ -983,36 +999,33 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
     def DrawCloseLoopPoles(self,gain):
             
-        # Calcula raízes do polinômio 1+k*TF(s):
-        raizes = self.sys.RaizesRL(gain)
+        # Calculates the roots of 1+k*C(s)*G(s)*H(s)=0:
+        roots = self.sysDict[self.sysCurrentName].RLroots(gain)
         txt = ''
-        for r in raizes:
+        for r in roots:
             if (txt == ''):
                 txt = self.createRootString(r)
             else:
                 txt = txt + '; ' + self.createRootString(r)
         
-        if not self.sys.Hide:
-            txt = _translate("MainWindow", "Pólos em MF: ", None) + txt
+        if not self.sysDict[self.sysCurrentName].Hide:
+            txt = _translate("MainWindow", "Polos em MF: ", None) + txt
             self.statusBar().showMessage(txt)
         
-        # Plotando pólos do sist. realimentado:
-        
-        try: # Se nenhum LGR foi traçado, não faz mais nada.
-            self.polosLGR[0].set_xdata(numpy.real(raizes))
-            self.polosLGR[0].set_ydata(numpy.imag(raizes))
+        # Ploting the closed loop (CL) poles:        
+        try: # If no RL draw, does nothing. Otherwise, update the CL poles values.
+            self.polosLGR[0].set_xdata(numpy.real(roots))
+            self.polosLGR[0].set_ydata(numpy.imag(roots))
         except AttributeError:
-            try: # Se nenhum polo foi desenhado, desenha então:
-                self.polosLGR = self.axesLGR.plot(numpy.real(raizes), numpy.imag(raizes),
+            try: # If no CL poles drawn yet, draws them:
+                self.polosLGR = self.LGRaxis.plot(numpy.real(roots), numpy.imag(roots),
                                 'xb',ms=7,mew=3)
             except AttributeError:
-
                 return
             else:
                 self.mplLGR.draw()
         else:
             self.mplLGR.draw()
-
         finally:
             pass
         

@@ -7,6 +7,7 @@ import numpy as np
 import control as ct
 import scipy as sp
 import logging as lg
+import utils
 
 class LTIsystem:
     """
@@ -36,8 +37,12 @@ class LTIsystem:
     HdenStr = '1'
     Henable = False     # Flag to indicate if transfer function H(s) is enabled or not
     
-    OLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
-    CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
+    DLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
+    #CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
+    DLTF_poles = np.array([])
+    DLTF_zeros = np.array([])
+    DLTF_num_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function numerator
+    DLTF_den_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function denominator
     #OLTF_w = ct.tf(1,1) # Open Loop Transfer Function for w input
     #CLTF_w = ct.tf(1,1) # Closed Loop Transfer Function for w input    
     
@@ -84,11 +89,12 @@ class LTIsystem:
     Kmax = 10.0         # Max gain for root locus plot.
     Kmin = 0.0          # Min gain for root locus plot.
     Kpoints = 200       # Number of K point for root locus plot. 
+    RL_root_vector = np.array([])   # Array that will contain the root locus data points.
     
     # Root locus forbidden regions paramethers:
-    LR_FR_R = 0.0
-    LR_FR_RI = 0.0
-    LR_FR_I = 0.0
+    RL_FR_R = 0.0
+    RL_FR_RI = 0.0
+    RL_FR_I = 0.0
     
     # Bode diagram paramethers:
     Fmin = 0.01
@@ -166,22 +172,27 @@ class LTIsystem:
         self.C_tf = ct.tf(self.Cnum,self.Cden)
         self.H_tf = ct.tf(self.Hnum,self.Hden)
 
-        # Compute OpenLoop and ClosedLoop transfer functions accordingly with
+        # Compute the Direct Loop transfer functions accordingly with
         # the system type.
         if (self.Type == 0):
-            self.OLTF_r = (self.K * self.G_tf).minreal(0.0001)
-            self.CLTF_r = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
+            self.DLTF_r = (self.G_tf * self.H_tf).minreal(0.0001)
+            #self.CLTF_r = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
             #self.OLTF_w = ct.tf(1,1)
             #self.CLTF_w = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 1):
-            self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
-            self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+            self.DLTF_r = (self.C_tf * self.G_tf * self.H_tf).minreal(0.0001)
+            #self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
             #self.OLTF_w = ct.tf(1,1)
             #self.CLTF_w = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
         elif (self.Type == 2):
-            self.OLTF_r = (self.K * self.C_tf * self.G_tf).minreal(0.0001)
-            self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+            self.DLTF_r = (self.C_tf * self.G_tf * self.H_tf).minreal(0.0001)
+            #self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
         
+        self.DLTF_poles = self.DLTF_r.poles()
+        self.DLTF_zeros = self.DLTF_r.zeros()
+        self.DLTF_num_poly = np.poly1d(self.DLTF_r.num[0][0])
+        self.DLTF_den_poly = np.poly1d(self.DLTF_r.den[0][0])
+
         # Computing MIMO system Transfer Matrix polynomial coefficients.
         # This is a 2x2 MIMO system, therefore there are 4 transfer functions.
         if (self.Type == 0):
@@ -427,8 +438,8 @@ class LTIsystem:
 
         """
 
-        num = np.poly1d(self.OLTF_r.num[0][0]) #self.polyDnum
-        den = np.poly1d(self.OLTF_r.den[0][0]) #self.polyDden
+        #num = np.poly1d(self.OLTF_r.num[0][0]) #self.polyDnum
+        #den = np.poly1d(self.OLTF_r.den[0][0]) #self.polyDden
         
         
         # Creating a gain vector (without the critical points):
@@ -436,15 +447,29 @@ class LTIsystem:
         kvect = np.arange(self.Kmin,self.Kmax,delta_k)
         # Calculating the RL separation points by polynomial derivative:
         # d(-1/G(s))/ds = 0
-        deriv = sp.polyder(den)*num - sp.polyder(num)*den
+        deriv = sp.polyder(self.DLTF_den_poly)*self.DLTF_num_poly - sp.polyder(self.DLTF_num_poly)*self.DLTF_den_poly
         cpss = sp.roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for root in cpss:		
-            aux = num(root)
+            aux = self.DLTF_num_poly(root)
             if aux != 0:
-                Kc = -den(root) / num(root)
+                Kc = -self.DLTF_den_poly(root) / self.DLTF_num_poly(root)
                 if (np.isreal(Kc)) and (Kc <= self.Kmax) and (Kc >= self.Kmin):
                         #print(Kc)
                         kvect = np.append(kvect,Kc)
         # Reorder kvect:
         kvect = np.sort(kvect)
+        # Calculate the roots:
+        self.RL_root_vector = utils.MyRootLocus(self.DLTF_num_poly,self.DLTF_den_poly,kvect)
+
+    def RLroots(self,K):
+        """
+        Calculate the roots of the characteristic equation, here given by
+        the numerator and denominator of the direct loop transfer function.
+        """
+        
+        # Characteristic equation:
+        #  EqC = DL.den + K * DL.num
+        EqC = self.DLTF_den_poly + K * self.DLTF_num_poly
+        
+        return EqC.roots

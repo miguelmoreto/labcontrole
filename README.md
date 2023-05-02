@@ -16,7 +16,7 @@ Para maiores informações sobre o projeto, acesse o site do LabControle: http:/
 
 O LabControle roda em Windows 7, Windows 8 (32 ou 64bits, tando do código fonte como de binários) além de rodar em Linux (pelo código fonte apenas).
 
-## New Features of LabControl 3 
+## New Features of LabControl 3
 
 * The user can handle and compare multiple systems parameters. A system list was added to the main UI.
 * The user can plot in the same graphic multiple time domain simulations, from different parameters and different systems.
@@ -24,21 +24,31 @@ O LabControle roda em Windows 7, Windows 8 (32 ou 64bits, tando do código fonte
 * Using python Controls module to handle transfer functions and solving the system.
 * System data structure completed restrutured.
 
-## Executar no Linux
+## Running from source on Linux
 
-Siga os passos abaixo:
+It is recommended to run LabControl3 using the [Anaconda](https://www.anaconda.com/) enviroment.
+In order to run from the python source code, you will need to install de dependencies.
 
-1. Baixe o código fonte usando git. Execute a seguinte linha de comando:
+1. Install dependencies:
+	1. `conda install numpy scipy matplotlib`
+	2. `conda install pyqt`
+	3. `conda install -c conda-forge control`
+	2. `conda install -c conda-forge slycot`
 
+1. Download the source code using git. Run in a command line:
 `git clone https://github.com/miguelmoreto/labcontrole.git`
-1. Entre na pasta criada:
 
+2. Enter in the created folder:
 `cd labcontrole`
-1. Execute o script:
 
-`./run.sh`
+1. Run the script:
+If using the system instalation, run`./run.sh`
+If using Anaconda enviroment, run `./run_conda.sh` of `~/anaconda3/bin/conda run python LabControl3.py`. If you installed anaconda in another folder, then you will have to change the path acordingly.
 
-## Downloads
+#### Observations: 
+The python [slycot](https://github.com/python-control/Slycot) is needed for LabControl3. If you manage to install it outside Anaconda enviroment, then you will be able to run LabControl3 without Anaconda.
+
+## Binary Distributions
 
 ### LabControl3
 
