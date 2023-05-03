@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -138,13 +138,13 @@
               <widget class="QLabel" name="labelRt">
                <property name="minimumSize">
                 <size>
-                 <width>35</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -176,13 +176,13 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>80</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -294,7 +294,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -406,7 +406,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>45</width>
                  <height>25</height>
                 </size>
                </property>
@@ -483,13 +483,13 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>55</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -589,13 +589,13 @@
               <widget class="QLabel" name="label_2">
                <property name="minimumSize">
                 <size>
-                 <width>30</width>
+                 <width>50</width>
                  <height>0</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>35</width>
+                 <width>50</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -624,13 +624,13 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>80</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -742,13 +742,13 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>40</width>
+                 <width>50</width>
                  <height>25</height>
                 </size>
                </property>
@@ -851,7 +851,7 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>45</width>
                  <height>25</height>
                 </size>
                </property>
@@ -928,13 +928,13 @@
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>55</width>
+                 <width>60</width>
                  <height>25</height>
                 </size>
                </property>
@@ -1326,8 +1326,14 @@
              <widget class="QFrame" name="frame_sys_btns">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>150</width>
                 <height>30</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>150</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="frameShape">
@@ -2779,10 +2785,13 @@ QGroupBox::title {
            <item>
             <widget class="QFrame" name="frameLGR1">
              <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+              <enum>QFrame::NoFrame</enum>
              </property>
              <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
               <property name="leftMargin">
@@ -2813,7 +2822,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -2939,7 +2948,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -3065,7 +3074,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3101,7 +3110,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3170,7 +3179,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <italic>false</italic>
                   <bold>false</bold>
@@ -3347,7 +3356,7 @@ QGroupBox::title {
                 </property>
                 <property name="font">
                  <font>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3476,7 +3485,10 @@ QGroupBox::title {
        <attribute name="title">
         <string>Diagrama de Bode</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,1">
+        <property name="spacing">
+         <number>4</number>
+        </property>
         <property name="leftMargin">
          <number>4</number>
         </property>
@@ -3499,17 +3511,20 @@ QGroupBox::title {
           </property>
           <property name="maximumSize">
            <size>
-            <width>160</width>
-            <height>16777215</height>
+            <width>1000</width>
+            <height>50</height>
            </size>
           </property>
           <property name="frameShape">
-           <enum>QFrame::Box</enum>
+           <enum>QFrame::StyledPanel</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
+           <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <property name="spacing">
+            <number>4</number>
+           </property>
            <property name="leftMargin">
             <number>4</number>
            </property>
@@ -3522,35 +3537,6 @@ QGroupBox::title {
            <property name="bottomMargin">
             <number>4</number>
            </property>
-           <item>
-            <widget class="QLabel" name="labelBodeTit">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>20</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Configuração</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLabel" name="labelFmin">
              <property name="minimumSize">
@@ -3567,7 +3553,7 @@ QGroupBox::title {
              </property>
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>11</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3577,7 +3563,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. mínima [Hz]:</string>
+              <string>Freq. mín. [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3621,7 +3607,7 @@ QGroupBox::title {
              </property>
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>11</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3631,7 +3617,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. máxima [Hz]:</string>
+              <string>Freq. máx. [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3675,7 +3661,7 @@ QGroupBox::title {
              </property>
              <property name="font">
               <font>
-               <pointsize>12</pointsize>
+               <pointsize>11</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3732,17 +3718,25 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <spacer name="verticalSpacerBode">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
+            <widget class="QPushButton" name="btnBodeClear">
+             <property name="minimumSize">
               <size>
-               <width>20</width>
-               <height>214</height>
+               <width>0</width>
+               <height>40</height>
               </size>
              </property>
-            </spacer>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>Limpar a área do gráfico</string>
+             </property>
+             <property name="text">
+              <string>Limpar</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnPlotBode">
@@ -3765,34 +3759,50 @@ QGroupBox::title {
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="btnBodeClear">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>12</pointsize>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>Limpar a área do gráfico</string>
-             </property>
-             <property name="text">
-              <string>Limpar</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="VBoxLayoutBode">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="MatplotlibWidget" name="mplBode" native="true"/>
+           <widget class="QTreeWidget" name="treeWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <column>
+             <property name="text">
+              <string>Sistema</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Freq. resp.</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="VBoxLayoutBode">
+            <item>
+             <widget class="MatplotlibWidget" name="mplBode" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>

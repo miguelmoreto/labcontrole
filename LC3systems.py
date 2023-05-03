@@ -156,6 +156,7 @@ class LTIsystem:
         self.TypeStr = self.TypeStrList[systype-1]
         self.updateSystem()
         self.clearTimeSimulData()
+        self.RL_root_vector = np.array([])
 
     def updateSystem(self):
         """

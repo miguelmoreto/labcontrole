@@ -52,6 +52,7 @@ import MySystem
 import utils
 import numpy
 import subprocess
+import platform
 import pickle
 #import encript
 import base64
@@ -288,7 +289,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.groupBoxH.toggled.connect(self.onGroupBoxHcheck)
         # Buttons:
         self.btnSimul.clicked.connect(self.onBtnSimul)
-        self.btnPlotLGR.clicked.connect(self.onBtnLGR)
+        self.btnPlotLGR.clicked.connect(self.onBtnRL)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
         self.btnPlotBode.clicked.connect(self.onBtnPlotBode)
         self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
@@ -897,7 +898,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxResT.setValue(self.sysDict[self.sysCurrentName].Delta_t)
             self.doubleSpinBoxResT.blockSignals(False) #valueChanged.connect(self.onSimluResChange)     
         
-    def onBtnLGR(self):
+    def onBtnRL(self):
         """
         Plot LGR graphic.
         """
@@ -1548,11 +1549,22 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
     
     def onCalcAction(self):
-        try:
-            p=subprocess.Popen('calc.exe')
-        except OSError:
-            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (calc.exe).", None))
-            
+        """
+        Opens a calculator app from the system
+        """
+        system = platform.system()
+        if system == 'Windows':
+            try:
+                p=subprocess.Popen('calc.exe')
+            except OSError:
+                QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (calc.exe).", None))
+        elif system == 'Linux':
+            try:
+                p=subprocess.Popen('gnome-calculator')
+            except FileNotFoundError:
+                QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (gnome-calculator).", None))
+        else:
+            QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Não foi possível determinar o sistema operacional.", None))
     
     def onSaveAction(self):
         """
@@ -1745,65 +1757,74 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.comboBoxSys.setEnabled(True)
 
     def onTabChange(self, index):
-        # Clearing the lists:
-        self.listWidgetCLpoles.clear()
-        self.listWidgetOLpoles.clear()
-        self.listWidgetOLzeros.clear()
-        self.listWidgetRLpoints.clear()
-        
-        if (self.sys.Hide == True or self.sys.Type > 2):
-            txt = _translate("MainWindow", "Desabilitado", None)
-            item = QtWidgets.QListWidgetItem()
-            item.setText(txt)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.listWidgetCLpoles.addItem(item)
-            item = QtWidgets.QListWidgetItem()
-            item.setText(txt)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.listWidgetOLpoles.addItem(item)
-            item = QtWidgets.QListWidgetItem()
-            item.setText(txt)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.listWidgetOLzeros.addItem(item)
-            item = QtWidgets.QListWidgetItem()
-            item.setText(txt)
-            item.setTextAlignment(QtCore.Qt.AlignCenter)
-            self.listWidgetRLpoints.addItem(item)
-            return
-            
-        # Check if SysInfo tab:
-        if (index == 5):
-            # Closed loop poles:
-            rootsCL = self.sys.RaizesRL(self.sys.K)
-            for root in rootsCL:
+        """
+        Event handler when the user change tabs.
+        """
+        # LGR tab:
+        # if (index == 2) and \
+        #     self.sysDict[self.sysCurrentName].Hide == False and \
+        #     self.sysDict[self.sysCurrentName].Type < 3:
+        #     # Redraw the LGR if there exist data already calculated.
+        #     if len(self.sysDict[self.sysCurrentName].RL_root_vector) > 0:
+        #         # Redraw the RL
+        #         self.onBtnRL()
+        if (index == 5):  # Sysinfo tab.
+            # Clearing the lists:
+            self.listWidgetCLpoles.clear()
+            self.listWidgetOLpoles.clear()
+            self.listWidgetOLzeros.clear()
+            self.listWidgetRLpoints.clear()
+            if (self.sys.Hide == True or self.sys.Type > 2):
+                txt = _translate("MainWindow", "Desabilitado", None)
                 item = QtWidgets.QListWidgetItem()
-                item.setText(self.createRootString(root))
+                item.setText(txt)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetCLpoles.addItem(item)
-            
-            rootsOL = self.sys.RaizesOL()
-            for root in rootsOL:
                 item = QtWidgets.QListWidgetItem()
-                item.setText(self.createRootString(root))
+                item.setText(txt)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetOLpoles.addItem(item)
-                
-            zerosOL = self.sys.ZerosOL()
-            for zero in zerosOL:
                 item = QtWidgets.QListWidgetItem()
-                item.setText(self.createRootString(zero))
+                item.setText(txt)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetOLzeros.addItem(item)
-            
-            pontos, ganhos = self.sys.PontosSeparacao()
-            i = 0
-            for ponto in pontos:
                 item = QtWidgets.QListWidgetItem()
-                item.setText(self.createRootString(ponto) + " com Kc =  %0.3f" %(ganhos[i]))
+                item.setText(txt)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.listWidgetRLpoints.addItem(item)
-                i = i + 1
+                return
+            else:
+                # Closed loop poles:
+                rootsCL = self.sys.RaizesRL(self.sys.K)
+                for root in rootsCL:
+                    item = QtWidgets.QListWidgetItem()
+                    item.setText(self.createRootString(root))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.listWidgetCLpoles.addItem(item)
                 
+                rootsOL = self.sys.RaizesOL()
+                for root in rootsOL:
+                    item = QtWidgets.QListWidgetItem()
+                    item.setText(self.createRootString(root))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.listWidgetOLpoles.addItem(item)
+                    
+                zerosOL = self.sys.ZerosOL()
+                for zero in zerosOL:
+                    item = QtWidgets.QListWidgetItem()
+                    item.setText(self.createRootString(zero))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.listWidgetOLzeros.addItem(item)
+                
+                pontos, ganhos = self.sys.PontosSeparacao()
+                i = 0
+                for ponto in pontos:
+                    item = QtWidgets.QListWidgetItem()
+                    item.setText(self.createRootString(ponto) + " com Kc =  %0.3f" %(ganhos[i]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.listWidgetRLpoints.addItem(item)
+                    i = i + 1
+                    
     # Given a numpy number (complex or not) return a formatted string.
     def createRootString(self, root):
         root_str = ''
