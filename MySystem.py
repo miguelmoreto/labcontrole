@@ -493,6 +493,7 @@ class MySystem:
         # Plotando a magnitude:
         ax = figura.add_subplot(111)
         
+        
         [linha1] = ax.plot(preal,pimag)
         if completo : [linha2] = ax.plot(preal,-1*pimag)        
         if comcirculo :

@@ -124,9 +124,8 @@ class LTIsystem:
     N = 0                        # Number of samples
 
     # Time Domain simulation data
-    TimeSimList = []                # List to store a collection of Data Dictionaries
     CurrentTimeSimId = -1
-    #CurrentTimeSimIndex = -1        # An index for time simulation data. The LC3systems
+    #CurrentTimeSimIndex = -1       # An index for time simulation data. The LC3systems
                                     # object can store several simulations.
     TimeSimCounter = -1             # An absolute time simulation counter 
     # TimeSimData dictionary structure:
@@ -145,6 +144,12 @@ class LTIsystem:
     TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
     CurrentSimulName = ''
 
+    # Frequency response data
+    CurrentFreqResponseId = -1
+    FreqResponseCounter = -1        # An absolute frequency response data counter
+    FreqResponseData = {'Name':[]}  # A Dictionary to store frequency response data.
+    CurrentFreqResponseName = ''
+
     def __init__(self,index,systype):
         """
         Init function. Updates
@@ -156,6 +161,7 @@ class LTIsystem:
         self.TypeStr = self.TypeStrList[systype]
         self.updateSystem()
         self.clearTimeSimulData()
+        self.clearFreqResponseData()
         self.RL_root_vector = np.array([])
 
     def updateSystem(self):
@@ -286,7 +292,7 @@ class LTIsystem:
         # if the removed simulation data was the only one stored
         # resets the CurrentTimeSimIndex and TimeSimCounter.
         if not len(self.TimeSimData['Name']):
-            self.CurrentTimeSimIndex = -1
+            #self.CurrentTimeSimIndex = -1
             self.TimeSimCounter = -1
         else: # simul to remove is not the only one.
             if self.CurrentSimulName == name:   # If the removed is the current one:
@@ -474,3 +480,65 @@ class LTIsystem:
         EqC = self.DLTF_den_poly + K * self.DLTF_num_poly
         
         return EqC.roots
+
+    def clearFreqResponseData(self):
+        """
+        Clear all the time simulation data stored.
+        """
+        self.FreqResponseData = {'Name':[]}
+        self.FreqResponseName = ''
+        self.CurrentFreqResponseId = -1
+        self.FreqResponseCounter = -1 
+
+    def setAtiveFreqResponse(self,name):
+        """
+        Sets the current frequency response data
+        """
+        if name in self.FreqResponseData['Name']:
+            lg.debug('Setting active freq. response in Sysname: {s} SimulName: {sm} List: {l}'.format(s=self.Name,sm=name,l=self.FreqResponseData['Name']))
+            self.CurrentFreqResponseName = name
+            self.CurrentFreqResponseId = self.FreqResponseData[name]['id']
+        else:
+            lg.info('Freq. response name {s} not found in FreqResponseData.'.format(s=name))
+
+    def addFreqResponse(self):
+        self.FreqResponseCounter = self.FreqResponseCounter + 1
+        # Format simul name string. The simulation number is 1 plus the last one:
+        self.CurrentFreqResponseId = self.FreqResponseCounter
+        self.CurrentFreqResponseName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentFreqResponseId)
+        self.FreqResponseData['Name'].append(self.CurrentFreqResponseName)
+        self.FreqResponseData[self.CurrentFreqResponseName] = {}
+        # Store this simul ID:
+        self.FreqResponseData[self.CurrentFreqResponseName]['id'] = self.CurrentFreqResponseId
+        # Store this simul infos:
+        self.FreqResponseData[self.CurrentFreqResponseName]['info'] = 'K = {k}'.format(k=self.K)
+
+    def removeFreqResponse(self, name):
+        lg.debug('Removing freq response {s} from sys index {i}'.format(s=name,i=self.Index))
+        lg.debug('Freq. response names stored: {s}'.format(s=self.TimeSimData['Name']))
+        # Find in wich position the removed data is in the dictionary:
+        removedIdx = self.FreqResponseData['Name'].index(name)
+
+        # if the removed simulation data was the only one stored
+        # resets the CurrentTimeSimIndex and TimeSimCounter.
+        if not len(self.FreqResponseData['Name']):
+            #self.CurrentTimeSimIndex = -1
+            self.FreqResponseCounter = -1
+        else: # simul to remove is not the only one.
+            if self.CurrentFreqResponseName == name:   # If the removed is the current one:
+                # The new current data will be the prior one:
+                lg.debug('Removing current selected simul:')
+                lg.debug('Sysname: {s} SimulName: {sm} Index in the list: {i}'.format(s=self.Name,sm=name,i=removedIdx))
+                self.CurrentFreqResponseName = self.FreqResponseData['Name'][removedIdx - 1]
+                #print(self.TimeSimData)
+                lg.debug('Current simul name: {n}'.format(n=self.CurrentFreqResponseName))
+                self.CurrentFreqResponseId = self.FreqResponseData[self.CurrentFreqResponseName]['id'] # Gets the previous simuldataId.
+                #self.CurrentTimeSimIndex = self.CurrentTimeSimIndex - 1
+            #else: # If not, find the index of current SimulName in the list.
+            #    self.CurrentTimeSimId = self.TimeSimData[self.CurrentSimulName]['id']
+            #    currentIdx = self.TimeSimData['Name'].index(self.CurrentSimulName)
+
+            # Updates the new current simulation data name:
+            #self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
+        self.FreqResponseData['Name'].pop(removedIdx) # Remove the simulation name from the list.
+        del self.FreqResponseData[name] # Remove the data from the dictionary.

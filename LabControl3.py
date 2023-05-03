@@ -184,8 +184,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCurrentName = ''
         self.sysCounter = -1
         self.addSystem(0)
-        self.treeWidgetSimul.setColumnWidth(0, 60)
-        self.treeWidgetBode.setColumnWidth(0, 60)
+        self.treeWidgetSimul.setColumnWidth(0, 70)
+        self.treeWidgetBode.setColumnWidth(0, 70)
 
         ########################
 
@@ -277,7 +277,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditFmax.textEdited.connect(self.onBodeFmaxChange)
         self.lineEditFminNyq.textEdited.connect(self.onNyquistFminChange)
         self.lineEditFmaxNyq.textEdited.connect(self.onNyquistFmaxChange)
-
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
@@ -293,7 +292,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnPlotLGR.clicked.connect(self.onBtnRL)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
         self.btnPlotBode.clicked.connect(self.onBtnPlotBode)
-        self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
         self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
         self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
         self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
@@ -303,6 +301,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimulRemove.clicked.connect(self.onBtnSimulRemove)
         self.btnSimulClear.clicked.connect(self.onBtnSimulClear)
         self.btnSimulClearAxis.clicked.connect(self.onBtnSimulClearAxis)
+        self.btnSimulInspect.clicked.connect(self.onBtnSimulInspect)
+        self.btnBodeAdd.clicked.connect(self.onBtnBodeAdd)
+        self.btnBodeRemove.clicked.connect(self.onBtnBodeRemove)
+        self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
+        self.btnBodeClearAxis.clicked.connect(self.onBtnBodeClearAxis)
+        self.btnBodeInspect.clicked.connect(self.onBtnBodeInspect)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
         self.actionCalc.triggered.connect(self.onCalcAction)
@@ -847,8 +851,137 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
         self.mplSimul.draw()
-
     
+    def onBtnSimulInspect(self):
+        QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+
+    def onBtnBodeAdd(self):
+        print('Bode add')
+        """
+        Button event handler to add a frequency response to the list.
+        """
+        self.treeWidgetBode.clearSelection()
+        self.sysDict[self.sysCurrentName].addFreqResponse()    # Adding a TimeSimul data to LC3systems object.
+        simulname  = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
+        lg.debug('Adding a simulation on System {s} with simulname {n}'.format(s=self.sysCurrentName,n=simulname))
+        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetBode)
+        currentItem.setText(0, self.sysCurrentName)
+        currentItem.setText(1, simulname)
+        # Setting a simulation tooltip:
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
+        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+        currentItem.setSelected(True)
+        #return currentItem        
+    
+    def onBtnBodeRemove(self):
+        """
+        Button event handler.
+        Removes a frequency response from the list:
+            - remove the treewidget item
+            - remove the correct data form the LC3systems object
+            - remove the selected plotted lines from the graph
+            - select the previous freq. response and activates it.
+        """
+        selectItemList = self.treeWidgetBode.selectedItems()
+        if not selectItemList:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação para ser removida.", None))
+            return
+        else:
+            currentItem = selectItemList[0]
+        
+        # If no index is readed from column 0, then the selected item is a child item.
+        # Thus the parent is used:
+        if not currentItem.text(0):
+            currentItem = currentItem.parent()
+            lg.debug('Removing parent simul item {s} from system {sys}'.format(s=currentItem.text(1),sys=currentItem.text(0)))   
+
+        sysname = currentItem.text(0) # The sys index of the simul to remove (column 0)
+        freqrespnameremove = currentItem.text(1) # The simulation name to remove
+
+        lg.debug(freqrespnameremove)
+        lg.debug(sysname)
+        lg.debug(self.sysDict[sysname].FreqResponseData['Name'])
+        lg.debug('Removing simul item {s} from system {sys}'.format(s=freqrespnameremove,sys=sysname))
+
+        if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
+            # Remove plotted lines:
+            lg.debug('Item to remove: {s}'.format(s=freqrespnameremove))
+            for signal in self.sysDict[sysname].FreqResponseData[freqrespnameremove]['data'].keys():
+                label = '{id}:{s}:{sg}'.format(id=sysname,s=freqrespnameremove,sg=signal)
+                #print(label)
+                # ************* TODO:
+                #self.removeExistingPlot(self.mplSimul.axes,label)
+            # Redraw the graphic area:
+            #**************** TODO:
+            #self.mplSimul.axes.legend(loc='upper right')
+            #self.mplSimul.draw()
+        
+        # Remove simulation data from the LC3systems object:
+        self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
+        
+        root = self.treeWidgetBode.invisibleRootItem()
+        index = root.indexOfChild(currentItem)
+        # Select the item above to the one that will be removed (if exists: index > 0):
+        if (index > 0):
+            newitem = root.child(index - 1)
+            #print('Item above: {s}'.format(s=itemabove.text(1)))
+            # Setting the active simuldata in the object as the previous one in the list:
+            newsysname = newitem.text(0) # Get the itemabove system name.
+            lg.debug('The up active freq. response data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+            self.sysDict[newsysname].setAtiveFreqResponse(newitem.text(1))
+        else: # There is only one item (the one to be removed) or it is the first of the list (index=0)
+            if (root.childCount() > 1) and index == 0: # There is an item below to the one to be removed.
+                newitem = root.child(index + 1)
+                newsysname = newitem.text(0) # Get the item below system name.
+                lg.debug('The down active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+                self.sysDict[newsysname].setAtiveFreqResponse(newitem.text(1))
+
+        # Removing the item from list:
+        root.removeChild(currentItem)
+        # Selecting the item above (or below):
+        if index:
+            # If not index, there is nothing else to select in the treelist
+            # Clear list selection:
+            self.treeWidgetBode.clearSelection()
+            self.treeWidgetBode.setCurrentItem(newitem)        
+    
+    def onBtnBodeClear(self):
+        """
+        Button event handler.
+        Erase all the frequency response data:
+            - Erase the treewidget list
+            - Erase the all the simulation data in the LC3Systems objects.
+            - Clear the graphic area.
+        """
+        # Remove all the itens in the treewidget:
+        root = self.treeWidgetBode.invisibleRootItem()
+        root.takeChildren()
+
+        for key in self.sysDict:
+            self.sysDict[key].clearFreqResponseData()
+
+        # ******** TODO:
+        # Clear plot area:
+        #self.mplSimul.axes.cla()
+        #self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
+        #self.mplSimul.axes.set_ylim(0, 1)
+        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
+        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
+        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        #self.mplSimul.axes.grid()
+        #self.mplSimul.draw()
+    
+    def onBtnBodeClearAxis(self):
+        print('Bode clear axis')
+        # Clear Bode figure:
+
+        self.mplBode.figure.clf()
+        self.mplBode.draw() 
+
+    def onBtnBodeInspect(self):
+        QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+
+
     def removeExistingPlot(self,ax,label):
         """
         Remove an existem plot line from the graph, based on the label.
@@ -1111,12 +1244,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
     
-    def onBtnBodeClear(self):
-        # Clear Bode figure:
-
-        self.mplBode.figure.clf()
-        self.mplBode.draw() 
-
 
     def onBodeFminChange(self,value):
         """
