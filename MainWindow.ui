@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2595,6 +2595,9 @@ QGroupBox::title {
              </property>
              <item>
               <widget class="QTreeWidget" name="treeWidgetSimul">
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
                <column>
                 <property name="text">
                  <string>Sistema</string>
@@ -2676,6 +2679,17 @@ QGroupBox::title {
                   <property name="icon">
                    <iconset resource="images.qrc">
                     <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnSimulInspect">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/icons_UI/images/lupe.png</normaloff>:/icons_UI/images/lupe.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3541,19 +3555,19 @@ QGroupBox::title {
             <widget class="QLabel" name="labelFmin">
              <property name="minimumSize">
               <size>
-               <width>0</width>
-               <height>20</height>
+               <width>70</width>
+               <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>20</height>
+               <height>100</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <pointsize>11</pointsize>
+               <pointsize>10</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3563,10 +3577,14 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. mín. [Hz]:</string>
+              <string>Freq.
+mín. [Hz]:</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignCenter</set>
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -3595,19 +3613,19 @@ QGroupBox::title {
             <widget class="QLabel" name="labelFmax">
              <property name="minimumSize">
               <size>
-               <width>0</width>
-               <height>20</height>
+               <width>70</width>
+               <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>20</height>
+               <height>100</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <pointsize>11</pointsize>
+               <pointsize>10</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3617,10 +3635,14 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq. máx. [Hz]:</string>
+              <string>Freq.
+máx. [Hz]:</string>
              </property>
              <property name="alignment">
-              <set>Qt::AlignCenter</set>
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -3718,7 +3740,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="btnBodeClear">
+            <widget class="QPushButton" name="btnBodeClearAxis">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3765,29 +3787,154 @@ QGroupBox::title {
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QTreeWidget" name="treeWidget">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <widget class="QFrame" name="frameBode_2">
+            <property name="minimumSize">
+             <size>
+              <width>160</width>
+              <height>0</height>
+             </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>150</width>
+              <width>160</width>
               <height>16777215</height>
              </size>
             </property>
-            <column>
-             <property name="text">
-              <string>Sistema</string>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,0">
+             <property name="spacing">
+              <number>0</number>
              </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Freq. resp.</string>
+             <property name="leftMargin">
+              <number>0</number>
              </property>
-            </column>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QTreeWidget" name="treeWidgetBode">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>166666</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <column>
+                <property name="text">
+                 <string>Sistema</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Freq. resp.</string>
+                </property>
+               </column>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frameBodeBtn">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>4</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>4</number>
+                </property>
+                <item>
+                 <widget class="QToolButton" name="btnBodeAdd">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnBodeRemove">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnBodeClear">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="btnBodeInspect">
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="images.qrc">
+                    <normaloff>:/icons_UI/images/lupe.png</normaloff>:/icons_UI/images/lupe.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>

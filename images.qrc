@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons_UI">
+    <file>images/lupe.png</file>
     <file>images/addsys.png</file>
     <file>images/refreshsys.png</file>
     <file>images/removesys.png</file>

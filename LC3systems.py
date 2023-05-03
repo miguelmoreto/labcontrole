@@ -153,7 +153,7 @@ class LTIsystem:
         self.Index = index
         #self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
         self.Name = 'SYS {i}'.format(i=index)   # Format name string
-        self.TypeStr = self.TypeStrList[systype-1]
+        self.TypeStr = self.TypeStrList[systype]
         self.updateSystem()
         self.clearTimeSimulData()
         self.RL_root_vector = np.array([])

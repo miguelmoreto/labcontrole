@@ -185,6 +185,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCounter = -1
         self.addSystem(0)
         self.treeWidgetSimul.setColumnWidth(0, 60)
+        self.treeWidgetBode.setColumnWidth(0, 60)
 
         ########################
 
@@ -654,7 +655,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setText(1, simulname)
         # Setting a simulation tooltip:
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
-        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+        currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[self.sysCurrentName].K,l=self.sysDict[self.sysCurrentName].Loop))
         currentItem.setSelected(True)
         return currentItem
 
@@ -824,6 +825,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 # Plot the new data
                 self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                 #print(label)
+
+        # Setting a simulation tooltip:
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
+        currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[self.sysCurrentName].K,l=self.sysDict[self.sysCurrentName].Loop))
 
         self.treeWidgetSimul.expandAll()
 
