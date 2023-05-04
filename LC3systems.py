@@ -570,7 +570,7 @@ class LTIsystem:
                            int(self.Fpoints*dec))
         omega = 2*np.pi*f
 
-        mag, phase, omega = self.DLTF_r.frequency_response(omega, squeeze=True)
+        mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
         self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag

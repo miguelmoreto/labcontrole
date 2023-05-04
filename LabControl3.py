@@ -159,6 +159,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplLGR.figure.set_tight_layout(True)
         self.mplBode.figure.set_facecolor('0.90')
         self.mplBode.figure.set_tight_layout(True)
+        self.mplBode.figure.clf()
         self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
         self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
         
@@ -1034,48 +1035,59 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     item.setText(1,signal)
                     item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
                     if signal in ['mag','phase']:   # y(t) and r(t) are checked by default.
-                        label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
-                        # TODO:
-                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega'],self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'])
-                        #self.magBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[0,0],'k--')
-                        self.magBodeAxis.grid(True)
-                        self.magBodeAxis.xaxis.grid(True, which='minor')
-                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega'],self.sysDict[sysname].FreqResponseData[simulname]['data']['phase'])
-                        #self.phaseBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[-numpy.pi,-numpy.pi],'k--')
-                        self.phaseBodeAxis.grid(True)
-                        self.phaseBodeAxis.xaxis.grid(True, which='minor')
+                        label = '{id}:{s}'.format(id=sysname,s=simulname)
+                        if signal == 'mag':
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            #self.magBodeAxis.grid(True)
+                            #self.magBodeAxis.xaxis.grid(True, which='minor')
+                        elif signal == 'phase':
+                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                            #self.phaseBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[-numpy.pi,-numpy.pi],'k--')
+                            #self.phaseBodeAxis.grid(True)
+                        #self.phaseBodeAxis.xaxis.grid(True, which='minor')
                         #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                         item.setCheckState(1, Qt.Checked)
                     else:
                         item.setCheckState(1, Qt.Unchecked)                
                     #print(signal)
-
-        # Update the graph, according to the itens selected in the list:
-        for i in range(currentItem.childCount()):
-            item = currentItem.child(i)
-            signal = item.text(1)
-            label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
-            if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
-                # Remove the existing ploted line:
-                # TODO:
-                #self.removeExistingPlot(self.mplSimul.axes,label)
-                # Plot the new data
-                # TODO:
-                #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
-                print(label)
+        else:
+            # Update the graph, according to the itens selected in the list:
+            for i in range(currentItem.childCount()):
+                item = currentItem.child(i)
+                signal = item.text(1)
+                label = '{id}:{s}'.format(id=sysname,s=simulname)
+                if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                    # Remove the existing ploted line:
+                    if signal == 'mag':
+                        self.removeExistingPlot(self.magBodeAxis,label)
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    elif signal == 'phase':
+                        self.removeExistingPlot(self.phaseBodeAxis,label)
+                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    # Plot the new data
+                    # TODO:
+                    #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                    print(label)
 
         # Setting a simulation tooltip:
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
         currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+
+        fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
+        fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
+        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
+        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
 
         self.treeWidgetSimul.expandAll()
 
         self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
         # Format the plotting area:
         # TODO:
-        #self.mplSimul.axes.autoscale()     
-        #self.mplSimul.axes.grid(True)
-
+        self.mplBode.axes.autoscale()     
+        self.magBodeAxis.grid(True)
+        self.phaseBodeAxis.grid(True)
+        self.magBodeAxis.legend(loc='upper right')
+        self.phaseBodeAxis.legend(loc='upper right')
         # Custom Navigation
         #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         #self.mpltoolbarBode.siblings = [ax1, ax2]
@@ -1083,8 +1095,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         # Ajusting labels e title:
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        self.magBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
         self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de K*C(s)*G(s)", None))
         
         self.mplBode.draw()
