@@ -159,6 +159,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplLGR.figure.set_tight_layout(True)
         self.mplBode.figure.set_facecolor('0.90')
         self.mplBode.figure.set_tight_layout(True)
+        self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
+        self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
         
         #self.mplSimul.axes.plot(x,y)
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -170,7 +172,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.autoscale(True)
         self.mplSimul.draw()
         
-        self.mplBode.figure.clf()
+        #self.mplBode.figure.clf()
         self.mplNyquist.figure.clf()
         lg.basicConfig(level=lg.DEBUG)
         # Initializing system
@@ -871,7 +873,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
         currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
         currentItem.setSelected(True)
-        #return currentItem        
+        return currentItem        
     
     def onBtnBodeRemove(self):
         """
@@ -977,6 +979,118 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.mplBode.figure.clf()
         self.mplBode.draw() 
+
+    
+    def onBtnPlotBode(self):
+
+                
+        # Is the system definition has errors, show the error and finish:
+        if self._has_expressions_errors():
+            return
+
+        addnewflag = 0
+        selectItemList = self.treeWidgetBode.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if not selectItemList:
+           # Creating new simulation data:
+            currentItem = self.onBtnBodeAdd()
+        else:
+            currentItem = selectItemList[0]
+        
+        if not currentItem.childCount():  # Check if the freq response item in the list is empty.
+            if not currentItem.parent():  # Check if the selected item is not a child item.
+                addnewflag = 1
+            else:
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
+        lg.info('Plotting Bode Diagram Name: {s} in System {i}'.format(s=simulname,i=sysname))
+
+        self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
+        
+        # Plotting Bode:
+        #dB, phase, f, ax1, ax2 = self.sys.Bode(self.mplBode.figure)
+        # Plotando a magnitude:
+        #ax1 = figura.add_subplot(2,1,1)
+        #ax1.semilogx(f, dBmag)        
+        # ax1.semilogx([self.Fmin,self.Fmax],[0,0],'k--')
+        # ax1.grid(True)
+        # ax1.xaxis.grid(True, which='minor')
+        # # Plotando a fase:
+        # ax2 = figura.add_subplot(2,1,2, sharex=ax1)
+        # ax2.semilogx(f, fase)
+        # ax2.semilogx([self.Fmin,self.Fmax],[-180,-180],'k--')
+        # ax2.grid(True)
+        # ax2.xaxis.grid(True, which='minor')
+
+        #self.sysDict[sysname].TimeSimulationTesting()
+        self.sysDict[sysname].FreqResponse()
+
+        if (addnewflag): # It is a new simul in the list. Add child itens to it:
+            for signal in self.sysDict[sysname].FreqResponseData[simulname]['data']:
+                if signal != 'omega':
+                    item = QtWidgets.QTreeWidgetItem(currentItem)   # Creat the child itens in the tree.
+                    item.setText(1,signal)
+                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    if signal in ['mag','phase']:   # y(t) and r(t) are checked by default.
+                        label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
+                        # TODO:
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega'],self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'])
+                        #self.magBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[0,0],'k--')
+                        self.magBodeAxis.grid(True)
+                        self.magBodeAxis.xaxis.grid(True, which='minor')
+                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega'],self.sysDict[sysname].FreqResponseData[simulname]['data']['phase'])
+                        #self.phaseBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[-numpy.pi,-numpy.pi],'k--')
+                        self.phaseBodeAxis.grid(True)
+                        self.phaseBodeAxis.xaxis.grid(True, which='minor')
+                        #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                        item.setCheckState(1, Qt.Checked)
+                    else:
+                        item.setCheckState(1, Qt.Unchecked)                
+                    #print(signal)
+
+        # Update the graph, according to the itens selected in the list:
+        for i in range(currentItem.childCount()):
+            item = currentItem.child(i)
+            signal = item.text(1)
+            label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
+            if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                # Remove the existing ploted line:
+                # TODO:
+                #self.removeExistingPlot(self.mplSimul.axes,label)
+                # Plot the new data
+                # TODO:
+                #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                print(label)
+
+        # Setting a simulation tooltip:
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
+        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+
+        self.treeWidgetSimul.expandAll()
+
+        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
+        # Format the plotting area:
+        # TODO:
+        #self.mplSimul.axes.autoscale()     
+        #self.mplSimul.axes.grid(True)
+
+        # Custom Navigation
+        #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
+        #self.mpltoolbarBode.siblings = [ax1, ax2]
+        #self.mpltoolbarBode.error = 0.1
+
+        # Ajusting labels e title:
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.magBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de K*C(s)*G(s)", None))
+        
+        self.mplBode.draw()
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+    
 
     def onBtnBodeInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
@@ -1218,32 +1332,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         self.sysDict[self.sysCurrentName].FpointsNyq = value
    
-    
-    def onBtnPlotBode(self):
-
-        if self._has_expressions_errors():
-            return
-
-        self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
-        
-        # Plotting Bode:
-        dB, phase, f, ax1, ax2 = self.sys.Bode(self.mplBode.figure)
-
-        # Custom Navigation
-        #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
-        #self.mpltoolbarBode.siblings = [ax1, ax2]
-        #self.mpltoolbarBode.error = 0.1
-
-        # Ajusting labels e title:
-        ax1.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-        ax2.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        ax2.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        ax1.set_title(_translate("MainWindow", "Diagrama de Bode de K*C(s)*G(s)", None))
-        
-        self.mplBode.draw()
-        
-        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
-    
 
     def onBodeFminChange(self,value):
         """

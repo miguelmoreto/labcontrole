@@ -138,16 +138,30 @@ class LTIsystem:
     #                'w(t)' : array of the perturbation input signal
     #                'y(t)' : array of the main system output signal
     #                'u(t)' : array of the control action output signal
-    #       'id' : the id number of the simulation
-    #       'info' : a dictionary with the following keys:
-    #  that contains the numpy arrays with the plotting data.
+    #       'id'   : the id number of the simulation
+    #       'info' : a string with some info.
     TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
     CurrentSimulName = ''
 
     # Frequency response data
     CurrentFreqResponseId = -1
     FreqResponseCounter = -1        # An absolute frequency response data counter
-    FreqResponseData = {'Name':[]}  # A Dictionary to store frequency response data.
+    # Frequency response data structure:
+    #  key 'Name': a list containing the name of each freq. response data
+    #  Each name in the list will be a key in the dictionary. This key
+    #  will contain also a dictionary with the following keys:
+    #       'data' : a dictionary with the keys:
+    #                'omega' : angular frequency array
+    #                'mag'   : array of the magnitude of the frequency response (not in dB)
+    #                'phase' : array of the phase of the frequency response (in radians)
+    #       'id'   : the id number of the freq response
+    #       'info' : a dictionary with the folowing keys:
+    #                'wLimits'  : a tuple with the Fmin and Fmax values.
+    #                'GM'       : Gain margin value
+    #                'wG'       : Gain crossing frequency value (rad/s)
+    #                'PM'       : Phase margin value
+    #                'wP'       : Phase crossing frequency value (rad/s)
+    FreqResponseData = {'Name':[]}  # The Dictionary to store frequency response data.
     CurrentFreqResponseName = ''
 
     def __init__(self,index,systype):
@@ -511,7 +525,7 @@ class LTIsystem:
         # Store this simul ID:
         self.FreqResponseData[self.CurrentFreqResponseName]['id'] = self.CurrentFreqResponseId
         # Store this simul infos:
-        self.FreqResponseData[self.CurrentFreqResponseName]['info'] = 'K = {k}'.format(k=self.K)
+        self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'K': self.K}
 
     def removeFreqResponse(self, name):
         lg.debug('Removing freq response {s} from sys index {i}'.format(s=name,i=self.Index))
@@ -542,3 +556,27 @@ class LTIsystem:
             #self.CurrentSimulName = self.TimeSimData['Name'][self.CurrentTimeSimIndex]        
         self.FreqResponseData['Name'].pop(removedIdx) # Remove the simulation name from the list.
         del self.FreqResponseData[name] # Remove the data from the dictionary.
+    
+    def FreqResponse(self):
+        """
+        Calculates the frequency response of the Direct Loop Transfer Function DLTF_r
+        """
+        # Create the complex frequency vector.
+        # With logspace, there are no need for a lot o points to obtaind a good
+        # graphic.
+        dec = np.log10(self.Fmax/self.Fmin) # Number of decades;
+        f = np.logspace(int(np.log10(self.Fmin)),
+                           int(np.log10(self.Fmax)),
+                           int(self.Fpoints*dec))
+        omega = 2*np.pi*f
+
+        mag, phase, omega = self.DLTF_r.frequency_response(omega, squeeze=True)
+        gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
+        self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
+        self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag
+        self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = phase
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['GM'] = gm
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['wG'] = wgc
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['PM'] = pm
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['wP'] = wpc
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['wLimits'] = (omega[0],omega[-1])
