@@ -255,6 +255,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
         self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
+        self.treeWidgetBode.itemClicked.connect(self.onTreeBodeClicked)
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
@@ -857,6 +858,55 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     
     def onBtnSimulInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+
+    def onTreeBodeClicked(self,item,column):
+        """
+        When the user clicks in a item from the time frequency response treewidget list.
+        """
+        parent = item.parent()
+        if not parent: # I'am interested in only child itens.
+            lg.debug('Clicked in parent: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
+            sysname = item.text(0)
+            self.sysDict[sysname].setAtiveFreqResponse(item.text(1))
+            return
+        sysname = parent.text(0)
+        #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+        simulname = parent.text(1)
+        signal = item.text(1)
+        lg.debug('Clicked on child from: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
+        self.sysDict[sysname].setAtiveFreqResponse(simulname)
+        if (column == 1): # The second column has the checkboxes
+            label = '{id}:{s}'.format(id=sysname,s=simulname)
+            if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
+                if signal == 'mag':
+                    self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                elif signal == 'phase':
+                    self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                #lg.debug('Item {s} enabled to plot.'.format(s=label))
+                #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                item.setCheckState(1,Qt.Checked)
+            elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
+                if signal == 'mag':
+                    self.removeExistingPlot(self.magBodeAxis.axes,label)
+                elif signal == 'phase':
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+                #lg.debug('Item {s} disabled to plot.'.format(s=label))
+                #self.removeExistingPlot(self.mplSimul.axes,label)
+                item.setCheckState(1,Qt.Unchecked)
+            else:
+                lg.debug('Item check state not changed.')
+                return
+            #self.magBodeAxis.autoscale()
+            # Getting the actual plot limits:
+            #ylim = self.mplSimul.axes.get_ylim()
+            # Set a new y limit, adding 1/10 of the total:
+            #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
+            #self.mplSimul.axes.set_xlim(xmin = 0)        
+            self.magBodeAxis.legend(loc='upper right')
+            self.phaseBodeAxis.legend(loc='upper right')
+            self.mplBode.draw()
+        else:
+            lg.info('Not clicked in the checkbox.')
 
     def onBtnBodeAdd(self):
         print('Bode add')
