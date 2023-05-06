@@ -1,0 +1,13 @@
+
+
+To generate a executable:
+
+1) Activate conda in the terminal.
+
+2) conda install -c conda-forge pyinstaller
+3) pip install --upgrade PyQt5-sip
+4) pyinstaller --clean --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
+
+https://pyinstaller.org/en/stable/runtime-information.html
+https://pyinstaller.org/en/stable/usage.html
+https://stackoverflow.com/questions/72110384/libgl-error-mesa-loader-failed-to-open-iris

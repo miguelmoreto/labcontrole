@@ -321,7 +321,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnBodeAdd.clicked.connect(self.onBtnBodeAdd)
         self.btnBodeRemove.clicked.connect(self.onBtnBodeRemove)
         self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
-        self.btnBodeClearAxis.clicked.connect(self.onBtnFreqResponseClearAxis)
+        self.btnFreqResponseClearAxis.clicked.connect(self.onBtnFreqResponseClearAxis)
         self.btnBodeInspect.clicked.connect(self.onBtnBodeInspect)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
