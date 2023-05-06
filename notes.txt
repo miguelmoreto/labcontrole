@@ -2,11 +2,24 @@
 
 To generate a executable:
 
-1) Activate conda in the terminal.
 
-2) conda install -c conda-forge pyinstaller
-3) pip install --upgrade PyQt5-sip
-4) pyinstaller --clean --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
+Creating a distribution enviroment:
+conda create --name distenv python nomkl --no-default-packages
+conda activate distenv
+conda install numpy
+conda install scipy
+conda install matplotlib
+conda install -c conda-forge control slycot
+pip install --upgrade PyQt5-sip
+conda install -c anaconda pyqt
+conda install -c conda-forge libstdcxx-ng
+conda install -c conda-forge pyinstaller
+pyinstaller --clean -y --onedir --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
+conda deactivate
+
+Utility commands:
+pyrcc5 resources.qrc -o resources.py
+
 
 https://pyinstaller.org/en/stable/runtime-information.html
 https://pyinstaller.org/en/stable/usage.html

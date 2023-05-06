@@ -112,7 +112,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
-        self.label.setPixmap(QtGui.QPixmap( "diagram1Opened.png"))
+        self.label.setPixmap(QtGui.QPixmap( ":/diagrams/diagram1Opened.png"))
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
@@ -530,7 +530,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.groupBoxH.setEnabled(False)
             self.lineEditGden.hide()
             # Disable buttons:
-            self.btnPlotBode.setEnabled(False)
+            self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.btnPlotNyquist.setEnabled(False)
             self.labelGden.hide()
@@ -1073,6 +1073,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onRadioBtnBode(self,checked):
         #print('Btn Bode {s}'.format(s=checked))
         if checked:
+            self.radioBtnCirc1.setEnabled(False)
+            self.radioBtnFreqNeg.setEnabled(False)
             self.mplBode.figure.clf()
             self.uncheckAllItens(self.treeWidgetBode)
             self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
@@ -1088,6 +1090,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def onRadioBtnNyquist(self,checked):
         if checked:
+            self.radioBtnCirc1.setEnabled(True)
+            self.radioBtnFreqNeg.setEnabled(True)            
             self.mplBode.figure.clf()
             self.uncheckAllItens(self.treeWidgetBode)
             self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
@@ -1896,7 +1900,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return
 
-        self.label.setPixmap(QtGui.QPixmap(png_file_name))
+        self.label.setPixmap(QtGui.QPixmap(':/diagrams/{f}'.format(f=png_file_name)))
 
     
     def onAboutAction(self):

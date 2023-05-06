@@ -14,4 +14,16 @@
     <file>images/refresh.png</file>
     <file>images/fileopen.png</file>
   </qresource>
+  <qresource prefix="diagrams">
+    <file>diagram1Closed.png</file>
+    <file>diagram1Opened.png</file>
+    <file>diagram2Closed.png</file>
+    <file>diagram2Opened.png</file>
+    <file>diagram3Closed.png</file>
+    <file>diagram3Opened.png</file>
+    <file>diagram4Closed.png</file>
+    <file>diagram4Opened.png</file>
+    <file>diagram5Closed.png</file>
+    <file>diagram5Opened.png</file>
+  </qresource>
 </RCC>

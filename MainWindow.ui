@@ -1423,7 +1423,10 @@
              <enum>QFrame::NoFrame</enum>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Image&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="images.qrc">:/diagrams/diagram1Opened.png</pixmap>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -3538,7 +3541,7 @@ QGroupBox::title {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,1,0,0,0">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -3606,7 +3609,7 @@ QGroupBox::title {
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>80</width>
                <height>16777215</height>
               </size>
              </property>
@@ -3669,7 +3672,7 @@ QGroupBox::title {
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>80</width>
                <height>16777215</height>
               </size>
              </property>
@@ -3734,6 +3737,12 @@ QGroupBox::title {
                <height>25</height>
               </size>
              </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -3763,6 +3772,92 @@ QGroupBox::title {
              <property name="value">
               <double>100.000000000000000</double>
              </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frameNyquistOpt">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_14">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>4</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QRadioButton" name="radioBtnCirc1">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="toolTip">
+                 <string>Habilita o traçado do círculo unitário no diagrama de Nyquist.</string>
+                </property>
+                <property name="text">
+                 <string>Circ. 1</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioBtnFreqNeg">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="toolTip">
+                 <string>Habilita traçado do diagrama de nyquist com freq. negativa.</string>
+                </property>
+                <property name="text">
+                 <string>F. Neg.</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -3869,6 +3964,12 @@ QGroupBox::title {
                <height>40</height>
               </size>
              </property>
+             <property name="maximumSize">
+              <size>
+               <width>65</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
@@ -3886,7 +3987,7 @@ QGroupBox::title {
             <widget class="QPushButton" name="btnPlotFreqResponse">
              <property name="minimumSize">
               <size>
-               <width>140</width>
+               <width>130</width>
                <height>40</height>
               </size>
              </property>
