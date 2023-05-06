@@ -162,6 +162,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplBode.figure.clf()
         self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
         self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
+        self.magBodeAxis.grid(True)
+        self.phaseBodeAxis.grid(True)
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        self.mplBode.draw()
+
         
         #self.mplSimul.axes.plot(x,y)
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -246,6 +254,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Connecting events:
         self.radioBtnOpen.clicked.connect(self.feedbackOpen)
         self.radioBtnClose.clicked.connect(self.feedbackClose)
+        self.radioBtnBode.toggled.connect(self.onRadioBtnBode)
+        self.radioBtnNyquist.toggled.connect(self.onRadioBtnNyquist)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
         # ComboBoxes:
@@ -297,7 +307,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimul.clicked.connect(self.onBtnSimul)
         self.btnPlotLGR.clicked.connect(self.onBtnRL)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
-        self.btnPlotBode.clicked.connect(self.onBtnPlotBode)
         self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
         self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
         self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
@@ -308,10 +317,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimulClear.clicked.connect(self.onBtnSimulClear)
         self.btnSimulClearAxis.clicked.connect(self.onBtnSimulClearAxis)
         self.btnSimulInspect.clicked.connect(self.onBtnSimulInspect)
+        self.btnPlotFreqResponse.clicked.connect(self.onBtnPlotFreqResponse)
         self.btnBodeAdd.clicked.connect(self.onBtnBodeAdd)
         self.btnBodeRemove.clicked.connect(self.onBtnBodeRemove)
         self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
-        self.btnBodeClearAxis.clicked.connect(self.onBtnBodeClearAxis)
+        self.btnBodeClearAxis.clicked.connect(self.onBtnFreqResponseClearAxis)
         self.btnBodeInspect.clicked.connect(self.onBtnBodeInspect)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
@@ -495,7 +505,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelPtTk.setEnabled(False)
             self.spinBoxPtTk.setEnabled(False)
             self.doubleSpinBoxResT.setEnabled(True)
-            self.btnPlotBode.setEnabled(True)
+            self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
             self.btnPlotNyquist.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
@@ -511,7 +521,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
             self.doubleSpinBoxResT.setEnabled(False)
-            self.btnPlotBode.setEnabled(False)
+            self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.btnPlotNyquist.setEnabled(False)            
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
@@ -1020,32 +1030,88 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[key].clearFreqResponseData()
 
         # Clear plot area:
-        self.magBodeAxis.cla()
-        self.phaseBodeAxis.cla()
-        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de KC(s)G(s)H(s)", None))
+        if self.radioBtnBode.isChecked():
+            self.magBodeAxis.cla()
+            self.phaseBodeAxis.cla()
+            self.magBodeAxis.grid(True)
+            self.phaseBodeAxis.grid(True)            
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        elif self.radioBtnNyquist.isChecked():
+            self.NyquistAxis.cla()
+            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
         self.mplBode.draw()
     
-    def onBtnBodeClearAxis(self):
+    def onBtnFreqResponseClearAxis(self):
         """
         Uncheck all itens from the list and clear the ploting area.
         """
         self.uncheckAllItens(self.treeWidgetBode)
-        # Clear Bode magnitude and phase axis:
-        self.magBodeAxis.cla()
-        self.phaseBodeAxis.cla()
-        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de KC(s)G(s)H(s)", None))
+        if self.radioBtnBode.isChecked():
+            # Clear Bode magnitude and phase axis:
+            self.magBodeAxis.cla()
+            self.phaseBodeAxis.cla()
+            self.magBodeAxis.grid(True)
+            self.phaseBodeAxis.grid(True)
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        elif self.radioBtnNyquist.isChecked():
+            self.NyquistAxis.cla()
+            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))            
+        else:
+            lg.warning('Frequency response type not set.')                      
         self.mplBode.draw() 
 
-    
-    def onBtnPlotBode(self):
+    def onRadioBtnBode(self,checked):
+        #print('Btn Bode {s}'.format(s=checked))
+        if checked:
+            self.mplBode.figure.clf()
+            self.uncheckAllItens(self.treeWidgetBode)
+            self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
+            self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
+            self.magBodeAxis.grid(True)
+            self.phaseBodeAxis.grid(True)
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+            self.mplBode.draw()
+            self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Bode", None))
 
-                
+    def onRadioBtnNyquist(self,checked):
+        if checked:
+            self.mplBode.figure.clf()
+            self.uncheckAllItens(self.treeWidgetBode)
+            self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
+            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
+            self.mplBode.draw() 
+            self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Nyquist", None))
+
+
+    def onBtnPlotFreqResponse(self):
+        if self.radioBtnBode.isChecked():
+            # Plot Bode
+            self.PlotBode()
+        elif self.radioBtnNyquist.isChecked():
+            # TODO
+            # Plot Nyquist
+            pass
+        else:
+            lg.warning('Frequency response type not set.')
+
+    
+    def PlotBode(self):
+
         # Is the system definition has errors, show the error and finish:
         if self._has_expressions_errors():
             return
@@ -1071,22 +1137,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.statusBar().showMessage(_translate("MainWindow", "Traçando Bode...", None))
         
-        # Plotting Bode:
-        #dB, phase, f, ax1, ax2 = self.sys.Bode(self.mplBode.figure)
-        # Plotando a magnitude:
-        #ax1 = figura.add_subplot(2,1,1)
-        #ax1.semilogx(f, dBmag)        
-        # ax1.semilogx([self.Fmin,self.Fmax],[0,0],'k--')
-        # ax1.grid(True)
-        # ax1.xaxis.grid(True, which='minor')
-        # # Plotando a fase:
-        # ax2 = figura.add_subplot(2,1,2, sharex=ax1)
-        # ax2.semilogx(f, fase)
-        # ax2.semilogx([self.Fmin,self.Fmax],[-180,-180],'k--')
-        # ax2.grid(True)
-        # ax2.xaxis.grid(True, which='minor')
-
-        #self.sysDict[sysname].TimeSimulationTesting()
+        # Calculating the frequency response:
         self.sysDict[sysname].FreqResponse()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
@@ -1157,7 +1208,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
         self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
         self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de K*C(s)*G(s)", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         
         self.mplBode.draw()
         
@@ -1178,8 +1229,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             item = root.child(i) # Simulations in the list
             for j in range(item.childCount()): # Signals
                 child = item.child(j)
-                if (child.checkState(1) == Qt.Checked):
-                    child.setCheckState(1,Qt.Unchecked)
+                child.setCheckState(1,Qt.Unchecked)
 
     def removeExistingPlot(self,ax,label):
         """

@@ -2347,7 +2347,7 @@ QGroupBox::title {
       </widget>
       <widget class="QWidget" name="tabSimul">
        <attribute name="title">
-        <string>Simulação</string>
+        <string>Resposta Temporal</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_12" stretch="0,1">
         <property name="spacing">
@@ -3500,7 +3500,7 @@ QGroupBox::title {
       </widget>
       <widget class="QWidget" name="tabBode">
        <attribute name="title">
-        <string>Diagrama de Bode</string>
+        <string>Resposta em Frequência</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_8" stretch="0,1">
         <property name="spacing">
@@ -3528,7 +3528,7 @@ QGroupBox::title {
           </property>
           <property name="maximumSize">
            <size>
-            <width>1000</width>
+            <width>16777215</width>
             <height>50</height>
            </size>
           </property>
@@ -3556,15 +3556,21 @@ QGroupBox::title {
            </property>
            <item>
             <widget class="QLabel" name="labelFmin">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>70</width>
+               <width>40</width>
                <height>30</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
+               <width>40</width>
                <height>100</height>
               </size>
              </property>
@@ -3580,8 +3586,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq.
-mín. [Hz]:</string>
+              <string notr="true">Fmin [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -3595,8 +3600,14 @@ mín. [Hz]:</string>
             <widget class="QLineEdit" name="lineEditFmin">
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>80</width>
                <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
               </size>
              </property>
              <property name="font">
@@ -3616,13 +3627,13 @@ mín. [Hz]:</string>
             <widget class="QLabel" name="labelFmax">
              <property name="minimumSize">
               <size>
-               <width>70</width>
+               <width>40</width>
                <height>0</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>16777215</width>
+               <width>40</width>
                <height>100</height>
               </size>
              </property>
@@ -3638,14 +3649,13 @@ mín. [Hz]:</string>
               <number>0</number>
              </property>
              <property name="text">
-              <string>Freq.
-máx. [Hz]:</string>
+              <string notr="true">Fmax [Hz]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
              <property name="wordWrap">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -3653,8 +3663,14 @@ máx. [Hz]:</string>
             <widget class="QLineEdit" name="lineEditFmax">
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>80</width>
                <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>100</width>
+               <height>16777215</height>
               </size>
              </property>
              <property name="font">
@@ -3672,6 +3688,12 @@ máx. [Hz]:</string>
            </item>
            <item>
             <widget class="QLabel" name="labelBodeRes">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3681,12 +3703,12 @@ máx. [Hz]:</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>20</height>
+               <height>80</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <pointsize>11</pointsize>
+               <pointsize>10</pointsize>
               </font>
              </property>
              <property name="lineWidth">
@@ -3696,7 +3718,8 @@ máx. [Hz]:</string>
               <number>0</number>
              </property>
              <property name="text">
-              <string>Resolução:</string>
+              <string>Resolução
+[pt/dec]:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3726,7 +3749,7 @@ máx. [Hz]:</string>
               <enum>QAbstractSpinBox::UpDownArrows</enum>
              </property>
              <property name="suffix">
-              <string notr="true"> pt/dec</string>
+              <string notr="true"/>
              </property>
              <property name="decimals">
               <number>0</number>
@@ -3743,7 +3766,103 @@ máx. [Hz]:</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="btnBodeClearAxis">
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QFrame" name="frameBodeNyquist">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QRadioButton" name="radioBtnBode">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Para traçar o diagrama de Bode a partir dos dados da resposta em frequência.</string>
+                </property>
+                <property name="text">
+                 <string notr="true">Bode</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioBtnNyquist">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Para traçar o diagrama de Nyquist a partir dos dados da resposta em frequência.</string>
+                </property>
+                <property name="text">
+                 <string notr="true">Nyquist</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnFreqResponseClearAxis">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -3764,10 +3883,10 @@ máx. [Hz]:</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="btnPlotBode">
+            <widget class="QPushButton" name="btnPlotFreqResponse">
              <property name="minimumSize">
               <size>
-               <width>0</width>
+               <width>140</width>
                <height>40</height>
               </size>
              </property>
