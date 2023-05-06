@@ -188,7 +188,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCounter = -1
         self.addSystem(0)
         self.treeWidgetSimul.setColumnWidth(0, 70)
+        self.treeWidgetSimul.setColumnWidth(1, 70)
         self.treeWidgetBode.setColumnWidth(0, 70)
+        self.treeWidgetBode.setColumnWidth(1, 70)
 
         ########################
 
@@ -639,12 +641,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 lg.debug('Item check state not changed.')
                 return
-            self.mplSimul.axes.autoscale()
+            
             # Getting the actual plot limits:
             ylim = self.mplSimul.axes.get_ylim()
             # Set a new y limit, adding 1/10 of the total:
             #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-            self.mplSimul.axes.set_xlim(xmin = 0)        
+            self.mplSimul.axes.set_xlim(xmin = 0)
+            self.mplSimul.axes.autoscale()
             self.mplSimul.axes.legend(loc='upper right')
             self.mplSimul.draw()
         else:
@@ -738,6 +741,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.treeWidgetSimul.setCurrentItem(newitem)
         
     def onBtnSimulClearAxis(self):
+        """
+        Unselect from the list and remove from the graphic
+        all the plotted signals.
+        """
+        self.uncheckAllItens(self.treeWidgetSimul)
         # Clear plot area:
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
@@ -748,7 +756,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.grid()
         self.mplSimul.draw()
         
-    
     def onBtnSimulClear(self):
         """
         Button event handler.
@@ -882,16 +889,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
                 elif signal == 'phase':
                     self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
-                #lg.debug('Item {s} enabled to plot.'.format(s=label))
-                #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                lg.debug('Item {s} enabled to plot.'.format(s=label))
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
                 if signal == 'mag':
                     self.removeExistingPlot(self.magBodeAxis.axes,label)
                 elif signal == 'phase':
                     self.removeExistingPlot(self.phaseBodeAxis.axes,label)
-                #lg.debug('Item {s} disabled to plot.'.format(s=label))
-                #self.removeExistingPlot(self.mplSimul.axes,label)
+                lg.debug('Item {s} disabled to plot.'.format(s=label))
                 item.setCheckState(1,Qt.Unchecked)
             else:
                 lg.debug('Item check state not changed.')
@@ -909,14 +914,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             lg.info('Not clicked in the checkbox.')
 
     def onBtnBodeAdd(self):
-        print('Bode add')
         """
         Button event handler to add a frequency response to the list.
         """
         self.treeWidgetBode.clearSelection()
         self.sysDict[self.sysCurrentName].addFreqResponse()    # Adding a TimeSimul data to LC3systems object.
         simulname  = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
-        lg.debug('Adding a simulation on System {s} with simulname {n}'.format(s=self.sysCurrentName,n=simulname))
+        lg.debug('Adding a frequency reponse on System {s} with name {n}'.format(s=self.sysCurrentName,n=simulname))
         currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetBode)
         currentItem.setText(0, self.sysCurrentName)
         currentItem.setText(1, simulname)
@@ -937,7 +941,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         selectItemList = self.treeWidgetBode.selectedItems()
         if not selectItemList:
-            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação para ser removida.", None))
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma responsta em frequência para ser removida.", None))
             return
         else:
             currentItem = selectItemList[0]
@@ -946,7 +950,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Thus the parent is used:
         if not currentItem.text(0):
             currentItem = currentItem.parent()
-            lg.debug('Removing parent simul item {s} from system {sys}'.format(s=currentItem.text(1),sys=currentItem.text(0)))   
+            lg.debug('Removing parent freq. response item {s} from system {sys}'.format(s=currentItem.text(1),sys=currentItem.text(0)))   
 
         sysname = currentItem.text(0) # The sys index of the simul to remove (column 0)
         freqrespnameremove = currentItem.text(1) # The simulation name to remove
@@ -954,20 +958,22 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.debug(freqrespnameremove)
         lg.debug(sysname)
         lg.debug(self.sysDict[sysname].FreqResponseData['Name'])
-        lg.debug('Removing simul item {s} from system {sys}'.format(s=freqrespnameremove,sys=sysname))
+        lg.debug('Removing freq. response item {s} from system {sys}'.format(s=freqrespnameremove,sys=sysname))
 
         if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
             # Remove plotted lines:
             lg.debug('Item to remove: {s}'.format(s=freqrespnameremove))
             for signal in self.sysDict[sysname].FreqResponseData[freqrespnameremove]['data'].keys():
-                label = '{id}:{s}:{sg}'.format(id=sysname,s=freqrespnameremove,sg=signal)
-                #print(label)
-                # ************* TODO:
+                label = '{id}:{s}'.format(id=sysname,s=freqrespnameremove)
+                if signal == 'mag':
+                    self.removeExistingPlot(self.magBodeAxis.axes,label)
+                elif signal == 'phase':
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,label)
                 #self.removeExistingPlot(self.mplSimul.axes,label)
             # Redraw the graphic area:
-            #**************** TODO:
-            #self.mplSimul.axes.legend(loc='upper right')
-            #self.mplSimul.draw()
+            self.magBodeAxis.legend(loc='upper right')
+            self.phaseBodeAxis.legend(loc='upper right')
+            self.mplBode.draw()
         
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
@@ -986,7 +992,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if (root.childCount() > 1) and index == 0: # There is an item below to the one to be removed.
                 newitem = root.child(index + 1)
                 newsysname = newitem.text(0) # Get the item below system name.
-                lg.debug('The down active simul data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
+                lg.debug('The down freq.response data will be {i} from system {s}'.format(i=newitem.text(1),s=newsysname))
                 self.sysDict[newsysname].setAtiveFreqResponse(newitem.text(1))
 
         # Removing the item from list:
@@ -1002,8 +1008,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Button event handler.
         Erase all the frequency response data:
-            - Erase the treewidget list
-            - Erase the all the simulation data in the LC3Systems objects.
+            - Erase the bode treewidget list
+            - Erase the all the freq. response data in the LC3Systems objects.
             - Clear the graphic area.
         """
         # Remove all the itens in the treewidget:
@@ -1013,22 +1019,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         for key in self.sysDict:
             self.sysDict[key].clearFreqResponseData()
 
-        # ******** TODO:
         # Clear plot area:
-        #self.mplSimul.axes.cla()
-        #self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
-        #self.mplSimul.axes.set_ylim(0, 1)
-        #self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
-        #self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        #self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
-        #self.mplSimul.axes.grid()
-        #self.mplSimul.draw()
+        self.magBodeAxis.cla()
+        self.phaseBodeAxis.cla()
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de KC(s)G(s)H(s)", None))
+        self.mplBode.draw()
     
     def onBtnBodeClearAxis(self):
-        print('Bode clear axis')
-        # Clear Bode figure:
-
-        self.mplBode.figure.clf()
+        """
+        Uncheck all itens from the list and clear the ploting area.
+        """
+        self.uncheckAllItens(self.treeWidgetBode)
+        # Clear Bode magnitude and phase axis:
+        self.magBodeAxis.cla()
+        self.phaseBodeAxis.cla()
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de KC(s)G(s)H(s)", None))
         self.mplBode.draw() 
 
     
@@ -1128,11 +1139,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
         self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
 
-        self.treeWidgetSimul.expandAll()
+        self.treeWidgetBode.expandAll()
 
         self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
         # Format the plotting area:
-        # TODO:
         self.mplBode.axes.autoscale()     
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
@@ -1157,6 +1167,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onBtnBodeInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
 
+    def uncheckAllItens(self,treeWidget):
+        """
+        Auxiliary method to uncheck all signal itens (childs) 
+        from the given QtreeWidged list
+        """
+        root = treeWidget.invisibleRootItem()
+        i = 0
+        for i in range(root.childCount()):
+            item = root.child(i) # Simulations in the list
+            for j in range(item.childCount()): # Signals
+                child = item.child(j)
+                if (child.checkState(1) == Qt.Checked):
+                    child.setCheckState(1,Qt.Unchecked)
 
     def removeExistingPlot(self,ax,label):
         """

@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2643,7 +2643,7 @@ QGroupBox::title {
                 <item>
                  <widget class="QToolButton" name="btnSimulAdd">
                   <property name="toolTip">
-                   <string>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</string>
+                   <string>Adiciona uma nova simulação vazia à lista.</string>
                   </property>
                   <property name="text">
                    <string>...</string>
@@ -2657,7 +2657,7 @@ QGroupBox::title {
                 <item>
                  <widget class="QToolButton" name="btnSimulRemove">
                   <property name="toolTip">
-                   <string>Remove da lisa o sistema selecionado</string>
+                   <string>Remove a simulação selecionada.</string>
                   </property>
                   <property name="text">
                    <string>...</string>
@@ -2671,7 +2671,7 @@ QGroupBox::title {
                 <item>
                  <widget class="QToolButton" name="btnSimulClear">
                   <property name="toolTip">
-                   <string>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</string>
+                   <string>Remove todas as simulações temporais armazenadas.</string>
                   </property>
                   <property name="text">
                    <string>Add</string>
@@ -2684,6 +2684,9 @@ QGroupBox::title {
                 </item>
                 <item>
                  <widget class="QToolButton" name="btnSimulInspect">
+                  <property name="toolTip">
+                   <string>Mostra janela com dados calculados a partir da simulação selecionada.</string>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>
@@ -3889,6 +3892,9 @@ máx. [Hz]:</string>
                 </property>
                 <item>
                  <widget class="QToolButton" name="btnBodeAdd">
+                  <property name="toolTip">
+                   <string>Adiciona uma resposta em frequência vazia à lista.</string>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>
@@ -3900,6 +3906,9 @@ máx. [Hz]:</string>
                 </item>
                 <item>
                  <widget class="QToolButton" name="btnBodeRemove">
+                  <property name="toolTip">
+                   <string>Remove a resposta em frequência selecionada.</string>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>
@@ -3911,6 +3920,9 @@ máx. [Hz]:</string>
                 </item>
                 <item>
                  <widget class="QToolButton" name="btnBodeClear">
+                  <property name="toolTip">
+                   <string>Remove todas as respostas em frequência armazenadas.</string>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>
@@ -3922,6 +3934,9 @@ máx. [Hz]:</string>
                 </item>
                 <item>
                  <widget class="QToolButton" name="btnBodeInspect">
+                  <property name="toolTip">
+                   <string>Mostra janela com dados calculados a partir da resposta em frequência selecionada.</string>
+                  </property>
                   <property name="text">
                    <string>...</string>
                   </property>

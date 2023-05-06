@@ -417,38 +417,17 @@ class LTIsystem:
 
         # Creating Time Simulation Data with the inputs vectors:
         self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w}
-
-    def TimeSimulationTesting(self):
-        """
-        Temporary method only to test the UI and multiplot feature
-        """
-        self.createInputVectors()
-        #time = np.arange(0,1,0.01)
-        #y = np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time)
-        #u = 2*np.sin(2*np.pi*np.random.uniform(low=1,high=10)*time+np.pi/2)
-        #r = np.ones(len(time))
-        #w = 0.5*np.ones(len(time))
-        r = self.TimeSimData[self.CurrentSimulName]['data']['r(t)']
-        y = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'] * 2
-        u = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'] * 1.5
-
-        e = r - y
-        self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = y
-        self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u
-        self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e
-
     
     def TimeSimulation(self):
         """
-        Performs a time domain simulation.
+        Performs a time domain simulation using a MIMO system:
+            inputs r(t) and w(t)
+            outputs y(t) and u(t)
         """
         self.createInputVectors()
         T = self.TimeSimData[self.CurrentSimulName]['data']['time']
         U = np.append(np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['r(t)'],(1,self.N)),np.reshape(self.TimeSimData[self.CurrentSimulName]['data']['w(t)'],(1,self.N)),axis=0)
         T,Y = ct.forced_response(self.TM,T,U,return_x=False)
-        #print(np.shape(T))
-        #print(np.shape(U))
-        #print(np.shape(Y))
         self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = U[0]-Y[0]
@@ -458,11 +437,7 @@ class LTIsystem:
         Calculate the root locus
 
         """
-
-        #num = np.poly1d(self.OLTF_r.num[0][0]) #self.polyDnum
-        #den = np.poly1d(self.OLTF_r.den[0][0]) #self.polyDden
-        
-        
+       
         # Creating a gain vector (without the critical points):
         delta_k = (self.Kmax-self.Kmin) / self.Kpoints
         kvect = np.arange(self.Kmin,self.Kmax,delta_k)
