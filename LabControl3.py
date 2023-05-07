@@ -58,6 +58,7 @@ import pickle
 import base64
 import logging as lg
 import LC3systems
+import myfreqplot
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -1105,16 +1106,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onBtnPlotFreqResponse(self):
         if self.radioBtnBode.isChecked():
             # Plot Bode
-            self.PlotBode()
+            self.plotBode()
         elif self.radioBtnNyquist.isChecked():
-            # TODO
             # Plot Nyquist
+            self.plotNyquist()
             pass
         else:
             lg.warning('Frequency response type not set.')
 
     
-    def PlotBode(self):
+    def plotBode(self):
 
         # Is the system definition has errors, show the error and finish:
         if self._has_expressions_errors():
@@ -1221,6 +1222,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def onBtnBodeInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+
+    def plotNyquist(self):
+
+        counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r,self.NyquistAxis,omega_limits=[self.sysDict[self.sysCurrentName].Fmin,self.sysDict[self.sysCurrentName].Fmax])
+        self.mplBode.draw()
+        print(counts)
 
     def uncheckAllItens(self,treeWidget):
         """

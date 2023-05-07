@@ -192,7 +192,7 @@ class LTIsystem:
         self.G_tf = ct.tf(self.Gnum,self.Gden)
         self.C_tf = ct.tf(self.Cnum,self.Cden)
         self.H_tf = ct.tf(self.Hnum,self.Hden)
-
+        
         # Compute the Direct Loop transfer functions accordingly with
         # the system type.
         if (self.Type == 0):
@@ -544,6 +544,7 @@ class LTIsystem:
                            int(np.log10(self.Fmax)),
                            int(self.Fpoints*dec))
         omega = 2*np.pi*f
+        ct.nyquist_plot
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
