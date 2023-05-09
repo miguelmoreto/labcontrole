@@ -1225,7 +1225,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def plotNyquist(self):
 
-        counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r,self.NyquistAxis,omega_limits=[self.sysDict[self.sysCurrentName].Fmin,self.sysDict[self.sysCurrentName].Fmax])
+        counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r,self.NyquistAxis)
         self.mplBode.draw()
         print(counts)
 

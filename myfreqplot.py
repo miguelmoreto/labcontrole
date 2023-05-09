@@ -91,7 +91,7 @@ _nyquist_defaults = {
     'nyquist.arrows': 2,                        # number of arrors around curve
     'nyquist.arrow_size': 8,                    # pixel size for arrows
     'nyquist.encirclement_threshold': 0.05,     # warning threshold
-    'nyquist.indent_radius': 1e-4,              # indentation radius
+    'nyquist.indent_radius': 1e-6,              # indentation radius
     'nyquist.indent_direction': 'right',        # indentation direction
     'nyquist.indent_points': 50,                # number of points to insert
     'nyquist.max_curve_magnitude': 20,          # clip large values

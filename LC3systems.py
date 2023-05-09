@@ -544,13 +544,12 @@ class LTIsystem:
                            int(np.log10(self.Fmax)),
                            int(self.Fpoints*dec))
         omega = 2*np.pi*f
-        ct.nyquist_plot
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
         self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag
-        self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = phase
+        self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = ct.unwrap(phase)
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['GM'] = gm
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wG'] = wgc
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['PM'] = pm
