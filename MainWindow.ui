@@ -1426,7 +1426,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="images.qrc">:/diagrams/diagram1Opened.png</pixmap>
+             <pixmap>:/diagrams/diagram1Opened.png</pixmap>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -3541,7 +3541,7 @@ QGroupBox::title {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,1,0,0,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,1,0,0,0,0">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -3558,6 +3558,20 @@ QGroupBox::title {
             <number>4</number>
            </property>
            <item>
+            <widget class="QCheckBox" name="checkBoxFreqAuto">
+             <property name="toolTip">
+              <string>Habilita o cálculo automático dos limites de frequência para os gráficos de Bode e Nyquist.</string>
+             </property>
+             <property name="text">
+              <string>Freq.
+Auto</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QLabel" name="labelFmin">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -3567,7 +3581,7 @@ QGroupBox::title {
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>30</width>
                <height>30</height>
               </size>
              </property>
@@ -3601,15 +3615,18 @@ QGroupBox::title {
            </item>
            <item>
             <widget class="QLineEdit" name="lineEditFmin">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>80</width>
+               <width>75</width>
                <height>25</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>80</width>
+               <width>75</width>
                <height>16777215</height>
               </size>
              </property>
@@ -3664,15 +3681,18 @@ QGroupBox::title {
            </item>
            <item>
             <widget class="QLineEdit" name="lineEditFmax">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>80</width>
+               <width>75</width>
                <height>25</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>80</width>
+               <width>75</width>
                <height>16777215</height>
               </size>
              </property>
@@ -3721,8 +3741,7 @@ QGroupBox::title {
               <number>0</number>
              </property>
              <property name="text">
-              <string>Resolução
-[pt/dec]:</string>
+              <string>Pts:</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -3739,7 +3758,7 @@ QGroupBox::title {
              </property>
              <property name="maximumSize">
               <size>
-               <width>100</width>
+               <width>60</width>
                <height>16777215</height>
               </size>
              </property>
@@ -3767,10 +3786,10 @@ QGroupBox::title {
               <double>5.000000000000000</double>
              </property>
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>10000.000000000000000</double>
              </property>
              <property name="value">
-              <double>100.000000000000000</double>
+              <double>1000.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -3862,6 +3881,19 @@ QGroupBox::title {
            </item>
            <item>
             <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_6">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>

@@ -572,8 +572,10 @@ def nyquist_plot(
 
             # Plot the regular portions of the curve (and grab the color)
             # Moreto: I am not using this feature of scaled points.
-            x_reg = resp.real#np.ma.masked_where(reg_mask, resp.real)
-            y_reg = resp.imag#np.ma.masked_where(reg_mask, resp.imag)
+            #x_reg = resp.real#np.ma.masked_where(reg_mask, resp.real)
+            x_reg = np.ma.masked_where(reg_mask, resp.real)
+            #y_reg = resp.imag#np.ma.masked_where(reg_mask, resp.imag)
+            y_reg = np.ma.masked_where(reg_mask, resp.imag)
             p = plotaxis.plot(
                 x_reg, y_reg, primary_style[0], color=color, **kwargs)
             c = p[0].get_color()
@@ -586,11 +588,11 @@ def nyquist_plot(
 
             # Plot the scaled sections of the curve (changing linestyle)
             # Moreto: I am not using this feature of scaled points.
-            #x_scl = np.ma.masked_where(scale_mask, resp.real)
-            #y_scl = np.ma.masked_where(scale_mask, resp.imag)
-            #plotaxis.plot(
-            #    x_scl * (1 + curve_offset), y_scl * (1 + curve_offset),
-            #    primary_style[1], color=c, **kwargs)
+            x_scl = np.ma.masked_where(scale_mask, resp.real)
+            y_scl = np.ma.masked_where(scale_mask, resp.imag)
+            plotaxis.plot(
+                x_scl * (1 + curve_offset), y_scl * (1 + curve_offset),
+                primary_style[1], color=c, **kwargs)
 
             # Plot the primary curve (invisible) for setting arrows
             x, y = resp.real.copy(), resp.imag.copy()
@@ -610,10 +612,10 @@ def nyquist_plot(
                 plotaxis.plot(
                     x_reg, -y_reg, mirror_style[0], color=c, **kwargs)
                 # Moreto: I am not using this feature of scaled points.
-                #plotaxis.plot(
-                #    x_scl * (1 - curve_offset),
-                #    -y_scl * (1 - curve_offset),
-                #    mirror_style[1], color=c, **kwargs)
+                plotaxis.plot(
+                    x_scl * (1 - curve_offset),
+                    -y_scl * (1 - curve_offset),
+                    mirror_style[1], color=c, **kwargs)
 
                 # Add the arrows (on top of an invisible contour)
                 x, y = resp.real.copy(), resp.imag.copy()

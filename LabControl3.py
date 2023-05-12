@@ -259,6 +259,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.radioBtnNyquist.toggled.connect(self.onRadioBtnNyquist)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
+        self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
         # ComboBoxes:
         self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
         self.comboBoxRinit.currentIndexChanged.connect(self.onChangeRinitInputType)
@@ -470,9 +471,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxWtime.setValue(self.sysDict[sysname].InstWt)
         self.doubleSpinBoxRnoise.setValue(self.sysDict[sysname].NoiseRt)
         self.doubleSpinBoxWnoise.setValue(self.sysDict[sysname].NoiseWt)
-        self.doubleSpinBoxRebd.setValue(self.sysDict[self.sysCurrentName].RL_FR_R)
-        self.doubleSpinBoxRibd.setValue(self.sysDict[self.sysCurrentName].RL_FR_RI)
-        self.doubleSpinBoxImbd.setValue(self.sysDict[self.sysCurrentName].RL_FR_I)
+        self.doubleSpinBoxRebd.setValue(self.sysDict[sysname].RL_FR_R)
+        self.doubleSpinBoxRibd.setValue(self.sysDict[sysname].RL_FR_RI)
+        self.doubleSpinBoxImbd.setValue(self.sysDict[sysname].RL_FR_I)
 
         #LineEdits:
         self.lineEditRvalueInit.setText(self.locale.toString(self.sysDict[sysname].Rt_initValue))
@@ -486,6 +487,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
         self.lineEditFminNyq.setText(self.locale.toString(self.sysDict[sysname].FminNyq))
         self.lineEditFmaxNyq.setText(self.locale.toString(self.sysDict[sysname].FmaxNyq))        
+
+        self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
 
         # System type specific changes in the UI:
         self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
@@ -853,8 +856,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #print(label)
 
         # Setting a simulation tooltip:
-        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
-        currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[self.sysCurrentName].K,l=self.sysDict[self.sysCurrentName].Loop))
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
+        currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[sysname].K,l=self.sysDict[sysname].Loop))
 
         self.treeWidgetSimul.expandAll()
 
@@ -876,6 +879,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     
     def onBtnSimulInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+
+    def onCheckBoxFreqAuto(self,state):
+        """
+        When the user changes the state of the checkbox for enable/disable frequency auto limits.
+        """
+        if state:
+            self.sysDict[self.sysCurrentName].FreqAuto = True
+            self.lineEditFmin.setEnabled(False)
+            self.lineEditFmax.setEnabled(False)
+        else:
+            self.sysDict[self.sysCurrentName].FreqAuto = False
+            self.lineEditFmin.setEnabled(True)
+            self.lineEditFmax.setEnabled(True)
 
     def onTreeBodeClicked(self,item,column):
         """
@@ -1144,6 +1160,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         # Calculating the frequency response:
         self.sysDict[sysname].FreqResponse()
+
+        # Update the Freq. Limits in UI (in case of using auto limits):
+        self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
+        self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
             for signal in self.sysDict[sysname].FreqResponseData[simulname]['data']:

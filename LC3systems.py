@@ -96,10 +96,11 @@ class LTIsystem:
     RL_FR_RI = 0.0
     RL_FR_I = 0.0
     
-    # Bode diagram paramethers:
+    # Frequency Response stuff:
+    FreqAuto = True
     Fmin = 0.01
     Fmax = 100.0
-    Fpoints = 20
+    Fpoints = 1000
     
     # Nyquist plot paramethers:
     FminNyq = 0.01
@@ -539,11 +540,20 @@ class LTIsystem:
         # Create the complex frequency vector.
         # With logspace, there are no need for a lot o points to obtaind a good
         # graphic.
-        dec = np.log10(self.Fmax/self.Fmin) # Number of decades;
-        f = np.logspace(int(np.log10(self.Fmin)),
-                           int(np.log10(self.Fmax)),
-                           int(self.Fpoints*dec))
-        omega = 2*np.pi*f
+        #dec = np.log10(self.Fmax/self.Fmin) # Number of decades;
+        #f = np.logspace(int(np.log10(self.Fmin)),
+        #                   int(np.log10(self.Fmax)),
+        #                   int(self.Fpoints*dec))
+        #omega = 2*np.pi*f
+
+        #ct.set_defaults('freqplot',number_of_samples=self.Fpoints)
+
+        if self.FreqAuto:
+            omega,_ = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = None, omega_num = self.Fpoints,Hz=True)
+            self.Fmin = omega[0]/(2*np.pi)
+            self.Fmax = omega[-1]/(2*np.pi)
+        else:
+            omega,_ = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = [2*np.pi*self.Fmin,2*np.pi*self.Fmax], omega_num = self.Fpoints,Hz=True)
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
