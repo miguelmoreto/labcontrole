@@ -1245,9 +1245,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def plotNyquist(self):
 
-        counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r,self.NyquistAxis)
+        #omega,_ = self.sysDict[self.sysCurrentName].calcOmega()
+        #omega = None
+        #counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r * self.sysDict[self.sysCurrentName].K,self.NyquistAxis,omega=omega,arrows=1)
+        resp = self.sysDict[self.sysCurrentName].NyquistGraphLines()
+        self.NyquistAxis.plot(resp.real, resp.imag)
         self.mplBode.draw()
-        print(counts)
+        #print(counts)
 
     def uncheckAllItens(self,treeWidget):
         """

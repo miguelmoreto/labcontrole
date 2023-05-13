@@ -88,7 +88,7 @@ _freqplot_defaults = {
 _nyquist_defaults = {
     'nyquist.primary_style': ['-', '-.'],       # style for primary curve
     'nyquist.mirror_style': ['--', ':'],        # style for mirror curve
-    'nyquist.arrows': 2,                        # number of arrors around curve
+    'nyquist.arrows': 1,                        # number of arrors around curve
     'nyquist.arrow_size': 8,                    # pixel size for arrows
     'nyquist.encirclement_threshold': 0.05,     # warning threshold
     'nyquist.indent_radius': 1e-6,              # indentation radius

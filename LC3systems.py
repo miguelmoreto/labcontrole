@@ -533,6 +533,21 @@ class LTIsystem:
         self.FreqResponseData['Name'].pop(removedIdx) # Remove the simulation name from the list.
         del self.FreqResponseData[name] # Remove the data from the dictionary.
     
+    def calcOmega(self):
+        """
+        Determine the omega vector for frequency response (Bode and Nyquist plots).
+        Using internal Control module functions.
+        """
+
+        if self.FreqAuto: # If the omega range is set to automatic:
+            omega,omega_given = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = None, omega_num = self.Fpoints,Hz=True,feature_periphery_decades=2)
+            self.Fmin = omega[0]/(2*np.pi)
+            self.Fmax = omega[-1]/(2*np.pi)
+        else:
+            omega,omega_given = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = [2*np.pi*self.Fmin,2*np.pi*self.Fmax], omega_num = self.Fpoints,Hz=True)
+
+        return omega,omega_given
+
     def FreqResponse(self):
         """
         Calculates the frequency response of the Direct Loop Transfer Function DLTF_r
@@ -545,18 +560,12 @@ class LTIsystem:
         #                   int(np.log10(self.Fmax)),
         #                   int(self.Fpoints*dec))
         #omega = 2*np.pi*f
+        #         
 
-        #ct.set_defaults('freqplot',number_of_samples=self.Fpoints)
-
-        if self.FreqAuto:
-            omega,_ = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = None, omega_num = self.Fpoints,Hz=True)
-            self.Fmin = omega[0]/(2*np.pi)
-            self.Fmax = omega[-1]/(2*np.pi)
-        else:
-            omega,_ = ct.freqplot._determine_omega_vector(self.K * self.DLTF_r,omega_in = None, omega_limits = [2*np.pi*self.Fmin,2*np.pi*self.Fmax], omega_num = self.Fpoints,Hz=True)
+        omega,_ = self.calcOmega()
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
-        gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.DLTF_r,returnall=False)
+        gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.K * self.DLTF_r,returnall=False)
         self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = ct.unwrap(phase)
@@ -565,3 +574,173 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['PM'] = pm
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wP'] = wpc
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wLimits'] = (omega[0],omega[-1])
+    
+    def NyquistGraphLines(self):
+        """
+        Calculates the Nyquist plot lines.
+            Regular: portion of the graph where the magnitude is below the limit.
+            Scaled: portion with larger magnitude, rescaled to better fit the plot.
+        """
+        arrows = 1
+        arrow_size = 8
+        #arrow_style = config._get_param('nyquist', 'arrow_style', kwargs, None)
+        indent_radius = 1e-6
+        encirclement_threshold = 0.05
+        indent_direction = 'right'
+        indent_points = 50
+        max_curve_magnitude = 20
+        max_curve_offset = 0.02
+        start_marker = 'o'
+        start_marker_size = 4
+        label_freq = None
+        warn_encirclements = True
+        warn_nyquist = True
+        #primary_style = _['-', '-.']
+        #mirror_style = _parse_linestyle('mirror_style', allow_false=True)
+
+        omega,omega_range_given = self.calcOmega()
+        sys = self.K * self.DLTF_r
+        # do indentations in s-plane where it is more convenient
+        splane_contour = 1j * omega
+        splane_contour[0] = 0
+
+        # Bend the contour around any poles on/near the imaginary axis
+        # TODO: smarter indent radius that depends on dcgain of system
+        # and timebase of discrete system.
+        if indent_direction != 'none':
+            if sys.isctime():
+                splane_poles = sys.poles()
+                splane_cl_poles = sys.feedback().poles()
+
+            #
+            # Check to make sure indent radius is small enough
+            #
+            # If there is a closed loop pole that is near the imaginary access
+            # at a point that is near an open loop pole, it is possible that
+            # indentation might skip or create an extraneous encirclement.
+            # We check for that situation here and generate a warning if that
+            # could happen.
+            #
+            for p_cl in splane_cl_poles:
+                # See if any closed loop poles are near the imaginary axis
+                if abs(p_cl.real) <= indent_radius:
+                    # See if any open loop poles are close to closed loop poles
+                    p_ol = splane_poles[
+                        (np.abs(splane_poles - p_cl)).argmin()]
+
+                    if abs(p_ol - p_cl) <= indent_radius and \
+                       warn_encirclements:
+                        lg.warning("Indented contour may miss closed loop pole; "
+                            "consider reducing indent_radius to be less than "
+                            f"{abs(p_ol - p_cl):5.2g}")
+
+            #
+            # See if we should add some frequency points near imaginary poles
+            #
+            for p in splane_poles:
+                # See if we need to process this pole (skip if on the negative
+                # imaginary axis or not near imaginary axis + user override)
+                if p.imag < 0 or abs(p.real) > indent_radius or \
+                   omega_range_given:
+                    continue
+
+                # Find the frequencies before the pole frequency
+                below_points = np.argwhere(
+                    splane_contour.imag - abs(p.imag) < -indent_radius)
+                if below_points.size > 0:
+                    first_point = below_points[-1].item()
+                    start_freq = p.imag - indent_radius
+                else:
+                    # Add the points starting at the beginning of the contour
+                    assert splane_contour[0] == 0
+                    first_point = 0
+                    start_freq = 0
+
+                # Find the frequencies after the pole frequency
+                above_points = np.argwhere(
+                    splane_contour.imag - abs(p.imag) > indent_radius)
+                last_point = above_points[0].item()
+
+                # Add points for half/quarter circle around pole frequency
+                # (these will get indented left or right below)
+                splane_contour = np.concatenate((
+                    splane_contour[0:first_point+1],
+                    (1j * np.linspace(
+                        start_freq, p.imag + indent_radius, indent_points)),
+                    splane_contour[last_point:]))
+
+            # Indent points that are too close to a pole
+            for i, s in enumerate(splane_contour):
+                # Find the nearest pole
+                p = splane_poles[(np.abs(splane_poles - s)).argmin()]
+
+                # See if we need to indent around it
+                if abs(s - p) < indent_radius:
+                    # Figure out how much to offset (simple trigonometry)
+                    offset = np.sqrt(indent_radius ** 2 - (s - p).imag ** 2) \
+                        - (s - p).real
+
+                    # Figure out which way to offset the contour point
+                    if p.real < 0 or (p.real == 0 and
+                                      indent_direction == 'right'):
+                        # Indent to the right
+                        splane_contour[i] += offset
+
+                    elif p.real > 0 or (p.real == 0 and
+                                         indent_direction == 'left'):
+                        # Indent to the left
+                        splane_contour[i] -= offset
+
+                    else:
+                        raise ValueError("unknown value for indent_direction")
+
+        # change contour to z-plane if necessary
+        if sys.isctime():
+            contour = splane_contour
+        else:
+            contour = np.exp(splane_contour * sys.dt)
+
+        # Compute the primary curve
+        resp = sys(contour)
+
+        # Compute CW encirclements of -1 by integrating the (unwrapped) angle
+        phase = -ct.unwrap(np.angle(resp + 1))
+        encirclements = np.sum(np.diff(phase)) / np.pi
+        count = int(np.round(encirclements, 0))
+
+        # Let the user know if the count might not make sense
+        if abs(encirclements - count) > encirclement_threshold and \
+           warn_encirclements:
+            lg.warning(
+                "number of encirclements was a non-integer value; this can"
+                " happen is contour is not closed, possibly based on a"
+                " frequency range that does not include zero.")
+        #
+        # Make sure that the enciriclements match the Nyquist criterion
+        #
+        # If the user specifies the frequency points to use, it is possible
+        # to miss enciriclements, so we check here to make sure that the
+        # Nyquist criterion is actually satisfied.
+        #
+
+        # Count the number of open/closed loop RHP poles:
+        if indent_direction == 'right':
+            P = (sys.poles().real > 0).sum()
+        else:
+            P = (sys.poles().real >= 0).sum()
+        Z = (sys.feedback().poles().real >= 0).sum()
+
+        # Check to make sure the results make sense; warn if not
+        if Z != count + P and warn_encirclements:
+            lg.warning(
+                "number of encirclements does not match Nyquist criterion;"
+                " check frequency range and indent radius/direction")
+        elif indent_direction == 'none' and any(sys.poles().real == 0) and \
+                warn_encirclements:
+            lg.warning(
+                "system has pure imaginary poles but indentation is"
+                " turned off; results may be meaningless")
+
+
+        return resp
+        
