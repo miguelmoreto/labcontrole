@@ -1244,14 +1244,113 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
 
     def plotNyquist(self):
-
+        simulname = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
         #omega,_ = self.sysDict[self.sysCurrentName].calcOmega()
         #omega = None
         #counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r * self.sysDict[self.sysCurrentName].K,self.NyquistAxis,omega=omega,arrows=1)
-        resp = self.sysDict[self.sysCurrentName].NyquistGraphLines()
-        self.NyquistAxis.plot(resp.real, resp.imag)
+        self.sysDict[self.sysCurrentName].NyquistGraphLines()
+        reg_re = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['reg_re']
+        reg_im = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['reg_im']
+        scaled_re = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_re']
+        scaled_im = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_im']
+        x = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_re']
+        y  =self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_im']
+        arrow_style = matplotlib.patches.ArrowStyle('simple', head_width=8, head_length=8)
+        # Ploting the regular portion of the curve:
+        p = self.NyquistAxis.plot(reg_re, reg_im, '-')
+        c = p[0].get_color() # Getting the curve color.
+        # Plotting the invisile line to place arrows:
+        p = self.NyquistAxis.plot(x, y, linestyle='None', color=c)
+        # Plotting the arrows:
+        self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=1)
+        # Ploting the scaled portion of the curve:
+        self.NyquistAxis.plot(scaled_re, scaled_im, '-.' , color=c)
+
+        # Plotting negative frequency lines (if selected):
+        if self.radioBtnFreqNeg.isChecked():
+            self.NyquistAxis.plot(reg_re, -reg_im, '-', color=c)
+            self.NyquistAxis.plot(scaled_re, -scaled_im, '-.', color=c)
+            # Plotting the invisile line to place arrows:
+            p = self.NyquistAxis.plot(x, -y, linestyle='None', color=c)
+            # Plotting the arrows:
+            self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1)            
+        
         self.mplBode.draw()
-        #print(counts)
+
+
+    # Internal function to add arrows to a nyquist curve.
+    # Code taken from Control module.
+    def _add_arrows_to_line2D(self,
+            axes, line, arrow_locs=[0.2, 0.4, 0.6, 0.8],
+            arrowstyle='-|>', arrowsize=1, dir=1, transform=None):
+        """
+        Add arrows to a matplotlib.lines.Line2D at selected locations.
+
+        Parameters:
+        -----------
+        axes: Axes object as returned by axes command (or gca)
+        line: Line2D object as returned by plot command
+        arrow_locs: list of locations where to insert arrows, % of total length
+        arrowstyle: style of the arrow
+        arrowsize: size of the arrow
+        transform: a matplotlib transform instance, default to data coordinates
+
+        Returns:
+        --------
+        arrows: list of arrows
+
+        Based on https://stackoverflow.com/questions/26911898/
+
+        """
+        if not isinstance(line, matplotlib.lines.Line2D):
+            raise ValueError("expected a matplotlib.lines.Line2D object")
+        x, y = line.get_xdata(), line.get_ydata()
+
+        arrow_kw = {
+            "arrowstyle": arrowstyle,
+        }
+
+        color = line.get_color()
+        use_multicolor_lines = isinstance(color, numpy.ndarray)
+        if use_multicolor_lines:
+            raise NotImplementedError("multicolor lines not supported")
+        else:
+            arrow_kw['color'] = color
+
+        linewidth = line.get_linewidth()
+        if isinstance(linewidth, numpy.ndarray):
+            raise NotImplementedError("multiwidth lines not supported")
+        else:
+            arrow_kw['linewidth'] = linewidth
+
+        if transform is None:
+            transform = axes.transData
+
+        # Compute the arc length along the curve
+        s = numpy.cumsum(numpy.sqrt(numpy.diff(x) ** 2 + numpy.diff(y) ** 2))
+
+        arrows = []
+        for loc in arrow_locs:
+            n = numpy.searchsorted(s, s[-1] * loc)
+
+            # Figure out what direction to paint the arrow
+            if dir == 1:
+                arrow_tail = (x[n], y[n])
+                arrow_head = (numpy.mean(x[n:n + 2]), numpy.mean(y[n:n + 2]))
+            elif dir == -1:
+                # Orient the arrow in the other direction on the segment
+                arrow_tail = (x[n + 1], y[n + 1])
+                arrow_head = (numpy.mean(x[n:n + 2]), numpy.mean(y[n:n + 2]))
+            else:
+                raise ValueError("unknown value for keyword 'dir'")
+
+            p = matplotlib.patches.FancyArrowPatch(
+                arrow_tail, arrow_head, transform=transform, lw=0,
+                **arrow_kw)
+            axes.add_patch(p)
+            arrows.append(p)
+        return arrows
+
 
     def uncheckAllItens(self,treeWidget):
         """

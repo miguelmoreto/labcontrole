@@ -8,6 +8,7 @@ import control as ct
 import scipy as sp
 import logging as lg
 import utils
+import matplotlib as mpl
 
 class LTIsystem:
     """
@@ -151,17 +152,25 @@ class LTIsystem:
     #  key 'Name': a list containing the name of each freq. response data
     #  Each name in the list will be a key in the dictionary. This key
     #  will contain also a dictionary with the following keys:
-    #       'data' : a dictionary with the keys:
-    #                'omega' : angular frequency array
-    #                'mag'   : array of the magnitude of the frequency response (not in dB)
-    #                'phase' : array of the phase of the frequency response (in radians)
-    #       'id'   : the id number of the freq response
-    #       'info' : a dictionary with the folowing keys:
-    #                'wLimits'  : a tuple with the Fmin and Fmax values.
-    #                'GM'       : Gain margin value
-    #                'wG'       : Gain crossing frequency value (rad/s)
-    #                'PM'       : Phase margin value
-    #                'wP'       : Phase crossing frequency value (rad/s)
+    #       'data'   : a dictionary for the bode data, with the keys:
+    #                   'omega' : angular frequency array
+    #                   'mag'   : array of the magnitude of the frequency response (not in dB)
+    #                   'phase' : array of the phase of the frequency response (in radians)
+    #       'nydata' : a dictionary for nyquist graph data, with the keys:
+    #                   'omega'     : angular frequency array
+    #                   'reg_re'    : regular portion of the curve (real part)
+    #                   'reg_im'    : regular portion of the curve (imaginary part)
+    #                   'scaled_re' : scaled portion of the curve (real part)
+    #                   'scaled_im' : scaled portion of the curve (imaginary part)
+    #                   'arrow_re'  : invisible curve for plotting the arrows (real part)
+    #                   'arrow_im'  : invisible curve for plotting the arrows (imaginary part)
+    #       'id'     : the id number of the freq response
+    #       'info'   : a dictionary with the folowing keys:
+    #                   'wLimits'  : a tuple with the Fmin and Fmax values.
+    #                   'GM'       : Gain margin value
+    #                   'wG'       : Gain crossing frequency value (rad/s)
+    #                   'PM'       : Phase margin value
+    #                   'wP'       : Phase crossing frequency value (rad/s)
     FreqResponseData = {'Name':[]}  # The Dictionary to store frequency response data.
     CurrentFreqResponseName = ''
 
@@ -599,6 +608,8 @@ class LTIsystem:
         #mirror_style = _parse_linestyle('mirror_style', allow_false=True)
 
         omega,omega_range_given = self.calcOmega()
+        # Store omega vector:
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata'] = {'omega': omega}
         sys = self.K * self.DLTF_r
         # do indentations in s-plane where it is more convenient
         splane_contour = 1j * omega
@@ -740,7 +751,98 @@ class LTIsystem:
             lg.warning(
                 "system has pure imaginary poles but indentation is"
                 " turned off; results may be meaningless")
-
-
-        return resp
         
+        # Find the different portions of the curve (with scaled pts marked)
+        reg_mask = np.logical_or(
+            np.abs(resp) > max_curve_magnitude,
+            splane_contour.real != 0)
+        scale_mask = ~reg_mask \
+            & np.concatenate((~reg_mask[1:], ~reg_mask[-1:])) \
+            & np.concatenate((~reg_mask[0:1], ~reg_mask[:-1]))        
+        # Rescale the points with large magnitude
+        rescale = np.logical_and(
+            reg_mask, abs(resp) > max_curve_magnitude)
+        resp[rescale] *= max_curve_magnitude / abs(resp[rescale])
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['reg_re'] = np.ma.masked_where(reg_mask, resp.real)
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['reg_im'] = np.ma.masked_where(reg_mask, resp.imag)
+
+        # Figure out how much to offset the curve: the offset goes from
+        # zero at the start of the scaled section to max_curve_offset as
+        # we move along the curve
+        curve_offset = self._compute_curve_offset(resp, scale_mask, max_curve_offset)
+
+        # Plot the scaled sections of the curve (changing linestyle)
+        # Moreto: I am not using this feature of scaled points.
+        x_scl = np.ma.masked_where(scale_mask, resp.real)
+        y_scl = np.ma.masked_where(scale_mask, resp.imag)
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['scaled_re'] = x_scl * (1 + curve_offset)
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['scaled_im'] = y_scl * (1 + curve_offset)
+
+        # Calculate the primary curve (invisible) for setting arrows:
+        x, y = resp.real.copy(), resp.imag.copy()
+        x[reg_mask] *= (1 + curve_offset[reg_mask])
+        y[reg_mask] *= (1 + curve_offset[reg_mask])
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['arrow_re'] = x
+        self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['arrow_im'] = y
+
+
+        #
+        #
+        #return resp
+    
+    #
+    # Function to compute Nyquist curve offsets
+    #
+    # This function computes a smoothly varying offset that starts and ends at
+    # zero at the ends of a scaled segment.
+    #
+    def _compute_curve_offset(self, resp, mask, max_offset):
+        # Compute the arc length along the curve
+        s_curve = np.cumsum(
+            np.sqrt(np.diff(resp.real) ** 2 + np.diff(resp.imag) ** 2))
+
+        # Initialize the offset
+        offset = np.zeros(resp.size)
+        arclen = np.zeros(resp.size)
+
+        # Walk through the response and keep track of each continous component
+        i, nsegs = 0, 0
+        while i < resp.size:
+            # Skip the regular segment
+            while i < resp.size and mask[i]:
+                i += 1              # Increment the counter
+                if i == resp.size:
+                    break
+                # Keep track of the arclength
+                arclen[i] = arclen[i-1] + np.abs(resp[i] - resp[i-1])
+
+            nsegs += 0.5
+            if i == resp.size:
+                break
+
+            # Save the starting offset of this segment
+            seg_start = i
+
+            # Walk through the scaled segment
+            while i < resp.size and not mask[i]:
+                i += 1
+                if i == resp.size:  # See if we are done with this segment
+                    break
+                # Keep track of the arclength
+                arclen[i] = arclen[i-1] + np.abs(resp[i] - resp[i-1])
+
+            nsegs += 0.5
+            if i == resp.size:
+                break
+
+            # Save the ending offset of this segment
+            seg_end = i
+
+            # Now compute the scaling for this segment
+            s_segment = arclen[seg_end-1] - arclen[seg_start]
+            offset[seg_start:seg_end] = max_offset * s_segment/s_curve[-1] * \
+                np.sin(np.pi * (arclen[seg_start:seg_end]
+                                - arclen[seg_start])/s_segment)
+
+        return offset
+
