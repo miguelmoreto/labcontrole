@@ -184,6 +184,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         #self.mplBode.figure.clf()
         self.mplNyquist.figure.clf()
+        self.nyquist_circ = 0
         lg.basicConfig(level=lg.DEBUG)
         # Initializing system
         self.sys = MySystem.MySystem()
@@ -257,6 +258,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.radioBtnClose.clicked.connect(self.feedbackClose)
         self.radioBtnBode.toggled.connect(self.onRadioBtnBode)
         self.radioBtnNyquist.toggled.connect(self.onRadioBtnNyquist)
+        self.radioBtnCirc1.toggled.connect(self.onRadioBtnCirc1)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
         self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
@@ -1058,6 +1060,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             self.NyquistAxis.cla()
+            # Adding the invisible unity circle:
+            self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+            self.NyquistAxis.add_patch(self.nyquist_circ)
+            self.nyquist_circ.set_visible(False)
             self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
@@ -1080,6 +1086,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             self.NyquistAxis.cla()
+            # Adding the invisible unity circle:
+            self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+            self.NyquistAxis.add_patch(self.nyquist_circ)
+            self.nyquist_circ.set_visible(False)            
             self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))            
@@ -1111,7 +1121,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.radioBtnFreqNeg.setEnabled(True)            
             self.mplBode.figure.clf()
             self.uncheckAllItens(self.treeWidgetBode)
+            # Adding the invisible unity circle:
             self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
+            self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+            self.NyquistAxis.add_patch(self.nyquist_circ)
+            self.nyquist_circ.set_visible(False)
             self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
@@ -1254,7 +1268,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         scaled_re = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_re']
         scaled_im = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_im']
         x = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_re']
-        y  =self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_im']
+        y = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_im']
         arrow_style = matplotlib.patches.ArrowStyle('simple', head_width=8, head_length=8)
         # Ploting the regular portion of the curve:
         p = self.NyquistAxis.plot(reg_re, reg_im, '-')
@@ -1273,10 +1287,33 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Plotting the invisile line to place arrows:
             p = self.NyquistAxis.plot(x, -y, linestyle='None', color=c)
             # Plotting the arrows:
-            self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1)            
+            self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1)  
+        # Plotting the unity radius circle:
+        if self.radioBtnCirc1.isChecked():
+            #if not self.nyquist_circ:
+            #    # Only add the circle if it does not exist:
+            #    self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+            #    self.NyquistAxis.add_patch(self.nyquist_circ)
+            self.nyquist_circ.set_visible(True)
+        else:
+            self.nyquist_circ.set_visible(False)
         
+        # Mark the start of the curve
+        self.NyquistAxis.plot(reg_re[0], reg_im[0], 'o',
+                        color=c, markersize=4)
+        # Mark the -1 point
+        self.NyquistAxis.plot([-1], [0], 'r+', color='orangered')
         self.mplBode.draw()
 
+    def onRadioBtnCirc1(self,checked):
+        """
+        Toggles the visibility of the unity circle in Nyquist plot.
+        """
+        if checked:
+            self.nyquist_circ.set_visible(True)
+        else:
+            self.nyquist_circ.set_visible(False)
+        self.mplBode.draw()
 
     # Internal function to add arrows to a nyquist curve.
     # Code taken from Control module.
