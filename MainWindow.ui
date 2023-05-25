@@ -189,6 +189,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -268,6 +270,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -389,6 +393,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -419,6 +425,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -496,6 +504,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -637,6 +647,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -722,6 +734,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -755,6 +769,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -834,6 +850,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -864,6 +882,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -941,6 +961,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="text">
@@ -1148,6 +1170,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -1187,6 +1211,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -1229,6 +1255,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -1268,6 +1296,8 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="toolTip">
@@ -1479,6 +1509,8 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -1505,6 +1537,8 @@
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -1526,6 +1560,8 @@
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -1550,6 +1586,8 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -1700,6 +1738,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -1923,6 +1963,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2137,6 +2179,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2397,6 +2441,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>11</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -2415,6 +2461,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2445,6 +2493,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>11</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -2463,6 +2513,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2515,6 +2567,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2536,6 +2590,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -2843,6 +2899,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -2876,6 +2934,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -2924,6 +2984,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -2969,6 +3031,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -3002,6 +3066,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3053,6 +3119,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3095,6 +3163,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3131,6 +3201,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3161,6 +3233,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3239,6 +3313,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3305,6 +3381,8 @@ QGroupBox::title {
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
                    </font>
                   </property>
                   <property name="text">
@@ -3326,6 +3404,8 @@ QGroupBox::title {
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
                    </font>
                   </property>
                   <property name="text">
@@ -3377,6 +3457,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3413,6 +3495,8 @@ QGroupBox::title {
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="toolTip">
@@ -3458,6 +3542,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -3479,6 +3565,8 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -3594,6 +3682,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -3633,6 +3723,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -3660,6 +3752,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -3699,6 +3793,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -3732,6 +3828,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -3765,6 +3863,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -3954,6 +4054,7 @@ Auto</string>
                <widget class="QRadioButton" name="radioBtnBode">
                 <property name="font">
                  <font>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -3973,6 +4074,7 @@ Auto</string>
                <widget class="QRadioButton" name="radioBtnNyquist">
                 <property name="font">
                  <font>
+                  <pointsize>10</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -4005,6 +4107,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4026,6 +4130,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4143,7 +4249,7 @@ Auto</string>
                  <number>4</number>
                 </property>
                 <item>
-                 <widget class="QToolButton" name="btnBodeAdd">
+                 <widget class="QToolButton" name="btnFreqRespAdd">
                   <property name="toolTip">
                    <string>Adiciona uma resposta em frequência vazia à lista.</string>
                   </property>
@@ -4157,7 +4263,7 @@ Auto</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QToolButton" name="btnBodeRemove">
+                 <widget class="QToolButton" name="btnFreqRespRemove">
                   <property name="toolTip">
                    <string>Remove a resposta em frequência selecionada.</string>
                   </property>
@@ -4171,7 +4277,7 @@ Auto</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QToolButton" name="btnBodeClear">
+                 <widget class="QToolButton" name="btnFreqRespClear">
                   <property name="toolTip">
                    <string>Remove todas as respostas em frequência armazenadas.</string>
                   </property>
@@ -4185,7 +4291,7 @@ Auto</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QToolButton" name="btnBodeInspect">
+                 <widget class="QToolButton" name="btnFreqRespInspect">
                   <property name="toolTip">
                    <string>Mostra janela com dados calculados a partir da resposta em frequência selecionada.</string>
                   </property>
@@ -4318,6 +4424,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -4345,6 +4453,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -4372,6 +4482,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -4399,6 +4511,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="text">
@@ -4426,6 +4540,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="lineWidth">
@@ -4453,6 +4569,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4486,6 +4604,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4504,6 +4624,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4541,6 +4663,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4562,6 +4686,8 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="toolTip">
@@ -4623,6 +4749,8 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="lineWidth">
@@ -4688,6 +4816,8 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="lineWidth">
@@ -4753,6 +4883,8 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="lineWidth">
@@ -4821,6 +4953,8 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="lineWidth">

@@ -163,6 +163,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplBode.figure.clf()
         self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
         self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
+        
+        self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
+        self.NyquistAxis.set_visible(False)
+        self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
@@ -322,11 +328,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimulClearAxis.clicked.connect(self.onBtnSimulClearAxis)
         self.btnSimulInspect.clicked.connect(self.onBtnSimulInspect)
         self.btnPlotFreqResponse.clicked.connect(self.onBtnPlotFreqResponse)
-        self.btnBodeAdd.clicked.connect(self.onBtnBodeAdd)
-        self.btnBodeRemove.clicked.connect(self.onBtnBodeRemove)
-        self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
+        self.btnFreqRespAdd.clicked.connect(self.onBtnFreqRespAdd)
+        self.btnFreqRespRemove.clicked.connect(self.onBtnFreqRespRemove)
+        self.btnFreqRespClear.clicked.connect(self.onBtnFreqRespClear)
         self.btnFreqResponseClearAxis.clicked.connect(self.onBtnFreqResponseClearAxis)
-        self.btnBodeInspect.clicked.connect(self.onBtnBodeInspect)
+        self.btnFreqRespInspect.clicked.connect(self.onBtnFreqRespInspect)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
         self.actionCalc.triggered.connect(self.onCalcAction)
@@ -942,7 +948,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             lg.info('Not clicked in the checkbox.')
 
-    def onBtnBodeAdd(self):
+    def onBtnFreqRespAdd(self):
         """
         Button event handler to add a frequency response to the list.
         """
@@ -959,7 +965,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setSelected(True)
         return currentItem        
     
-    def onBtnBodeRemove(self):
+    def onBtnFreqRespRemove(self):
         """
         Button event handler.
         Removes a frequency response from the list:
@@ -1033,7 +1039,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.treeWidgetBode.clearSelection()
             self.treeWidgetBode.setCurrentItem(newitem)        
     
-    def onBtnBodeClear(self):
+    def onBtnFreqRespClear(self):
         """
         Button event handler.
         Erase all the frequency response data:
@@ -1102,16 +1108,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if checked:
             self.radioBtnCirc1.setEnabled(False)
             self.radioBtnFreqNeg.setEnabled(False)
-            self.mplBode.figure.clf()
-            self.uncheckAllItens(self.treeWidgetBode)
-            self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
-            self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
+            #self.mplBode.figure.clf()
+            #self.uncheckAllItens(self.treeWidgetBode)
+            #self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
+            #self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
+            # Set visible only the Bode Axes':
+            self.magBodeAxis.set_visible(True)
+            self.phaseBodeAxis.set_visible(True)
+            self.NyquistAxis.set_visible(False)
             self.magBodeAxis.grid(True)
             self.phaseBodeAxis.grid(True)
-            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-            self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+            #self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            #self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+            #self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            #self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
             self.mplBode.draw()
             self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Bode", None))
 
@@ -1119,16 +1129,21 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if checked:
             self.radioBtnCirc1.setEnabled(True)
             self.radioBtnFreqNeg.setEnabled(True)            
-            self.mplBode.figure.clf()
-            self.uncheckAllItens(self.treeWidgetBode)
+            #self.mplBode.figure.clf()
+            #self.uncheckAllItens(self.treeWidgetBode)
             # Adding the invisible unity circle:
-            self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
+            #self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
+            # Set visible only the Nyquist Axes:
+            self.magBodeAxis.set_visible(False)
+            self.phaseBodeAxis.set_visible(False)
+            self.NyquistAxis.set_visible(True)
+
             self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
             self.NyquistAxis.add_patch(self.nyquist_circ)
             self.nyquist_circ.set_visible(False)
-            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
+            #self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+            #self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+            #self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
             self.mplBode.draw() 
             self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Nyquist", None))
 
@@ -1156,7 +1171,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Check if a simulation data already exists in the treeWidgetSimul
         if not selectItemList:
            # Creating new simulation data:
-            currentItem = self.onBtnBodeAdd()
+            currentItem = self.onBtnFreqRespAdd()
         else:
             currentItem = selectItemList[0]
         
@@ -1244,20 +1259,28 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mpltoolbarBode.error = 0.1
 
         # Ajusting labels e title:
-        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        #self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        #self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        #self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        #self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         
         self.mplBode.draw()
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
     
 
-    def onBtnBodeInspect(self):
+    def onBtnFreqRespInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
 
     def plotNyquist(self):
+        """
+        Function to draw the Nyquist plot.
+        This code is based on the code presented in the Python Control module.
+        """
+
+        # Is the system definition has errors, show the error and finish:
+        if self._has_expressions_errors():
+            return        
         simulname = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
         #omega,_ = self.sysDict[self.sysCurrentName].calcOmega()
         #omega = None
@@ -1290,10 +1313,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1)  
         # Plotting the unity radius circle:
         if self.radioBtnCirc1.isChecked():
-            #if not self.nyquist_circ:
-            #    # Only add the circle if it does not exist:
-            #    self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
-            #    self.NyquistAxis.add_patch(self.nyquist_circ)
             self.nyquist_circ.set_visible(True)
         else:
             self.nyquist_circ.set_visible(False)
@@ -1302,7 +1321,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.NyquistAxis.plot(reg_re[0], reg_im[0], 'o',
                         color=c, markersize=4)
         # Mark the -1 point
-        self.NyquistAxis.plot([-1], [0], 'r+', color='orangered')
+        self.NyquistAxis.plot([-1], [0], 'r+')
         self.mplBode.draw()
 
     def onRadioBtnCirc1(self,checked):
