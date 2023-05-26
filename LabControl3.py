@@ -58,7 +58,7 @@ import pickle
 import base64
 import logging as lg
 import LC3systems
-import myfreqplot
+import math
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -210,6 +210,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetBode.setColumnWidth(1, 70)
 
         ########################
+
+        self.inspectMessageBox = QtWidgets.QMessageBox()
+        #self.inspectMessageBox.setText("## Hello PyQt5!\nfrom pythonpyqt.com\n * Moreto \n * Miguel")
+        self.inspectMessageBox.setTextFormat(Qt.MarkdownText)
+        self.inspectMessageBox.setIcon(QtWidgets.QMessageBox.Information)
+        #self.inspectMessageBox.exec()
 
         # Error messages
         self.expressions_errors = {
@@ -888,7 +894,45 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.draw()
     
     def onBtnSimulInspect(self):
-        QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+        """
+        Inspect the selected simulation and shows in a dialog the analysis.
+        """
+        selectItemList = self.treeWidgetSimul.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if selectItemList:
+           # Creating new simulation data:
+            currentItem = selectItemList[0]
+        else:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação selecionada!", None))
+            return
+        
+        if currentItem.childCount():  # Check if the simulation item in the list is empty.
+            if currentItem.parent():  # Check if the selected item is not a child item.
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+        else:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "A simulação selecionada não possui dados!", None))
+            return
+                
+
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
+        y_max, y_final, e_final, e_final_diff, u_max = self.sysDict[sysname].inspectTimeSimulation(simulname)
+
+        if numpy.abs(e_final_diff) > 0.001: # System does not enter in steady state condition.
+            message_text = _translate("MainWindow", "A resposta do sistema não atinge o regime permanente.", None)
+        else: # Steady state ok.
+            Mp = (y_max - y_final)/y_final
+            zeta = math.sqrt((math.pow(math.log(Mp),2))/(math.pow(math.pi,2)+math.pow(math.log(Mp),2)))
+            message_text = _translate("MainWindow", "y<sub>final</sub> = {yf:.3f}    y<sub>pico</sub> = {yp:.3f}\n\n" \
+                                  "e<sub>final</sub> = {ef:.3f}    u<sub>max</sub> = {um:.3f}\n\n" \
+                                  "M<sub>p%</sub> = {mp:.3f}%\n\n" \
+                                  "Amortecimento (2<sup>a</sup> ordem): {zt:.3f}", None).format(yf=y_final, yp=y_max,ef=e_final, um=u_max, mp = Mp*100, zt = zeta)
+        #print(e_final_diff)
+
+        title_text = _translate("MainWindow", "### Propriedades da simulação {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
+
+        self.inspectMessageBox.setText(title_text+message_text)
+        self.inspectMessageBox.exec()
 
     def onCheckBoxFreqAuto(self,state):
         """

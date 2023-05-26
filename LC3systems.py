@@ -9,6 +9,7 @@ import scipy as sp
 import logging as lg
 import utils
 import matplotlib as mpl
+import math
 
 class LTIsystem:
     """
@@ -436,6 +437,28 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = U[0]-Y[0]
+    
+    def inspectTimeSimulation(self, simulname):
+        """
+        Calculates relevant parameters of the simulation data given 
+        by simulname.
+        Returns:
+            y_max = maximum value of the output
+            y_final = final value of the output (mean value of the last 5% samples of the signal)
+            e_final = final value of the error (mean value of the last 5% samples of the signal)
+            e_final_diff = mean value of differences between one sample and the next
+                            during the last 5% samples of the error signal. This is to check
+                            if the error is in steady state (this value should be aprox. zero)
+            u_max = maximum value of the control signal
+        """
+        y_max = np.amax(self.TimeSimData[simulname]['data']['y(t)'])
+        y_final_array = self.TimeSimData[simulname]['data']['y(t)'][math.floor(self.N - self.N * 0.05):]
+        e_final_array = self.TimeSimData[simulname]['data']['e(t)'][math.floor(self.N - self.N * 0.05):]
+        e_final_diff = np.mean(np.diff(e_final_array)/self.Delta_t)  # A mean of derivatives. If it is 0, them the error is stable.
+        y_final = np.mean(y_final_array)
+        e_final = np.mean(e_final_array)
+        u_max = np.amax(self.TimeSimData[simulname]['data']['u(t)'])
+        return y_max, y_final, e_final, e_final_diff, u_max
     
     def RootLocus(self):
         """
