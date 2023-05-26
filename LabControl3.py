@@ -1925,7 +1925,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             return
         
         # If is a linear or discrete system, uses G(s):
-        if (self.sys.Type < 4):
+        if (self.sysDict[self.sysCurrentName].Type < 4):
             Gnum = self.checkTFinput(value)
             print(Gnum)
             
@@ -1941,7 +1941,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.sysDict[self.sysCurrentName].GnumStr = str(value)
                 self.sysDict[self.sysCurrentName].updateSystem()
         # TODO
-        elif (self.sys.Type == 4):
+        elif (self.sysDict[self.sysCurrentName].Type == 4):
             # Parse and check NL system input string:
             sysstr = self.sys.NLsysParseString(str(value))
             
