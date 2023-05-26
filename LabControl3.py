@@ -138,8 +138,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditKlgr.setValidator(self.doubleValidator)
         self.lineEditFmin.setValidator(self.doubleValidator)
         self.lineEditFmax.setValidator(self.doubleValidator)
-        self.lineEditFminNyq.setValidator(self.doubleValidator)
-        self.lineEditFmaxNyq.setValidator(self.doubleValidator)        
+        #self.lineEditFminNyq.setValidator(self.doubleValidator)
+        #self.lineEditFmaxNyq.setValidator(self.doubleValidator)        
 
         # Adding toolbars
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
@@ -147,11 +147,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
         self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
         #self.mpltoolbarBode = CustomNavigationToolbar(self.mplBode, self)
-        self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
+        #self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
         self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
         self.VBoxLayoutBode.addWidget(self.mpltoolbarBode)
-        self.VBoxLayoutNyquist.addWidget(self.mpltoolbarNyquist)
+        #self.VBoxLayoutNyquist.addWidget(self.mpltoolbarNyquist)
         
         # MATPLOTLIB API AXES CONFIG
         self.mplSimul.figure.set_facecolor('0.90')
@@ -177,7 +177,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         self.mplBode.draw()
 
-        
         #self.mplSimul.axes.plot(x,y)
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
@@ -189,8 +188,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.draw()
         
         #self.mplBode.figure.clf()
-        self.mplNyquist.figure.clf()
-        self.nyquist_circ = 0
+        #self.mplNyquist.figure.clf()
+        self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+        self.NyquistAxis.add_patch(self.nyquist_circ)
+        self.nyquist_circ.set_visible(False)        
         lg.basicConfig(level=lg.DEBUG)
         # Initializing system
         self.sys = MySystem.MySystem()
@@ -286,8 +287,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxRnoise.valueChanged.connect(self.onRnoiseChange)
         self.doubleSpinBoxWtime.valueChanged.connect(self.onWtimeChange)
         self.doubleSpinBoxWnoise.valueChanged.connect(self.onWnoiseChange)
-        self.doubleSpinBodeRes.valueChanged.connect(self.onBodeResChange)
-        self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
+        self.doubleSpinFreqRes.valueChanged.connect(self.onFreqResChange)
+        #self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
         self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
         self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
@@ -299,10 +300,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditWvalueFinal.textEdited.connect(self.onWvalueFinalChange)
         self.lineEditK.textEdited.connect(self.onKChange)
         self.lineEditKlgr.textEdited.connect(self.onKChange)
-        self.lineEditFmin.textEdited.connect(self.onBodeFminChange)
-        self.lineEditFmax.textEdited.connect(self.onBodeFmaxChange)
-        self.lineEditFminNyq.textEdited.connect(self.onNyquistFminChange)
-        self.lineEditFmaxNyq.textEdited.connect(self.onNyquistFmaxChange)
+        self.lineEditFmin.textEdited.connect(self.onFminChange)
+        self.lineEditFmax.textEdited.connect(self.onFmaxChange)
+        #self.lineEditFminNyq.textEdited.connect(self.onNyquistFminChange)
+        #self.lineEditFmaxNyq.textEdited.connect(self.onNyquistFmaxChange)
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
@@ -317,8 +318,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimul.clicked.connect(self.onBtnSimul)
         self.btnPlotLGR.clicked.connect(self.onBtnRL)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
-        self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
-        self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
+        #self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
+        #self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
         self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
         self.btnSysRemove.clicked.connect(self.onBtnSysRemove)
         self.btnSysClear.clicked.connect(self.onBtnSysClear)
@@ -482,6 +483,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxRebd.setValue(self.sysDict[sysname].RL_FR_R)
         self.doubleSpinBoxRibd.setValue(self.sysDict[sysname].RL_FR_RI)
         self.doubleSpinBoxImbd.setValue(self.sysDict[sysname].RL_FR_I)
+        self.doubleSpinFreqRes.setValue(self.sysDict[sysname].Fpoints)
 
         #LineEdits:
         self.lineEditRvalueInit.setText(self.locale.toString(self.sysDict[sysname].Rt_initValue))
@@ -493,8 +495,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.onKChange(self.locale.toString(self.sysDict[sysname].K))
         self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
         self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
-        self.lineEditFminNyq.setText(self.locale.toString(self.sysDict[sysname].FminNyq))
-        self.lineEditFmaxNyq.setText(self.locale.toString(self.sysDict[sysname].FmaxNyq))        
+        #self.lineEditFminNyq.setText(self.locale.toString(self.sysDict[sysname].FminNyq))
+        #self.lineEditFmaxNyq.setText(self.locale.toString(self.sysDict[sysname].FmaxNyq))        
 
         self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
 
@@ -519,7 +521,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxResT.setEnabled(True)
             self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
-            self.btnPlotNyquist.setEnabled(True)
+            #self.btnPlotNyquist.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
         elif (systype == 3): # Discrete time controler system.
             self.labelGden.show()
@@ -924,6 +926,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
                 elif signal == 'phase':
                     self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                elif signal == 'nyquist':
+                    # Redraw the Nyquist plot.
+                    self.plotNyquist(sysname,simulname)                    
                 lg.debug('Item {s} enabled to plot.'.format(s=label))
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
@@ -931,6 +936,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     self.removeExistingPlot(self.magBodeAxis.axes,label)
                 elif signal == 'phase':
                     self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+                elif signal == 'nyquist':
+                    # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
+                    self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
+                    self.removeExistingPlot(self.NyquistAxis,'_'+label)     # Regular line (mirror)
+                    self.removeExistingPlot(self.NyquistAxis,'_i'+label)    # Invisible line to plot arrows
+                    self.removeExistingPlot(self.NyquistAxis,'_s'+label)    # Scaled line 
+                    self.removeExistingPlot(self.NyquistAxis,'_im'+label)   # Invisible line (mirror) to plot arrows
+                    self.removeExistingPlot(self.NyquistAxis,'_sm'+label)   # Scaled line (mirror) 
+                    self.removeExistingPlot(self.NyquistAxis,'_a'+label+'0')   # First arrow of line
+                    self.removeExistingPlot(self.NyquistAxis,'_a'+label+'1')   # Second...
+                    self.removeExistingPlot(self.NyquistAxis,'_am'+label+'0')  # First arrow of mirror line
+                    self.removeExistingPlot(self.NyquistAxis,'_am'+label+'1')  # Second...
+                    self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point
                 lg.debug('Item {s} disabled to plot.'.format(s=label))
                 item.setCheckState(1,Qt.Unchecked)
             else:
@@ -944,6 +962,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             #self.mplSimul.axes.set_xlim(xmin = 0)        
             self.magBodeAxis.legend(loc='upper right')
             self.phaseBodeAxis.legend(loc='upper right')
+            self.NyquistAxis.legend(loc='upper right')
             self.mplBode.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -995,20 +1014,38 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.debug(self.sysDict[sysname].FreqResponseData['Name'])
         lg.debug('Removing freq. response item {s} from system {sys}'.format(s=freqrespnameremove,sys=sysname))
 
-        if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
+        i = 0
+        #if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
+        for i in range(currentItem.childCount()):
             # Remove plotted lines:
             lg.debug('Item to remove: {s}'.format(s=freqrespnameremove))
-            for signal in self.sysDict[sysname].FreqResponseData[freqrespnameremove]['data'].keys():
-                label = '{id}:{s}'.format(id=sysname,s=freqrespnameremove)
-                if signal == 'mag':
-                    self.removeExistingPlot(self.magBodeAxis.axes,label)
-                elif signal == 'phase':
-                    self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+            item = currentItem.child(i) # Simulations in the list
+            signal = item.text(1)
+            #for signal in self.sysDict[sysname].FreqResponseData[freqrespnameremove]['data'].keys():
+            label = '{id}:{s}'.format(id=sysname,s=freqrespnameremove)
+            if signal == 'mag':
+                self.removeExistingPlot(self.magBodeAxis.axes,label)
+            elif signal == 'phase':
+                self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+            elif signal == 'nyquist':
+                # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
+                self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
+                self.removeExistingPlot(self.NyquistAxis,'_'+label)     # Regular line (mirror)
+                self.removeExistingPlot(self.NyquistAxis,'_i'+label)    # Invisible line to plot arrows
+                self.removeExistingPlot(self.NyquistAxis,'_s'+label)    # Scaled line 
+                self.removeExistingPlot(self.NyquistAxis,'_im'+label)   # Invisible line (mirror) to plot arrows
+                self.removeExistingPlot(self.NyquistAxis,'_sm'+label)   # Scaled line (mirror) 
+                self.removeExistingPlot(self.NyquistAxis,'_a'+label+'0')   # First arrow of line
+                self.removeExistingPlot(self.NyquistAxis,'_a'+label+'1')   # Second...
+                self.removeExistingPlot(self.NyquistAxis,'_am'+label+'0')  # First arrow of mirror line
+                self.removeExistingPlot(self.NyquistAxis,'_am'+label+'1')  # Second...
+                self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point                    
                 #self.removeExistingPlot(self.mplSimul.axes,label)
-            # Redraw the graphic area:
-            self.magBodeAxis.legend(loc='upper right')
-            self.phaseBodeAxis.legend(loc='upper right')
-            self.mplBode.draw()
+        # Redraw the graphic area:
+        self.magBodeAxis.legend(loc='upper right')
+        self.phaseBodeAxis.legend(loc='upper right')
+        self.NyquistAxis.legend(loc='upper right')
+        self.mplBode.draw()
         
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
@@ -1055,32 +1092,35 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[key].clearFreqResponseData()
 
         # Clear plot area:
-        if self.radioBtnBode.isChecked():
-            self.magBodeAxis.cla()
-            self.phaseBodeAxis.cla()
-            self.magBodeAxis.grid(True)
-            self.phaseBodeAxis.grid(True)            
-            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
-            self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
-        elif self.radioBtnNyquist.isChecked():
-            self.NyquistAxis.cla()
-            # Adding the invisible unity circle:
-            self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
-            self.NyquistAxis.add_patch(self.nyquist_circ)
-            self.nyquist_circ.set_visible(False)
-            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
+        #if self.radioBtnBode.isChecked():
+        self.magBodeAxis.cla()
+        self.phaseBodeAxis.cla()
+        self.magBodeAxis.grid(True)
+        self.phaseBodeAxis.grid(True)            
+        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        #elif self.radioBtnNyquist.isChecked():
+        self.NyquistAxis.cla()
+        # Adding the invisible unity circle:
+        self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+        self.NyquistAxis.add_patch(self.nyquist_circ)
+        self.nyquist_circ.set_visible(False)
+        self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
         self.mplBode.draw()
     
     def onBtnFreqResponseClearAxis(self):
         """
         Uncheck all itens from the list and clear the ploting area.
         """
-        self.uncheckAllItens(self.treeWidgetBode)
+        #self.uncheckAllItens(self.treeWidgetBode)
         if self.radioBtnBode.isChecked():
+            # Unselect bode signals from the list:
+            self.uncheckItens(self.treeWidgetBode,'mag')
+            self.uncheckItens(self.treeWidgetBode,'phase')
             # Clear Bode magnitude and phase axis:
             self.magBodeAxis.cla()
             self.phaseBodeAxis.cla()
@@ -1091,7 +1131,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
             self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
+            # Unselect nyquist signals from the list:
+            self.uncheckItens(self.treeWidgetBode,'nyquist')
             self.NyquistAxis.cla()
+            self.NyquistAxis.grid(True)
             # Adding the invisible unity circle:
             self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
             self.NyquistAxis.add_patch(self.nyquist_circ)
@@ -1138,9 +1181,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.phaseBodeAxis.set_visible(False)
             self.NyquistAxis.set_visible(True)
 
-            self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
-            self.NyquistAxis.add_patch(self.nyquist_circ)
-            self.nyquist_circ.set_visible(False)
+            #self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
+            #self.NyquistAxis.add_patch(self.nyquist_circ)
+            #self.nyquist_circ.set_visible(False)
             #self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
             #self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
             #self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
@@ -1149,16 +1192,148 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
 
     def onBtnPlotFreqResponse(self):
-        if self.radioBtnBode.isChecked():
-            # Plot Bode
-            self.plotBode()
-        elif self.radioBtnNyquist.isChecked():
-            # Plot Nyquist
-            self.plotNyquist()
-            pass
-        else:
-            lg.warning('Frequency response type not set.')
+        """
+        Calculates the frequency response and plots acording to the selected
+        type of graph: bode or nyquist.
+        """
+        # Is the system definition has errors, show the error and finish:
+        if self._has_expressions_errors():
+            return
 
+        addnewflag = 0
+        selectItemList = self.treeWidgetBode.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if not selectItemList:
+           # Creating new simulation data:
+            currentItem = self.onBtnFreqRespAdd()
+        else:
+            currentItem = selectItemList[0]
+
+        if not currentItem.childCount():  # Check if the freq response item in the list is empty.
+            if currentItem.parent():  # Check if the selected item is a child item.
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+                #addnewflag = 1
+        
+        childCount = currentItem.childCount()
+
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
+        lg.info('Plotting Bode Diagram Name: {s} in System {i}'.format(s=simulname,i=sysname))
+        if self.radioBtnBode.isChecked():
+            self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Bode...", None))
+        if self.radioBtnNyquist.isChecked():
+            self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Nyquist...", None))
+        
+        # Calculating the frequency response:
+        self.sysDict[sysname].FreqResponse()
+
+        # Update the Freq. Limits in UI (in case of using auto limits):
+        self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
+        self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+
+        #if (childCount < 3): # It is a new simul in the list. Add child itens to it:
+        if (self.radioBtnBode.isChecked() and childCount < 2): # Check if the list is empty (or there is only one child - nyquist )
+            for signal in self.sysDict[sysname].FreqResponseData[simulname]['data']:
+                if signal != 'omega':
+                    item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
+                    item.setText(1,signal)
+                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    if signal in ['mag','phase']:   # y(t) and r(t) are checked by default.
+                        label = '{id}:{s}'.format(id=sysname,s=simulname)
+                        if signal == 'mag':
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            #self.magBodeAxis.grid(True)
+                            #self.magBodeAxis.xaxis.grid(True, which='minor')
+                        elif signal == 'phase':
+                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                            #self.phaseBodeAxis.semilogx([self.sysDict[sysname].Fmin/(numpy.pi*2),self.sysDict[sysname].Fmax/(numpy.pi*2)],[-numpy.pi,-numpy.pi],'k--')
+                            #self.phaseBodeAxis.grid(True)
+                        #self.phaseBodeAxis.xaxis.grid(True, which='minor')
+                        #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                        item.setCheckState(1, Qt.Checked)
+                    else:
+                        item.setCheckState(1, Qt.Unchecked)
+                    #print(signal)
+        elif (self.radioBtnNyquist.isChecked() and (childCount == 2 or childCount == 0)):
+            self.sysDict[sysname].NyquistGraphLines()
+            item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
+            item.setText(1,'nyquist')
+            item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+            item.setCheckState(1, Qt.Checked)
+            self.sysDict[sysname].NyquistGraphLines()
+            self.plotNyquist(sysname,simulname)
+        #else:
+        #    lg.warning('Frequency response type not set.')
+        #else: # It is not a new freq. response data to add. Update the existing ones.
+        # Update the graph, according to the itens selected in the list:
+        else: # (self.radioBtnBode.isChecked() and childCount == 2):
+            for i in range(currentItem.childCount()):
+                item = currentItem.child(i)
+                signal = item.text(1)
+                label = '{id}:{s}'.format(id=sysname,s=simulname)
+                if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                    # Remove the existing ploted line:
+                    if signal == 'mag':
+                        self.removeExistingPlot(self.magBodeAxis,label)
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    elif signal == 'phase':
+                        self.removeExistingPlot(self.phaseBodeAxis,label)
+                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    elif signal == 'nyquist':
+                        # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
+                        self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
+                        self.removeExistingPlot(self.NyquistAxis,'_'+label)     # Regular line (mirror)
+                        self.removeExistingPlot(self.NyquistAxis,'_i'+label)    # Invisible line to plot arrows
+                        self.removeExistingPlot(self.NyquistAxis,'_s'+label)    # Scaled line 
+                        self.removeExistingPlot(self.NyquistAxis,'_im'+label)   # Invisible line (mirror) to plot arrows
+                        self.removeExistingPlot(self.NyquistAxis,'_sm'+label)   # Scaled line (mirror) 
+                        self.removeExistingPlot(self.NyquistAxis,'_a'+label+'0')   # First arrow of line
+                        self.removeExistingPlot(self.NyquistAxis,'_a'+label+'1')   # Second...
+                        self.removeExistingPlot(self.NyquistAxis,'_am'+label+'0')  # First arrow of mirror line
+                        self.removeExistingPlot(self.NyquistAxis,'_am'+label+'1')  # Second...
+                        self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point
+                        self.sysDict[sysname].NyquistGraphLines()
+                        self.plotNyquist(sysname,simulname)
+                        #print('Updating nyquist...')
+                    # Plot the new data
+                    # TODO:
+                    #self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                    print(label)
+
+        # Setting a simulation tooltip:
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
+        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+
+        fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
+        fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
+        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
+        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
+
+        self.treeWidgetBode.expandAll()
+
+        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
+        # Format the plotting area:
+        self.mplBode.axes.autoscale()     
+        self.magBodeAxis.grid(True)
+        self.phaseBodeAxis.grid(True)
+        self.NyquistAxis.grid(True)
+        self.magBodeAxis.legend(loc='upper right')
+        self.phaseBodeAxis.legend(loc='upper right')
+        self.NyquistAxis.legend(loc='upper right')
+        # Custom Navigation
+        #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
+        #self.mpltoolbarBode.siblings = [ax1, ax2]
+        #self.mpltoolbarBode.error = 0.1
+
+        # Ajusting labels e title:
+        #self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        #self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
+        #self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        #self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        
+        self.mplBode.draw()
+        
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
     
     def plotBode(self):
 
@@ -1272,7 +1447,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onBtnFreqRespInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
 
-    def plotNyquist(self):
+    def plotNyquist(self,sysname,simulname):
         """
         Function to draw the Nyquist plot.
         This code is based on the code presented in the Python Control module.
@@ -1281,36 +1456,37 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Is the system definition has errors, show the error and finish:
         if self._has_expressions_errors():
             return        
-        simulname = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
+        #simulname = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
         #omega,_ = self.sysDict[self.sysCurrentName].calcOmega()
         #omega = None
         #counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r * self.sysDict[self.sysCurrentName].K,self.NyquistAxis,omega=omega,arrows=1)
-        self.sysDict[self.sysCurrentName].NyquistGraphLines()
-        reg_re = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['reg_re']
-        reg_im = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['reg_im']
-        scaled_re = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_re']
-        scaled_im = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['scaled_im']
-        x = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_re']
-        y = self.sysDict[self.sysCurrentName].FreqResponseData[simulname]['nydata']['arrow_im']
+        
+        reg_re = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['reg_re']
+        reg_im = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['reg_im']
+        scaled_re = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['scaled_re']
+        scaled_im = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['scaled_im']
+        x = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['arrow_re']
+        y = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['arrow_im']
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
         arrow_style = matplotlib.patches.ArrowStyle('simple', head_width=8, head_length=8)
         # Ploting the regular portion of the curve:
-        p = self.NyquistAxis.plot(reg_re, reg_im, '-')
+        p = self.NyquistAxis.plot(reg_re, reg_im, '-',label=label)
         c = p[0].get_color() # Getting the curve color.
         # Plotting the invisile line to place arrows:
-        p = self.NyquistAxis.plot(x, y, linestyle='None', color=c)
+        p = self.NyquistAxis.plot(x, y, linestyle='None', color=c, label='_i'+label)
         # Plotting the arrows:
-        self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=1)
+        self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=1,label='_a'+label)
         # Ploting the scaled portion of the curve:
-        self.NyquistAxis.plot(scaled_re, scaled_im, '-.' , color=c)
+        self.NyquistAxis.plot(scaled_re, scaled_im, '-.' , color=c, label='_s'+label)
 
         # Plotting negative frequency lines (if selected):
         if self.radioBtnFreqNeg.isChecked():
-            self.NyquistAxis.plot(reg_re, -reg_im, '-', color=c)
-            self.NyquistAxis.plot(scaled_re, -scaled_im, '-.', color=c)
+            self.NyquistAxis.plot(reg_re, -reg_im, '-', color=c, label='_'+label)
+            self.NyquistAxis.plot(scaled_re, -scaled_im, '-.', color=c, label='_sm'+label)
             # Plotting the invisile line to place arrows:
-            p = self.NyquistAxis.plot(x, -y, linestyle='None', color=c)
+            p = self.NyquistAxis.plot(x, -y, linestyle='None', color=c, label='_im'+label)
             # Plotting the arrows:
-            self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1)  
+            self._add_arrows_to_line2D(self.NyquistAxis, p[0], arrow_locs=[0.3, 0.7], arrowstyle=arrow_style, dir=-1,label='_am'+label)  
         # Plotting the unity radius circle:
         if self.radioBtnCirc1.isChecked():
             self.nyquist_circ.set_visible(True)
@@ -1319,10 +1495,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         # Mark the start of the curve
         self.NyquistAxis.plot(reg_re[0], reg_im[0], 'o',
-                        color=c, markersize=4)
+                        color=c, markersize=4,label = '_o'+label)
         # Mark the -1 point
         self.NyquistAxis.plot([-1], [0], 'r+')
-        self.mplBode.draw()
+        
+        #self.mplBode.draw()
 
     def onRadioBtnCirc1(self,checked):
         """
@@ -1338,7 +1515,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     # Code taken from Control module.
     def _add_arrows_to_line2D(self,
             axes, line, arrow_locs=[0.2, 0.4, 0.6, 0.8],
-            arrowstyle='-|>', arrowsize=1, dir=1, transform=None):
+            arrowstyle='-|>', arrowsize=1, dir=1, transform=None, label = ''):
         """
         Add arrows to a matplotlib.lines.Line2D at selected locations.
 
@@ -1386,6 +1563,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         s = numpy.cumsum(numpy.sqrt(numpy.diff(x) ** 2 + numpy.diff(y) ** 2))
 
         arrows = []
+        i = 0
         for loc in arrow_locs:
             n = numpy.searchsorted(s, s[-1] * loc)
 
@@ -1401,12 +1579,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 raise ValueError("unknown value for keyword 'dir'")
 
             p = matplotlib.patches.FancyArrowPatch(
-                arrow_tail, arrow_head, transform=transform, lw=0,
+                arrow_tail, arrow_head, transform=transform, lw=0, label = label+str(i),
                 **arrow_kw)
             axes.add_patch(p)
             arrows.append(p)
+            i = i + 1
         return arrows
 
+    def uncheckItens(self,treeWidget,signal):
+        """
+        Auxiliary method to uncheck specific signal itens (childs)
+        given from the string argument signal
+        from the given QtreeWidged list
+        """
+        root = treeWidget.invisibleRootItem()
+        i = 0
+        for i in range(root.childCount()):
+            item = root.child(i) # Simulations in the list
+            for j in range(item.childCount()): # Signals
+                child = item.child(j)
+                if child.text(1) == signal:
+                    child.setCheckState(1,Qt.Unchecked)
 
     def uncheckAllItens(self,treeWidget):
         """
@@ -1423,14 +1616,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def removeExistingPlot(self,ax,label):
         """
-        Remove an existem plot line from the graph, based on the label.
+        Remove an existem Artist object from the graph, based on the label.
+        It can be a line or a patch (arrow)
         """
-        line_index = 0  # Index used to find, using label, an specific plotted line to remove.
-        for line in ax.get_lines():
-            if (line.get_label() == label):
-                #print(line_index)
-                line.remove()
-            line_index = line_index + 1
+        for artist in ax.get_children():
+            if (artist.get_label() == label):
+                artist.remove()
 
     
     def onSimluResChange(self,value):
@@ -1608,70 +1799,22 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             pass
         
         return        
-    
-    def onBtnNyquist(self):
-        """
-        Plot nyquist diagram Button handler
-        """
-        if self._has_expressions_errors():
-            return
-
-        self.statusBar().showMessage(_translate("MainWindow", "Traçando Nyquist...", None))
-        
-        ax = self.sys.Nyquist(self.mplNyquist.figure,completo=self.checkBoxNyqNegFreq.isChecked(),comcirculo=self.checkBoxNyqCirc.isChecked())
-        
-        #[ax] = self.mplNyquist.figure.get_axes()
-        # Setting labels and title:
-        ax.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-        ax.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
-        ax.set_title('Diagrama de Nyquist')
-        
-        self.mplNyquist.draw()
-        
-        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
-
-    
-    def onBtnNyquistClear(self):
-        """
-        Clear figure of the Nyquist diagram. Button handler.
-        """
-        self.mplNyquist.figure.clf()
-        self.mplNyquist.draw()
-        pass
-    
-    def onNyquistFminChange(self, value):
-        """
-        Nyquist Fmin edited handler
-        """
-        self.sysDict[self.sysCurrentName].FminNyq,_ = self.locale.toDouble(value)
-
-    def onNyquistFmaxChange(self, value):
-        """
-        Nyquist Fmax edited handler
-        """
-        self.sysDict[self.sysCurrentName].FmaxNyq,_ = self.locale.toDouble(value)
-    
-    def onNyquistResChange(self, value):
-        """
-        Nyquist Resolution edited handler
-        """
-        self.sysDict[self.sysCurrentName].FpointsNyq = value
    
 
-    def onBodeFminChange(self,value):
+    def onFminChange(self,value):
         """
         Bode Fmin edited handler
         """
         self.sysDict[self.sysCurrentName].Fmin,_ = self.locale.toDouble(value)
 
 
-    def onBodeFmaxChange(self,value):
+    def onFmaxChange(self,value):
         """
         Bode Fmax edited handler
         """
         self.sysDict[self.sysCurrentName].Fmax,_ = self.locale.toDouble(value)
 
-    def onBodeResChange(self,value):
+    def onFreqResChange(self,value):
         """
         Bode Resolution edited handler
         """
@@ -1733,23 +1876,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Event handler of the line edit. Update the system property.
         """
         self.sysDict[self.sysCurrentName].Rt_finalValue,_ = self.locale.toDouble(value)
-        # if not value:
-        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-        #     return
-        # else:
-        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        # valid_value = self.checkTFinput(value, expr_var='t')
-        # if valid_value == 0:
-        #     self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-        #     self._set_expression_error('r(t)', True, '[{}] is not a valid expression'.format(value))
-        #     return
-        # self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        # value = value.replace(',','.')        
-        
-        # #if (int(value) == 2):
-        # #    self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: yellow }")
-        # self._set_expression_error('r(t)', False)
-        # self.sys.Rt = str(value)
  
 
     def onWvalueFinalChange(self,value):
@@ -1757,22 +1883,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Event handler of the line edit. Update the system property.
         """
         self.sysDict[self.sysCurrentName].Wt_finalValue,_ = self.locale.toDouble(value)
-        # if not value:
-        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-        #     return
-        # else:
-        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        
-        # valid_value = self.checkTFinput(value, expr_var='t')
-        # if valid_value == 0:
-        #     self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(255, 170, 170) }")
-        #     self._set_expression_error('w(t)', True, '[{}] is not a valid expression'.format(value))
-        #     return
-        # self.lineEditWvalue.setStyleSheet("QLineEdit { background-color: rgb(95, 211, 141) }")
-        # value = value.replace(',','.')   
-        
-        # self._set_expression_error('w(t)', False)
-        # self.sys.Wt = str(value)
+
 
     def onGroupBoxCcheck(self,flag):
         
@@ -1805,22 +1916,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self._set_expression_active('H[Num](s)', flag)
         self._set_expression_active('H[Den](s)', flag)
 
-    # def onGroupBoxWcheck(self,flag):
-        
-    #     if (flag == False):
-    #         self.statusBar().showMessage(_translate("MainWindow", "Perturbação desativada.", None))
-    #         self.sys.Wt = '0'
-    #         self.sys.InstWt = 0
-    #         self.sys.ruidoWt = 0
-    #         self.checkBoxPert.setDisabled(True)
-    #     else:
-    #         self.statusBar().showMessage(_translate("MainWindow", "Perturbação ativada.", None))
-    #         self.sys.Wt = str(self.lineEditWvalue.text())
-    #         self.sys.InstWt = self.doubleSpinBoxWtime.value()
-    #         self.sys.ruidoWt = self.doubleSpinBoxWnoise.value()
-    #         self.checkBoxPert.setDisabled(False)
-    #     self._set_expression_active('w(t)', flag)
-
     def onGnumChange(self,value):
         """
         When user enters a character.
@@ -1842,17 +1937,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 # Change color to green:
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
                 self._set_expression_error('G[Num](s)', False)
-                self.sys.GnumStr = str(value)
-                ####### LabControl 3: 
                 self.sysDict[self.sysCurrentName].Gnum = Gnum
                 self.sysDict[self.sysCurrentName].GnumStr = str(value)
                 self.sysDict[self.sysCurrentName].updateSystem()
-                ####################################
-                if self.sys.Type == 2:
-                    self.sys.G2num = Gnum
-                else:
-                    self.sys.Gnum = Gnum
-                self.sys.Atualiza()
+        # TODO
         elif (self.sys.Type == 4):
             # Parse and check NL system input string:
             sysstr = self.sys.NLsysParseString(str(value))
@@ -1886,17 +1974,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('G[Den](s)', False)
-            self.sys.GdenStr = str(value)
-            ####### LabControl 3: 
             self.sysDict[self.sysCurrentName].Gden = Gden
             self.sysDict[self.sysCurrentName].GdenStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
-            ####################################            
-            if self.sys.Type == 2:
-                self.sys.G2den = Gden
-            else:
-                self.sys.Gden = Gden
-            self.sys.Atualiza()
+
 
     def onCnumChange(self,value):
         """
@@ -1915,14 +1996,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('C[Num](s)', False)
-            self.sys.CnumStr = str(value)
-            self.sys.Cnum = Cnum
-            self.sys.Atualiza()
-            ####### LabControl 3: 
             self.sysDict[self.sysCurrentName].Cnum = Cnum
             self.sysDict[self.sysCurrentName].CnumStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
-            ####################################            
     
     def onCdenChange(self,value):
         """
@@ -1941,14 +2017,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('C[Den](s)', False)
-            self.sys.CdenStr = str(value)
-            self.sys.Cden = Cden
-            self.sys.Atualiza()
-            ####### LabControl 3: 
             self.sysDict[self.sysCurrentName].Cden = Cden
             self.sysDict[self.sysCurrentName].CdenStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
-            ####################################                
       
     def onHnumChange(self,value):
         """
@@ -1967,14 +2038,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('H[Num](s)', False)
-            self.sys.HnumStr = str(value)
-            self.sys.Hnum = Hnum
-            self.sys.Atualiza()
-            ####### LabControl 3: 
             self.sysDict[self.sysCurrentName].Hnum = Hnum
             self.sysDict[self.sysCurrentName].HnumStr = str(value)
-            self.sysDict[self.sysCurrentName].updateSystem()
-            ####################################             
+            self.sysDict[self.sysCurrentName].updateSystem()            
     
     def onHdenChange(self,value):
         """
@@ -1993,14 +2059,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('H[Den](s)', False)
-            self.sys.HdenStr = str(value)
-            self.sys.Hden = Hden
-            self.sys.Atualiza()
-            ####### LabControl 3: 
             self.sysDict[self.sysCurrentName].Hden = Hden
             self.sysDict[self.sysCurrentName].HdenStr = str(value)
-            self.sysDict[self.sysCurrentName].updateSystem()
-            ####################################             
+            self.sysDict[self.sysCurrentName].updateSystem()            
     
     def checkTFinput(self, value, expr_var='s'):
         """

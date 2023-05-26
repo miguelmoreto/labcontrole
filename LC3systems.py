@@ -102,11 +102,6 @@ class LTIsystem:
     Fmin = 0.01
     Fmax = 100.0
     Fpoints = 1000
-    
-    # Nyquist plot paramethers:
-    FminNyq = 0.01
-    FmaxNyq = 100.0
-    FpointsNyq = 100
 
     # System with discrete controller stuff:
     dT = 0.1        # Sample period
