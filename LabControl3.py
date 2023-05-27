@@ -813,7 +813,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def onBtnSimul(self):
         """
-        The main simulation button handler.
+        Time domain simulation button handler.
         """
         
         # Is the system definition has errors, show the error and finish:
@@ -836,6 +836,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
 
         sysname = currentItem.text(0)
+
+        if sysname != self.sysCurrentName:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Observação:", None), _translate("MainWindow", "O sistema selecionado na aba Diagrama não é\n"\
+                                                                                                            "o mesmo da simulação selecionada. Uma nova\n"\
+                                                                                                            "simulação será acrescentada à lista.", None))
+            currentItem = self.onBtnSimulAdd()
+            sysname = currentItem.text(0)
+            addnewflag = 1
+
         simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
         lg.info('Performing Simulation Name: {s} in System {i}'.format(s=simulname,i=sysname))
 
@@ -1259,8 +1268,31 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #addnewflag = 1
         
         childCount = currentItem.childCount()
-
         sysname = currentItem.text(0)
+
+        # Check if the selected system matches with the system of the selected freq.
+        # response in the list.
+        if sysname != self.sysCurrentName:
+            msgBox = QtWidgets.QMessageBox()
+            msgBox.setWindowTitle(_translate("MainWindow", "Observação:", None))
+            msgBox.setText(_translate("MainWindow", "O sistema selecionado na aba Diagrama não é o\n"\
+                                                    "mesmo da resposta em frequência selecionada.", None))
+            msgBox.setInformativeText(_translate("MainWindow", "Acrescentar uma nova resposta em frequência à\n"\
+                                                    "lista?" , None))
+            yes_btn = msgBox.addButton(msgBox.Yes)
+            no_btn = msgBox.addButton(msgBox.No)
+            yes_btn.setText(_translate("MainWindow", "Sim", None))
+            no_btn.setText(_translate("MainWindow", "Não (cancelar)", None))
+            msgBox.setDefaultButton(yes_btn)
+            msgBox.exec()
+            if msgBox.clickedButton() == no_btn:
+                return
+            else:
+                currentItem = self.onBtnFreqRespAdd()
+                sysname = currentItem.text(0)
+                childCount = currentItem.childCount()
+                sysname = currentItem.text(0)            
+
         simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
         lg.info('Plotting Bode Diagram Name: {s} in System {i}'.format(s=simulname,i=sysname))
         if self.radioBtnBode.isChecked():
