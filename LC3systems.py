@@ -6,6 +6,7 @@
 import numpy as np
 import control as ct
 import scipy as sp
+from scipy import signal
 import logging as lg
 import utils
 import matplotlib as mpl
@@ -58,7 +59,7 @@ class LTIsystem:
     Type = 0    # system type.
     Index = 0   # System index within a list.
     Name = ''
-    TypeStrList = ['LTI_1','LTI_2', 'LTI_3']    # List with string for the system types.
+    TypeStrList = ['LTI_1','LTI_2', 'LTI_3', 'DTS']    # List with string for the system types.
     TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
@@ -106,7 +107,7 @@ class LTIsystem:
 
     # System with discrete controller stuff:
     dT = 0.1        # Sample period
-    Npts_dT = 20    # Number of points for each dT
+    NpdT = 20    # Number of points for each dT
     NdT = 100       # Number of discrete periods
 
     
@@ -265,6 +266,7 @@ class LTIsystem:
         if newtype <= 4:
             lg.debug('Changing system type to {t}'.format(t=newtype))
             self.Type = newtype
+            self.TypeStr = self.TypeStrList[newtype]
         else:
             lg.info('System type {t} no implemented yet!'.format(t=newtype))
     
@@ -294,7 +296,10 @@ class LTIsystem:
         self.TimeSimCounter = self.TimeSimCounter + 1
         # Format simul name string. The simulation number is 1 plus the last one:
         self.CurrentTimeSimId = self.TimeSimCounter
-        self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+        if self.Type < 3:
+            self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+        elif self.Type == 3:
+            self.CurrentSimulName = 'DTS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
         self.TimeSimData[self.CurrentSimulName] = {}
         # Store this simul ID:
@@ -351,15 +356,20 @@ class LTIsystem:
         
         # Time vector:
         if (self.Type == 3):
+            # For discrete time simulation, calculates the total number of
+            # samples based on the number os discrete step time and the
+            # value of Delta_t (solving time step).
+            self.NdT = round(self.Tmax/self.dT)     # Number of discrete time steps.
+            self.NpdT = round(self.dT/self.Delta_t) # Number of points per each time step.
             # For discrete simulation it is needed 2 more samples in input vector.
-            time = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
+            time = np.arange(0,self.NdT*self.NpdT*self.Delta_t+2*self.Delta_t,self.Delta_t)
+            #time = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
         else:
             time = np.arange(0,self.Tmax,self.Delta_t)
-           
-        r = np.zeros((len(time)))
-        w = np.zeros((len(time)))
-        self.N = len(time)
-        #time = np.reshape(time,(1,len(time)))
+
+        self.N = len(time)   
+        r = np.zeros(self.N)
+        w = np.zeros(self.N)
         
         # Number of the sample corresponding to the begining of the inputs:
         sampleR = int(self.InstRt/self.Delta_t)
@@ -437,6 +447,96 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = U[0]-Y[0]
+    
+    def discreteTimeSimulation(self):
+        """
+        Time simulation considering a C(z) discrete controler and a
+        Zero Order Hold (ZOH). 
+            self.dT is the discrete sample time.
+        The idea is to solve the process (G(s)) as a step response
+        at every dT seconds. The value of the step is the output
+        of C(z).
+        """
+
+        self.createInputVectors()
+        Total_Nsamples = self.NdT * self.NpdT
+        #orderG = len(self.Gden)
+        orderG = np.poly1d(self.Gden).order
+        # Initial state vector:
+        X0G = np.zeros(orderG)
+        order_Cnum = len(self.Cnum) # b coeff. order
+        order_Cden = len(self.Cden) # a coeff. order
+        if (order_Cden > 1):
+            a = np.delete(self.Cden,0)
+        else:
+            a = np.zeros(0)
+        b = self.Cnum
+        R0 = np.zeros(order_Cnum)
+        Y0 = np.zeros(order_Cnum)
+        U0 = np.zeros(order_Cden-1)
+        E0 = np.zeros(order_Cnum)
+        yk = 0 # initial value of the output
+
+        t_plot = np.zeros(Total_Nsamples+2)
+        u_k = np.zeros(self.NdT)
+        y_plot = np.zeros(Total_Nsamples+2)
+        u_plot = np.zeros(Total_Nsamples+2)
+        e_plot = np.zeros(Total_Nsamples+2)
+        e_k = np.zeros(self.NdT)
+        t_step = np.arange(0,self.dT+self.Delta_t,self.Delta_t)
+        t_k = np.zeros(self.NdT)
+        
+        for k in np.arange(0,self.NdT):
+            R0[0] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][k*self.NpdT]
+            Y0[0] = yk
+            
+            if (self.Loop == 'closed'):
+                E0 = R0 - Y0
+            else:
+                E0 = R0
+                
+            e_k[k] = R0[0] - Y0[0]
+            t_k[k] = k * self.dT
+            # Controller diference equation:
+            uk = self.K * np.dot(b,E0) - np.dot(a,U0)
+            
+            #U = uk * numpy.ones(self.dT/step_dT+1) # input vector   
+            U = uk * np.ones(len(t_step)) # input vector   
+
+            t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
+            
+            if (k == 0):
+                #U = uk * np.ones(T/dT) # input vector
+                t_plot[0:(self.NpdT+1)] = t_out
+                y_plot[0:(self.NpdT+1)] = yout
+                u_plot[0:(self.NpdT+1)] = uk
+                e_plot[0:(self.NpdT+1)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][0:(self.NpdT+1)] - yout
+                #e_plot = np.append(e_plot,R[k*Npoints_dT:(k+1)*Npoints_dT] - yout)
+        
+            else:
+                t_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = t_out + k*self.dT
+                y_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = yout
+                u_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = uk
+                e_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] - yout
+           
+            yk = yout[-1] # Save the final output value. 
+            X0G = xout[-1] # Save the final state.
+            
+            Y0 = np.roll(Y0,1)
+            Y0[0] = yk
+            E0 = np.roll(E0,1)
+            R0 = np.roll(R0,1)
+            if (order_Cden > 1):
+                U0 = np.roll(U0,1)
+                U0[0] = uk
+            u_k[k] = uk
+        
+        self.TimeSimData[self.CurrentSimulName]['data']['tk'] = t_k
+        self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = y_plot
+        self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u_plot
+        self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e_plot
+        self.TimeSimData[self.CurrentSimulName]['data']['e[k]'] = e_k
+        return #t_plot, t_k, u_plot, y_plot, e_plot, e_k        
     
     def inspectTimeSimulation(self, simulname):
         """
@@ -802,18 +902,13 @@ class LTIsystem:
         y[reg_mask] *= (1 + curve_offset[reg_mask])
         self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['arrow_re'] = x
         self.FreqResponseData[self.CurrentFreqResponseName]['nydata']['arrow_im'] = y
-
-
-        #
-        #
-        #return resp
     
     #
     # Function to compute Nyquist curve offsets
     #
     # This function computes a smoothly varying offset that starts and ends at
     # zero at the ends of a scaled segment.
-    #
+    # Function taken from Control module.
     def _compute_curve_offset(self, resp, mask, max_offset):
         # Compute the arc length along the curve
         s_curve = np.cumsum(
