@@ -18,7 +18,7 @@ pyinstaller --clean -y --onedir --exclude-module sqlalchemy --hidden-import PyQt
 conda deactivate
 
 Utility commands:
-pyrcc5 resources.qrc -o resources.py
+pyrcc5 images.qrc -o images_rc.py
 
 
 https://pyinstaller.org/en/stable/runtime-information.html

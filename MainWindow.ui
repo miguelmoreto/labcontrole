@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -1456,7 +1456,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap>:/diagrams/diagram1Opened.png</pixmap>
+             <pixmap resource="images.qrc">:/diagrams/images/diagram1Opened.png</pixmap>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

@@ -15,15 +15,24 @@
     <file>images/fileopen.png</file>
   </qresource>
   <qresource prefix="diagrams">
-    <file>diagram1Closed.png</file>
-    <file>diagram1Opened.png</file>
-    <file>diagram2Closed.png</file>
-    <file>diagram2Opened.png</file>
-    <file>diagram3Closed.png</file>
-    <file>diagram3Opened.png</file>
-    <file>diagram4Closed.png</file>
-    <file>diagram4Opened.png</file>
-    <file>diagram5Closed.png</file>
-    <file>diagram5Opened.png</file>
+    <file>images/diagram1Closed.png</file>
+    <file>images/diagram1Opened.png</file>
+    <file>images/diagram2Closed.png</file>
+    <file>images/diagram2Opened.png</file>
+    <file>images/diagram3Closed.png</file>
+    <file>images/diagram3Opened.png</file>
+    <file>images/diagram4Closed.png</file>
+    <file>images/diagram4Opened.png</file>
+    <file>images/diagram5Closed.png</file>
+    <file>images/diagram5Opened.png</file>
+  </qresource>
+  <qresource prefix="mpltoolbar">
+    <file>images/mpl_toolbar/back.png</file>
+    <file>images/mpl_toolbar/filesave.png</file>
+    <file>images/mpl_toolbar/forward.png</file>
+    <file>images/mpl_toolbar/home.png</file>
+    <file>images/mpl_toolbar/move.png</file>
+    <file>images/mpl_toolbar/subplots.png</file>
+    <file>images/mpl_toolbar/zoom_to_rect.png</file>
   </qresource>
 </RCC>
