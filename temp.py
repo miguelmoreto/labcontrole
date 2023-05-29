@@ -7,15 +7,37 @@ import control as ct
 import numpy as np
 import matplotlib.pyplot as plt
 
-sys = ct.tf([2,10],[1,2,10])
-FTMF = sys/(1+sys)
-data = ct.step_response(sys,10)
+from scipy.signal import lti, lsim2
+
+# Testing solver:
+A = np.array([[0, 1], [0, 0]])
+B = np.array([[0], [1]])
+C = np.array([[1, 0]])
+D = 0
+system = lti(A, B, C, D)
+
+t = np.linspace(0, 5, num=50)
+u = np.ones_like(t)
+
+tout, y, x = lsim2(system, u, t,X0=[1,1])
+
+print(len(t))
+print(len(tout))
+
+#plt.plot(t, y)
+#plt.grid(alpha=0.3)
+#plt.xlabel('t')
+#plt.show()
+
+#sys = ct.tf([2,10],[1,2,10])
+#FTMF = sys/(1+sys)
+#data = ct.step_response(sys,10)
 #ct.set_defaults('nyquist',indent_radius=0.001)
-ct.set_defaults('nyquist',max_curve_magnitude=20)
-G1 = ct.zpk([],[0,-1,-2],10)
-N,contour = ct.nyquist_plot(sys,return_contour=True,plot=True)
-resp = G1(contour)
-x, y = resp.real.copy(), resp.imag.copy()
+#ct.set_defaults('nyquist',max_curve_magnitude=20)
+#G1 = ct.zpk([],[0,-1,-2],10)
+#N,contour = ct.nyquist_plot(sys,return_contour=True,plot=True)
+#resp = G1(contour)
+#x, y = resp.real.copy(), resp.imag.copy()
 
 #fig,ax = plt.subplots(figsize=(6, 5))#,layout='constrained')
 #ax.plot(x,y)

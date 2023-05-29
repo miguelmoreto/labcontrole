@@ -673,10 +673,22 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
                 lg.debug('Item {s} enabled to plot.'.format(s=label))
-                if signal in ['e[k]']:
-                    print('Plot e[k]')
+                if signal == 'e[k]': # If signal is e[k] get the line color from e(t)
+                    label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
+                    c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
+                    if c: # If color was found:
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5)
+                    else:
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5)
+                elif signal == 'e(t)': # If signal is e(t) get the line color from e[k]
+                    label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e[k]')
+                    c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
+                    if c: # If color was found:
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,color=c)
+                    else:
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                 else:
-                    self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                    self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)                    
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
                 lg.debug('Item {s} disabled to plot.'.format(s=label))
@@ -886,7 +898,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
             for signal in self.sysDict[sysname].TimeSimData[simulname]['data']:
-                if (signal != ('time' and 'tk')):
+                if (signal != 'time' and signal != 'tk'):
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
                     item.setText(1,signal)
                     item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
@@ -897,30 +909,26 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     else:
                         item.setCheckState(1, Qt.Unchecked)
                     #print(signal)
-
-        # Update the graph, according to the itens selected in the list:
-        for i in range(currentItem.childCount()):
-            item = currentItem.child(i)
-            signal = item.text(1)
-            label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
-            if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
-                # Remove the existing ploted line:
-                self.removeExistingPlot(self.mplSimul.axes,label)
-                # Plot the new data
-                print(signal)
-                if signal == 'e[k]':
-                    # TODO: not working.
-                    c = self.getExistingPlotColor(self.mplSimul.axes,'e(t)')
-                    if c:
-                        self.mplSimul.axes.scatter(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,color=c,marker='o')
-                        print('Plot e[k]')
+        else:
+            # Update the graph, according to the itens selected in the list:
+            for i in range(currentItem.childCount()):
+                item = currentItem.child(i)
+                signal = item.text(1)
+                label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
+                if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                    # Remove the existing ploted line:
+                    self.removeExistingPlot(self.mplSimul.axes,label)
+                    # Plot the new data
+                    if signal == 'e[k]': # If signal is e[k] get the line color from e(t)
+                        label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
+                        c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
+                        if c: # If color was found:
+                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5)
+                        else:
+                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5)
                     else:
-                        self.mplSimul.axes.scatter(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,marker='o')
-                        print('color not found')
-                        print(c)
-                else:
-                    self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
-                #print(label)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                    #print(label)
 
         # Setting a simulation tooltip:
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
@@ -1603,7 +1611,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         color = 0
         for artist in ax.get_children():
             if (artist.get_label() == label):
+                #print(type(artist))
+                #if isinstance(artist,matplotlib.collections.PathCollection): # For the scatter plot.
+                #    color = artist.get_facecolor()[0]
+                #else:
                 color = artist.get_color()
+
         return color
     
     def onSimluResChange(self,value):

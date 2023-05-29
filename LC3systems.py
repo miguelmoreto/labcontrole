@@ -362,7 +362,8 @@ class LTIsystem:
             self.NdT = round(self.Tmax/self.dT)     # Number of discrete time steps.
             self.NpdT = round(self.dT/self.Delta_t) # Number of points per each time step.
             # For discrete simulation it is needed 2 more samples in input vector.
-            time = np.arange(0,self.NdT*self.NpdT*self.Delta_t+2*self.Delta_t,self.Delta_t)
+            #time = np.arange(0,self.NdT*self.NpdT*self.Delta_t+2*self.Delta_t,self.Delta_t)
+            time = np.arange(0,self.NdT*self.NpdT*self.Delta_t,self.Delta_t)
             #time = np.arange(0,self.Tmax+2*self.Delta_t,self.Delta_t)
         else:
             time = np.arange(0,self.Tmax,self.Delta_t)
@@ -477,11 +478,11 @@ class LTIsystem:
         E0 = np.zeros(order_Cnum)
         yk = 0 # initial value of the output
 
-        t_plot = np.zeros(Total_Nsamples+2)
+        t_plot = np.zeros(Total_Nsamples)
         u_k = np.zeros(self.NdT)
-        y_plot = np.zeros(Total_Nsamples+2)
-        u_plot = np.zeros(Total_Nsamples+2)
-        e_plot = np.zeros(Total_Nsamples+2)
+        y_plot = np.zeros(Total_Nsamples)
+        u_plot = np.zeros(Total_Nsamples)
+        e_plot = np.zeros(Total_Nsamples)
         e_k = np.zeros(self.NdT)
         t_step = np.arange(0,self.dT+self.Delta_t,self.Delta_t)
         t_k = np.zeros(self.NdT)
@@ -500,24 +501,24 @@ class LTIsystem:
             # Controller diference equation:
             uk = self.K * np.dot(b,E0) - np.dot(a,U0)
             
-            #U = uk * numpy.ones(self.dT/step_dT+1) # input vector   
             U = uk * np.ones(len(t_step)) # input vector   
-
+            # Lsim2 returns the initial condition in the first element
+            # of the resulting array. We simulate with an aditional
+            # Delta_t. The last value is used only in the next discrete step.
             t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
             if (k == 0):
-                #U = uk * np.ones(T/dT) # input vector
-                t_plot[0:(self.NpdT+1)] = t_out
-                y_plot[0:(self.NpdT+1)] = yout
-                u_plot[0:(self.NpdT+1)] = uk
-                e_plot[0:(self.NpdT+1)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][0:(self.NpdT+1)] - yout
-                #e_plot = np.append(e_plot,R[k*Npoints_dT:(k+1)*Npoints_dT] - yout)
+                print(len(t_out))
+                t_plot[0:(self.NpdT)] = t_out[0:(self.NpdT)]
+                y_plot[0:(self.NpdT)] = yout[0:(self.NpdT)]
+                u_plot[0:(self.NpdT)] = uk
+                e_plot[0:(self.NpdT)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][0:(self.NpdT)] - yout[0:(self.NpdT)]
         
             else:
-                t_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = t_out + k*self.dT
-                y_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = yout
-                u_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = uk
-                e_plot[((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)+1):(((k+1)*self.NpdT)+2)] - yout
+                t_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = t_out[0:(self.NpdT)] + k*self.dT
+                y_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = yout[0:(self.NpdT)]
+                u_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = uk
+                e_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))] - yout[0:(self.NpdT)]
            
             yk = yout[-1] # Save the final output value. 
             X0G = xout[-1] # Save the final state.
@@ -536,7 +537,7 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u_plot
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e_plot
         self.TimeSimData[self.CurrentSimulName]['data']['e[k]'] = e_k
-        return #t_plot, t_k, u_plot, y_plot, e_plot, e_k        
+        return
     
     def inspectTimeSimulation(self, simulname):
         """
