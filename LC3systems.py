@@ -138,6 +138,7 @@ class LTIsystem:
     #                'y(t)' : array of the main system output signal
     #                'u(t)' : array of the control action output signal
     #       'id'   : the id number of the simulation
+    #       'type' : System type number when the simulation was performed
     #       'info' : a string with some info.
     TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
     CurrentSimulName = ''
@@ -304,9 +305,10 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName] = {}
         # Store this simul ID:
         self.TimeSimData[self.CurrentSimulName]['id'] = self.CurrentTimeSimId
+        # Store this simul system type:
+        self.TimeSimData[self.CurrentSimulName]['type'] = self.Type
         # Store this simul infos:
         self.TimeSimData[self.CurrentSimulName]['info'] = 'K = {k}'.format(k=self.K)
-        
     
     def removeSimul(self, name):
         lg.debug('Removing simul {s} from sys index {i}'.format(s=name,i=self.Index))
@@ -628,6 +630,8 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName] = {}
         # Store this simul ID:
         self.FreqResponseData[self.CurrentFreqResponseName]['id'] = self.CurrentFreqResponseId
+        # Store system type used:
+        self.FreqResponseData[self.CurrentFreqResponseName]['type'] = self.Type
         # Store this simul infos:
         self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'K': self.K}
 

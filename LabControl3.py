@@ -863,6 +863,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         sysname = currentItem.text(0)
 
+
         # Check if the selected system matches with the system of the selected
         # time simul in the list.
         if sysname != self.sysCurrentName:
@@ -883,6 +884,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 currentItem = self.onBtnSimulAdd()
                 sysname = currentItem.text(0)
                 addnewflag = 1
+        
+        simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
+        # Check if the system type is different from the current simulation:
+        if self.sysDict[sysname].Type != self.sysDict[sysname].TimeSimData[simulname]['type']:
+            currentItem = self.onBtnSimulAdd()
+            addnewflag = 1
 
         simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
         lg.info('Performing Simulation Name: {s} in System {i}'.format(s=simulname,i=sysname))
@@ -1094,7 +1101,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
         currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
         currentItem.setSelected(True)
-        return currentItem        
+        return currentItem
     
     def onBtnFreqRespRemove(self):
         """
@@ -1325,7 +1332,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 currentItem = self.onBtnFreqRespAdd()
                 sysname = currentItem.text(0)
-                childCount = currentItem.childCount()    
+                childCount = currentItem.childCount()
+
+        simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the frequency response name.
+        # Check if the system type is different from the current simulation:
+        if self.sysDict[sysname].Type != self.sysDict[sysname].FreqResponseData[simulname]['type']:
+            currentItem = self.onBtnFreqRespAdd()  # Add new freq response.
+            childCount = currentItem.childCount()
 
         simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
         lg.info('Plotting Bode Diagram Name: {s} in System {i}'.format(s=simulname,i=sysname))
