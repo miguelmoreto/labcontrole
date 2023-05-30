@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -3465,7 +3465,7 @@ QGroupBox::title {
                  <string>Resolução do gráfico (número de pontos)</string>
                 </property>
                 <property name="text">
-                 <string notr="true">Pontos:</string>
+                 <string notr="true">Res.:</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

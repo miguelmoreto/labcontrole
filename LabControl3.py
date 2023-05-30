@@ -2235,6 +2235,26 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
         
     def onLoadAction(self):
+        """
+        Load a file with the system dictionary serialized (pickle).
+        Load the data and updates the UI.
+        """
+
+        msgBox = QtWidgets.QMessageBox()
+        msgBox.setWindowTitle(_translate("MainWindow", "Atenção!", None))
+        msgBox.setText(           _translate("MainWindow", "Ao carregar um arquivo com definições\n"\
+                                                           "de sistemas, todas as informaçẽos atuais\n"\
+                                                           "serão perdidas!", None))
+        msgBox.setInformativeText(_translate("MainWindow", "Deseja continuar?" , None))
+        yes_btn = msgBox.addButton(msgBox.Yes)
+        no_btn = msgBox.addButton(msgBox.No)
+        yes_btn.setText(_translate("MainWindow", "Sim", None))
+        no_btn.setText(_translate("MainWindow", "Não", None))
+        msgBox.setDefaultButton(yes_btn)
+        msgBox.exec()
+        if msgBox.clickedButton() == no_btn:
+            return
+        
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,
                 _translate("MainWindow", "Abrir arquivo de sistema", None),
                 'sys',
@@ -2243,133 +2263,148 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if not fileName:
             return
         
-        expSys = ExportSystem()
-        
+       
         # Read encoded string from file:
         f = open(fileName, 'rb')
-        temp1 = f.read()
+        #temp1 = f.read()
+        # Read, decode and unpickle object from string:
+        self.sysDict = pickle.loads(base64.b64decode(f.read()))
         f.close()
-        # Decode string:
-        temp = base64.b64decode(temp1)
-        # Unpickle object from string:
-        expSys = pickle.loads(temp)
         
-        self.sys.Hide = expSys.Hide        
-        
-        if expSys.Hide == False:
-            self.labelHide.setText('')
-            # Update feedback switch
-            if expSys.Malha == 'Aberta':
-                self.radioBtnOpen.setChecked(True)
-            else:
-                self.radioBtnClose.setChecked(True)            
-            # Update system type and SVG:
-            self.sys.Type = expSys.Type
-            self.sys.Malha = expSys.Malha        
-            self.comboBoxSys.setCurrentIndex(expSys.Type)
-            self.onChangeSystem(expSys.Type)
-            # Update groupboxes checkboxes:
-            self.groupBoxG.setChecked(expSys.Genabled)
-            self.groupBoxC.setChecked(expSys.Cenabled)
-            self.groupBoxH.setChecked(expSys.Henabled)
-            # Update UI and call the callbacks to update system.
-            self.lineEditGnum.setText(expSys.Gnum)
-            self.onGnumChange(expSys.Gnum)
-            self.lineEditGden.setText(expSys.Gden)
-            self.onGdenChange(expSys.Gden)
-            self.lineEditCnum.setText(expSys.Cnum)
-            self.onCnumChange(expSys.Cnum)
-            self.lineEditCden.setText(expSys.Cden)
-            self.onCdenChange(expSys.Cden)
-            self.lineEditHnum.setText(expSys.Hnum)
-            self.onHnumChange(expSys.Hnum)
-            self.lineEditHden.setText(expSys.Hden)
-            self.onHdenChange(expSys.Hden)
-            
-            # Update gain
-            self.lineEditK.setText(str(expSys.K))
-            # Enable or re-enable group boxes:
-            self.groupBoxG.setEnabled(True)
-            self.groupBoxC.setEnabled(True)
-            self.groupBoxH.setEnabled(True)
-            # Re-enable Root Locus button:
-            self.btnPlotLGR.setEnabled(True)
-            self.comboBoxSys.setEnabled(True)
-        elif expSys.Hide == True:
-            self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
-            # Update feedback switch
-            if expSys.Malha == 'Aberta':
-                self.radioBtnOpen.setChecked(True)
-            else:
-                self.radioBtnClose.setChecked(True)                 
-            # Update system type and SVG:                        
-            self.sys.Type = expSys.Type
-            self.sys.Malha = expSys.Malha
-            self.comboBoxSys.setCurrentIndex(expSys.Type)
-            self.onChangeSystem(expSys.Type)
-            # Update groupboxes checkboxes:
-            self.groupBoxG.setChecked(expSys.Genabled)
-            self.groupBoxC.setChecked(expSys.Cenabled)
-            self.groupBoxH.setChecked(expSys.Henabled)            
+        #    Updating the list of systems.
+        # Clear list o systems:
+        self.listSystem.clear()
+        # Remove all the itens in the treewidget:
+        rootT = self.treeWidgetSimul.invisibleRootItem()
+        rootT.takeChildren()            
+        rootF = self.treeWidgetBode.invisibleRootItem()
+        rootF.takeChildren()
+        # Update the list with the loaded systems:
+        self.sysCounter = -1
+        for sys in self.sysDict:
+            self.sysCounter = self.sysCounter + 1
+            sysname = self.sysDict[sys].Name
+            self.listSystem.addItem(sysname)
+            #    Updating the time domain simulation list:
+            self.addExistingSimulsToList(self.treeWidgetSimul,self.sysDict[sys])
+            #    Updating the frequency response list:
+            self.addExistingFreqRespToList(self.treeWidgetBode,self.sysDict[sys])
 
-            # Call the callbacks to update system.
-            self.onGnumChange(expSys.Gnum)
-            self.onGdenChange(expSys.Gden)
-            self.onCnumChange(expSys.Cnum)
-            self.onCdenChange(expSys.Cden)
-            self.onHnumChange(expSys.Hnum)
-            self.onHdenChange(expSys.Hden)
+        # If exists simulations, selects the first one:
+        if rootT.childCount():
+            item = rootT.child(0)
+            item.setSelected(True)
+        # If exists frequency response, selects the first one:
+        if rootF.childCount():
+            item = rootF.child(0)
+            item.setSelected(True)
+        self.treeWidgetSimul.expandAll()
+        self.treeWidgetBode.expandAll()
+        # Set the first one as the current system:
+        self.listSystem.setCurrentRow(0)        # Select the first row.
+        item = self.listSystem.currentItem()    # Get the first row item.
+        self.sysCurrentName = item.text()       # Gets the name of the selected system.
+        self.updateUIfromSystem(self.sysCurrentName)    # Updates UI.
+        # Clears the axes:
+        self.onBtnSimulClearAxis()
+        self.onBtnFreqResponseClearAxis()
+
+
+        # if expSys.Hide == False:
+        #     pass
+
+        # elif expSys.Hide == True:
+        #     self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
+        #     # Update feedback switch
+        #     if expSys.Malha == 'Aberta':
+        #         self.radioBtnOpen.setChecked(True)
+        #     else:
+        #         self.radioBtnClose.setChecked(True)                 
+        #     # Update system type and SVG:                        
+        #     self.sys.Type = expSys.Type
+        #     self.sys.Malha = expSys.Malha
+        #     self.comboBoxSys.setCurrentIndex(expSys.Type)
+        #     self.onChangeSystem(expSys.Type)
+        #     # Update groupboxes checkboxes:
+        #     self.groupBoxG.setChecked(expSys.Genabled)
+        #     self.groupBoxC.setChecked(expSys.Cenabled)
+        #     self.groupBoxH.setChecked(expSys.Henabled)            
+
+        #     # Call the callbacks to update system.
+        #     self.onGnumChange(expSys.Gnum)
+        #     self.onGdenChange(expSys.Gden)
+        #     self.onCnumChange(expSys.Cnum)
+        #     self.onCdenChange(expSys.Cden)
+        #     self.onHnumChange(expSys.Hnum)
+        #     self.onHdenChange(expSys.Hden)
             
-            # Update gain
-            self.lineEditK.setText(str(expSys.K))
+        #     # Update gain
+        #     self.lineEditK.setText(str(expSys.K))
             
-            #self.onChangeSystem(expSys.Type)
+        #     #self.onChangeSystem(expSys.Type)
        
+        #     # Update UI:
+        #     self.lineEditGnum.setText('*****')
+        #     self.lineEditGden.setText('*****')
+        #     self.lineEditCnum.setText('*****')
+        #     self.lineEditCden.setText('*****')
+        #     self.lineEditHnum.setText('*****')
+        #     self.lineEditHden.setText('*****')
+        #     # Disable groupboxes:
+        #     self.groupBoxG.setEnabled(False) #setHidden
+        #     self.groupBoxC.setEnabled(False)
+        #     self.groupBoxH.setEnabled(False)
+        #     # Disable Root Locus button:
+        #     self.btnPlotLGR.setEnabled(False)
 
-            # Update UI:
-            self.lineEditGnum.setText('*****')
-            self.lineEditGden.setText('*****')
-            self.lineEditCnum.setText('*****')
-            self.lineEditCden.setText('*****')
-            self.lineEditHnum.setText('*****')
-            self.lineEditHden.setText('*****')
-            # Disable groupboxes:
-            self.groupBoxG.setEnabled(False) #setHidden
-            self.groupBoxC.setEnabled(False)
-            self.groupBoxH.setEnabled(False)
-            # Disable Root Locus button:
-            self.btnPlotLGR.setEnabled(False)
+        #     # Disable change system combo box:
+        #     self.comboBoxSys.setEnabled(False)
 
-            # Disable change system combo box:
-            self.comboBoxSys.setEnabled(False)
+
+    def addExistingSimulsToList(self,treeWidget,sys):
+        """
+        Cycle through the system object and add all the stored
+        time domain simulations to the list.
+        """
+ 
+        for simulname in sys.TimeSimData['Name']:
+            currentItem = QtWidgets.QTreeWidgetItem(treeWidget)
+            currentItem.setText(0, sys.Name)
+            currentItem.setText(1, simulname)
+            systype = sys.TimeSimData[simulname]['type']
+            # Setting a simulation tooltip:
+            currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=sys.Name,t=systype))
+            currentItem.setToolTip(1,sys.TimeSimData[simulname]['info'])
+            for signal in sys.TimeSimData[simulname]['data']:
+                if (signal != 'time' and signal != 'tk'):
+                    item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
+                    item.setText(1,signal)
+                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+
+                    item.setCheckState(1, Qt.Unchecked)
+
+    def addExistingFreqRespToList(self,treeWidget,sys):
+        """
+        Cycle through the system object and add all the stored
+        frequency responses to the list.
+        """
         
-    def onResetAction(self):
-        self.labelHide.setText('')
-        self.radioBtnOpen.setChecked(True)        
-        self.sys.Type = 0
-        self.sys.Malha = 'Aberta'
-        self.comboBoxSys.setCurrentIndex(0)
-        self.onChangeSystem(0)
-        self.groupBoxG.setEnabled(True)
-        self.groupBoxC.setEnabled(True)
-        self.groupBoxH.setEnabled(True)
-        self.groupBoxC.setChecked(False)
-        self.lineEditGnum.setText(str('2*s+10'))
-        self.onGnumChange(str('2*s+10'))
-        self.lineEditGden.setText(str('1*s^2+2*s+10'))
-        self.onGdenChange(str('1*s^2+2*s+10'))
-        self.lineEditCnum.setText(str('1'))
-        self.onCnumChange(str('1'))
-        self.lineEditCden.setText(str('1'))
-        self.onCdenChange(str('1'))
-        self.lineEditHnum.setText(str('1'))
-        self.onHnumChange(str('1'))
-        self.lineEditHden.setText(str('1'))
-        self.onHdenChange(str('1'))
-        self.lineEditK.setText(str(1.00))
-        #self.doubleSpinBoxK.setValue(1)
-        self.btnPlotLGR.setEnabled(True)
-        self.comboBoxSys.setEnabled(True)
+        for freqrespname in sys.FreqResponseData['Name']:
+            currentItem = QtWidgets.QTreeWidgetItem(treeWidget)
+            currentItem.setText(0, sys.Name)
+            currentItem.setText(1, freqrespname)
+            systype = sys.FreqResponseData[freqrespname]['type']
+            # Setting a simulation tooltip:
+            currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=sys.Name,t=systype))
+            currentItem.setToolTip(1,'K = {k}'.format(k=sys.FreqResponseData[freqrespname]['info']['K']))
+            for signal in sys.FreqResponseData[freqrespname]['data']:
+                if (signal != 'omega'):
+                    item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
+                    item.setText(1,signal)
+                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+
+                    item.setCheckState(1, Qt.Unchecked)
+
 
     def onTabChange(self, index):
         """
@@ -2383,13 +2418,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #     if len(self.sysDict[self.sysCurrentName].RL_root_vector) > 0:
         #         # Redraw the RL
         #         self.onBtnRL()
-        if (index == 5):  # Sysinfo tab.
+        if (index == 4):  # Sysinfo tab.
             # Clearing the lists:
             self.listWidgetCLpoles.clear()
             self.listWidgetOLpoles.clear()
             self.listWidgetOLzeros.clear()
             self.listWidgetRLpoints.clear()
-            if (self.sys.Hide == True or self.sys.Type > 2):
+            if (self.sysDict[self.sysCurrentName].Hide == True or self.sysDict[self.sysCurrentName].Type > 2):
                 txt = _translate("MainWindow", "Desabilitado", None)
                 item = QtWidgets.QListWidgetItem()
                 item.setText(txt)
@@ -2410,32 +2445,32 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 return
             else:
                 # Closed loop poles:
-                rootsCL = self.sys.RaizesRL(self.sys.K)
+                rootsCL = self.sysDict[self.sysCurrentName].RLroots(self.sysDict[self.sysCurrentName].K)
                 for root in rootsCL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(root))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.listWidgetCLpoles.addItem(item)
                 
-                rootsOL = self.sys.RaizesOL()
+                rootsOL = self.sysDict[self.sysCurrentName].DLroots()
                 for root in rootsOL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(root))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.listWidgetOLpoles.addItem(item)
                     
-                zerosOL = self.sys.ZerosOL()
+                zerosOL = self.sysDict[self.sysCurrentName].DLzeros()
                 for zero in zerosOL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(zero))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.listWidgetOLzeros.addItem(item)
                 
-                pontos, ganhos = self.sys.PontosSeparacao()
+                points, gains = self.sysDict[self.sysCurrentName].RLseparationPoints()
                 i = 0
-                for ponto in pontos:
+                for ponto in points:
                     item = QtWidgets.QListWidgetItem()
-                    item.setText(self.createRootString(ponto) + " com Kc =  %0.3f" %(ganhos[i]))
+                    item.setText(self.createRootString(ponto) + " => Kc =  %0.3f" %(gains[i]))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.listWidgetRLpoints.addItem(item)
                     i = i + 1

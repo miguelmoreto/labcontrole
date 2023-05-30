@@ -139,6 +139,7 @@ class LTIsystem:
     #                'u(t)' : array of the control action output signal
     #       'id'   : the id number of the simulation
     #       'type' : System type number when the simulation was performed
+    #       'loop' : Feedback loop status ('open' or 'closed')
     #       'info' : a string with some info.
     TimeSimData = {'Name':[]}       # A Dictionary to store time simulation data.
     CurrentSimulName = ''
@@ -307,8 +308,10 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['id'] = self.CurrentTimeSimId
         # Store this simul system type:
         self.TimeSimData[self.CurrentSimulName]['type'] = self.Type
+        # Store this simul feedback loop status:
+        self.TimeSimData[self.CurrentSimulName]['loop'] = self.Loop
         # Store this simul infos:
-        self.TimeSimData[self.CurrentSimulName]['info'] = 'K = {k}'.format(k=self.K)
+        self.TimeSimData[self.CurrentSimulName]['info'] = 'K = {k}, {l} loop'.format(k=self.K, l= self.Loop)
     
     def removeSimul(self, name):
         lg.debug('Removing simul {s} from sys index {i}'.format(s=name,i=self.Index))
@@ -450,6 +453,7 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = Y[0]
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = Y[1]
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = U[0]-Y[0]
+        self.TimeSimData[self.CurrentSimulName]['info'] = 'K = {k}, {l} loop'.format(k=self.K, l= self.Loop)
     
     def discreteTimeSimulation(self):
         """
@@ -587,6 +591,32 @@ class LTIsystem:
         # Calculate the roots:
         self.RL_root_vector = utils.MyRootLocus(self.DLTF_num_poly,self.DLTF_den_poly,kvect)
 
+   
+    def RLseparationPoints(self):
+        """
+        Calculate the separation points (and the corresponding gain)
+        of the Root Locus separation points.
+        """
+        num = self.DLTF_num_poly
+        den = self.DLTF_den_poly
+
+        points = []        
+        gains = []
+        
+        # Calculating d(-1/G(s))/ds = 0
+        deriv = sp.polyder(den)*num - sp.polyder(num)*den
+        cpss = sp.roots(deriv) # candidate points
+        # Verifing which point are ok.
+        for root in cpss:		
+            aux = num(root)
+            if aux != 0:
+                Kc = -den(root) / num(root)
+                if (np.isreal(Kc)):# and (Kc <= self.Kmax) and (Kc >= self.Kmin):
+                    points.append(root)
+                    gains.append(Kc)
+        
+        return points, gains
+
     def RLroots(self,K):
         """
         Calculate the roots of the characteristic equation, here given by
@@ -598,6 +628,18 @@ class LTIsystem:
         EqC = self.DLTF_den_poly + K * self.DLTF_num_poly
         
         return EqC.roots
+
+    def DLroots(self):
+        """
+        Return the roots of the direct loop transfer function.
+        """
+        return self.DLTF_den_poly.roots
+
+    def DLzeros(self):
+        """
+        Return the roots of the direct loop transfer function.
+        """
+        return self.DLTF_num_poly.roots 
 
     def clearFreqResponseData(self):
         """
