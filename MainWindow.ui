@@ -1204,7 +1204,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>16777215</width>
+                 <width>100</width>
                  <height>25</height>
                 </size>
                </property>
@@ -1216,7 +1216,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Entre com a taxa de amostragem do sistema discreto em segundos</string>
+                <string>Taxa de amostragem do sistema discreto em segundos.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1228,7 +1228,7 @@
                 <number>3</number>
                </property>
                <property name="singleStep">
-                <double>0.050000000000000</double>
+                <double>0.010000000000000</double>
                </property>
                <property name="value">
                 <double>0.100000000000000</double>
@@ -1260,7 +1260,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Número de pontos por T (taxa de amostragem) na simulação discreta</string>
+                <string>Número de pontos por T na simulação discreta.</string>
                </property>
                <property name="text">
                 <string>Pontos/T:</string>
@@ -1271,26 +1271,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBoxPtTk">
+              <widget class="QLabel" name="labelNpT">
                <property name="enabled">
                 <bool>false</bool>
                </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>25</height>
+                 <width>50</width>
+                 <height>0</height>
                 </size>
                </property>
                <property name="font">
@@ -1300,17 +1288,8 @@
                  <bold>false</bold>
                 </font>
                </property>
-               <property name="toolTip">
-                <string>Entre com o número de pontos por T (taxa de amostragem) na simulação discreta</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="maximum">
-                <number>999</number>
-               </property>
-               <property name="value">
-                <number>20</number>
+               <property name="text">
+                <string notr="true">20</string>
                </property>
               </widget>
              </item>
@@ -1349,6 +1328,9 @@
                 <width>150</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="toolTip">
+               <string>Listagem dos sistemas armazenados.</string>
               </property>
              </widget>
             </item>
@@ -1696,6 +1678,9 @@ QGroupBox::title {
                  <font>
                   <pointsize>12</pointsize>
                  </font>
+                </property>
+                <property name="toolTip">
+                 <string>Ganho de malha direta K.</string>
                 </property>
                 <property name="text">
                  <string>1</string>
@@ -2440,10 +2425,13 @@ QGroupBox::title {
             <widget class="QLabel" name="labelTmax">
              <property name="font">
               <font>
-               <pointsize>11</pointsize>
+               <pointsize>12</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Tempo máximo de simulação.</string>
              </property>
              <property name="text">
               <string notr="true">Tmax [s]:</string>
@@ -2492,13 +2480,16 @@ QGroupBox::title {
             <widget class="QLabel" name="labelRes">
              <property name="font">
               <font>
-               <pointsize>11</pointsize>
+               <pointsize>12</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Passo de integração utilizado na solução (resolução temporal da simulação).</string>
+             </property>
              <property name="text">
-              <string notr="true">Res.:</string>
+              <string notr="true">Passo:</string>
              </property>
             </widget>
            </item>
@@ -2518,7 +2509,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com a resolução da simulação</string>
+              <string>Entre com o passo de solução da simulação (resolução temporal).</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -2536,7 +2527,7 @@ QGroupBox::title {
               <double>0.500000000000000</double>
              </property>
              <property name="singleStep">
-              <double>0.005000000000000</double>
+              <double>0.001000000000000</double>
              </property>
              <property name="value">
               <double>0.005000000000000</double>
@@ -2572,7 +2563,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Limpar a área do gráfico</string>
+              <string>Limpar a área do gráfico sem apagar os dados.</string>
              </property>
              <property name="text">
               <string>Limpar</string>
@@ -2595,7 +2586,7 @@ QGroupBox::title {
               </font>
              </property>
              <property name="toolTip">
-              <string>Iniciar simulação no domínio do tempo</string>
+              <string>Executa uma simulação no domínio do tempo.</string>
              </property>
              <property name="text">
               <string>Simular</string>
@@ -2654,6 +2645,9 @@ QGroupBox::title {
              </property>
              <item>
               <widget class="QTreeWidget" name="treeWidgetSimul">
+               <property name="toolTip">
+                <string>Listagem das simulações armazenadas.</string>
+               </property>
                <property name="horizontalScrollBarPolicy">
                 <enum>Qt::ScrollBarAlwaysOff</enum>
                </property>
@@ -3385,6 +3379,9 @@ QGroupBox::title {
                     <bold>false</bold>
                    </font>
                   </property>
+                  <property name="toolTip">
+                   <string>Ganho de malha direta K.</string>
+                  </property>
                   <property name="text">
                    <string notr="true">Ganho K:</string>
                   </property>
@@ -3407,6 +3404,9 @@ QGroupBox::title {
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Ganho de malha direta K.</string>
                   </property>
                   <property name="text">
                    <string>1</string>
@@ -3686,6 +3686,9 @@ Auto</string>
                <bold>false</bold>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Limite inferior de frequência.</string>
+             </property>
              <property name="lineWidth">
               <number>0</number>
              </property>
@@ -3727,6 +3730,9 @@ Auto</string>
                <bold>false</bold>
               </font>
              </property>
+             <property name="toolTip">
+              <string>Limite inferior de frequência.</string>
+             </property>
              <property name="text">
               <string>0,0100</string>
              </property>
@@ -3755,6 +3761,9 @@ Auto</string>
                <weight>50</weight>
                <bold>false</bold>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Limite superior de frequência.</string>
              </property>
              <property name="lineWidth">
               <number>0</number>
@@ -3796,6 +3805,9 @@ Auto</string>
                <weight>50</weight>
                <bold>false</bold>
               </font>
+             </property>
+             <property name="toolTip">
+              <string>Limite superior de frequência.</string>
              </property>
              <property name="text">
               <string>100,0</string>
@@ -3868,7 +3880,7 @@ Auto</string>
               </font>
              </property>
              <property name="toolTip">
-              <string>Entre com o número de pontos por década para o traçado do diagrama de Bode</string>
+              <string>Número total de pontos de frequência para o traçado dos gráficos (resolução).</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -4135,7 +4147,7 @@ Auto</string>
               </font>
              </property>
              <property name="toolTip">
-              <string>Traçar o Diagrama de Bode</string>
+              <string>Plota a resposta em frequência (Bode ou Nyquist).</string>
              </property>
              <property name="text">
               <string>Traçar Bode</string>
@@ -4202,6 +4214,9 @@ Auto</string>
                  <width>166666</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>Listagem das respostas em frequência armazenadas.</string>
                </property>
                <property name="horizontalScrollBarPolicy">
                 <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -4638,7 +4653,6 @@ Auto</string>
    </attribute>
    <addaction name="actionCarregar_sistema"/>
    <addaction name="actionSalvar_sistema"/>
-   <addaction name="actionReset"/>
    <addaction name="separator"/>
    <addaction name="actionCalc"/>
    <addaction name="actionHelp"/>
@@ -4709,18 +4723,6 @@ Auto</string>
    </property>
    <property name="toolTip">
     <string>Fechar o programa.</string>
-   </property>
-  </action>
-  <action name="actionReset">
-   <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/refresh.png</normaloff>:/icons_UI/images/refresh.png</iconset>
-   </property>
-   <property name="text">
-    <string>Resetar systema</string>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Resetar o sistema para o &lt;span style=&quot; font-style:italic;&quot;&gt;default&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

@@ -510,7 +510,6 @@ class LTIsystem:
             t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
             if (k == 0):
-                print(len(t_out))
                 t_plot[0:(self.NpdT)] = t_out[0:(self.NpdT)]
                 y_plot[0:(self.NpdT)] = yout[0:(self.NpdT)]
                 u_plot[0:(self.NpdT)] = uk
@@ -539,7 +538,6 @@ class LTIsystem:
         self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u_plot
         self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e_plot
         self.TimeSimData[self.CurrentSimulName]['data']['e[k]'] = e_k
-        return
     
     def inspectTimeSimulation(self, simulname):
         """

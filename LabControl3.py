@@ -313,7 +313,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
         self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
-        self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
+        #self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
         self.lineEditRvalueInit.textEdited.connect(self.onRvalueInitChange)
         self.lineEditWvalueInit.textEdited.connect(self.onWvalueInitChange)
@@ -360,7 +360,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.actionCalc.triggered.connect(self.onCalcAction)
         self.actionSalvar_sistema.triggered.connect(self.onSaveAction)
         self.actionCarregar_sistema.triggered.connect(self.onLoadAction)
-        self.actionReset.triggered.connect(self.onResetAction)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -387,7 +386,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def _set_expression_active(self, expr, active):
         self.expressions_errors[expr]['active'] = active
     
-    ########### LabControl 3 stuff:
     def onChangeRinitInputType(self, index):
         """
         Read the input types from the UI and store them
@@ -442,7 +440,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     
     def onBtnSysAdd(self):
         self.addSystem(self.comboBoxSys.currentIndex())  # System type from the comboBox
-        #self.sysCurrentIndex = self.listSystem.currentRow()
         lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
     def onBtnSysRemove(self):
@@ -462,6 +459,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
     def onBtnSysClear(self):
+        """
+        Clear the list of systems.
+        """
         self.listSystem.clear()
         self.sysDict = {}
         self.sysCounter = -1
@@ -536,8 +536,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelTk.setEnabled(False)
             self.doubleSpinBoxTk.setEnabled(False)
             self.labelPtTk.setEnabled(False)
-            self.spinBoxPtTk.setEnabled(False)
-            self.doubleSpinBoxResT.setEnabled(True)
+            self.labelNpT.setEnabled(False)
+            #self.doubleSpinBoxResT.setEnabled(True)
             self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
             #self.btnPlotNyquist.setEnabled(True)
@@ -546,14 +546,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelGden.show()
             self.lineEditGden.show()
             self.groupBoxG.setTitle(_translate("MainWindow", "Planta G(s)", None))
-            self.labelGnum.setText(_translate("MainWindow", "Num:", None))                
+            self.labelGnum.setText(_translate("MainWindow", "Num:", None))   
+            self.onTkChange(self.sysDict[sysname].dT) # Execute the check of NpdT.             
             self.labelTk.setEnabled(True)
             self.doubleSpinBoxTk.setEnabled(True)
             self.labelPtTk.setEnabled(True)
-            self.spinBoxPtTk.setEnabled(True)
+            self.labelNpT.setEnabled(True)
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
-            self.doubleSpinBoxResT.setEnabled(False)
+            #self.doubleSpinBoxResT.setEnabled(False)
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
@@ -1638,41 +1639,40 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Changed simulation resolution
         """
         if (value > 0):
+            # Updates the value of Delta_t:
             self.sysDict[self.sysCurrentName].Delta_t = self.doubleSpinBoxResT.value()
-            # Update discrete time points per dT.
-            self.spinBoxPtTk.blockSignals(True)#  valueChanged.disconnect(self.onPointsTkChange)
-            self.sysDict[self.sysCurrentName].Npts_dT = self.sysDict[self.sysCurrentName].dT/self.sysDict[self.sysCurrentName].Delta_t
-            self.spinBoxPtTk.setValue(int(self.sysDict[self.sysCurrentName].Npts_dT))
-            self.spinBoxPtTk.blockSignals(False)#valueChanged.connect(self.onPointsTkChange)
-            
-    def onPointsTkChange(self, value):
-        """
-        DoubleSpinBox event handler.
-        Changed number of points per dT in discrete time simulation.
-        """
-        if (value > 0):
-            self.sysDict[self.sysCurrentName].Npts_dT = value
-            self.doubleSpinBoxResT.blockSignals(True) #valueChanged.disconnect(self.onSimluResChange)
-            # Change simulation resolution system and UI:
-            self.sysDict[self.sysCurrentName].Delta_t = self.sysDict[self.sysCurrentName].dT/value
-            #self.sys.N = self.sys.Tmax/self.sys.delta_t
-            self.doubleSpinBoxResT.setValue(self.sysDict[self.sysCurrentName].Delta_t)
-            self.doubleSpinBoxResT.blockSignals(False) #valueChanged.connect(self.onSimluResChange)
+            # Update discrete time points per dT:
+            self.sysDict[self.sysCurrentName].NpdT = round(self.sysDict[self.sysCurrentName].dT/self.sysDict[self.sysCurrentName].Delta_t)
+            self.labelNpT.setText(str(self.sysDict[self.sysCurrentName].NpdT))
+            if self.sysDict[self.sysCurrentName].Type == 3: # Discrete time system type
+                self.onTkChange(self.sysDict[self.sysCurrentName].dT) # Execute the check of NpdT.
+
             
     def onTkChange(self, value):
         """
         Changed the number of the sample period (dT)
         """
         if (value > 0):
-            self.sysDict[self.sysCurrentName].dT = value
-            self.sysDict[self.sysCurrentName].NdT = int(self.sysDict[self.sysCurrentName].Tmax/value)
-            # Change simulation resolution:
-            self.doubleSpinBoxResT.blockSignals(True) #valueChanged.disconnect(self.onSimluResChange)
-            # Change simulation resolution system and UI:
-            self.sysDict[self.sysCurrentName].Delta_t = value/self.sysDict[self.sysCurrentName].Npts_dT
-            #self.sys.N = self.sys.Tmax/self.sys.delta_t
-            self.doubleSpinBoxResT.setValue(self.sysDict[self.sysCurrentName].Delta_t)
-            self.doubleSpinBoxResT.blockSignals(False) #valueChanged.connect(self.onSimluResChange)     
+            # Update the values:
+            NdT = round(self.sysDict[self.sysCurrentName].Tmax/value) # Number of discrete time steps
+            self.sysDict[self.sysCurrentName].dT = value    # Discrete time step value (sampling period, T)
+            self.sysDict[self.sysCurrentName].NdT = NdT     
+            NpdT = round(value/self.sysDict[self.sysCurrentName].Delta_t) # Number of poins per discrete time step.
+            self.sysDict[self.sysCurrentName].NpdT = NpdT
+            self.labelNpT.setText(str(self.sysDict[self.sysCurrentName].NpdT))
+            # Check the number of point per discrete step time:
+            if NpdT < 10: # 10 is a sugestion.
+                msgBox = QtWidgets.QMessageBox()
+                msgBox.setWindowTitle(_translate("MainWindow", "Atenção!", None))
+                msgBox.setText(_translate("MainWindow", "Considerando o valor atual do passo de solução\n"\
+                                                        "de {dt:.3f} seg. e o período de amostragem de\n"\
+                                                        "{T} seg., o número de pontos por período é\n"\
+                                                        "de {npt}. É recomendado que esse número seja\n"\
+                                                        "maior do que 10. Aumente a valor de T ou então\n"\
+                                                        "diminua o passo de solução.".format(dt=self.sysDict[self.sysCurrentName].Delta_t,\
+                                                             T=round(value,5), npt=NpdT), None))
+                msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+                msgBox.exec()    
         
     def onBtnRL(self):
         """
