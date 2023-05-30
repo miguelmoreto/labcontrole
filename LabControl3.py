@@ -2192,7 +2192,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self,
                                 _translate("MainWindow", "Salvar sistema", None),
                                 "sisXX.LCN",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None),options=options)
-
+        if not fileName:
+            return
         hide = False
         
 
@@ -2206,29 +2207,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
             return
         
-        expSys = ExportSystem()
-        expSys.Gnum = self.lineEditGnum.text()
-        expSys.Gden = self.lineEditGden.text()
-        expSys.Cnum = self.lineEditCnum.text()
-        expSys.Cden = self.lineEditCden.text()
-        expSys.Hnum = self.lineEditHnum.text()
-        expSys.Hden = self.lineEditHden.text()
-        expSys.K = float(self.lineEditK.text())
-        expSys.Type = self.sys.Type
-        expSys.Malha = self.sys.Malha
-        expSys.Hide = hide
-        # Store groupbox checked status:
-        expSys.Genabled = self.groupBoxG.isChecked()
-        expSys.Cenabled = self.groupBoxC.isChecked()
-        expSys.Henabled = self.groupBoxH.isChecked()
+        # expSys = ExportSystem()
+        # expSys.Gnum = self.lineEditGnum.text()
+        # expSys.Gden = self.lineEditGden.text()
+        # expSys.Cnum = self.lineEditCnum.text()
+        # expSys.Cden = self.lineEditCden.text()
+        # expSys.Hnum = self.lineEditHnum.text()
+        # expSys.Hden = self.lineEditHden.text()
+        # expSys.K = float(self.lineEditK.text())
+        # expSys.Type = self.sys.Type
+        # expSys.Malha = self.sys.Malha
+        # expSys.Hide = hide
+        # # Store groupbox checked status:
+        # expSys.Genabled = self.groupBoxG.isChecked()
+        # expSys.Cenabled = self.groupBoxC.isChecked()
+        # expSys.Henabled = self.groupBoxH.isChecked()
         
         # Pickle object into a string:
-        temp = pickle.dumps(expSys,1)
+        #temp = pickle.dumps(self.sysDict,1)
         # Encode string:
-        temp1 = base64.b64encode(temp)
+        #temp1 = base64.b64encode(temp)
         # Write encoded string to disk:
         f = open(fileName,"wb")
-        f.write(temp1)
+        f.write(base64.b64encode(pickle.dumps(self.sysDict,1)))
         f.close()
         
         self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
