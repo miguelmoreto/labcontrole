@@ -562,11 +562,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
             self.lineEditGden.hide()
+            self.labelGden.hide()
+            self.lineEditGnum.setText(self.sysDict[sysname].NL_sysInputString)
             # Disable buttons:
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
-            self.labelGden.hide()
-            self.lineEditGnum.setText(self.sysDict[sysname].NLsysInputString)
+
             #self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
             self.labelGnum.setText(_translate("MainWindow", "f(Y,U)=", None))
@@ -705,7 +706,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
             self.mplSimul.axes.set_xlim(xmin = 0)
             self.mplSimul.axes.autoscale()
-            self.mplSimul.axes.legend(loc='upper right')
+            leg = self.mplSimul.axes.legend(loc='lower center')
+            if leg:
+                leg.set_draggable(state=True)
             self.mplSimul.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -765,7 +768,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #print(label)
                 self.removeExistingPlot(self.mplSimul.axes,label)
                     # Redraw the graphic area:
-            self.mplSimul.axes.legend(loc='upper right')
+            leg = self.mplSimul.axes.legend(loc='lower center')
+            if leg:
+                leg.set_draggable(state=True)            
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -896,13 +901,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.info('Performing Simulation Name: {s} in System {i}'.format(s=simulname,i=sysname))
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulando, aguarde...", None))
+        self.statusBar().repaint()
+
         # Perform a time domain simulation:
-        
-        #self.sysDict[sysname].TimeSimulationTesting()
-        if self.sysDict[sysname].Type < 3:
+        if self.sysDict[sysname].Type < 3: # LTI system
             self.sysDict[sysname].TimeSimulation()
-        elif self.sysDict[sysname].Type == 3:
+        elif self.sysDict[sysname].Type == 3: # Discrete time system
             self.sysDict[sysname].discreteTimeSimulation()
+        elif self.sysDict[sysname].Type == 4: # Non linear system
+            self.sysDict[sysname].NLsysSimulation()
 
         if (addnewflag): # It is a new simul in the list. Add child itens to it:
             for signal in self.sysDict[sysname].TimeSimData[simulname]['data']:
@@ -917,12 +924,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     else:
                         item.setCheckState(1, Qt.Unchecked)
                     #print(signal)
-        else:
+        else: # The simulation already exist in the list.
             # Update the graph, according to the itens selected in the list:
             for i in range(currentItem.childCount()):
                 item = currentItem.child(i)
-                signal = item.text(1)
-                label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
+                signal = item.text(1)   # Get signal name string
+                label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal) # Format the standard label
                 if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
                     # Remove the existing ploted line:
                     self.removeExistingPlot(self.mplSimul.axes,label)
@@ -930,21 +937,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     if signal == 'e[k]': # If signal is e[k] get the line color from e(t)
                         label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
                         c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
-                        if c: # If color was found:
+                        if c: # If color was found (e(t) was plotted before)
                             self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5)
-                        else:
+                        else: # Plot only e[k]
                             self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5)
-                    else:
+                    else: # Any other signal:
                         self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                     #print(label)
 
-        # Setting a simulation tooltip:
+        # Setting the simulation tooltip:
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
         currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[sysname].K,l=self.sysDict[sysname].Loop))
 
         self.treeWidgetSimul.expandAll()
 
-        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
         # Format the plotting area:
         self.mplSimul.axes.autoscale()     
         self.mplSimul.axes.grid(True)
@@ -953,12 +959,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #ylim = self.mplSimul.axes.get_ylim()
         # Set a new y limit, adding 1/10 of the total:
         #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-        self.mplSimul.axes.set_xlim(xmin = 0)        
-        self.mplSimul.axes.legend(loc='upper right')
+        self.mplSimul.axes.set_xlim(xmin = 0)
+        self.mplSimul.axes.legend(loc='lower center',draggable=True)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
         self.mplSimul.draw()
+
+        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
+        self.statusBar().repaint()        
     
     def onBtnSimulInspect(self):
         """
@@ -1080,9 +1089,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Set a new y limit, adding 1/10 of the total:
             #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
             #self.mplSimul.axes.set_xlim(xmin = 0)        
-            self.magBodeAxis.legend(loc='upper right')
-            self.phaseBodeAxis.legend(loc='upper right')
-            self.NyquistAxis.legend(loc='upper right')
+            leg = self.magBodeAxis.legend(loc='upper right')
+            if leg:
+                leg.set_draggable(state=True)
+            leg = self.phaseBodeAxis.legend(loc='upper right')
+            if leg:
+                leg.set_draggable(state=True)            
+            leg = self.NyquistAxis.legend(loc='upper right')
+            if leg:
+                leg.set_draggable(state=True)            
             self.mplBode.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -1162,9 +1177,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point                    
                 #self.removeExistingPlot(self.mplSimul.axes,label)
         # Redraw the graphic area:
-        self.magBodeAxis.legend(loc='upper right')
-        self.phaseBodeAxis.legend(loc='upper right')
-        self.NyquistAxis.legend(loc='upper right')
+        leg = self.magBodeAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)        
+        leg = self.phaseBodeAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)        
+        leg = self.NyquistAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)
         self.mplBode.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -1347,6 +1368,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Bode...", None))
         if self.radioBtnNyquist.isChecked():
             self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Nyquist...", None))
+        self.statusBar().repaint()
         
         # Calculating the frequency response:
         self.sysDict[sysname].FreqResponse()
@@ -1420,23 +1442,27 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.treeWidgetBode.expandAll()
 
-        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
         # Format the plotting area:
         self.mplBode.axes.autoscale()     
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.NyquistAxis.grid(True)
-        self.magBodeAxis.legend(loc='upper right')
-        self.phaseBodeAxis.legend(loc='upper right')
-        self.NyquistAxis.legend(loc='upper right')
+        leg = self.magBodeAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)        
+        leg = self.phaseBodeAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)        
+        leg = self.NyquistAxis.legend(loc='upper right')
+        if leg:
+            leg.set_draggable(state=True)        
         # Custom Navigation
         #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         #self.mpltoolbarBode.siblings = [ax1, ax2]
         #self.mpltoolbarBode.error = 0.1
         self.mplBode.draw()
-        
-        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
-    
+        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
+        self.statusBar().repaint()    
 
     def onBtnFreqRespInspect(self):
         QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
@@ -1676,12 +1702,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
     def onBtnRL(self):
         """
-        Plot LGR graphic.
+        Plot the Root Locus graphic..
         """
         if self._has_expressions_errors():
             return
 
         self.statusBar().showMessage(_translate("MainWindow", "Plotando LGR...", None))
+        self.statusBar().repaint()
         
         # Plot LGR:
         self.sysDict[self.sysCurrentName].RootLocus()
@@ -1698,6 +1725,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-')
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+        self.statusBar().repaint()
         
         self.LGRaxis.grid(True)
         self.LGRaxis.set_xlabel(_translate("MainWindow", "Eixo real", None))
@@ -1951,7 +1979,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # TODO
         elif (self.sysDict[self.sysCurrentName].Type == 4):
             # Parse and check NL system input string:
-            sysstr = self.sys.NLsysParseString(str(value))
+            sysstr = self.sysDict[self.sysCurrentName].NLsysParseString(str(value))
             
             if (sysstr):
                 # Change color to green:

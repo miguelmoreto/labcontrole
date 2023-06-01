@@ -7,6 +7,7 @@ import numpy as np
 import control as ct
 import scipy as sp
 from scipy import signal
+from scipy.integrate import odeint
 import logging as lg
 import utils
 import matplotlib as mpl
@@ -52,14 +53,17 @@ class LTIsystem:
     TM = ct.tf(1,1) # Transfer Matrix (MIMO system)
     #TM = ct.tf(1,1) # Closed Loop Transfer Matrix (MIMO system)
 
-    # Non linear system stuff:
-    NLsysString = '0.7*self.u-0.7*numpy.square(y[0])'
-    NLsysInputString = '0.7*U-0.7*numpy.square(Y)'
+    #     Initial values:
+    NL_e0 = 0.0                     # Initial error value (C(s) input)
+    NL_y0 = np.array([0.0])         # Output initial value for 1 order system
+    NL_X0 = [0]                     # C(s) LTI initial states.
+    NL_y00 = np.array([0.0,0.0])    # Output initial value for 2 order system
+    NL_N = 0                        # Number of samples
 
     Type = 0    # system type.
     Index = 0   # System index within a list.
     Name = ''
-    TypeStrList = ['LTI_1','LTI_2', 'LTI_3', 'DTS']    # List with string for the system types.
+    TypeStrList = ['LTI_1','LTI_2', 'LTI_3', 'DTS', 'NLS']    # List with string for the system types.
     TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
@@ -115,12 +119,10 @@ class LTIsystem:
     X0r = None
     X0w = None
 
-    #     Initial values:
-    e0 = 0.0                     # Initial error value (C(s) input)
-    y0 = np.array([0.0])         # Output initial value for 1 order system
-    X0 = [0]                     # C(s) LTI initial states.
-    y00 = np.array([0.0,0.0])    # Output initial value for 2 order system
-    N = 0                        # Number of samples
+    # Non linear system simulation stuff:
+    NL_sysString = '0.7*u-0.7*np.square(y[0])'
+    NL_sysInputString = '0.7*U-0.7*np.square(Y)'
+    NL_order  = 1
 
     # Time Domain simulation data
     CurrentTimeSimId = -1
@@ -302,6 +304,8 @@ class LTIsystem:
             self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
         elif self.Type == 3:
             self.CurrentSimulName = 'DTS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+        elif self.Type == 4:
+            self.CurrentSimulName = 'NLS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
         self.TimeSimData[self.CurrentSimulName] = {}
         # Store this simul ID:
@@ -1004,3 +1008,110 @@ class LTIsystem:
 
         return offset
 
+        
+    def NLsysParseString(self, string):
+        """
+        Parse the string entered by user.
+        The terms DY,Y and U will be substitued by y[1], y[0] and self.u 
+        respectivelly.
+        After susbstituion, the parsed string is evaluated using the temp
+        vecto y. Is eval fails, this method returns 0, otherwise 1.
+        """
+        
+        sysstr = ''
+        y = np.array([1,1]) # temp array to test the equation.
+        u = 1.0
+        self.NL_sysInputString = string
+
+        sysstr = string.replace(',','.')
+        sysstr = sysstr.replace('DY','y[1]')
+        sysstr = sysstr.replace('Y','y[0]')
+        sysstr = sysstr.replace('U','u')
+        print(sysstr)
+        # Test the parsed string:
+        try:
+            eval(sysstr)
+            print('Eval OK')
+        except:
+            print('Erro eval')
+            return 0
+            
+        if ('y[1]' in sysstr):
+            self.NL_order = 2
+            #print 'Ordem 2'
+        elif ('y[0]' in sysstr):
+            self.NL_order = 1
+            #print 'Ordem 1'
+        else:
+            #print 'Not ODE'
+            return 0            
+        
+        self.NL_sysString = sysstr
+        return 1
+        
+    def NLsysODE1(self,y,t,u):
+        """
+        Non linear system ordinary differential equation of order 1.
+        This is the callable function used by scipy.odeint
+        """
+        dy = eval(self.NL_sysString)
+        return dy
+    
+    def NLsysODE2(self,y,t,u):
+        """
+        Non linear system ordinary differential equation of order 2.
+        This is the callable function used by scipy.odeint
+        """
+        dy0 = y[1]
+        dy1 = eval(self.NL_sysString)
+        return np.array([dy0, dy1])
+
+    def NLsysSimulation(self):
+        """
+        Calculates the response of the Non-linear system with a
+        controller in series (C(s)).
+        """
+
+        self.createInputVectors()
+        y_out = np.zeros(self.N)
+        e_out = np.zeros(self.N)
+        u_out = np.zeros(self.N)
+        u = 0
+        e0 = 0.0                      # Initial error value (C(s) input)
+        y0 = np.array([0.0])          # Output initial value for 1 order system
+        X0 = np.zeros(len(self.Cden)-1) # C(s) LTI initial states.
+        y00 = np.array([0.0,0.0])     # Output initial value for 2 order system
+
+        # Loop throughout each simiul step:
+        for i in np.arange(0,self.N):
+            # Input sample:
+            Ri=self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][i]
+            # Calculates the error signal:
+            if (self.Loop == 'closed'):
+                e = self.K * (Ri - y0[0])
+            else:
+                e = self.K * Ri
+            e_out[i] = e
+            # Check if C(s) is defined.
+            if (self.Cenable):
+                # Solve one step of the C(s) differential equation:
+                t, yc, xout = signal.lsim2((self.Cnum,self.Cden),np.array([e0,e]),np.array([0,self.Delta_t]),X0)
+                u = yc[1]
+                X0 = xout[1] # Save the last state.
+            else:
+                u = e
+            u_out[i] = u
+            e0 = e
+            # Solve one step of the non-linear differential equation:
+            if (self.NL_order == 1):
+                y = odeint(self.NLsysODE1,y0[0],np.array([0,self.Delta_t]),args=(u,))
+                y0[0]=y[1]
+                y_out[i] = y[0]
+            elif (self.NL_order == 2):
+                y = odeint(self.NLsysODE2,y00,np.array([0,self.Delta_t]),args=(u,))
+                y00 = y[1]
+                y_out[i] = y[0][0]
+            
+        self.TimeSimData[self.CurrentSimulName]['data']['y(t)'] = y_out
+        self.TimeSimData[self.CurrentSimulName]['data']['u(t)'] = u_out
+        self.TimeSimData[self.CurrentSimulName]['data']['e(t)'] = e_out
