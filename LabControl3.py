@@ -92,7 +92,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
     """
     def __init__(self,parent=None):
-        self.init = 0
         super(LabControl3,self).__init__(parent)
         loadUi('MainWindow.ui', self)
         
@@ -113,11 +112,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
-        #self.label.setPixmap(QtGui.QPixmap( ":/diagrams/diagram1Opened.png"))
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
-        
         
         self.image = QtGui.QImage()        
 
@@ -169,7 +166,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.figure.set_facecolor('0.90')
         self.mplSimul.figure.set_tight_layout(True)
         self.mplSimul.figure.patch.set_alpha(0.0)
-        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
+        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=False)
         self.mplLGR.figure.set_facecolor('0.90')
         self.mplLGR.figure.set_tight_layout(True)
         self.mplLGR.figure.patch.set_alpha(0.0)
@@ -203,19 +200,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.autoscale(True)
         self.mplSimul.draw()
         
-        #self.mplBode.figure.clf()
-        #self.mplNyquist.figure.clf()
         self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
         self.NyquistAxis.add_patch(self.nyquist_circ)
         self.nyquist_circ.set_visible(False)        
         lg.basicConfig(level=lg.DEBUG)
-        # Initializing system
-        self.sys = MySystem.MySystem()
 
-                
-        self.init = 1
-
-        ######################## LabControl 3 stuff:
         self.sysDict = {}   # A dictionary that contains the LC3systems objects and the corresponding data.
         self.sysCurrentName = ''
         self.sysCounter = -1
@@ -225,13 +214,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetBode.setColumnWidth(0, 70)
         self.treeWidgetBode.setColumnWidth(1, 70)
 
-        ########################
-
         self.inspectMessageBox = QtWidgets.QMessageBox()
-        #self.inspectMessageBox.setText("## Hello PyQt5!\nfrom pythonpyqt.com\n * Moreto \n * Miguel")
         self.inspectMessageBox.setTextFormat(Qt.MarkdownText)
         self.inspectMessageBox.setIcon(QtWidgets.QMessageBox.Information)
-        #self.inspectMessageBox.exec()
+
 
         # Error messages
         self.expressions_errors = {
@@ -310,11 +296,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxWtime.valueChanged.connect(self.onWtimeChange)
         self.doubleSpinBoxWnoise.valueChanged.connect(self.onWnoiseChange)
         self.doubleSpinFreqRes.valueChanged.connect(self.onFreqResChange)
-        #self.doubleSpinNyqRes.valueChanged.connect(self.onNyquistResChange)
         self.doubleSpinBoxResT.valueChanged.connect(self.onSimluResChange)
         self.doubleSpinBoxLGRpontos.valueChanged.connect(self.onResLGRchange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
-        #self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
         # LineEdits:
         self.lineEditRvalueInit.textEdited.connect(self.onRvalueInitChange)
         self.lineEditWvalueInit.textEdited.connect(self.onWvalueInitChange)
@@ -324,8 +308,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditKlgr.textEdited.connect(self.onKChange)
         self.lineEditFmin.textEdited.connect(self.onFminChange)
         self.lineEditFmax.textEdited.connect(self.onFmaxChange)
-        #self.lineEditFminNyq.textEdited.connect(self.onNyquistFminChange)
-        #self.lineEditFmaxNyq.textEdited.connect(self.onNyquistFmaxChange)
         self.lineEditGnum.textEdited.connect(self.onGnumChange)
         self.lineEditGden.textEdited.connect(self.onGdenChange)
         self.lineEditCnum.textEdited.connect(self.onCnumChange)
@@ -340,8 +322,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnSimul.clicked.connect(self.onBtnSimul)
         self.btnPlotLGR.clicked.connect(self.onBtnRL)
         self.btnLGRclear.clicked.connect(self.onBtnLGRclear)
-        #self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
-        #self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
         self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
         self.btnSysRemove.clicked.connect(self.onBtnSysRemove)
         self.btnSysClear.clicked.connect(self.onBtnSysClear)
@@ -420,8 +400,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             return
         self.sysDict[self.sysCurrentName].Wt_finalType = index
 
-
-
     def onSysItemClicked(self,item):
         """
         User clicked in the list of stored system data.
@@ -444,6 +422,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.info('Current system is now {s}'.format(s=self.sysCurrentName))
 
     def onBtnSysRemove(self):
+        """
+        Remove a system from the list and delete the data from sysDict.
+        """
         itens = self.listSystem.selectedItems()
         if (self.listSystem.count() <= 1):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Ao menos um sistema deve ser mantido na lista. Remoção não efetuada.", None))
@@ -482,7 +463,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         systype = self.sysDict[sysname].Type
         # Comboboxes:
         # Blocking events, otherwise this will trigger the System
-        #   type ComboBox CurrentIndexChange event:
+        # type ComboBox CurrentIndexChange event:
         self.comboBoxSys.blockSignals(True) 
         self.comboBoxSys.setCurrentIndex(systype)
         self.comboBoxSys.blockSignals(False)
@@ -514,9 +495,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditWvalueFinal.setText(self.locale.toString(self.sysDict[sysname].Wt_finalValue))
         self.lineEditK.setText(self.locale.toString(self.sysDict[sysname].K))
         self.lineEditKlgr.setText(self.locale.toString(self.sysDict[sysname].K))
+        # Update K on UI and perform some calculations:
         self.onKChange(self.locale.toString(self.sysDict[sysname].K))
-        #self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
-        #self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
 
         self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
 
@@ -538,10 +518,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(False)
             self.labelPtTk.setEnabled(False)
             self.labelNpT.setEnabled(False)
-            #self.doubleSpinBoxResT.setEnabled(True)
             self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
-            #self.btnPlotNyquist.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
         elif (systype == 3): # Discrete time controler system.
             self.labelGden.show()
@@ -555,7 +533,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelNpT.setEnabled(True)
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
-            #self.doubleSpinBoxResT.setEnabled(False)
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
@@ -569,13 +546,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
 
-            #self.onGnumChange(self.sys.sysInputString)
             self.groupBoxG.setTitle(_translate("MainWindow", "EDO não linear", None))
             self.labelGnum.setText(_translate("MainWindow", "f(Y,U)=", None))
             self.groupBoxG.updateGeometry()   
         else:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
-            #self.comboBoxSys.setCurrentIndex(self.currentComboIndex)
             return
         self.updateSystemPNG()                 
 
@@ -640,14 +615,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.updateSliderPosition() # update slider position, this call also the event slider move.
     
     def onKChange(self,val):
-        #print('Val is {s} of type {t}'.format(s=val,t=type(val)))
+        """
+        Update the K value on system object, update the lineEdits
+        and update the slider postion in root locus tab.
+        """
+
         value,_ = self.locale.toDouble(val)
         # Save K value in the system object:
         self.sysDict[self.sysCurrentName].K = value
         # Update system transfer matrix:
         self.sysDict[self.sysCurrentName].updateSystem()
         
-        # Update spinboxes
+        # Update lineEdits
         self.lineEditK.setText(val)
         self.lineEditKlgr.setText(val)
         
@@ -667,7 +646,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[sysname].setAtiveTimeSimul(item.text(1))
             return
         sysname = parent.text(0)
-        #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+
         simulname = parent.text(1)
         signal = item.text(1)
         lg.debug('Clicked on child from: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
@@ -701,18 +680,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 lg.debug('Item check state not changed.')
                 return
             
-            # Getting the actual plot limits:
-            ylim = self.mplSimul.axes.get_ylim()
-            # Set a new y limit, adding 1/10 of the total:
-            #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-            self.mplSimul.axes.set_xlim(xmin = 0)
-            #self.mplSimul.axes.autoscale()
-            self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
-            self.mplSimul.axes.autoscale_view()
-            print(self.mplSimul.axes.get_xlim())
-            leg = self.mplSimul.axes.legend(loc='lower left')
-            if leg:
-                leg.set_draggable(state=True)
+            # Update the graph area:
+            self.mplSimul.axes.relim(visible_only=True)
+            self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
+            self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
+            self.mplSimul.axes.legend(loc='lower left',draggable = True)
             self.mplSimul.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -771,12 +743,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 label = '{id}:{s}:{sg}'.format(id=sysname,s=simnameremove,sg=signal)
                 #print(label)
                 self.removeExistingPlot(self.mplSimul.axes,label)
-                    # Redraw the graphic area:
-            self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
-            self.mplSimul.axes.autoscale_view()
-            leg = self.mplSimul.axes.legend(loc='lower left')
-            if leg:
-                leg.set_draggable(state=True)
+            # Update the graphic area:
+            self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
+            self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
+            self.mplSimul.axes.legend(loc='lower left', draggable = True)
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -818,7 +789,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
-        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
@@ -844,7 +814,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
-        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
@@ -929,6 +898,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
                         self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                         item.setCheckState(1, Qt.Checked)
+                        #print(box.get_points())
                     else:
                         item.setCheckState(1, Qt.Unchecked)
                     #print(signal)
@@ -958,18 +928,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[sysname].K,l=self.sysDict[sysname].Loop))
 
         self.treeWidgetSimul.expandAll()
+        
         self.mplSimul.axes.set_xlim(xmin = 0)
         self.mplSimul.axes.legend(loc='lower left',draggable=True)
         # Format the plotting area:
-        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
-        self.mplSimul.axes.autoscale_view()
+        self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
+        self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
         self.mplSimul.axes.grid(True)
         print(self.mplSimul.axes.get_xlim())
-
-        # Getting the actual plot limits:
-        #ylim = self.mplSimul.axes.get_ylim()
-        # Set a new y limit, adding 1/10 of the total:
-        #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
 
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -1050,7 +1017,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
             return
         sysname = parent.text(0)
-        #line_index = 0  # Index used to find, using label, an specific plotted line to remove.
+
         simulname = parent.text(1)
         signal = item.text(1)
         lg.debug('Clicked on child from: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
@@ -1093,21 +1060,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 lg.debug('Item check state not changed.')
                 return
-            #self.magBodeAxis.autoscale()
-            # Getting the actual plot limits:
-            #ylim = self.mplSimul.axes.get_ylim()
-            # Set a new y limit, adding 1/10 of the total:
-            #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-            #self.mplSimul.axes.set_xlim(xmin = 0)        
-            leg = self.magBodeAxis.legend(loc='upper right')
-            if leg:
-                leg.set_draggable(state=True)
-            leg = self.phaseBodeAxis.legend(loc='upper right')
-            if leg:
-                leg.set_draggable(state=True)            
-            leg = self.NyquistAxis.legend(loc='upper right')
-            if leg:
-                leg.set_draggable(state=True)            
+        
+            self.magBodeAxis.legend(loc='upper right', draggable = True)
+            self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+            self.NyquistAxis.legend(loc='upper right', draggable = True)
+
+            # Format the plotting area:
+            self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+            self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+            self.phaseBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.phaseBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+            self.phaseBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+            self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.NyquistAxis.axes.autoscale(enable=True, axis='both')
             self.mplBode.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -1160,7 +1126,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         lg.debug('Removing freq. response item {s} from system {sys}'.format(s=freqrespnameremove,sys=sysname))
 
         i = 0
-        #if (currentItem.childCount() > 0): # Check if it is an empty (not simulated) list item.
+        # Check if it is an empty (not simulated) list item.
         for i in range(currentItem.childCount()):
             # Remove plotted lines:
             lg.debug('Item to remove: {s}'.format(s=freqrespnameremove))
@@ -1187,15 +1153,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point                    
                 #self.removeExistingPlot(self.mplSimul.axes,label)
         # Redraw the graphic area:
-        leg = self.magBodeAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)        
-        leg = self.phaseBodeAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)        
-        leg = self.NyquistAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)
+        self.magBodeAxis.legend(loc='upper right', draggable = True)
+        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+        self.NyquistAxis.legend(loc='upper right', draggable = True)
+
+        # Format the plotting area:
+        self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+        self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+        self.phaseBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.phaseBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+        self.phaseBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+        self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.NyquistAxis.axes.autoscale(enable=True, axis='both')
         self.mplBode.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -1265,7 +1235,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Uncheck all itens from the list and clear the ploting area.
         """
-        #self.uncheckAllItens(self.treeWidgetBode)
+
         if self.radioBtnBode.isChecked():
             # Unselect bode signals from the list:
             self.uncheckItens(self.treeWidgetBode,'mag')
@@ -1457,15 +1427,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.NyquistAxis.grid(True)
-        leg = self.magBodeAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)        
-        leg = self.phaseBodeAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)        
-        leg = self.NyquistAxis.legend(loc='upper right')
-        if leg:
-            leg.set_draggable(state=True)        
+        self.magBodeAxis.legend(loc='upper right', draggable = True)
+        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+        self.NyquistAxis.legend(loc='upper right', draggable = True)
+        self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+        self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+        self.phaseBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.phaseBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+        self.phaseBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+        self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+        self.NyquistAxis.axes.autoscale(enable=True, axis='both')    
         # Custom Navigation
         #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         #self.mpltoolbarBode.siblings = [ax1, ax2]
@@ -1486,11 +1458,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Is the system definition has errors, show the error and finish:
         if self._has_expressions_errors():
             return        
-        #simulname = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
-        #omega,_ = self.sysDict[self.sysCurrentName].calcOmega()
-        #omega = None
-        #counts=myfreqplot.nyquist_plot(self.sysDict[self.sysCurrentName].DLTF_r * self.sysDict[self.sysCurrentName].K,self.NyquistAxis,omega=omega,arrows=1)
-        
+ 
+        # Getting data from the FreqResponseData structur within the selected
+        # system object.
         reg_re = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['reg_re']
         reg_im = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['reg_im']
         scaled_re = self.sysDict[sysname].FreqResponseData[simulname]['nydata']['scaled_re']
@@ -1528,8 +1498,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         color=c, markersize=4,label = '_o'+label)
         # Mark the -1 point
         self.NyquistAxis.plot([-1], [0], 'r+')
-        
-        #self.mplBode.draw()
 
     def onRadioBtnCirc1(self,checked):
         """
@@ -1661,12 +1629,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         color = 0
         for artist in ax.get_children():
             if (artist.get_label() == label):
-                #print(type(artist))
-                #if isinstance(artist,matplotlib.collections.PathCollection): # For the scatter plot.
-                #    color = artist.get_facecolor()[0]
-                #else:
                 color = artist.get_color()
-
         return color
     
     def onSimluResChange(self,value):
@@ -1871,8 +1834,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Tmax edited handler
         """
         self.sysDict[self.sysCurrentName].Tmax = value
-        # Update total number of samples:
-        #self.sys.N = self.sys.Tmax/self.sys.delta_t
+
         # Update spinboxes maximum values:
         self.doubleSpinBoxRtime.setMaximum(value)
         self.doubleSpinBoxWtime.setMaximum(value)
@@ -2244,28 +2206,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
             return
-        
-        # expSys = ExportSystem()
-        # expSys.Gnum = self.lineEditGnum.text()
-        # expSys.Gden = self.lineEditGden.text()
-        # expSys.Cnum = self.lineEditCnum.text()
-        # expSys.Cden = self.lineEditCden.text()
-        # expSys.Hnum = self.lineEditHnum.text()
-        # expSys.Hden = self.lineEditHden.text()
-        # expSys.K = float(self.lineEditK.text())
-        # expSys.Type = self.sys.Type
-        # expSys.Malha = self.sys.Malha
-        # expSys.Hide = hide
-        # # Store groupbox checked status:
-        # expSys.Genabled = self.groupBoxG.isChecked()
-        # expSys.Cenabled = self.groupBoxC.isChecked()
-        # expSys.Henabled = self.groupBoxH.isChecked()
-        
-        # Pickle object into a string:
-        #temp = pickle.dumps(self.sysDict,1)
-        # Encode string:
-        #temp1 = base64.b64encode(temp)
-        # Write encoded string to disk:
+
+        # Pickle object into a string, encode and write to disk:
         f = open(fileName,"wb")
         f.write(base64.b64encode(pickle.dumps(self.sysDict,1)))
         f.close()
@@ -2304,7 +2246,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
        
         # Read encoded string from file:
         f = open(fileName, 'rb')
-        #temp1 = f.read()
         # Read, decode and unpickle object from string:
         self.sysDict = pickle.loads(base64.b64decode(f.read()))
         f.close()
@@ -2530,25 +2471,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         return root_str
     
         
-        
-
-
-class ExportSystem:
-    
-    Gnum = str()
-    Gden = str()
-    Cnum = str()
-    Cden = str()
-    Hnum = str()
-    Hden = str()
-    Genabled = True
-    Cenabled = False
-    Henabled = False
-    K = 1.0
-    Type = 0
-    Malha = 'Aberta'
-    Hide = False
-
         
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
