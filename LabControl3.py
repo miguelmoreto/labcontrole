@@ -169,6 +169,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.figure.set_facecolor('0.90')
         self.mplSimul.figure.set_tight_layout(True)
         self.mplSimul.figure.patch.set_alpha(0.0)
+        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
         self.mplLGR.figure.set_facecolor('0.90')
         self.mplLGR.figure.set_tight_layout(True)
         self.mplLGR.figure.patch.set_alpha(0.0)
@@ -705,8 +706,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Set a new y limit, adding 1/10 of the total:
             #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
             self.mplSimul.axes.set_xlim(xmin = 0)
-            self.mplSimul.axes.autoscale()
-            leg = self.mplSimul.axes.legend(loc='lower center')
+            #self.mplSimul.axes.autoscale()
+            self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
+            self.mplSimul.axes.autoscale_view()
+            print(self.mplSimul.axes.get_xlim())
+            leg = self.mplSimul.axes.legend(loc='lower left')
             if leg:
                 leg.set_draggable(state=True)
             self.mplSimul.draw()
@@ -768,9 +772,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #print(label)
                 self.removeExistingPlot(self.mplSimul.axes,label)
                     # Redraw the graphic area:
-            leg = self.mplSimul.axes.legend(loc='lower center')
+            self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
+            self.mplSimul.axes.autoscale_view()
+            leg = self.mplSimul.axes.legend(loc='lower left')
             if leg:
-                leg.set_draggable(state=True)            
+                leg.set_draggable(state=True)
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -812,6 +818,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
+        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
@@ -837,6 +844,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
         self.mplSimul.axes.set_ylim(0, 1)
+        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
@@ -950,17 +958,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setToolTip(1,'K={k}, {l} loop'.format(k=self.sysDict[sysname].K,l=self.sysDict[sysname].Loop))
 
         self.treeWidgetSimul.expandAll()
-
+        self.mplSimul.axes.set_xlim(xmin = 0)
+        self.mplSimul.axes.legend(loc='lower left',draggable=True)
         # Format the plotting area:
-        self.mplSimul.axes.autoscale()     
+        self.mplSimul.axes.autoscale(enable=True, axis='both', tight=True)
+        self.mplSimul.axes.autoscale_view()
         self.mplSimul.axes.grid(True)
+        print(self.mplSimul.axes.get_xlim())
 
         # Getting the actual plot limits:
         #ylim = self.mplSimul.axes.get_ylim()
         # Set a new y limit, adding 1/10 of the total:
         #self.mplSimul.axes.set_ylim(top=(ylim[1]+(ylim[1]-ylim[0])/10))
-        self.mplSimul.axes.set_xlim(xmin = 0)
-        self.mplSimul.axes.legend(loc='lower center',draggable=True)
+
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
         self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
