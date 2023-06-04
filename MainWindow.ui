@@ -4702,6 +4702,9 @@ Auto</string>
    </property>
   </action>
   <action name="actionHelp">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="images.qrc">
      <normaloff>:/icons_UI/images/help.png</normaloff>:/icons_UI/images/help.png</iconset>

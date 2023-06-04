@@ -42,6 +42,7 @@ from PyQt5 import (
     QtGui,
     QtWidgets
 )
+
 from PyQt5.Qt import Qt
 from PyQt5.uic import loadUi
 import images_rc
@@ -78,7 +79,7 @@ MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControl 3</b></p>" \
             "professor do Departamento de Engenharia Elétrica da UFSC "\
             "para uso nos laboratórios da disciplina EEL7063 - Sistemas "\
             "de Controle.</p>" \
-            "<p>O LabControl 3 é uma atualização do LabControle 3 e foi "\
+            "<p>O LabControl 3 é uma atualização do LabControle 2 e foi "\
             "<p>O foi desenvolvido em linguagem Python 3. "\
             "Seu código é livre, podendo ser acessado no site:</p>"\
             "<p><b><a href=\"https://github.com/miguelmoreto/labcontrole\">https://github.com/miguelmoreto/labcontrole</a></b></p>"\
@@ -116,7 +117,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
         
-        self.image = QtGui.QImage()        
+        self.image = QtGui.QImage()
+        self.helpWindow = HelpWindow()
 
         # Initial definitions:
         # Setting locale to display numbers in the QtextEdits:
@@ -341,6 +343,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.actionCalc.triggered.connect(self.onCalcAction)
         self.actionSalvar_sistema.triggered.connect(self.onSaveAction)
         self.actionCarregar_sistema.triggered.connect(self.onLoadAction)
+        # HelpWindow events
+        self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
         
         self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
         
@@ -2157,9 +2161,26 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.label.setPixmap(QtGui.QPixmap(':/diagrams/images/{f}'.format(f=png_file_name)))
 
-    
-    def onAboutAction(self):
-        QtWidgets.QMessageBox.about(self,_translate("MainWindow", "Sobre o LabControle2", None), MESSAGE)
+    def onHelpWindowClose(self):
+        """
+        When the user closes the HelpWindow.
+        """
+        # Just uncheck the Action button:
+        self.actionHelp.setChecked(False)
+
+    def onAboutAction(self,checked):
+        """
+        When the user clicks on the help button (action). Open or
+        closed the help window.
+        """
+        if checked:
+            #self.w = HelpWindow()
+            self.helpWindow.setCurrentTopic(2)
+            self.helpWindow.show()
+
+        else:
+            self.helpWindow.close()  # Close window.
+            #self.w = None  # Discard reference.
         
     
     def onCalcAction(self):
@@ -2469,8 +2490,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 root_str = str(numpy.around(r_real, decimals=3)) + ' - j'+ str(numpy.around(abs(r_imag), decimals=3))
         
         return root_str
+
+
+class HelpWindow(QtWidgets.QFrame):
+    """
+    Another window to show the About and Help.
+    """
+    helpCloseSignal = QtCore.Signal()
+    currentTopic = 0
+
+    def __init__(self):
+        super().__init__()
+        loadUi('HelpWindow.ui', self)
     
-        
+    def closeEvent(self, event):
+        print(event)
+        self.helpCloseSignal.emit()
+    
+    def setCurrentTopic(self,row):
+        self.currentTopic = row
+        self.listTopics.setCurrentRow(row)
+
+    
+
         
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
