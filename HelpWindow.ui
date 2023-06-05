@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
+    <width>700</width>
     <height>450</height>
    </rect>
   </property>
@@ -18,7 +18,11 @@
   <property name="windowTitle">
    <string>Ajuda do LabControle</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
+  <property name="windowIcon">
+   <iconset resource="images.qrc">
+    <normaloff>:/icons_UI/images/icon32x32.png</normaloff>:/icons_UI/images/icon32x32.png</iconset>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
    <property name="spacing">
     <number>3</number>
    </property>
@@ -40,7 +44,26 @@
       <number>4</number>
      </property>
      <item>
+      <widget class="QLabel" name="labelUFSC">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="images.qrc">:/icons_UI/images/ufsc_large.png</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="label">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>190</width>
@@ -55,6 +78,9 @@
        <property name="text">
         <string>Selecione o tópico:</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+       </property>
       </widget>
      </item>
      <item>
@@ -67,7 +93,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>190</width>
+         <width>200</width>
          <height>16777215</height>
         </size>
        </property>
@@ -123,14 +149,16 @@ Florianópolis, SC, Brasil
     </layout>
    </item>
    <item>
-    <widget class="QTextEdit" name="textEditContent">
-     <property name="readOnly">
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="openExternalLinks">
       <bool>true</bool>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

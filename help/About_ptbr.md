@@ -18,3 +18,4 @@ Este software foi desenvolvido em linguagem Python 3 por Miguel Moreto, professo
 * Re-estruturação completa da estrutura de dados interna.
 * Aprimoramento da interface com o usuário.
 * Nova forma de configuração das entradas para simulação no domínio do tempo.
+

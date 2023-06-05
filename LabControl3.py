@@ -60,6 +60,7 @@ import base64
 import logging as lg
 import LC3systems
 import math
+import os
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -101,6 +102,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Adding toolbar spacer and a Hidden system label:
         empty = QtWidgets.QWidget()
         self.labelHide = QtWidgets.QLabel()
+        labelUFSC = QtWidgets.QLabel()
+        labelUFSC.setPixmap(QtGui.QPixmap(':/icons_UI/images/ufsc.png'))
+        
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -113,6 +117,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
+        self.toolBar.insertWidget(self.actionClose,labelUFSC)
         
         # Set diagram the current tab:
         self.tabWidget.setCurrentIndex(0)
@@ -2175,7 +2180,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if checked:
             #self.w = HelpWindow()
-            self.helpWindow.setCurrentTopic(2)
+            #self.helpWindow.setCurrentTopic(2)
             self.helpWindow.show()
 
         else:
@@ -2497,19 +2502,46 @@ class HelpWindow(QtWidgets.QFrame):
     Another window to show the About and Help.
     """
     helpCloseSignal = QtCore.Signal()
+    locale = ''
     currentTopic = 0
+    topicFiles = []
+    currentDir = ''
 
     def __init__(self):
         super().__init__()
         loadUi('HelpWindow.ui', self)
+        self.currentDir = os.path.dirname(os.path.realpath(__file__))
+        self.locale = QtCore.QLocale.system().name()
+        if (self.locale != 'pt_BR' and self.locale != 'pt_PT'):
+            print('Language {l} not supported. Using pt_BR'.format(l=self.locale))
+            self.topicFiles = ['About_ptbr.md','Inputs_ptbr.md','TimeSimul_ptbr.md','FreqResponse_ptbr.md','RootLocus_ptbr.md','DiscreteSys_ptbr.md','NonLinearSys_ptbr.md']
+        else:
+            self.topicFiles = ['About_ptbr.md','Inputs_ptbr.md','TimeSimul_ptbr.md','FreqResponse_ptbr.md','RootLocus_ptbr.md','DiscreteSys_ptbr.md','NonLinearSys_ptbr.md']
+
+        self.setCurrentTopic(0)
+        self.listTopics.itemClicked.connect(self.onListTopicsClicked)
+        self.textBrowser.setSearchPaths([os.path.join(self.currentDir, 'help')])
+        self.loadText()
+
     
     def closeEvent(self, event):
-        print(event)
         self.helpCloseSignal.emit()
+    
+    def onListTopicsClicked(self, item):
+
+        self.currentTopic = self.listTopics.currentRow()
+        self.loadText()
     
     def setCurrentTopic(self,row):
         self.currentTopic = row
         self.listTopics.setCurrentRow(row)
+
+    def loadText(self):
+        """
+        Load a Markdown text in the textBroser
+        """
+        filepath = os.path.join(self.currentDir, 'help',self.topicFiles[self.currentTopic])
+        self.textBrowser.setSource(QtCore.QUrl(filepath))
 
     
 

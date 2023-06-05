@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="icons_UI">
+    <file>images/icon16x16.png</file>
+    <file>images/icon32x32.png</file>
+    <file>images/ufsc_large.png</file>
+    <file>images/ufsc.png</file>
     <file>images/lupe.png</file>
     <file>images/addsys.png</file>
     <file>images/refreshsys.png</file>
