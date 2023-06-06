@@ -499,7 +499,8 @@ class LTIsystem:
         
         for k in np.arange(0,self.NdT):
             R0[0] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][k*self.NpdT]
-            Y0[0] = yk
+            Wk = self.TimeSimData[self.CurrentSimulName]['data']['w(t)'][k*self.NpdT]
+            Y0[0] = yk + Wk
             
             if (self.Loop == 'closed'):
                 E0 = R0 - Y0
@@ -517,18 +518,14 @@ class LTIsystem:
             # Delta_t. The last value is used only in the next discrete step.
             t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
-            if (k == 0):
-                t_plot[0:(self.NpdT)] = t_out[0:(self.NpdT)]
-                y_plot[0:(self.NpdT)] = yout[0:(self.NpdT)]
-                u_plot[0:(self.NpdT)] = uk
-                e_plot[0:(self.NpdT)] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][0:(self.NpdT)] - yout[0:(self.NpdT)]
-        
+            t_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = t_out[0:(self.NpdT)] + k*self.dT
+            y_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = yout[0:(self.NpdT)] + self.TimeSimData[self.CurrentSimulName]['data']['w(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))]
+            u_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = uk
+            if (self.Loop == 'closed'):
+                e_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))] - (yout[0:(self.NpdT)] +  self.TimeSimData[self.CurrentSimulName]['data']['w(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))])
             else:
-                t_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = t_out[0:(self.NpdT)] + k*self.dT
-                y_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = yout[0:(self.NpdT)]
-                u_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = uk
-                e_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))] - yout[0:(self.NpdT)]
-           
+                e_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = self.TimeSimData[self.CurrentSimulName]['data']['r(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))]
+        
             yk = yout[-1] # Save the final output value. 
             X0G = xout[-1] # Save the final state.
             

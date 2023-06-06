@@ -945,7 +945,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
         self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
         self.mplSimul.axes.grid(True)
-        print(self.mplSimul.axes.get_xlim())
 
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
@@ -1684,7 +1683,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
     def onBtnRL(self):
         """
-        Plot the Root Locus graphic..
+        Plot the Root Locus graphic.
         """
         if self._has_expressions_errors():
             return
@@ -1698,18 +1697,22 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplLGR.figure.clf()
         self.LGRaxis = self.mplLGR.figure.add_subplot(111)
         # Open loop poles:
-        self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_poles), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_poles), 'x')
+        self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_poles), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_poles), 'xr',ms=6,mew=1.5, zorder=3)
         # Open loop zeros:
         if self.sysDict[self.sysCurrentName].DLTF_zeros.any():
-            self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_zeros), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_zeros), 'o')
+            self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_zeros), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_zeros), 'or',ms=6, zorder=3)
         for col in self.sysDict[self.sysCurrentName].RL_root_vector.T:
             # Ploting the root locus.
-            self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-')
+            self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-', zorder=2)
         
         self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
         self.statusBar().repaint()
         
         self.LGRaxis.grid(True)
+        self.LGRaxis.relim(visible_only=True) # Recalculate the limits according to the current data.
+        #print(self.LGRaxis.get_ylim())
+        self.LGRaxis.autoscale(enable=True, axis='both')#,tight=True)
+        
         self.LGRaxis.set_xlabel(_translate("MainWindow", "Eixo real", None))
         self.LGRaxis.set_ylabel(_translate("MainWindow", "Eixo imaginário", None))
         self.LGRaxis.set_title(_translate("MainWindow", "Lugar Geométrico das Raízes de ", None)+'{s}'.format(s=self.sysDict[self.sysCurrentName].Name))
@@ -1733,19 +1736,40 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].RL_FR_R = self.doubleSpinBoxRebd.value()
         self.sysDict[self.sysCurrentName].RL_FR_RI = self.doubleSpinBoxRibd.value()
         self.sysDict[self.sysCurrentName].RL_FR_I = self.doubleSpinBoxImbd.value()
-        
-        xlimites = self.LGRaxis.get_xlim()
-        ylimites = self.LGRaxis.get_ylim()
-        
-        if (abs(xlimites[0]-xlimites[1])<0.1):
-            self.LGRaxis.set_xlim((xlimites[0]-1,xlimites[1]+1))
-            xlimites = self.LGRaxis.get_xlim()
-
-        if (abs(ylimites[0]-ylimites[1])<0.1):
-            self.LGRaxis.set_ylim((ylimites[0]-1,ylimites[1]+1))
-            ylimites = self.self.LGRaxis.get_ylim()
 
 
+        # Getting the plot limits:
+        xlimites = list(self.LGRaxis.get_xlim())
+        ylimites = list(self.LGRaxis.get_ylim())
+        xmargin,ymargin = self.LGRaxis.margins()
+
+        self.LGRaxis.axline([xlimites[0],0],[xlimites[1],0],linestyle='-',color='black',linewidth=1.7,zorder=1)
+        self.LGRaxis.axline([0,ylimites[0]],[0,ylimites[1]],linestyle='-',color='black',linewidth=1.7,zorder=1)
+
+        # Disable autoscale to plot the forbidden regions and subsequent
+        # updates in the close loop poles locations.
+        self.LGRaxis.autoscale(enable=False, axis='both')
+        # Extending the limits to include de autoscalem margim:
+        xlimites[0] = xlimites[0] + xmargin*xlimites[0]
+        xlimites[1] = xlimites[1] + xmargin*xlimites[1]
+        ylimites[0] = ylimites[0] + ymargin*ylimites[0]
+        ylimites[1] = ylimites[1] + ymargin*ylimites[1]
+
+        # To include the origin:
+        if (xlimites[1] < 0):
+            self.LGRaxis.set_xlim((xlimites[0],0.2))
+
+        #self.LGRaxis.arrow(xlimites[0],0,xlimites[1]-xlimites[0],0,head_width=0.1, head_length=0.1, length_includes_head=True,linestyle='-',color='black',linewidth=1.7,zorder=1)
+
+        # if (abs(xlimites[0]-xlimites[1])<0.1):
+        #     self.LGRaxis.set_xlim((xlimites[0]-1,xlimites[1]+1))
+        #     xlimites = self.LGRaxis.get_xlim()
+
+        # if (abs(ylimites[0]-ylimites[1])<0.1):
+        #     self.LGRaxis.set_ylim((ylimites[0]-1,ylimites[1]+1))
+        #     ylimites = self.LGRaxis.get_ylim()
+
+        # Plotting forbidden regions:
         if Re > 0:
             if Re < 0.5:
                 inic = Re + 0.5
@@ -1753,7 +1777,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 inic = 0
             y = [ylimites[0],ylimites[1],ylimites[1],ylimites[0]]
             x = [-Re,-Re,inic,inic]
-            self.LGRaxis.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0)            
+            self.LGRaxis.fill(x,y,facecolor=(1,0.6,0.5),linewidth=0,zorder=0)            
         
         if RI > 0:
             # R = Ribd * I
@@ -1806,7 +1830,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         except AttributeError:
             try: # If no CL poles drawn yet, draws them:
                 self.polosLGR = self.LGRaxis.plot(numpy.real(roots), numpy.imag(roots),
-                                'xb',ms=7,mew=3)
+                                'xb',ms=7,mew=2.2)
             except AttributeError:
                 return
             else:
@@ -1944,7 +1968,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # If is a linear or discrete system, uses G(s):
         if (self.sysDict[self.sysCurrentName].Type < 4):
             Gnum = self.checkTFinput(value)
-            print(Gnum)
             
             if (Gnum == 0):
                 # Change color ro red:
@@ -1957,7 +1980,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.sysDict[self.sysCurrentName].Gnum = Gnum
                 self.sysDict[self.sysCurrentName].GnumStr = str(value)
                 self.sysDict[self.sysCurrentName].updateSystem()
-        # TODO
         elif (self.sysDict[self.sysCurrentName].Type == 4):
             # Parse and check NL system input string:
             sysstr = self.sysDict[self.sysCurrentName].NLsysParseString(str(value))
