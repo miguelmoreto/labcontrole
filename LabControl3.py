@@ -51,13 +51,11 @@ from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as Navigati
 from matplotlib.widgets import MultiCursor, Cursor
 from matplotlib.backend_tools import Cursors
 
-import MySystem
 import utils
 import numpy
 import subprocess
 import platform
 import pickle
-#import encript
 import base64
 import logging as lg
 import LC3systems
