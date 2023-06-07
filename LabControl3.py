@@ -2558,7 +2558,7 @@ class HelpWindow(QtWidgets.QFrame):
 
         self.setCurrentTopic(0)
         self.listTopics.itemClicked.connect(self.onListTopicsClicked)
-        self.textBrowser.setSearchPaths([os.path.join(self.currentDir, 'help')])
+        self.textBrowser.setSearchPaths([str(os.path.join(self.currentDir, 'help'))])
         self.loadText()
 
     
@@ -2579,9 +2579,7 @@ class HelpWindow(QtWidgets.QFrame):
         Load a Markdown text in the textBroser
         """
         filepath = os.path.join(self.currentDir, 'help',self.topicFiles[self.currentTopic])
-        self.textBrowser.setSource(QtCore.QUrl(filepath))
-
-    
+        self.textBrowser.setSource(QtCore.QUrl.fromLocalFile(filepath))
 
         
 if __name__ == '__main__':

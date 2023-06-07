@@ -15,6 +15,8 @@ conda install -c anaconda pyqt
 conda install -c conda-forge libstdcxx-ng
 conda install -c conda-forge pyinstaller
 pyinstaller --clean -y --onedir --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
+pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+
 conda deactivate
 
 Utility commands:

@@ -5,15 +5,15 @@ block_cipher = None
 
 
 a = Analysis(
-    ['LabControl3.py'],
+    ['\\'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=['PyQt5.sip'],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['sqlalchemy'],
+    excludes=[],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -26,7 +26,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='LabControl3',
+    name='',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -46,5 +46,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='LabControl3',
+    name='',
 )
