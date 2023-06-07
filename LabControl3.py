@@ -48,6 +48,8 @@ from PyQt5.uic import loadUi
 import images_rc
 
 from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.widgets import MultiCursor, Cursor
+from matplotlib.backend_tools import Cursors
 
 import MySystem
 import utils
@@ -181,6 +183,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.figure.set_tight_layout(True)
         self.mplSimul.figure.patch.set_alpha(0.0)
         self.mplSimul.axes.autoscale(enable=True, axis='both', tight=False)
+        # Set useblit=True on most backends for enhanced performance.
+        self.cursor = Cursor(self.mplSimul.axes, useblit=True, color='gray', linewidth=0.7, linestyle = '--')
         self.mplLGR.figure.set_facecolor('0.90')
         self.mplLGR.figure.set_tight_layout(True)
         self.mplLGR.figure.patch.set_alpha(0.0)
@@ -190,7 +194,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplBode.figure.clf()
         self.magBodeAxis = self.mplBode.figure.add_subplot(2,1,1)
         self.phaseBodeAxis = self.mplBode.figure.add_subplot(2,1,2, sharex=self.magBodeAxis)
-        
+        self.multicursor = MultiCursor(self.mplBode.figure.canvas, (self.magBodeAxis, self.phaseBodeAxis), color='gray', lw=0.7,
+                    linestyle = '--', horizOn=False, vertOn=True)
+
         self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
         self.NyquistAxis.set_visible(False)
         self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
@@ -864,7 +870,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         sysname = currentItem.text(0)
 
-
         # Check if the selected system matches with the system of the selected
         # time simul in the list.
         if sysname != self.sysCurrentName:
@@ -957,7 +962,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.mplSimul.axes.set_ylabel(_translate("MainWindow", "Valor", None))
         self.mplSimul.axes.set_xlabel(_translate("MainWindow", "Tempo [s]", None))
-        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))        
+        self.mplSimul.axes.set_title(_translate("MainWindow", "Simulação no tempo", None))
+        
+        #self.mplSimul.axes.cursor_to_use = Cursors.SELECT_REGION
         self.mplSimul.draw()
 
         self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
@@ -1459,6 +1466,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         #self.mpltoolbarBode.siblings = [ax1, ax2]
         #self.mpltoolbarBode.error = 0.1
+
+
         self.mplBode.draw()
         self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
         self.statusBar().repaint()    

@@ -2,27 +2,27 @@
 # -*- coding: utf-8 -*-
 #
 # Testing control system module.
-import control as ct
-#import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+# import control as ct
+# #import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
 
-from scipy.signal import lti, lsim2
+# from scipy.signal import lti, lsim2
 
-# Testing solver:
-A = np.array([[0, 1], [0, 0]])
-B = np.array([[0], [1]])
-C = np.array([[1, 0]])
-D = 0
-system = lti(A, B, C, D)
+# # Testing solver:
+# A = np.array([[0, 1], [0, 0]])
+# B = np.array([[0], [1]])
+# C = np.array([[1, 0]])
+# D = 0
+# system = lti(A, B, C, D)
 
-t = np.linspace(0, 5, num=50)
-u = np.ones_like(t)
+# t = np.linspace(0, 5, num=50)
+# u = np.ones_like(t)
 
-tout, y, x = lsim2(system, u, t,X0=[1,1])
+# tout, y, x = lsim2(system, u, t,X0=[1,1])
 
-print(len(t))
-print(len(tout))
+# print(len(t))
+# print(len(tout))
 
 #plt.plot(t, y)
 #plt.grid(alpha=0.3)
@@ -74,5 +74,33 @@ print(len(tout))
 #       ylim=(0, 8), yticks=np.arange(1, 8))
 
 #roots, gains = ct.root_locus(sys,kvect=np.linspace(0,20,100),plot=True,ax=ax)
-plt.show()
+# plt.show()
 
+# https://matplotlib.org/stable/gallery/event_handling/cursor_demo.html
+import matplotlib.pyplot as plt
+from matplotlib.backend_tools import Cursors
+
+
+fig, axs = plt.subplots(len(Cursors), figsize=(6, len(Cursors) + 0.5),
+                        gridspec_kw={'hspace': 0})
+fig.suptitle('Hover over an Axes to see alternate Cursors')
+
+for cursor, ax in zip(Cursors, axs):
+    ax.cursor_to_use = cursor
+    ax.text(0.5, 0.5, cursor.name,
+            horizontalalignment='center', verticalalignment='center')
+    ax.set(xticks=[], yticks=[])
+
+
+def hover(event):
+    if fig.canvas.widgetlock.locked():
+        # Don't do anything if the zoom/pan tools have been enabled.
+        return
+
+    fig.canvas.set_cursor(
+        event.inaxes.cursor_to_use if event.inaxes else Cursors.POINTER)
+
+
+fig.canvas.mpl_connect('motion_notify_event', hover)
+
+plt.show()
