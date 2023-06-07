@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -1116,7 +1116,7 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Sistema LTI3: [K.C(s) +W(s)].G(s)</string>
+                 <string>Sistema LTI 3: [K.C(s) +W(s)].G(s)</string>
                 </property>
                </item>
                <item>
@@ -1126,7 +1126,7 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Sistema não-linear</string>
+                 <string>Sistema Não-linear</string>
                 </property>
                </item>
               </widget>

@@ -93,6 +93,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     """
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
     """
+
     def __init__(self,parent=None):
         super(LabControl3,self).__init__(parent)
         loadUi('MainWindow.ui', self)
@@ -101,10 +102,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         # Adding toolbar spacer and a Hidden system label:
         empty = QtWidgets.QWidget()
-        self.labelHide = QtWidgets.QLabel()
+
         labelUFSC = QtWidgets.QLabel()
         labelUFSC.setPixmap(QtGui.QPixmap(':/icons_UI/images/ufsc.png'))
-        
+        self.labelHide = QtWidgets.QLabel()
+        self.labelSysToolbar = QtWidgets.QLabel()        
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -114,8 +116,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.labelHide.setFont(font)
         self.labelHide.setText('')
         self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
+        font.setPointSize(11)
+        self.labelSysToolbar.setFont(font)
+        self.labelSysToolbar.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
+
         self.toolBar.insertWidget(self.actionClose,empty)
+        self.toolBar.insertWidget(self.actionClose,self.labelSysToolbar)
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
         self.toolBar.insertWidget(self.actionClose,labelUFSC)
         
@@ -561,6 +568,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             return
+        
+        self.labelSysToolbar.setText('Sistema {s}, {t}'.format(s=sysname, t=self.sysDict[sysname].TypeStr))
         self.updateSystemPNG()                 
 
     def feedbackOpen(self):

@@ -208,17 +208,8 @@ class LTIsystem:
         # the system type.
         if (self.Type == 0):
             self.DLTF_r = (self.G_tf * self.H_tf).minreal(0.0001)
-            #self.CLTF_r = ((self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
-            #self.OLTF_w = ct.tf(1,1)
-            #self.CLTF_w = (1/(1+self.K * self.G_tf * self.H_tf)).minreal(0.0001)
-        elif (self.Type == 1):
+        elif (self.Type == 1 or self.Type == 2):
             self.DLTF_r = (self.C_tf * self.G_tf * self.H_tf).minreal(0.0001)
-            #self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
-            #self.OLTF_w = ct.tf(1,1)
-            #self.CLTF_w = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
-        elif (self.Type == 2):
-            self.DLTF_r = (self.C_tf * self.G_tf * self.H_tf).minreal(0.0001)
-            #self.CLTF_r = ((self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
         
         self.DLTF_poles = self.DLTF_r.poles()
         self.DLTF_zeros = self.DLTF_r.zeros()
@@ -249,6 +240,17 @@ class LTIsystem:
                 YW_tf = (1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
                 UR_tf = ((self.K * self.C_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
                 UW_tf = (-(self.K * self.C_tf * self.H_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf) ).minreal(0.0001)
+        elif (self.Type == 2):
+            if (self.Loop == 'open'):   # Open Loop
+                YR_tf = (self.K * self.C_tf * self.G_tf).minreal(0.0001)    # Y(s)/R(s) transfer function
+                YW_tf = self.G_tf                                           # Y(s)/W(s) transfer function
+                UR_tf = (self.K * self.C_tf).minreal(0.0001)                # U(s)/R(s) transfer function
+                UW_tf = ct.tf(0,1)                                          # U(s)/W(s) transfer function
+            else:   # Closed Loop
+                YR_tf = ((self.K * self.C_tf * self.G_tf)/(1+self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                YW_tf = ((self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                UR_tf = ((self.K * self.C_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)).minreal(0.0001)
+                UW_tf = (-(self.K * self.C_tf * self.G_tf * self.H_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf) ).minreal(0.0001)
         else:
             return 0 # System type not recognized.
         
