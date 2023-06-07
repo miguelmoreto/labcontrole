@@ -1,4 +1,19 @@
-## English Description
+## Released the first beta version of LabControl 3!
+
+Check the Releases section: https://github.com/miguelmoreto/labcontrole/releases
+
+### New Features of LabControl 3
+
+* The user can handle multiple system definitions. A list of systems has been added in the program interface.
+* The user can plot multiple time domain and frequency domain simulations. Iterative lists in the interface makes it possible to select which signals to plot.
+* The plotting of the Nyquist diagram has been improved.
+* In the time domain response, the control action signal is now available to be plotted.
+* Use of the Controls module to handle transfer functions and solve systems (for continuous linear systems).
+* Complete re-structuring of the internal data structure.
+* Improvement of the user interface.
+* New way of configuring the inputs for time domain simulation
+
+## Description
 The LabControl is a simulation software for linear control systems. It is designed to be used as an auxiliary tool for teaching classical control system theory.
 
 LabControl as its own website in Brazilian Portuguese that can be acessed in http://sites.google.com/site/controlelab/
@@ -7,27 +22,15 @@ You can find more information in english using the LabControle Wiki.
 
 Some Screenshots are available https://sites.google.com/site/controlelab/screenshots.
 
-LabControl runs on Windows 7, Windows 8 (32 or 64bits, both from sorce or binaries) and on Linux (from the source code only).
+LabControl runs on Windows (tested only in Windows 10 64bits), and Linux. In order to run from source, it is recommended [Anaconda](https://www.anaconda.com/).
 
-## Descrição em Português
-O LabControle é um simulador de sistemas de controle lineares para ser utilizado como apoio em disciplinas teóricas e práticas de sistemas de controle.
-
-Para maiores informações sobre o projeto, acesse o site do LabControle: http://sites.google.com/site/controlelab/
-
-O LabControle roda em Windows 7, Windows 8 (32 ou 64bits, tando do código fonte como de binários) além de rodar em Linux (pelo código fonte apenas).
-
-## New Features of LabControl 3
-
-* The user can handle and compare multiple systems parameters. A system list was added to the main UI.
-* The user can plot in the same graphic multiple time domain simulations, from different parameters and different systems.
-* The control action signal is available to plot.
-* Using python Controls module to handle transfer functions and solving the system.
-* System data structure completed restrutured.
 
 ## Running from source on Linux
 
 It is recommended to run LabControl3 using the [Anaconda](https://www.anaconda.com/) enviroment.
 In order to run from the python source code, you will need to install de dependencies.
+1. Create a dedicated conda enviroment (optional)
+    1. Switch to that envirioment
 
 1. Install dependencies:
 	1. `conda install numpy scipy matplotlib`
@@ -42,21 +45,15 @@ In order to run from the python source code, you will need to install de depende
 `cd labcontrole`
 
 1. Run the script:
-If using the system instalation, run`./run.sh`
-If using Anaconda enviroment, run `./run_conda.sh` of `~/anaconda3/bin/conda run python LabControl3.py`. If you installed anaconda in another folder, then you will have to change the path acordingly.
+Run`./run.sh` or `python LabControl3.py`
 
 #### Observations: 
 The python [slycot](https://github.com/python-control/Slycot) is needed for LabControl3. If you manage to install it outside Anaconda enviroment, then you will be able to run LabControl3 without Anaconda.
 
-## Binary Distributions
+## Running from source on Windows
 
-### LabControl3
+Use the same steps as Linux instructions above, using de Anaconda Prompt.
 
-Not available yet.
-
-### LabControle 2:
-
-Se Releases section: https://github.com/miguelmoreto/labcontrole/releases
 
 ## About
 
@@ -66,8 +63,8 @@ It depends on the folowing python packges:
 * Matplotlib
 * Scipy
 * Numpy
-* Pyqt5
-* Controls
+* PyQt5
+* Controls (with slycot)
 
 ## Developers
 

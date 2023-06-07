@@ -35,3 +35,7 @@ $ ln -s libstdc++.so.6 libstdc++.so.6.0.19
 https://pyinstaller.org/en/stable/runtime-information.html
 https://pyinstaller.org/en/stable/usage.html
 https://stackoverflow.com/questions/72110384/libgl-error-mesa-loader-failed-to-open-iris
+
+Translation (old commands):
+%WINPYDIR%\Lib\site-packages\PyQt4\pylupdate4.exe -verbose translate.pro
+%WINPYDIR%\Lib\site-packages\PyQt4\lrelease.exe LabControle2_en.ts -qm LabControle2_en.qm
