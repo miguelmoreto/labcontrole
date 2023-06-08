@@ -2897,7 +2897,7 @@ QGroupBox::title {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,1,0,0,0,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -3260,30 +3260,20 @@ Auto</string>
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+            <widget class="QCheckBox" name="checkBoxMargins">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="toolTip">
+              <string>Mostrar as margens de estabilidade no diagrama de Bode.</string>
              </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+             <property name="text">
+              <string>Margens</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
            <item>
             <widget class="QFrame" name="frameBodeNyquist">

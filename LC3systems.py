@@ -173,6 +173,7 @@ class LTIsystem:
     #                   'wG'       : Gain crossing frequency value (rad/s)
     #                   'PM'       : Phase margin value
     #                   'wP'       : Phase crossing frequency value (rad/s)
+    #                   'SMflag'   : Draw Stability Margins flag: True or False.
     FreqResponseData = {'Name':[]}  # The Dictionary to store frequency response data.
     CurrentFreqResponseName = ''
 
@@ -687,6 +688,7 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName]['type'] = self.Type
         # Store this simul infos:
         self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'K': self.K}
+        self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'SMflag': False}
 
     def removeFreqResponse(self, name):
         lg.debug('Removing freq response {s} from sys index {i}'.format(s=name,i=self.Index))

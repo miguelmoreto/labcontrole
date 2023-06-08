@@ -279,6 +279,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
         self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
+        self.checkBoxMargins.stateChanged.connect(self.onCheckBoxMargins)
         # ComboBoxes:
         self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
         self.comboBoxRinit.currentIndexChanged.connect(self.onChangeRinitInputType)
@@ -1010,7 +1011,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.inspectMessageBox.setText(title_text+message_text)
         self.inspectMessageBox.exec()
 
-    def onCheckBoxFreqAuto(self,state):
+    def onCheckBoxFreqAuto(self, state):
         """
         When the user changes the state of the checkbox for enable/disable frequency auto limits.
         """
@@ -1022,6 +1023,24 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[self.sysCurrentName].FreqAuto = False
             self.lineEditFmin.setEnabled(True)
             self.lineEditFmax.setEnabled(True)
+    
+    def onCheckBoxMargins(self, state):
+        """
+        When the user changes the state of the checkbox for enable/disable 
+        the drawing of stability margins in Bode plot.
+        """
+        # TODO
+        # 1 find out which system and freq. response is selected in the list.
+        # TODO decide if this option is global (for all freq. responses)
+        # or independent for echa freq. response.
+        # 2 check if the freq. response is not empty and if the mag and/or
+        #   phase plot are selected.
+        # 3 get the stability margins
+        # 4 get the line color based on the label
+        # 5 plot the lines (if checked) or erase the lines (if unchecked).
+        #   each margin line has a unique label equal to the corresponding
+        #   plot (mag or phase) preceeding with "_" character.
+        print(state)
 
     def onTreeBodeClicked(self,item,column):
         """
