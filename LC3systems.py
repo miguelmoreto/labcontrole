@@ -113,6 +113,7 @@ class LTIsystem:
     dT = 0.1        # Sample period
     NpdT = 20    # Number of points for each dT
     NdT = 100       # Number of discrete periods
+    Umax = 0
 
     
     # Initial states:
@@ -513,6 +514,15 @@ class LTIsystem:
             t_k[k] = k * self.dT
             # Controller diference equation:
             uk = self.K * np.dot(b,E0) - np.dot(a,U0)
+
+            # Apply saturation (if enable):
+            if self.Umax > 0:
+                if (uk > self.Umax):
+                    uk = self.Umax
+                elif (uk < -self.Umax):
+                    uk = -self.Umax
+                else:
+                    pass
             
             U = uk * np.ones(len(t_step)) # input vector   
             # Lsim2 returns the initial condition in the first element
@@ -1011,10 +1021,11 @@ class LTIsystem:
     def NLsysParseString(self, string):
         """
         Parse the string entered by user.
-        The terms DY,Y and U will be substitued by y[1], y[0] and self.u 
+        The terms DY,Y and U will be substitued by y[1], y[0] and u 
         respectivelly.
         After susbstituion, the parsed string is evaluated using the temp
-        vecto y. Is eval fails, this method returns 0, otherwise 1.
+        vector y and value u. Is eval fails, this method returns 0, 
+        otherwise returns 1.
         """
         
         sysstr = ''

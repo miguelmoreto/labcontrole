@@ -25,9 +25,9 @@
     <file>images/diagram2Opened.png</file>
     <file>images/diagram3Closed.png</file>
     <file>images/diagram3Opened.png</file>
-    <file>images/diagram4Closed.png</file>
-    <file>images/diagram4Opened.png</file>
     <file>images/diagram5Closed.png</file>
+    <file>images/diagram4Opened.png</file>
+    <file>images/diagram4Closed.png</file>
     <file>images/diagram5Opened.png</file>
   </qresource>
   <qresource prefix="mpltoolbar">

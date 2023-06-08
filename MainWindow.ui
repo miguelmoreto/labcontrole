@@ -442,7 +442,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Inst.:</string>
+                <string notr="true">Inst.:</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -909,7 +909,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Inst.:</string>
+                <string notr="true">Inst.:</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1166,6 +1166,64 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelUmax">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Valor da saturação (0 para desabilitar).</string>
+               </property>
+               <property name="text">
+                <string notr="true">Umax:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEditUmax">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Valor da saturação (0 para desabilitar).</string>
+               </property>
+               <property name="text">
+                <string notr="true">0</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelTk">
@@ -4781,6 +4839,7 @@ Auto</string>
   <tabstop>doubleSpinBoxWtime</tabstop>
   <tabstop>doubleSpinBoxWnoise</tabstop>
   <tabstop>comboBoxSys</tabstop>
+  <tabstop>lineEditUmax</tabstop>
   <tabstop>doubleSpinBoxTk</tabstop>
   <tabstop>listSystem</tabstop>
   <tabstop>btnSysAdd</tabstop>
@@ -4824,8 +4883,8 @@ Auto</string>
   <tabstop>btnFreqRespInspect</tabstop>
   <tabstop>doubleSpinBoxKmax</tabstop>
   <tabstop>doubleSpinBoxKmin</tabstop>
-  <tabstop>lineEditKlgr</tabstop>
   <tabstop>verticalSliderK</tabstop>
+  <tabstop>lineEditKlgr</tabstop>
   <tabstop>doubleSpinBoxRebd</tabstop>
   <tabstop>doubleSpinBoxRibd</tabstop>
   <tabstop>doubleSpinBoxImbd</tabstop>

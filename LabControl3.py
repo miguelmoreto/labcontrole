@@ -149,8 +149,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditK.setValidator(self.doubleValidator)
         self.lineEditKlgr.setValidator(self.doubleValidator)
         self.lineEditFmin.setValidator(self.doubleValidator)
-        self.lineEditFmax.setValidator(self.doubleValidator)   
-
+        self.lineEditFmax.setValidator(self.doubleValidator)
+        self.lineEditUmax.setValidator(self.doubleValidator)
         # Adding Matplotlib toolbars:
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
         #self.mpltoolbarSimul = CustomNavigationToolbar(self.mplSimul, self)
@@ -333,6 +333,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditCden.textEdited.connect(self.onCdenChange)
         self.lineEditHnum.textEdited.connect(self.onHnumChange)
         self.lineEditHden.textEdited.connect(self.onHdenChange)
+        self.lineEditUmax.textEdited.connect(self.onUmaxChange)
         # Group Boxes:
         self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
         self.groupBoxG.toggled.connect(self.onGroupBoxGcheck)
@@ -516,6 +517,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditWvalueFinal.setText(self.locale.toString(self.sysDict[sysname].Wt_finalValue))
         self.lineEditK.setText(self.locale.toString(self.sysDict[sysname].K))
         self.lineEditKlgr.setText(self.locale.toString(self.sysDict[sysname].K))
+        self.lineEditUmax.setText(self.locale.toString(self.sysDict[sysname].Umax))
         # Update K on UI and perform some calculations:
         self.onKChange(self.locale.toString(self.sysDict[sysname].K))
         # Update the slider limits and tick interval:
@@ -541,6 +543,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(False)
             self.labelPtTk.setEnabled(False)
             self.labelNpT.setEnabled(False)
+            self.labelUmax.setEnabled(False)
+            self.lineEditUmax.setEnabled(False)            
             self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
@@ -556,12 +560,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelNpT.setEnabled(True)
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
+            self.labelUmax.setEnabled(True)
+            self.lineEditUmax.setEnabled(True)
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
-        elif (systype == 4):
+        elif (systype == 4): # Non linear system.
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
+            self.labelPtTk.setEnabled(False)
+            self.labelNpT.setEnabled(False)
+            self.labelUmax.setEnabled(False)
+            self.lineEditUmax.setEnabled(False)             
             self.lineEditGden.hide()
             self.labelGden.hide()
             self.lineEditGnum.setText(self.sysDict[sysname].NL_sysInputString)
@@ -1673,6 +1685,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if self.sysDict[self.sysCurrentName].Type == 3: # Discrete time system type
                 self.onTkChange(self.sysDict[self.sysCurrentName].dT) # Execute the check of NpdT.
 
+    def onUmaxChange(self, value):
+        """
+        Update control signal saturation in discrete time simulation.
+        """
+        self.sysDict[self.sysCurrentName].Umax,_ = self.locale.toDouble(value)
             
     def onTkChange(self, value):
         """
