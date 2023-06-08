@@ -72,23 +72,6 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControl 3</b></p>" \
-            "<p>O LabControl é um software desenvolvido " \
-            "para ser utilizado em atividades de laboratório de " \
-            "disciplinas de Sistemas de Controle.</p>" \
-            "<p>O LabControl 3 foi desenvolvido por Miguel Moreto, " \
-            "professor do Departamento de Engenharia Elétrica da UFSC "\
-            "para uso nos laboratórios da disciplina EEL7063 - Sistemas "\
-            "de Controle.</p>" \
-            "<p>O LabControl 3 é uma atualização do LabControle 2 e foi "\
-            "<p>O foi desenvolvido em linguagem Python 3. "\
-            "Seu código é livre, podendo ser acessado no site:</p>"\
-            "<p><b><a href=\"https://github.com/miguelmoreto/labcontrole\">https://github.com/miguelmoreto/labcontrole</a></b></p>"\
-            "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
-			"<p>Contribuidores:</p>"\
-			"<p>Anderson Livramento</p>"\
-            "<p>Florianópolis, SC, 2020</p>", None)
-
 class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     """
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
