@@ -117,6 +117,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.labelHide.setText('')
         self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         font.setPointSize(11)
+        self.labelSysToolbar.setToolTip(_translate("MainWindow", "Esse é o sistema selecionado no momento.", None))
         self.labelSysToolbar.setFont(font)
         self.labelSysToolbar.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
@@ -362,7 +363,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # HelpWindow events
         self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
         
-        self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
+        self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
         
     def _has_expressions_errors(self):
         result = False
@@ -517,6 +518,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditKlgr.setText(self.locale.toString(self.sysDict[sysname].K))
         # Update K on UI and perform some calculations:
         self.onKChange(self.locale.toString(self.sysDict[sysname].K))
+        # Update the slider limits and tick interval:
+        self.onResLGRchange(self.sysDict[sysname].Kpoints)
 
         self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
 
@@ -583,7 +586,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].Loop = 'open'
         self.sysDict[self.sysCurrentName].updateSystem()
         self.updateSystemPNG()
-        self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
+        #self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
     def feedbackClose(self):
         """Close Feedback """
@@ -593,7 +596,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].updateSystem()
         # Change PNG accordingly:        
         self.updateSystemPNG()
-        self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
+        #self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
 
     def onChangeSystem(self,sysindex):
         """
@@ -604,7 +607,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].changeSystemType(sysindex)
         self.updateUIfromSystem(self.sysCurrentName)
         self.sysDict[self.sysCurrentName].updateSystem()
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))  
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None),3000)  
 
     def onSliderMove(self,value):
         """Slider change event. 
@@ -965,7 +968,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.cursor_to_use = Cursors.SELECT_REGION
         self.mplSimul.draw()
 
-        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None),3000)
         self.statusBar().repaint()        
     
     def onBtnSimulInspect(self):
@@ -1467,7 +1470,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
 
         self.mplBode.draw()
-        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None),3000)
         self.statusBar().repaint()    
 
     def onBtnFreqRespInspect(self):
@@ -1721,7 +1724,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Ploting the root locus.
             self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-', zorder=2)
         
-        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None),3000)
         self.statusBar().repaint()
         
         self.LGRaxis.grid(True)
@@ -1820,7 +1823,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Chage the number of LGR gain points (resolution).
         """
-        self.sysDict[self.sysCurrentName].Kpontos = self.doubleSpinBoxLGRpontos.value()
+        # Update the current system object:
+        self.sysDict[self.sysCurrentName].Kpoints = value
+        # Update the limit of the slider:
+        self.verticalSliderK.setMaximum(int(value))
+        # Update the tick marks to ramain the same (20):
+        self.verticalSliderK.setTickInterval(int(value/20))
         # Update slider position.
         self.updateSliderPosition()
         
@@ -1837,7 +1845,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if not self.sysDict[self.sysCurrentName].Hide:
             txt = _translate("MainWindow", "Polos em MF: ", None) + txt
-            self.statusBar().showMessage(txt)
+            self.statusBar().showMessage(txt,5000)
         
         # Ploting the closed loop (CL) poles:        
         try: # If no RL draw, does nothing. Otherwise, update the CL poles values.
@@ -1945,9 +1953,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxCcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "C(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "C(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None),1000)
         
         self.sysDict[self.sysCurrentName].Cenable = flag
         self._set_expression_active('C[Num](s)', flag)
@@ -1956,9 +1964,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxGcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Genable = flag
         self._set_expression_active('G[Num](s)', flag)
         self._set_expression_active('G[Den](s)', flag)
@@ -1966,9 +1974,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxHcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "H(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "H(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Henable = flag
         self._set_expression_active('H[Num](s)', flag)
         self._set_expression_active('H[Den](s)', flag)
@@ -2002,12 +2010,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             
             if (sysstr):
                 # Change color to green:
-                self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None))
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None),1000)
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
                 self._set_expression_error('f(y,u)', False)
             else:
                 # Wrong input, change color ro red:
-                self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None))
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None),1000)
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
                 self._set_expression_error('f(y,u)', True, '[{}] is not a valid expression'.format(value))
                 
@@ -2149,9 +2157,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: red }")
                 retorno = 0
         if retorno == 0:
-            self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None),1000)
         
         return retorno
 
@@ -2268,7 +2276,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         elif fileName.endswith("LCO"):
             hide = True
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None),5000)
             return
 
         # Pickle object into a string, encode and write to disk:
@@ -2276,7 +2284,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         f.write(base64.b64encode(pickle.dumps(self.sysDict,1)))
         f.close()
         
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None),3000)
         
     def onLoadAction(self):
         """
