@@ -38,6 +38,12 @@ https://pyinstaller.org/en/stable/runtime-information.html
 https://pyinstaller.org/en/stable/usage.html
 https://stackoverflow.com/questions/72110384/libgl-error-mesa-loader-failed-to-open-iris
 
-Translation (old commands):
-%WINPYDIR%\Lib\site-packages\PyQt4\pylupdate4.exe -verbose translate.pro
-%WINPYDIR%\Lib\site-packages\PyQt4\lrelease.exe LabControle2_en.ts -qm LabControle2_en.qm
+
+Translation:
+pylupdate5 MainWindow.ui -ts MainWindow_en.ts
+pylupdate5 HelpWindow.ui -ts HelpWindow_en.ts
+pylupdate5 LabControl3.py -ts LabControle3_en.ts
+
+lrelease MainWindow_en.ts HelpWindow_en.ts -qm LabControl3_en.qm
+
+

@@ -1457,7 +1457,7 @@
                   <string>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</string>
                  </property>
                  <property name="text">
-                  <string>...</string>
+                  <string notr="true">...</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
@@ -1471,7 +1471,7 @@
                   <string>Remove da lisa o sistema selecionado</string>
                  </property>
                  <property name="text">
-                  <string>...</string>
+                  <string notr="true">...</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
@@ -1485,7 +1485,7 @@
                   <string>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</string>
                  </property>
                  <property name="text">
-                  <string>Add</string>
+                  <string notr="true">Add</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
