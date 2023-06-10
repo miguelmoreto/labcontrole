@@ -445,6 +445,11 @@ class LTIsystem:
         else:
             lg.error('r(t) final signal type {t} not recognized.'.format(t=self.Wt_finalType))
 
+        if self.NoiseRt > 0:
+            r = r + np.random.normal(0, self.NoiseRt, self.N)
+        if self.NoiseWt > 0:
+            w = w + np.random.normal(0, self.NoiseWt, self.N)
+
         # Creating Time Simulation Data with the inputs vectors:
         self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w}
     
