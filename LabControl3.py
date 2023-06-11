@@ -213,8 +213,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.addSystem(0)
         self.treeWidgetSimul.setColumnWidth(0, 70)
         self.treeWidgetSimul.setColumnWidth(1, 70)
-        self.treeWidgetBode.setColumnWidth(0, 70)
-        self.treeWidgetBode.setColumnWidth(1, 70)
+        self.treeWidgetFreqResp.setColumnWidth(0, 70)
+        self.treeWidgetFreqResp.setColumnWidth(1, 70)
 
         self.inspectMessageBox = QtWidgets.QMessageBox()
         self.inspectMessageBox.setTextFormat(Qt.MarkdownText)
@@ -289,7 +289,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
         self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
-        self.treeWidgetBode.itemClicked.connect(self.onTreeBodeClicked)
+        self.treeWidgetFreqResp.itemClicked.connect(self.onTreeBodeClicked)
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
@@ -1030,9 +1030,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         the drawing of stability margins in Bode plot.
         """
         # TODO
-        # 1 find out which system and freq. response is selected in the list.
+        # 1 find out which system and freq. response is selected in the list. DONE
         # TODO decide if this option is global (for all freq. responses)
-        # or independent for echa freq. response.
+        # or independent for echa freq. response. DONE: independent
         # 2 check if the freq. response is not empty and if the mag and/or
         #   phase plot are selected.
         # 3 get the stability margins
@@ -1040,7 +1040,67 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # 5 plot the lines (if checked) or erase the lines (if unchecked).
         #   each margin line has a unique label equal to the corresponding
         #   plot (mag or phase) preceeding with "_" character.
-        print(state)
+        # Is the system definition has errors, show the error and finish:
+
+        if state == Qt.Checked:
+            state = True
+        else:
+            state = False
+
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetFreqResp
+        if not selectItemList:
+           # Creating new simulation data:
+           return
+        else:
+            currentItem = selectItemList[0]
+
+        if not currentItem.childCount():  # Check if the freq response item in the list is empty.
+            if currentItem.parent():  # Check if the selected item is a child item.
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+        
+        childCount = currentItem.childCount()
+        # Get the sysname from the list:
+        sysname = currentItem.text(0)
+        # Get the frequency response name:
+        simulname = self.sysDict[sysname].CurrentFreqResponseName
+        # Store the state of the checkbox:
+        self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] = state
+
+        if not childCount: # No frequency response calculated yet.
+            return
+
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
+        if state: # Draw the Stability Margins for the selected freq. response:
+            GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+            wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+            PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+            wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+
+            print(label)
+            print('GM: {g} dB at {w}'.format(g=20*math.log10(GM),w=wP/(2*math.pi)))
+            print('PM: {g} deg at {w}'.format(g=PM,w=wG/(2*math.pi)))
+            print(type(GM))
+            pass
+        else: # Remove the Stability Margins (if exist):
+            pass
+        # for i in range(currentItem.childCount()):
+        #     child = currentItem.child(i)
+        #     if child.text(1) == 'mag': 
+        #         if child.checkState(1) == Qt.Checked: # The mag is checked (a plot exists)
+        #             if state:
+        #                 print('Child {s} checked. Add'.format(s=child.text(1)))
+        #             else:
+        #                 print('Child {s} checked. Remove'.format(s=child.text(1)))
+        #     elif child.text(1) == 'phase':
+        #         if child.checkState(1) == Qt.Checked: # The mag is checked (a plot exists)
+        #             if state: # Add the phase margin:
+        #                 print('Child {s} checked. Add'.format(s=child.text(1)))
+        #             else: # Remove the phase margin
+        #                 print('Child {s} checked. Remove'.format(s=child.text(1)))
+        #     else:
+        #         pass
+
 
     def onTreeBodeClicked(self,item,column):
         """
@@ -1050,10 +1110,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if not parent: # I'am interested in only child itens.
             lg.debug('Clicked in parent: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
             sysname = item.text(0)
-            self.sysDict[sysname].setAtiveFreqResponse(item.text(1))
+            simulname = item.text(1)
+            self.sysDict[sysname].setAtiveFreqResponse(simulname)
             # Updating LineEdits with the frquency limits used in the simulation:
             self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
             self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+            # Update the checkbox to draw (or not) the stability margins:
+            SMflag = self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] # get the value stored
+            self.checkBoxMargins.blockSignals(True) # prevent the execution of checked event handler.
+            self.checkBoxMargins.setChecked(SMflag) # update checkbox
+            self.checkBoxMargins.blockSignals(False)
             return
         sysname = parent.text(0)
 
@@ -1064,6 +1130,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Updating LineEdits with the frquency limits used in the simulation:
         self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
         self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+        # Update the checkbox to draw (or not) the stability margins:
+        SMflag = self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] # get the value stored
+        self.checkBoxMargins.blockSignals(True) # prevent the execution of checked event handler.
+        self.checkBoxMargins.setChecked(SMflag) # update checkbox
+        self.checkBoxMargins.blockSignals(False)
+
         if (column == 1): # The second column has the checkboxes
             label = '{id}:{s}'.format(id=sysname,s=simulname)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
@@ -1121,11 +1193,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Button event handler to add a frequency response to the list.
         """
-        self.treeWidgetBode.clearSelection()
+        self.treeWidgetFreqResp.clearSelection()
         self.sysDict[self.sysCurrentName].addFreqResponse()    # Adding a TimeSimul data to LC3systems object.
         simulname  = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
         lg.debug('Adding a frequency reponse on System {s} with name {n}'.format(s=self.sysCurrentName,n=simulname))
-        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetBode)
+        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetFreqResp)
         currentItem.setText(0, self.sysCurrentName)
         currentItem.setText(1, simulname)
         # Setting a simulation tooltip:
@@ -1143,7 +1215,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             - remove the selected plotted lines from the graph
             - select the previous freq. response and activates it.
         """
-        selectItemList = self.treeWidgetBode.selectedItems()
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
         if not selectItemList:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma responsta em frequência para ser removida.", None))
             return
@@ -1210,7 +1282,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
         
-        root = self.treeWidgetBode.invisibleRootItem()
+        root = self.treeWidgetFreqResp.invisibleRootItem()
         index = root.indexOfChild(currentItem)
         # Select the item above to the one that will be removed (if exists: index > 0):
         if (index > 0):
@@ -1233,8 +1305,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if index:
             # If not index, there is nothing else to select in the treelist
             # Clear list selection:
-            self.treeWidgetBode.clearSelection()
-            self.treeWidgetBode.setCurrentItem(newitem)        
+            self.treeWidgetFreqResp.clearSelection()
+            self.treeWidgetFreqResp.setCurrentItem(newitem)        
     
     def onBtnFreqRespClear(self):
         """
@@ -1245,7 +1317,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             - Clear the graphic area.
         """
         # Remove all the itens in the treewidget:
-        root = self.treeWidgetBode.invisibleRootItem()
+        root = self.treeWidgetFreqResp.invisibleRootItem()
         root.takeChildren()
 
         for key in self.sysDict:
@@ -1277,8 +1349,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         if self.radioBtnBode.isChecked():
             # Unselect bode signals from the list:
-            self.uncheckItens(self.treeWidgetBode,'mag')
-            self.uncheckItens(self.treeWidgetBode,'phase')
+            self.uncheckItens(self.treeWidgetFreqResp,'mag')
+            self.uncheckItens(self.treeWidgetFreqResp,'phase')
             # Clear Bode magnitude and phase axis:
             self.magBodeAxis.cla()
             self.phaseBodeAxis.cla()
@@ -1290,7 +1362,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             # Unselect nyquist signals from the list:
-            self.uncheckItens(self.treeWidgetBode,'nyquist')
+            self.uncheckItens(self.treeWidgetFreqResp,'nyquist')
             self.NyquistAxis.cla()
             self.NyquistAxis.grid(True)
             # Adding the invisible unity circle:
@@ -1338,7 +1410,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if self._has_expressions_errors():
             return
 
-        selectItemList = self.treeWidgetBode.selectedItems()
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
         # Check if a simulation data already exists in the treeWidgetSimul
         if not selectItemList:
            # Creating new simulation data:
@@ -1459,7 +1531,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
         self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
 
-        self.treeWidgetBode.expandAll()
+        self.treeWidgetFreqResp.expandAll()
 
         # Format the plotting area:
         self.mplBode.axes.autoscale()     
@@ -2347,7 +2419,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Remove all the itens in the treewidget:
         rootT = self.treeWidgetSimul.invisibleRootItem()
         rootT.takeChildren()            
-        rootF = self.treeWidgetBode.invisibleRootItem()
+        rootF = self.treeWidgetFreqResp.invisibleRootItem()
         rootF.takeChildren()
         # Update the list with the loaded systems:
         self.sysCounter = -1
@@ -2358,7 +2430,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             #    Updating the time domain simulation list:
             self.addExistingSimulsToList(self.treeWidgetSimul,self.sysDict[sys])
             #    Updating the frequency response list:
-            self.addExistingFreqRespToList(self.treeWidgetBode,self.sysDict[sys])
+            self.addExistingFreqRespToList(self.treeWidgetFreqResp,self.sysDict[sys])
 
         # If exists simulations, selects the first one:
         if rootT.childCount():
@@ -2369,7 +2441,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             item = rootF.child(0)
             item.setSelected(True)
         self.treeWidgetSimul.expandAll()
-        self.treeWidgetBode.expandAll()
+        self.treeWidgetFreqResp.expandAll()
         # Set the first one as the current system:
         self.listSystem.setCurrentRow(0)        # Select the first row.
         item = self.listSystem.currentItem()    # Get the first row item.

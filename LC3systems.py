@@ -758,6 +758,7 @@ class LTIsystem:
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.K * self.DLTF_r,returnall=False)
+        #gm,pm,wpc,wgc = ct.margin(self.K * self.DLTF_r)
         self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = ct.unwrap(phase)
