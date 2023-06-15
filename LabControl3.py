@@ -652,7 +652,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditKlgr.setText(val)
         
         # Draw Closed Loop Poles:
-        self.DrawCloseLoopPoles(value)
+        if self.sysDict[self.sysCurrentName].Type < 3:
+            self.DrawCloseLoopPoles(value)
         # Update slider position.
         self.updateSliderPosition()
     
@@ -1028,20 +1029,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         When the user changes the state of the checkbox for enable/disable 
         the drawing of stability margins in Bode plot.
+        
+        Find out which system and freq. response is selected in the list.
+        Plot the lines (if checked) or erase the lines (if unchecked).
+        Each margin line has a unique label equal to the corresponding
+        plot (mag or phase) preceeding with "_" character.
         """
-        # TODO
-        # 1 find out which system and freq. response is selected in the list. DONE
-        # TODO decide if this option is global (for all freq. responses)
-        # or independent for echa freq. response. DONE: independent
-        # 2 check if the freq. response is not empty and if the mag and/or
-        #   phase plot are selected.
-        # 3 get the stability margins
-        # 4 get the line color based on the label
-        # 5 plot the lines (if checked) or erase the lines (if unchecked).
-        #   each margin line has a unique label equal to the corresponding
-        #   plot (mag or phase) preceeding with "_" character.
-        # Is the system definition has errors, show the error and finish:
-
         if state == Qt.Checked:
             state = True
         else:
@@ -1066,40 +1059,56 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         simulname = self.sysDict[sysname].CurrentFreqResponseName
         # Store the state of the checkbox:
         self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] = state
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
 
         if not childCount: # No frequency response calculated yet.
             return
-
-        label = '{id}:{s}'.format(id=sysname,s=simulname)
+        
         if state: # Draw the Stability Margins for the selected freq. response:
-            GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
-            wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
-            PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
-            wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+            self.plotStabilityMargins(sysname,simulname)
 
-            print(label)
-            print('GM: {g} dB at {w}'.format(g=20*math.log10(GM),w=wP/(2*math.pi)))
-            print('PM: {g} deg at {w}'.format(g=PM,w=wG/(2*math.pi)))
-            print(type(GM))
             pass
         else: # Remove the Stability Margins (if exist):
+            self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
+            self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
             pass
-        # for i in range(currentItem.childCount()):
-        #     child = currentItem.child(i)
-        #     if child.text(1) == 'mag': 
-        #         if child.checkState(1) == Qt.Checked: # The mag is checked (a plot exists)
-        #             if state:
-        #                 print('Child {s} checked. Add'.format(s=child.text(1)))
-        #             else:
-        #                 print('Child {s} checked. Remove'.format(s=child.text(1)))
-        #     elif child.text(1) == 'phase':
-        #         if child.checkState(1) == Qt.Checked: # The mag is checked (a plot exists)
-        #             if state: # Add the phase margin:
-        #                 print('Child {s} checked. Add'.format(s=child.text(1)))
-        #             else: # Remove the phase margin
-        #                 print('Child {s} checked. Remove'.format(s=child.text(1)))
-        #     else:
-        #         pass
+        
+        self.mplBode.draw()
+
+
+    def plotStabilityMargins(self,sysname,simulname,which='both'):
+        """
+        Draw the stability margins in the bode plot, given the system
+        name string and simulname.
+        which : 'both' draws Gain Margin and Stability Margin
+                'GM' draws only the Gain Margin
+                'PM' draws only the Phase Margin
+        """
+
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
+        
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        fP=wP/(2*math.pi) # Phase crossing frequency (where the phase crosses -180 deg)
+        fG = wG/(2*math.pi) # Gain crossing frequency (where the gain crosses 0dB)
+
+        if math.isfinite(GM) and (which == 'GM' or which == 'both'):
+            # Get the color of the magnitude plot line:
+            c = self.getExistingPlotColor(self.magBodeAxis,label)
+            if c: # magnitude plot line exists
+                self.magBodeAxis.semilogx([fP,fP],[0,-20*math.log10(GM)],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+
+        if math.isfinite(PM) and (which == 'PM' or which == 'both'):
+            # Get the color of the phase plot line:
+            c = self.getExistingPlotColor(self.phaseBodeAxis,label)
+            if c: # phase plot line exists
+                self.phaseBodeAxis.semilogx([fG,fG],[-180,-180+PM],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+        #
+        #print('GM: {g} dB at {w}'.format(g=20*math.log10(GM),w=fP))
+        #print('PM: {g} deg at {w}'.format(g=PM,w=wG/(2*math.pi)))
+
 
 
     def onTreeBodeClicked(self,item,column):
@@ -1141,8 +1150,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
                 if signal == 'mag':
                     self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                        self.plotStabilityMargins(sysname,simulname,'GM')
                 elif signal == 'phase':
                     self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                        self.plotStabilityMargins(sysname,simulname,'PM')
                 elif signal == 'nyquist':
                     # Redraw the Nyquist plot.
                     self.plotNyquist(sysname,simulname)                    
@@ -1150,9 +1163,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
                 if signal == 'mag':
-                    self.removeExistingPlot(self.magBodeAxis.axes,label)
+                    self.removeExistingPlot(self.magBodeAxis.axes,label) # Remove the gain line
+                    self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
                 elif signal == 'phase':
-                    self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,label) # Remove the phase line
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
                 elif signal == 'nyquist':
                     # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
                     self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
@@ -1484,6 +1499,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     else:
                         item.setCheckState(1, Qt.Unchecked)
                     #print(signal)
+            if self.checkBoxMargins.isChecked(): # Plot Stability Margins
+                self.plotStabilityMargins(sysname,simulname)
+            else: # Remove Stability Margins if their exists.
+                self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
+                self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
         elif (self.radioBtnNyquist.isChecked() and (childCount == 2 or childCount == 0)):
             self.sysDict[sysname].NyquistGraphLines()
             item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
@@ -1502,10 +1522,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     # Remove the existing ploted line:
                     if signal == 'mag':
                         self.removeExistingPlot(self.magBodeAxis,label)
+                        self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
                         self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                            self.plotStabilityMargins(sysname,simulname,'GM')
                     elif signal == 'phase':
                         self.removeExistingPlot(self.phaseBodeAxis,label)
+                        self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the gain margin marker
                         self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                        if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                            self.plotStabilityMargins(sysname,simulname,'PM')
                     elif signal == 'nyquist':
                         # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
                         self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
@@ -1523,8 +1549,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         self.plotNyquist(sysname,simulname)
 
         # Setting a simulation tooltip:
-        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
-        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        #wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        #wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
+        currentItem.setToolTip(1,'K = {k}\nGM = {g:.3f} dB\nPM = {p:.3f}°'.format(k=self.sysDict[sysname].K,g=20*math.log10(GM),p=PM))
 
         fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
         fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
@@ -2440,6 +2470,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if rootF.childCount():
             item = rootF.child(0)
             item.setSelected(True)
+
+
         self.treeWidgetSimul.expandAll()
         self.treeWidgetFreqResp.expandAll()
         # Set the first one as the current system:
@@ -2450,8 +2482,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Clears the axes:
         self.onBtnSimulClearAxis()
         self.onBtnFreqResponseClearAxis()
-
-
+        if rootF.childCount():
+            # Plot the 0dB line and the -180° line:
+            fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
+            fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
+            self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
+            self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
+            self.mplBode.draw() 
         # if expSys.Hide == False:
         #     pass
 

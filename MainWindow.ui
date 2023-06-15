@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>880</width>
     <height>600</height>
    </rect>
   </property>
@@ -59,7 +59,7 @@
        </font>
       </property>
       <property name="toolTip">
-       <string>Mostra informações do sistema selecionado.</string>
+       <string/>
       </property>
       <property name="currentIndex">
        <number>0</number>
