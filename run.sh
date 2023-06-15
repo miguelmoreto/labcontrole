@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 LabControle2.py
+python3 LabControl3.py
