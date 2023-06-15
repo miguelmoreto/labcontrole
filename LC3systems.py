@@ -174,6 +174,7 @@ class LTIsystem:
     #                   'PM'       : Phase margin value
     #                   'wP'       : Phase crossing frequency value (rad/s)
     #                   'SMflag'   : Draw Stability Margins flag: True or False.
+    #                   'K'        : The direct loop gain used to calculate the freq response.
     FreqResponseData = {'Name':[]}  # The Dictionary to store frequency response data.
     CurrentFreqResponseName = ''
 
@@ -767,6 +768,7 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['PM'] = pm
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wP'] = wpc
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wLimits'] = (omega[0],omega[-1])
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['K'] = self.K
     
     def NyquistGraphLines(self):
         """
