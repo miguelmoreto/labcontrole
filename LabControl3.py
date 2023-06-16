@@ -975,20 +975,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         selectItemList = self.treeWidgetSimul.selectedItems()
         # Check if a simulation data already exists in the treeWidgetSimul
         if selectItemList:
-           # Creating new simulation data:
+            # Getting the selected item:
             currentItem = selectItemList[0]
         else:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação selecionada!", None))
             return
         
-        if currentItem.childCount():  # Check if the simulation item in the list is empty.
-            if currentItem.parent():  # Check if the selected item is not a child item.
-                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
-        else:
+        if currentItem.parent():  # Check if the selected item is not a child item.
+            currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+
+        if not currentItem.childCount():  # Check if the simulation item in the list is empty.
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "A simulação selecionada não possui dados!", None))
             return
-                
-
+        
         sysname = currentItem.text(0)
         simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
         y_max, y_final, e_final, e_final_diff, u_max = self.sysDict[sysname].inspectTimeSimulation(simulname)
@@ -1007,7 +1006,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                   "M<sub>p%</sub> = {mp:.3f}%\n\n" \
                                   "Amortecimento (2<sup>a</sup> ordem): {zt:.3f}", None).format(yf=y_final, yp=y_max,ef=e_final, um=u_max, mp = Mp*100, zt = zeta)
 
-        title_text = _translate("MainWindow", "### Propriedades da simulação {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
+        title_text = _translate("MainWindow", "### Propriedades da resposta temporal\n### {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
 
         self.inspectMessageBox.setText(title_text+message_text)
         self.inspectMessageBox.exec()
@@ -1590,7 +1589,48 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.statusBar().repaint()    
 
     def onBtnFreqRespInspect(self):
-        QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+        """
+        Inspect the selected frequency response and shows in a dialog the analysis.
+        """
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if selectItemList:
+            # Getting the selected item:
+            currentItem = selectItemList[0]
+        else:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma resposta em frequência selecionada!", None))
+            return
+        
+        if currentItem.parent():  # Check if the selected item is not a child item.
+            currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+
+        if not currentItem.childCount():  # Check if the simulation item in the list is empty.
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "A resposta em frequência selecionada não possui dados!", None))
+            return
+        
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        wlimits = self.sysDict[sysname].FreqResponseData[simulname]['info']['wLimits']
+        g0 = self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'][0] # Gain at Fmin
+        p0 = self.sysDict[sysname].FreqResponseData[simulname]['data']['phase'][0] # Phase at Fmin
+        fP=wP/(2*math.pi) # Phase crossing frequency (where the phase crosses -180 deg)
+        fG = wG/(2*math.pi) # Gain crossing frequency (where the gain crosses 0dB)
+        message_text = _translate("MainWindow", "Margem de ganho = {gm:.3f} dB ({gma:.3f})\n\n"\
+                    "Margem de fase = {pm:.3f}°\n\n" \
+                    "Freq. de cruzamento de ganho = {fg:.3f} Hz ({wg:.3f} rad/s)\n\n" \
+                    "Freq. de cruzamento de fase = {fp:.3f} Hz ({wp:.3f} rad/s)\n\n" \
+                    "Fmin = {fmin:.3f} Hz   Fmax = {fmax:.3f} Hz\n\n" \
+                    "Ganho em Fmin = {g0:.3f} dB ({g0a:.3f}) \n\n" \
+                    "Fase em Fmin = {p0:.3f}°", None).format(gm=20*math.log10(GM), gma=GM,pm=PM,fg=fG, wg=wG, fp=fP, wp=wP,fmin=wlimits[0]/(2*math.pi),fmax=wlimits[1]/(2*math.pi),g0=20*math.log10(g0), g0a=g0, p0=p0*180/math.pi)
+
+        title_text = _translate("MainWindow", "### Propriedades da resposta em frequência\n### {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
+
+        self.inspectMessageBox.setText(title_text+message_text)
+        self.inspectMessageBox.exec()
 
     def plotNyquist(self,sysname,simulname):
         """
