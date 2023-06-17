@@ -117,8 +117,8 @@ class LTIsystem:
     X0w = None
 
     # Non linear system simulation stuff:
-    NL_sysString = '0.7*u-0.7*np.square(y[0])'
-    NL_sysInputString = '0.7*U-0.7*np.square(Y)'
+    NL_sysString = '0.7*u-0.7*y[0]**2'#'0.7*u-0.7*np.square(y[0])'
+    NL_sysInputString = '0.7*U-0.7*Y^2'
     NL_order  = 1
 
     # Time Domain simulation data
@@ -1040,10 +1040,13 @@ class LTIsystem:
         self.NL_sysInputString = string
 
         sysstr = string.replace(',','.')
+        sysstr = string.replace('^','**')
+        sysstr = string.replace('e^','math.exp')
+        sysstr = string.replace('sin','math.sin')
+        sysstr = string.replace('cos','math.cos')
         sysstr = sysstr.replace('DY','y[1]')
         sysstr = sysstr.replace('Y','y[0]')
         sysstr = sysstr.replace('U','u')
-        print(sysstr)
         # Test the parsed string:
         try:
             eval(sysstr)

@@ -1914,6 +1914,9 @@ QGroupBox::title {
                 <property name="text">
                  <string notr="true">1</string>
                 </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item row="3" column="0">
@@ -1976,6 +1979,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2130,11 +2136,29 @@ QGroupBox::title {
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="cursor">
+                 <cursorShape>IBeamCursor</cursorShape>
+                </property>
                 <property name="toolTip">
                  <string>Numerador da planta G(s)</string>
                 </property>
+                <property name="locale">
+                 <locale language="English" country="UnitedStates"/>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="inputMask">
+                 <string notr="true"/>
+                </property>
                 <property name="text">
                  <string notr="true">2*s+10</string>
+                </property>
+                <property name="placeholderText">
+                 <string notr="true"/>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2192,6 +2216,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1*s^2+2*s+10</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2352,6 +2379,9 @@ QGroupBox::title {
                 <property name="text">
                  <string notr="true">1</string>
                 </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item row="3" column="0">
@@ -2411,6 +2441,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
