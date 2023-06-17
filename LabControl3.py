@@ -459,12 +459,33 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Updates the User Interface from the parameters stored in the LC3systems object.
         """
-        self.lineEditGnum.setText(self.sysDict[sysname].GnumStr)
-        self.lineEditGden.setText(self.sysDict[sysname].GdenStr)
-        self.lineEditCnum.setText(self.sysDict[sysname].CnumStr)
-        self.lineEditCden.setText(self.sysDict[sysname].CdenStr)
-        self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
-        self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
+        hide = self.sysDict[sysname].Hide
+        if hide:
+            self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
+            self.lineEditGnum.setText('*****')
+            self.lineEditGden.setText('*****')
+            self.lineEditCnum.setText('*****')
+            self.lineEditCden.setText('*****')
+            self.lineEditHnum.setText('*****')
+            self.lineEditHden.setText('*****')
+            # Disable groupboxes:
+            self.groupBoxG.setEnabled(False)
+            self.groupBoxC.setEnabled(False)
+            self.groupBoxH.setEnabled(False)
+            # Disable change system combo box:
+            self.comboBoxSys.setEnabled(False)
+        else:
+            self.lineEditGnum.setText(self.sysDict[sysname].GnumStr)
+            self.lineEditGden.setText(self.sysDict[sysname].GdenStr)
+            self.lineEditCnum.setText(self.sysDict[sysname].CnumStr)
+            self.lineEditCden.setText(self.sysDict[sysname].CdenStr)
+            self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
+            self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
+            self.groupBoxG.setEnabled(True)
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(True)            
+            self.comboBoxSys.setEnabled(True)
+            self.btnPlotLGR.setEnabled(True)
 
         systype = self.sysDict[sysname].Type
         # Comboboxes:
@@ -508,11 +529,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.onResLGRchange(self.sysDict[sysname].Kpoints)
 
         self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
-
-        # System type specific changes in the UI:
         self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
         self.groupBoxG.setChecked(self.sysDict[sysname].Genable)
         self.groupBoxH.setChecked(self.sysDict[sysname].Henable)
+
+        # System type specific changes in the UI:
         if (systype < 3): # LTI system
             if (systype == 0): # LTI system 1 (without C(s))
                 self.groupBoxC.setEnabled(False)
@@ -572,6 +593,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             return
         
+        if hide:
+            # Disable Root Locus button:
+            self.btnPlotLGR.setEnabled(False)
+
         self.labelSysToolbar.setText('Sistema {s}, {t}'.format(s=sysname, t=self.sysDict[sysname].TypeStr))
         self.updateSystemPNG()                 
 
@@ -706,7 +731,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.axes.relim(visible_only=True)
             self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
             self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
-            self.mplSimul.axes.legend(loc='lower left',draggable = True)
+            self.mplSimul.axes.legend(loc='center right',draggable = True)
             self.mplSimul.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -769,7 +794,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
             self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
             self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
-            self.mplSimul.axes.legend(loc='lower left', draggable = True)
+            self.mplSimul.axes.legend(loc='center right', draggable = True)
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -951,7 +976,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetSimul.expandAll()
         
         self.mplSimul.axes.set_xlim(xmin = 0)
-        self.mplSimul.axes.legend(loc='lower left',draggable=True)
+        self.mplSimul.axes.legend(loc='center right',draggable=True)
         # Format the plotting area:
         self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
         self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
@@ -1186,8 +1211,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 lg.debug('Item check state not changed.')
                 return
         
-            self.magBodeAxis.legend(loc='upper right', draggable = True)
-            self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+            self.magBodeAxis.legend(loc='center right', draggable = True)
+            self.phaseBodeAxis.legend(loc='center right', draggable = True)
             self.NyquistAxis.legend(loc='upper right', draggable = True)
 
             # Format the plotting area:
@@ -1278,8 +1303,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point                    
                 #self.removeExistingPlot(self.mplSimul.axes,label)
         # Redraw the graphic area:
-        self.magBodeAxis.legend(loc='upper right', draggable = True)
-        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+        self.magBodeAxis.legend(loc='center right', draggable = True)
+        self.phaseBodeAxis.legend(loc='center right', draggable = True)
         self.NyquistAxis.legend(loc='upper right', draggable = True)
 
         # Format the plotting area:
@@ -1555,10 +1580,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
         currentItem.setToolTip(1,'K = {k}\nGM = {g:.3f} dB\nPM = {p:.3f}°'.format(k=self.sysDict[sysname].K,g=20*math.log10(GM),p=PM))
 
-        fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
-        fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
-        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
-        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
+        fmin = self.sysDict[sysname].Fmin
+        fmax = self.sysDict[sysname].Fmax
+        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
 
         self.treeWidgetFreqResp.expandAll()
 
@@ -1567,9 +1592,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.NyquistAxis.grid(True)
-        self.magBodeAxis.legend(loc='upper right', draggable = True)
-        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
-        self.NyquistAxis.legend(loc='upper right', draggable = True)
+        self.magBodeAxis.legend(loc='center right', draggable = True)
+        self.phaseBodeAxis.legend(loc='center right', draggable = True)
+        self.NyquistAxis.legend(loc='center right', draggable = True)
         self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
         self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
         self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
@@ -2475,7 +2500,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if not fileName:
             return
-        
+
+        if fileName.endswith("LCN"):
+            hide = False
+        elif fileName.endswith("LCO"):
+            hide = True
+        else:
+            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None),5000)
+            return        
        
         # Read encoded string from file:
         f = open(fileName, 'rb')
@@ -2495,6 +2527,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysCounter = -1
         for sys in self.sysDict:
             self.sysCounter = self.sysCounter + 1
+            if hide: # Set the Hide flag if it is the case.
+                self.sysDict[sys].Hide = True
             sysname = self.sysDict[sys].Name
             self.listSystem.addItem(sysname)
             #    Updating the time domain simulation list:
@@ -2511,7 +2545,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             item = rootF.child(0)
             item.setSelected(True)
 
-
         self.treeWidgetSimul.expandAll()
         self.treeWidgetFreqResp.expandAll()
         # Set the first one as the current system:
@@ -2523,61 +2556,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.onBtnSimulClearAxis()
         self.onBtnFreqResponseClearAxis()
         if rootF.childCount():
-            # Plot the 0dB line and the -180° line:
-            fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
-            fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
-            self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
-            self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
-            self.mplBode.draw() 
-        # if expSys.Hide == False:
-        #     pass
-
-        # elif expSys.Hide == True:
-        #     self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
-        #     # Update feedback switch
-        #     if expSys.Malha == 'Aberta':
-        #         self.radioBtnOpen.setChecked(True)
-        #     else:
-        #         self.radioBtnClose.setChecked(True)                 
-        #     # Update system type and SVG:                        
-        #     self.sys.Type = expSys.Type
-        #     self.sys.Malha = expSys.Malha
-        #     self.comboBoxSys.setCurrentIndex(expSys.Type)
-        #     self.onChangeSystem(expSys.Type)
-        #     # Update groupboxes checkboxes:
-        #     self.groupBoxG.setChecked(expSys.Genabled)
-        #     self.groupBoxC.setChecked(expSys.Cenabled)
-        #     self.groupBoxH.setChecked(expSys.Henabled)            
-
-        #     # Call the callbacks to update system.
-        #     self.onGnumChange(expSys.Gnum)
-        #     self.onGdenChange(expSys.Gden)
-        #     self.onCnumChange(expSys.Cnum)
-        #     self.onCdenChange(expSys.Cden)
-        #     self.onHnumChange(expSys.Hnum)
-        #     self.onHdenChange(expSys.Hden)
-            
-        #     # Update gain
-        #     self.lineEditK.setText(str(expSys.K))
-            
-        #     #self.onChangeSystem(expSys.Type)
-       
-        #     # Update UI:
-        #     self.lineEditGnum.setText('*****')
-        #     self.lineEditGden.setText('*****')
-        #     self.lineEditCnum.setText('*****')
-        #     self.lineEditCden.setText('*****')
-        #     self.lineEditHnum.setText('*****')
-        #     self.lineEditHden.setText('*****')
-        #     # Disable groupboxes:
-        #     self.groupBoxG.setEnabled(False) #setHidden
-        #     self.groupBoxC.setEnabled(False)
-        #     self.groupBoxH.setEnabled(False)
-        #     # Disable Root Locus button:
-        #     self.btnPlotLGR.setEnabled(False)
-
-        #     # Disable change system combo box:
-        #     self.comboBoxSys.setEnabled(False)
+            # Plot the 0 dB line and the -180° line:
+            fmin = self.sysDict[self.sysCurrentName].Fmin
+            fmax = self.sysDict[self.sysCurrentName].Fmax
+            self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+            self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
+            self.mplBode.draw()
 
 
     def addExistingSimulsToList(self,treeWidget,sys):

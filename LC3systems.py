@@ -42,16 +42,12 @@ class LTIsystem:
     Henable = False     # Flag to indicate if transfer function H(s) is enabled or not
     
     DLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
-    #CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
     DLTF_poles = np.array([])
     DLTF_zeros = np.array([])
     DLTF_num_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function numerator
     DLTF_den_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function denominator
-    #OLTF_w = ct.tf(1,1) # Open Loop Transfer Function for w input
-    #CLTF_w = ct.tf(1,1) # Closed Loop Transfer Function for w input    
     
     TM = ct.tf(1,1) # Transfer Matrix (MIMO system)
-    #TM = ct.tf(1,1) # Closed Loop Transfer Matrix (MIMO system)
 
     #     Initial values:
     NL_e0 = 0.0                     # Initial error value (C(s) input)
@@ -63,7 +59,7 @@ class LTIsystem:
     Type = 0    # system type.
     Index = 0   # System index within a list.
     Name = ''
-    TypeStrList = ['LTI_1','LTI_2', 'LTI_3', 'DTS', 'NLS']    # List with string for the system types.
+    TypeStrList = ['LTI 1','LTI 2', 'LTI 3', 'DTS', 'NLS']    # List with string for the system types.
     TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
@@ -306,11 +302,11 @@ class LTIsystem:
         # Format simul name string. The simulation number is 1 plus the last one:
         self.CurrentTimeSimId = self.TimeSimCounter
         if self.Type < 3:
-            self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'LTI {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         elif self.Type == 3:
-            self.CurrentSimulName = 'DTS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'DTS {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         elif self.Type == 4:
-            self.CurrentSimulName = 'NLS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'NLS {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
         self.TimeSimData[self.CurrentSimulName] = {}
         # Store this simul ID:
