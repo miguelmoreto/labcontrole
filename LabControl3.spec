@@ -8,7 +8,7 @@ a = Analysis(
     ['LabControl3.py'],
     pathex=[],
     binaries=[],
-    datas=[('MainWindow.ui', '.'), ('HelpWindow.ui', '.'), ('matplotlibwidget.py', '.'), ('./help/*', './help')],
+    datas=[],
     hiddenimports=['PyQt5.sip'],
     hookspath=[],
     hooksconfig={},
