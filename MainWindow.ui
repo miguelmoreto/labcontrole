@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>880</width>
     <height>600</height>
    </rect>
   </property>
@@ -57,6 +57,9 @@
         <weight>50</weight>
         <bold>false</bold>
        </font>
+      </property>
+      <property name="toolTip">
+       <string/>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -215,6 +218,9 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Tipo do sinal de referência durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</string>
+               </property>
                <item>
                 <property name="text">
                  <string>Constante</string>
@@ -275,7 +281,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Valor inicial da entrada r(t)</string>
+                <string>Valor do parâmetro do sinal referência durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</string>
                </property>
                <property name="inputMethodHints">
                 <set>Qt::ImhNone</set>
@@ -338,6 +344,9 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Tipo do sinal de referência durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</string>
+               </property>
                <item>
                 <property name="text">
                  <string>Constante</string>
@@ -397,6 +406,9 @@
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="toolTip">
+                <string>Valor do parâmetro do sinal referência durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</string>
+               </property>
                <property name="text">
                 <string notr="true">1</string>
                </property>
@@ -430,7 +442,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Inst.:</string>
+                <string notr="true">Inst.:</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -465,7 +477,8 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Instante de tempo em que a entrada será aplicada</string>
+                <string>Instante de tempo em que ocorre a mudança da entrada
+ do período inicial para o final.</string>
                </property>
                <property name="suffix">
                 <string notr="true"> s</string>
@@ -544,7 +557,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Desvio padrão do ruído a ser aplicado na entrada r(t)</string>
+                <string>Desvio padrão do ruído a ser aplicado na entrada r(t).</string>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -679,6 +692,9 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Tipo do sinal de perturbação durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</string>
+               </property>
                <item>
                 <property name="text">
                  <string>Constante</string>
@@ -739,7 +755,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Valor do degrau ou função do tempo da perturbação</string>
+                <string>Valor do parâmetro do sinal perturbação durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</string>
                </property>
                <property name="text">
                 <string notr="true">0</string>
@@ -794,6 +810,9 @@
                  <width>16777215</width>
                  <height>25</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string>Tipo do sinal de perturbação durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</string>
                </property>
                <item>
                 <property name="text">
@@ -854,6 +873,9 @@
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="toolTip">
+                <string>Valor do parâmetro do sinal perturbação durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</string>
+               </property>
                <property name="text">
                 <string notr="true">0</string>
                </property>
@@ -887,7 +909,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Inst.:</string>
+                <string notr="true">Inst.:</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -922,7 +944,8 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Instante de tempo em que a perturbação será aplicada</string>
+                <string>Instante de tempo em que ocorre a mudança da entrada
+ do período inicial para o final.</string>
                </property>
                <property name="suffix">
                 <string notr="true"> s</string>
@@ -1001,7 +1024,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Desvio padrão do ruído a ser aplicado na entrada w(t)</string>
+                <string>Desvio padrão do ruído a ser aplicado na entrada w(t).</string>
                </property>
                <property name="decimals">
                 <number>3</number>
@@ -1099,7 +1122,7 @@
                 </size>
                </property>
                <property name="toolTip">
-                <string>Seleção do tipo de sistema a ser analisado</string>
+                <string>Seleção do tipo de sistema a ser analisado.</string>
                </property>
                <property name="sizeAdjustPolicy">
                 <enum>QComboBox::AdjustToContents</enum>
@@ -1143,6 +1166,64 @@
                 </size>
                </property>
               </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelUmax">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Valor da saturação (0 para desabilitar).</string>
+               </property>
+               <property name="text">
+                <string notr="true">Umax:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEditUmax">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Valor da saturação (0 para desabilitar).</string>
+               </property>
+               <property name="text">
+                <string notr="true">0</string>
+               </property>
+              </widget>
              </item>
              <item>
               <widget class="QLabel" name="labelTk">
@@ -1216,7 +1297,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Taxa de amostragem do sistema discreto em segundos.</string>
+                <string>Período de amostragem do sistema discreto em segundos.</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -1260,7 +1341,7 @@
                 </font>
                </property>
                <property name="toolTip">
-                <string>Número de pontos por T na simulação discreta.</string>
+                <string>Número de pontos por T usado na simulação discreta.</string>
                </property>
                <property name="text">
                 <string>Pontos/T:</string>
@@ -1376,7 +1457,7 @@
                   <string>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</string>
                  </property>
                  <property name="text">
-                  <string>...</string>
+                  <string notr="true">...</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
@@ -1390,7 +1471,7 @@
                   <string>Remove da lisa o sistema selecionado</string>
                  </property>
                  <property name="text">
-                  <string>...</string>
+                  <string notr="true">...</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
@@ -1404,7 +1485,7 @@
                   <string>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</string>
                  </property>
                  <property name="text">
-                  <string>Add</string>
+                  <string notr="true">Add</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">
@@ -1430,6 +1511,9 @@
               <width>0</width>
               <height>230</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Diagrama de blocos do sistema selecionado.</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::NoFrame</enum>
@@ -1830,6 +1914,9 @@ QGroupBox::title {
                 <property name="text">
                  <string notr="true">1</string>
                 </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item row="3" column="0">
@@ -1892,6 +1979,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2046,11 +2136,29 @@ QGroupBox::title {
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="cursor">
+                 <cursorShape>IBeamCursor</cursorShape>
+                </property>
                 <property name="toolTip">
                  <string>Numerador da planta G(s)</string>
                 </property>
+                <property name="locale">
+                 <locale language="English" country="UnitedStates"/>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="inputMask">
+                 <string notr="true"/>
+                </property>
                 <property name="text">
                  <string notr="true">2*s+10</string>
+                </property>
+                <property name="placeholderText">
+                 <string notr="true"/>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2108,6 +2216,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1*s^2+2*s+10</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2268,6 +2379,9 @@ QGroupBox::title {
                 <property name="text">
                  <string notr="true">1</string>
                 </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
               <item row="3" column="0">
@@ -2327,6 +2441,9 @@ QGroupBox::title {
                 </property>
                 <property name="text">
                  <string notr="true">1</string>
+                </property>
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -2813,7 +2930,7 @@ QGroupBox::title {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,1,0,0,0,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
            <property name="spacing">
             <number>4</number>
            </property>
@@ -3176,30 +3293,20 @@ Auto</string>
             </widget>
            </item>
            <item>
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+            <widget class="QCheckBox" name="checkBoxMargins">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
+             <property name="toolTip">
+              <string>Mostrar as margens de estabilidade no diagrama de Bode.</string>
              </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+             <property name="text">
+              <string>Margens</string>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
+            </widget>
            </item>
            <item>
             <widget class="QFrame" name="frameBodeNyquist">
@@ -3308,7 +3415,7 @@ Auto</string>
               </font>
              </property>
              <property name="toolTip">
-              <string>Limpar a área do gráfico</string>
+              <string>Limpar a área do gráfico (sem apagar os dados).</string>
              </property>
              <property name="text">
               <string>Limpar</string>
@@ -3380,7 +3487,7 @@ Auto</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QTreeWidget" name="treeWidgetBode">
+              <widget class="QTreeWidget" name="treeWidgetFreqResp">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -3737,7 +3844,7 @@ Auto</string>
                  </font>
                 </property>
                 <property name="toolTip">
-                 <string>Valor da restrição de tempo de resposta</string>
+                 <string>Valor da restrição de tempo de resposta.</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -3819,7 +3926,7 @@ Auto</string>
                  </font>
                 </property>
                 <property name="toolTip">
-                 <string>Valor da restrição de tempo de pico</string>
+                 <string>Valor da restrição de tempo de pico.</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -3986,7 +4093,7 @@ Auto</string>
                  </font>
                 </property>
                 <property name="toolTip">
-                 <string>Ajuste de ganho de malha direta K</string>
+                 <string>Ajuste de ganho de malha direta K.</string>
                 </property>
                 <property name="maximum">
                  <number>200</number>
@@ -4066,7 +4173,7 @@ Auto</string>
                  </font>
                 </property>
                 <property name="toolTip">
-                 <string>Valor da restrição de sobressinal percentual</string>
+                 <string>Valor da restrição de sobressinal percentual.</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -4254,7 +4361,7 @@ Auto</string>
                  </font>
                 </property>
                 <property name="toolTip">
-                 <string>Número de pontos para o traçado do LGR</string>
+                 <string>Número de pontos para o traçado do LGR.</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -4301,7 +4408,7 @@ Auto</string>
               </font>
              </property>
              <property name="toolTip">
-              <string>Traçar o Lugar Geomátrico das Raízes</string>
+              <string>Traçar o Lugar Geomátrico das Raízes.</string>
              </property>
              <property name="text">
               <string>Traçar LGR</string>
@@ -4324,7 +4431,7 @@ Auto</string>
               </font>
              </property>
              <property name="toolTip">
-              <string>Limpar a área do gráfico</string>
+              <string>Limpar a área do gráfico.</string>
              </property>
              <property name="text">
               <string>Limpar</string>
@@ -4617,6 +4724,10 @@ Auto</string>
               <bold>true</bold>
              </font>
             </property>
+            <property name="toolTip">
+             <string>Mostra o valor dos pontos de separação
+ e o correspondente ganho.</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -4736,6 +4847,78 @@ Auto</string>
    <header>matplotlibwidget</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>comboBoxRinit</tabstop>
+  <tabstop>lineEditRvalueInit</tabstop>
+  <tabstop>comboBoxRfinal</tabstop>
+  <tabstop>lineEditRvalueFinal</tabstop>
+  <tabstop>doubleSpinBoxRtime</tabstop>
+  <tabstop>doubleSpinBoxRnoise</tabstop>
+  <tabstop>comboBoxWinit</tabstop>
+  <tabstop>lineEditWvalueInit</tabstop>
+  <tabstop>comboBoxWfinal</tabstop>
+  <tabstop>lineEditWvalueFinal</tabstop>
+  <tabstop>doubleSpinBoxWtime</tabstop>
+  <tabstop>doubleSpinBoxWnoise</tabstop>
+  <tabstop>comboBoxSys</tabstop>
+  <tabstop>lineEditUmax</tabstop>
+  <tabstop>doubleSpinBoxTk</tabstop>
+  <tabstop>listSystem</tabstop>
+  <tabstop>btnSysAdd</tabstop>
+  <tabstop>btnSysRemove</tabstop>
+  <tabstop>btnSysClear</tabstop>
+  <tabstop>radioBtnOpen</tabstop>
+  <tabstop>radioBtnClose</tabstop>
+  <tabstop>lineEditK</tabstop>
+  <tabstop>groupBoxC</tabstop>
+  <tabstop>lineEditCnum</tabstop>
+  <tabstop>lineEditCden</tabstop>
+  <tabstop>groupBoxG</tabstop>
+  <tabstop>lineEditGnum</tabstop>
+  <tabstop>lineEditGden</tabstop>
+  <tabstop>groupBoxH</tabstop>
+  <tabstop>lineEditHnum</tabstop>
+  <tabstop>lineEditHden</tabstop>
+  <tabstop>doubleSpinBoxTmax</tabstop>
+  <tabstop>doubleSpinBoxResT</tabstop>
+  <tabstop>btnSimulClearAxis</tabstop>
+  <tabstop>btnSimul</tabstop>
+  <tabstop>treeWidgetSimul</tabstop>
+  <tabstop>btnSimulAdd</tabstop>
+  <tabstop>btnSimulRemove</tabstop>
+  <tabstop>btnSimulClear</tabstop>
+  <tabstop>btnSimulInspect</tabstop>
+  <tabstop>checkBoxFreqAuto</tabstop>
+  <tabstop>lineEditFmin</tabstop>
+  <tabstop>lineEditFmax</tabstop>
+  <tabstop>doubleSpinFreqRes</tabstop>
+  <tabstop>radioBtnCirc1</tabstop>
+  <tabstop>radioBtnFreqNeg</tabstop>
+  <tabstop>radioBtnBode</tabstop>
+  <tabstop>radioBtnNyquist</tabstop>
+  <tabstop>btnFreqResponseClearAxis</tabstop>
+  <tabstop>btnPlotFreqResponse</tabstop>
+  <tabstop>treeWidgetFreqResp</tabstop>
+  <tabstop>btnFreqRespAdd</tabstop>
+  <tabstop>btnFreqRespRemove</tabstop>
+  <tabstop>btnFreqRespClear</tabstop>
+  <tabstop>btnFreqRespInspect</tabstop>
+  <tabstop>doubleSpinBoxKmax</tabstop>
+  <tabstop>doubleSpinBoxKmin</tabstop>
+  <tabstop>verticalSliderK</tabstop>
+  <tabstop>lineEditKlgr</tabstop>
+  <tabstop>doubleSpinBoxRebd</tabstop>
+  <tabstop>doubleSpinBoxRibd</tabstop>
+  <tabstop>doubleSpinBoxImbd</tabstop>
+  <tabstop>doubleSpinBoxLGRpontos</tabstop>
+  <tabstop>btnPlotLGR</tabstop>
+  <tabstop>btnLGRclear</tabstop>
+  <tabstop>listWidgetOLpoles</tabstop>
+  <tabstop>listWidgetOLzeros</tabstop>
+  <tabstop>listWidgetCLpoles</tabstop>
+  <tabstop>listWidgetRLpoints</tabstop>
+ </tabstops>
  <resources>
   <include location="images.qrc"/>
  </resources>

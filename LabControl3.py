@@ -72,23 +72,6 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtWidgets.QApplication.translate(context, text, disambig)
 
-MESSAGE = _translate("MainWindow", "<p><b>Sobre o LabControl 3</b></p>" \
-            "<p>O LabControl é um software desenvolvido " \
-            "para ser utilizado em atividades de laboratório de " \
-            "disciplinas de Sistemas de Controle.</p>" \
-            "<p>O LabControl 3 foi desenvolvido por Miguel Moreto, " \
-            "professor do Departamento de Engenharia Elétrica da UFSC "\
-            "para uso nos laboratórios da disciplina EEL7063 - Sistemas "\
-            "de Controle.</p>" \
-            "<p>O LabControl 3 é uma atualização do LabControle 2 e foi "\
-            "<p>O foi desenvolvido em linguagem Python 3. "\
-            "Seu código é livre, podendo ser acessado no site:</p>"\
-            "<p><b><a href=\"https://github.com/miguelmoreto/labcontrole\">https://github.com/miguelmoreto/labcontrole</a></b></p>"\
-            "<p>Contribua enviando sugestões e relatórios de bugs (issues)!</p>"\
-			"<p>Contribuidores:</p>"\
-			"<p>Anderson Livramento</p>"\
-            "<p>Florianópolis, SC, 2020</p>", None)
-
 class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     """
     hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
@@ -117,6 +100,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.labelHide.setText('')
         self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         font.setPointSize(11)
+        self.labelSysToolbar.setToolTip(_translate("MainWindow", "Esse é o sistema selecionado no momento.", None))
         self.labelSysToolbar.setFont(font)
         self.labelSysToolbar.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
@@ -148,8 +132,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditK.setValidator(self.doubleValidator)
         self.lineEditKlgr.setValidator(self.doubleValidator)
         self.lineEditFmin.setValidator(self.doubleValidator)
-        self.lineEditFmax.setValidator(self.doubleValidator)   
-
+        self.lineEditFmax.setValidator(self.doubleValidator)
+        self.lineEditUmax.setValidator(self.doubleValidator)
         # Adding Matplotlib toolbars:
         self.mpltoolbarSimul = NavigationToolbar(self.mplSimul, self)
         #self.mpltoolbarSimul = CustomNavigationToolbar(self.mplSimul, self)
@@ -229,8 +213,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.addSystem(0)
         self.treeWidgetSimul.setColumnWidth(0, 70)
         self.treeWidgetSimul.setColumnWidth(1, 70)
-        self.treeWidgetBode.setColumnWidth(0, 70)
-        self.treeWidgetBode.setColumnWidth(1, 70)
+        self.treeWidgetFreqResp.setColumnWidth(0, 70)
+        self.treeWidgetFreqResp.setColumnWidth(1, 70)
 
         self.inspectMessageBox = QtWidgets.QMessageBox()
         self.inspectMessageBox.setTextFormat(Qt.MarkdownText)
@@ -295,6 +279,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
         self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
+        self.checkBoxMargins.stateChanged.connect(self.onCheckBoxMargins)
         # ComboBoxes:
         self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
         self.comboBoxRinit.currentIndexChanged.connect(self.onChangeRinitInputType)
@@ -304,7 +289,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Lists:
         self.listSystem.itemClicked.connect(self.onSysItemClicked)
         self.treeWidgetSimul.itemClicked.connect(self.onTreeSimulClicked)
-        self.treeWidgetBode.itemClicked.connect(self.onTreeBodeClicked)
+        self.treeWidgetFreqResp.itemClicked.connect(self.onTreeBodeClicked)
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
@@ -332,6 +317,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditCden.textEdited.connect(self.onCdenChange)
         self.lineEditHnum.textEdited.connect(self.onHnumChange)
         self.lineEditHden.textEdited.connect(self.onHdenChange)
+        self.lineEditUmax.textEdited.connect(self.onUmaxChange)
         # Group Boxes:
         self.groupBoxC.toggled.connect(self.onGroupBoxCcheck)
         self.groupBoxG.toggled.connect(self.onGroupBoxGcheck)
@@ -362,7 +348,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # HelpWindow events
         self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
         
-        self.statusBar().showMessage(_translate("MainWindow", "Pronto.", None))        
+        self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
         
     def _has_expressions_errors(self):
         result = False
@@ -473,12 +459,33 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Updates the User Interface from the parameters stored in the LC3systems object.
         """
-        self.lineEditGnum.setText(self.sysDict[sysname].GnumStr)
-        self.lineEditGden.setText(self.sysDict[sysname].GdenStr)
-        self.lineEditCnum.setText(self.sysDict[sysname].CnumStr)
-        self.lineEditCden.setText(self.sysDict[sysname].CdenStr)
-        self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
-        self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
+        hide = self.sysDict[sysname].Hide
+        if hide:
+            self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
+            self.lineEditGnum.setText('*****')
+            self.lineEditGden.setText('*****')
+            self.lineEditCnum.setText('*****')
+            self.lineEditCden.setText('*****')
+            self.lineEditHnum.setText('*****')
+            self.lineEditHden.setText('*****')
+            # Disable groupboxes:
+            self.groupBoxG.setEnabled(False)
+            self.groupBoxC.setEnabled(False)
+            self.groupBoxH.setEnabled(False)
+            # Disable change system combo box:
+            self.comboBoxSys.setEnabled(False)
+        else:
+            self.lineEditGnum.setText(self.sysDict[sysname].GnumStr)
+            self.lineEditGden.setText(self.sysDict[sysname].GdenStr)
+            self.lineEditCnum.setText(self.sysDict[sysname].CnumStr)
+            self.lineEditCden.setText(self.sysDict[sysname].CdenStr)
+            self.lineEditHnum.setText(self.sysDict[sysname].HnumStr)
+            self.lineEditHden.setText(self.sysDict[sysname].HdenStr)
+            self.groupBoxG.setEnabled(True)
+            self.groupBoxC.setEnabled(True)
+            self.groupBoxH.setEnabled(True)            
+            self.comboBoxSys.setEnabled(True)
+            self.btnPlotLGR.setEnabled(True)
 
         systype = self.sysDict[sysname].Type
         # Comboboxes:
@@ -515,15 +522,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditWvalueFinal.setText(self.locale.toString(self.sysDict[sysname].Wt_finalValue))
         self.lineEditK.setText(self.locale.toString(self.sysDict[sysname].K))
         self.lineEditKlgr.setText(self.locale.toString(self.sysDict[sysname].K))
+        self.lineEditUmax.setText(self.locale.toString(self.sysDict[sysname].Umax))
         # Update K on UI and perform some calculations:
         self.onKChange(self.locale.toString(self.sysDict[sysname].K))
+        # Update the slider limits and tick interval:
+        self.onResLGRchange(self.sysDict[sysname].Kpoints)
 
         self.checkBoxFreqAuto.setChecked(self.sysDict[sysname].FreqAuto)
-
-        # System type specific changes in the UI:
         self.groupBoxC.setChecked(self.sysDict[sysname].Cenable)
         self.groupBoxG.setChecked(self.sysDict[sysname].Genable)
         self.groupBoxH.setChecked(self.sysDict[sysname].Henable)
+
+        # System type specific changes in the UI:
         if (systype < 3): # LTI system
             if (systype == 0): # LTI system 1 (without C(s))
                 self.groupBoxC.setEnabled(False)
@@ -538,6 +548,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.doubleSpinBoxTk.setEnabled(False)
             self.labelPtTk.setEnabled(False)
             self.labelNpT.setEnabled(False)
+            self.labelUmax.setEnabled(False)
+            self.lineEditUmax.setEnabled(False)            
             self.btnPlotFreqResponse.setEnabled(True)
             self.btnPlotLGR.setEnabled(True)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(s)", None)) 
@@ -553,12 +565,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.labelNpT.setEnabled(True)
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
+            self.labelUmax.setEnabled(True)
+            self.lineEditUmax.setEnabled(True)
             self.btnPlotFreqResponse.setEnabled(False)
             self.btnPlotLGR.setEnabled(False)
             self.groupBoxC.setTitle(_translate("MainWindow", "Controlador C(z)", None))
-        elif (systype == 4):
+        elif (systype == 4): # Non linear system.
             self.groupBoxC.setEnabled(True)
             self.groupBoxH.setEnabled(False)
+            self.labelTk.setEnabled(False)
+            self.doubleSpinBoxTk.setEnabled(False)
+            self.labelPtTk.setEnabled(False)
+            self.labelNpT.setEnabled(False)
+            self.labelUmax.setEnabled(False)
+            self.lineEditUmax.setEnabled(False)             
             self.lineEditGden.hide()
             self.labelGden.hide()
             self.lineEditGnum.setText(self.sysDict[sysname].NL_sysInputString)
@@ -573,6 +593,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Aviso!", None), _translate("MainWindow", "Sistema ainda não implementado!", None))
             return
         
+        if hide:
+            # Disable Root Locus button:
+            self.btnPlotLGR.setEnabled(False)
+
         self.labelSysToolbar.setText('Sistema {s}, {t}'.format(s=sysname, t=self.sysDict[sysname].TypeStr))
         self.updateSystemPNG()                 
 
@@ -583,7 +607,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].Loop = 'open'
         self.sysDict[self.sysCurrentName].updateSystem()
         self.updateSystemPNG()
-        self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
+        #self.statusBar().showMessage(_translate("MainWindow", "Malha aberta.", None))
     
     def feedbackClose(self):
         """Close Feedback """
@@ -593,7 +617,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].updateSystem()
         # Change PNG accordingly:        
         self.updateSystemPNG()
-        self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
+        #self.statusBar().showMessage(_translate("MainWindow", "Malha fechada.", None))
 
     def onChangeSystem(self,sysindex):
         """
@@ -604,7 +628,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[self.sysCurrentName].changeSystemType(sysindex)
         self.updateUIfromSystem(self.sysCurrentName)
         self.sysDict[self.sysCurrentName].updateSystem()
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None))  
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema alterado.", None),3000)  
 
     def onSliderMove(self,value):
         """Slider change event. 
@@ -653,7 +677,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditKlgr.setText(val)
         
         # Draw Closed Loop Poles:
-        self.DrawCloseLoopPoles(value)
+        if self.sysDict[self.sysCurrentName].Type < 3:
+            self.DrawCloseLoopPoles(value)
         # Update slider position.
         self.updateSliderPosition()
     
@@ -706,7 +731,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.axes.relim(visible_only=True)
             self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
             self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
-            self.mplSimul.axes.legend(loc='lower left',draggable = True)
+            self.mplSimul.axes.legend(loc='center right',draggable = True)
             self.mplSimul.draw()
         else:
             lg.info('Not clicked in the checkbox.')
@@ -769,7 +794,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
             self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
             self.mplSimul.axes.autoscale(enable=True, axis='y',tight=False)
-            self.mplSimul.axes.legend(loc='lower left', draggable = True)
+            self.mplSimul.axes.legend(loc='center right', draggable = True)
             self.mplSimul.draw()
         
         # Remove simulation data from the LC3systems object:
@@ -951,7 +976,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetSimul.expandAll()
         
         self.mplSimul.axes.set_xlim(xmin = 0)
-        self.mplSimul.axes.legend(loc='lower left',draggable=True)
+        self.mplSimul.axes.legend(loc='center right',draggable=True)
         # Format the plotting area:
         self.mplSimul.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
         self.mplSimul.axes.autoscale(enable=True, axis='x',tight=True)
@@ -965,7 +990,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.cursor_to_use = Cursors.SELECT_REGION
         self.mplSimul.draw()
 
-        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Simulação concluída.", None),3000)
         self.statusBar().repaint()        
     
     def onBtnSimulInspect(self):
@@ -975,20 +1000,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         selectItemList = self.treeWidgetSimul.selectedItems()
         # Check if a simulation data already exists in the treeWidgetSimul
         if selectItemList:
-           # Creating new simulation data:
+            # Getting the selected item:
             currentItem = selectItemList[0]
         else:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma simulação selecionada!", None))
             return
         
-        if currentItem.childCount():  # Check if the simulation item in the list is empty.
-            if currentItem.parent():  # Check if the selected item is not a child item.
-                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
-        else:
+        if currentItem.parent():  # Check if the selected item is not a child item.
+            currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+
+        if not currentItem.childCount():  # Check if the simulation item in the list is empty.
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "A simulação selecionada não possui dados!", None))
             return
-                
-
+        
         sysname = currentItem.text(0)
         simulname = self.sysDict[sysname].CurrentSimulName # Get the simulname
         y_max, y_final, e_final, e_final_diff, u_max = self.sysDict[sysname].inspectTimeSimulation(simulname)
@@ -1007,12 +1031,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                   "M<sub>p%</sub> = {mp:.3f}%\n\n" \
                                   "Amortecimento (2<sup>a</sup> ordem): {zt:.3f}", None).format(yf=y_final, yp=y_max,ef=e_final, um=u_max, mp = Mp*100, zt = zeta)
 
-        title_text = _translate("MainWindow", "### Propriedades da simulação {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
+        title_text = _translate("MainWindow", "### Propriedades da resposta temporal\n### {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
 
         self.inspectMessageBox.setText(title_text+message_text)
         self.inspectMessageBox.exec()
 
-    def onCheckBoxFreqAuto(self,state):
+    def onCheckBoxFreqAuto(self, state):
         """
         When the user changes the state of the checkbox for enable/disable frequency auto limits.
         """
@@ -1024,6 +1048,92 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[self.sysCurrentName].FreqAuto = False
             self.lineEditFmin.setEnabled(True)
             self.lineEditFmax.setEnabled(True)
+    
+    def onCheckBoxMargins(self, state):
+        """
+        When the user changes the state of the checkbox for enable/disable 
+        the drawing of stability margins in Bode plot.
+        
+        Find out which system and freq. response is selected in the list.
+        Plot the lines (if checked) or erase the lines (if unchecked).
+        Each margin line has a unique label equal to the corresponding
+        plot (mag or phase) preceeding with "_" character.
+        """
+        if state == Qt.Checked:
+            state = True
+        else:
+            state = False
+
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetFreqResp
+        if not selectItemList:
+           # Creating new simulation data:
+           return
+        else:
+            currentItem = selectItemList[0]
+
+        if not currentItem.childCount():  # Check if the freq response item in the list is empty.
+            if currentItem.parent():  # Check if the selected item is a child item.
+                currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+        
+        childCount = currentItem.childCount()
+        # Get the sysname from the list:
+        sysname = currentItem.text(0)
+        # Get the frequency response name:
+        simulname = self.sysDict[sysname].CurrentFreqResponseName
+        # Store the state of the checkbox:
+        self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] = state
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
+
+        if not childCount: # No frequency response calculated yet.
+            return
+        
+        if state: # Draw the Stability Margins for the selected freq. response:
+            self.plotStabilityMargins(sysname,simulname)
+
+            pass
+        else: # Remove the Stability Margins (if exist):
+            self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
+            self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
+            pass
+        
+        self.mplBode.draw()
+
+
+    def plotStabilityMargins(self,sysname,simulname,which='both'):
+        """
+        Draw the stability margins in the bode plot, given the system
+        name string and simulname.
+        which : 'both' draws Gain Margin and Stability Margin
+                'GM' draws only the Gain Margin
+                'PM' draws only the Phase Margin
+        """
+
+        label = '{id}:{s}'.format(id=sysname,s=simulname)
+        
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        fP=wP/(2*math.pi) # Phase crossing frequency (where the phase crosses -180 deg)
+        fG = wG/(2*math.pi) # Gain crossing frequency (where the gain crosses 0dB)
+
+        if math.isfinite(GM) and (which == 'GM' or which == 'both'):
+            # Get the color of the magnitude plot line:
+            c = self.getExistingPlotColor(self.magBodeAxis,label)
+            if c: # magnitude plot line exists
+                self.magBodeAxis.semilogx([fP,fP],[0,-20*math.log10(GM)],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+
+        if math.isfinite(PM) and (which == 'PM' or which == 'both'):
+            # Get the color of the phase plot line:
+            c = self.getExistingPlotColor(self.phaseBodeAxis,label)
+            if c: # phase plot line exists
+                self.phaseBodeAxis.semilogx([fG,fG],[-180,-180+PM],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+        #
+        #print('GM: {g} dB at {w}'.format(g=20*math.log10(GM),w=fP))
+        #print('PM: {g} deg at {w}'.format(g=PM,w=wG/(2*math.pi)))
+
+
 
     def onTreeBodeClicked(self,item,column):
         """
@@ -1033,10 +1143,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if not parent: # I'am interested in only child itens.
             lg.debug('Clicked in parent: sys {s} simul {sm}'.format(s=item.text(0),sm=item.text(1)))
             sysname = item.text(0)
-            self.sysDict[sysname].setAtiveFreqResponse(item.text(1))
+            simulname = item.text(1)
+            self.sysDict[sysname].setAtiveFreqResponse(simulname)
             # Updating LineEdits with the frquency limits used in the simulation:
             self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
             self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+            # Update the checkbox to draw (or not) the stability margins:
+            SMflag = self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] # get the value stored
+            self.checkBoxMargins.blockSignals(True) # prevent the execution of checked event handler.
+            self.checkBoxMargins.setChecked(SMflag) # update checkbox
+            self.checkBoxMargins.blockSignals(False)
             return
         sysname = parent.text(0)
 
@@ -1047,13 +1163,23 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Updating LineEdits with the frquency limits used in the simulation:
         self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
         self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
+        # Update the checkbox to draw (or not) the stability margins:
+        SMflag = self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] # get the value stored
+        self.checkBoxMargins.blockSignals(True) # prevent the execution of checked event handler.
+        self.checkBoxMargins.setChecked(SMflag) # update checkbox
+        self.checkBoxMargins.blockSignals(False)
+
         if (column == 1): # The second column has the checkboxes
             label = '{id}:{s}'.format(id=sysname,s=simulname)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
                 if signal == 'mag':
-                    self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                        self.plotStabilityMargins(sysname,simulname,'GM')
                 elif signal == 'phase':
                     self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                        self.plotStabilityMargins(sysname,simulname,'PM')
                 elif signal == 'nyquist':
                     # Redraw the Nyquist plot.
                     self.plotNyquist(sysname,simulname)                    
@@ -1061,9 +1187,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 item.setCheckState(1,Qt.Checked)
             elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
                 if signal == 'mag':
-                    self.removeExistingPlot(self.magBodeAxis.axes,label)
+                    self.removeExistingPlot(self.magBodeAxis.axes,label) # Remove the gain line
+                    self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
                 elif signal == 'phase':
-                    self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,label) # Remove the phase line
+                    self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
                 elif signal == 'nyquist':
                     # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
                     self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
@@ -1083,8 +1211,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 lg.debug('Item check state not changed.')
                 return
         
-            self.magBodeAxis.legend(loc='upper right', draggable = True)
-            self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+            self.magBodeAxis.legend(loc='center right', draggable = True)
+            self.phaseBodeAxis.legend(loc='center right', draggable = True)
             self.NyquistAxis.legend(loc='upper right', draggable = True)
 
             # Format the plotting area:
@@ -1104,11 +1232,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Button event handler to add a frequency response to the list.
         """
-        self.treeWidgetBode.clearSelection()
+        self.treeWidgetFreqResp.clearSelection()
         self.sysDict[self.sysCurrentName].addFreqResponse()    # Adding a TimeSimul data to LC3systems object.
         simulname  = self.sysDict[self.sysCurrentName].CurrentFreqResponseName
         lg.debug('Adding a frequency reponse on System {s} with name {n}'.format(s=self.sysCurrentName,n=simulname))
-        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetBode)
+        currentItem = QtWidgets.QTreeWidgetItem(self.treeWidgetFreqResp)
         currentItem.setText(0, self.sysCurrentName)
         currentItem.setText(1, simulname)
         # Setting a simulation tooltip:
@@ -1126,7 +1254,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             - remove the selected plotted lines from the graph
             - select the previous freq. response and activates it.
         """
-        selectItemList = self.treeWidgetBode.selectedItems()
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
         if not selectItemList:
             QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma responsta em frequência para ser removida.", None))
             return
@@ -1175,8 +1303,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point                    
                 #self.removeExistingPlot(self.mplSimul.axes,label)
         # Redraw the graphic area:
-        self.magBodeAxis.legend(loc='upper right', draggable = True)
-        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
+        self.magBodeAxis.legend(loc='center right', draggable = True)
+        self.phaseBodeAxis.legend(loc='center right', draggable = True)
         self.NyquistAxis.legend(loc='upper right', draggable = True)
 
         # Format the plotting area:
@@ -1193,7 +1321,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
         
-        root = self.treeWidgetBode.invisibleRootItem()
+        root = self.treeWidgetFreqResp.invisibleRootItem()
         index = root.indexOfChild(currentItem)
         # Select the item above to the one that will be removed (if exists: index > 0):
         if (index > 0):
@@ -1216,8 +1344,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if index:
             # If not index, there is nothing else to select in the treelist
             # Clear list selection:
-            self.treeWidgetBode.clearSelection()
-            self.treeWidgetBode.setCurrentItem(newitem)        
+            self.treeWidgetFreqResp.clearSelection()
+            self.treeWidgetFreqResp.setCurrentItem(newitem)        
     
     def onBtnFreqRespClear(self):
         """
@@ -1228,7 +1356,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             - Clear the graphic area.
         """
         # Remove all the itens in the treewidget:
-        root = self.treeWidgetBode.invisibleRootItem()
+        root = self.treeWidgetFreqResp.invisibleRootItem()
         root.takeChildren()
 
         for key in self.sysDict:
@@ -1260,8 +1388,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         if self.radioBtnBode.isChecked():
             # Unselect bode signals from the list:
-            self.uncheckItens(self.treeWidgetBode,'mag')
-            self.uncheckItens(self.treeWidgetBode,'phase')
+            self.uncheckItens(self.treeWidgetFreqResp,'mag')
+            self.uncheckItens(self.treeWidgetFreqResp,'phase')
             # Clear Bode magnitude and phase axis:
             self.magBodeAxis.cla()
             self.phaseBodeAxis.cla()
@@ -1273,7 +1401,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             # Unselect nyquist signals from the list:
-            self.uncheckItens(self.treeWidgetBode,'nyquist')
+            self.uncheckItens(self.treeWidgetFreqResp,'nyquist')
             self.NyquistAxis.cla()
             self.NyquistAxis.grid(True)
             # Adding the invisible unity circle:
@@ -1321,7 +1449,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if self._has_expressions_errors():
             return
 
-        selectItemList = self.treeWidgetBode.selectedItems()
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
         # Check if a simulation data already exists in the treeWidgetSimul
         if not selectItemList:
            # Creating new simulation data:
@@ -1388,13 +1516,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     if signal in ['mag','phase']:   # magnitude and phase are checked by default.
                         label = '{id}:{s}'.format(id=sysname,s=simulname)
                         if signal == 'mag':
-                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
                         elif signal == 'phase':
                             self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
                         item.setCheckState(1, Qt.Checked)
                     else:
                         item.setCheckState(1, Qt.Unchecked)
                     #print(signal)
+            if self.checkBoxMargins.isChecked(): # Plot Stability Margins
+                self.plotStabilityMargins(sysname,simulname)
+            else: # Remove Stability Margins if their exists.
+                self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
+                self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
         elif (self.radioBtnNyquist.isChecked() and (childCount == 2 or childCount == 0)):
             self.sysDict[sysname].NyquistGraphLines()
             item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
@@ -1413,10 +1546,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     # Remove the existing ploted line:
                     if signal == 'mag':
                         self.removeExistingPlot(self.magBodeAxis,label)
-                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                            self.plotStabilityMargins(sysname,simulname,'GM')
                     elif signal == 'phase':
                         self.removeExistingPlot(self.phaseBodeAxis,label)
+                        self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the gain margin marker
                         self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                        if self.checkBoxMargins.isChecked(): # Plot Gain Margin
+                            self.plotStabilityMargins(sysname,simulname,'PM')
                     elif signal == 'nyquist':
                         # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
                         self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
@@ -1434,24 +1573,28 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         self.plotNyquist(sysname,simulname)
 
         # Setting a simulation tooltip:
-        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[self.sysCurrentName].Name,t=self.sysDict[self.sysCurrentName].TypeStr))
-        currentItem.setToolTip(1,'K={k}'.format(k=self.sysDict[self.sysCurrentName].K))
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        #wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        #wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
+        currentItem.setToolTip(1,'K = {k}\nGM = {g:.3f} dB\nPM = {p:.3f}°'.format(k=self.sysDict[sysname].K,g=20*math.log10(GM),p=PM))
 
-        fmin = self.sysDict[sysname].Fmin#/(numpy.pi*2)
-        fmax = self.sysDict[sysname].Fmax#/(numpy.pi*2)
-        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')#,'k--')
-        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')#,'k--')
+        fmin = self.sysDict[sysname].Fmin
+        fmax = self.sysDict[sysname].Fmax
+        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+        self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
 
-        self.treeWidgetBode.expandAll()
+        self.treeWidgetFreqResp.expandAll()
 
         # Format the plotting area:
         self.mplBode.axes.autoscale()     
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.NyquistAxis.grid(True)
-        self.magBodeAxis.legend(loc='upper right', draggable = True)
-        self.phaseBodeAxis.legend(loc='upper right', draggable = True)
-        self.NyquistAxis.legend(loc='upper right', draggable = True)
+        self.magBodeAxis.legend(loc='center right', draggable = True)
+        self.phaseBodeAxis.legend(loc='center right', draggable = True)
+        self.NyquistAxis.legend(loc='center right', draggable = True)
         self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
         self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
         self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
@@ -1467,11 +1610,52 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
 
         self.mplBode.draw()
-        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None),3000)
         self.statusBar().repaint()    
 
     def onBtnFreqRespInspect(self):
-        QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Funcionalidade ainda não implementada.", None))
+        """
+        Inspect the selected frequency response and shows in a dialog the analysis.
+        """
+        selectItemList = self.treeWidgetFreqResp.selectedItems()
+        # Check if a simulation data already exists in the treeWidgetSimul
+        if selectItemList:
+            # Getting the selected item:
+            currentItem = selectItemList[0]
+        else:
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Nenhuma resposta em frequência selecionada!", None))
+            return
+        
+        if currentItem.parent():  # Check if the selected item is not a child item.
+            currentItem = currentItem.parent() # The selected item was a child item. Using the parent item.
+
+        if not currentItem.childCount():  # Check if the simulation item in the list is empty.
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "A resposta em frequência selecionada não possui dados!", None))
+            return
+        
+        sysname = currentItem.text(0)
+        simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
+        GM = self.sysDict[sysname].FreqResponseData[simulname]['info']['GM']
+        wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
+        PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
+        wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
+        wlimits = self.sysDict[sysname].FreqResponseData[simulname]['info']['wLimits']
+        g0 = self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'][0] # Gain at Fmin
+        p0 = self.sysDict[sysname].FreqResponseData[simulname]['data']['phase'][0] # Phase at Fmin
+        fP=wP/(2*math.pi) # Phase crossing frequency (where the phase crosses -180 deg)
+        fG = wG/(2*math.pi) # Gain crossing frequency (where the gain crosses 0dB)
+        message_text = _translate("MainWindow", "Margem de ganho = {gm:.3f} dB ({gma:.3f})\n\n"\
+                    "Margem de fase = {pm:.3f}°\n\n" \
+                    "Freq. de cruzamento de ganho = {fg:.3f} Hz ({wg:.3f} rad/s)\n\n" \
+                    "Freq. de cruzamento de fase = {fp:.3f} Hz ({wp:.3f} rad/s)\n\n" \
+                    "Fmin = {fmin:.3f} Hz   Fmax = {fmax:.3f} Hz\n\n" \
+                    "Ganho em Fmin = {g0:.3f} dB ({g0a:.3f}) \n\n" \
+                    "Fase em Fmin = {p0:.3f}°", None).format(gm=20*math.log10(GM), gma=GM,pm=PM,fg=fG, wg=wG, fp=fP, wp=wP,fmin=wlimits[0]/(2*math.pi),fmax=wlimits[1]/(2*math.pi),g0=20*math.log10(g0), g0a=g0, p0=p0*180/math.pi)
+
+        title_text = _translate("MainWindow", "### Propriedades da resposta em frequência\n### {sys}:{s}\n\n", None).format(s=simulname,sys=sysname)
+
+        self.inspectMessageBox.setText(title_text+message_text)
+        self.inspectMessageBox.exec()
 
     def plotNyquist(self,sysname,simulname):
         """
@@ -1670,6 +1854,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if self.sysDict[self.sysCurrentName].Type == 3: # Discrete time system type
                 self.onTkChange(self.sysDict[self.sysCurrentName].dT) # Execute the check of NpdT.
 
+    def onUmaxChange(self, value):
+        """
+        Update control signal saturation in discrete time simulation.
+        """
+        self.sysDict[self.sysCurrentName].Umax,_ = self.locale.toDouble(value)
             
     def onTkChange(self, value):
         """
@@ -1721,7 +1910,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Ploting the root locus.
             self.LGRaxis.plot(numpy.real(col), numpy.imag(col), '-', zorder=2)
         
-        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Concluído.", None),3000)
         self.statusBar().repaint()
         
         self.LGRaxis.grid(True)
@@ -1820,7 +2009,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         Chage the number of LGR gain points (resolution).
         """
-        self.sysDict[self.sysCurrentName].Kpontos = self.doubleSpinBoxLGRpontos.value()
+        # Update the current system object:
+        self.sysDict[self.sysCurrentName].Kpoints = value
+        # Update the limit of the slider:
+        self.verticalSliderK.setMaximum(int(value))
+        # Update the tick marks to ramain the same (20):
+        self.verticalSliderK.setTickInterval(int(value/20))
         # Update slider position.
         self.updateSliderPosition()
         
@@ -1837,7 +2031,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if not self.sysDict[self.sysCurrentName].Hide:
             txt = _translate("MainWindow", "Polos em MF: ", None) + txt
-            self.statusBar().showMessage(txt)
+            self.statusBar().showMessage(txt,5000)
         
         # Ploting the closed loop (CL) poles:        
         try: # If no RL draw, does nothing. Otherwise, update the CL poles values.
@@ -1945,9 +2139,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxCcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "C(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "C(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None),1000)
         
         self.sysDict[self.sysCurrentName].Cenable = flag
         self._set_expression_active('C[Num](s)', flag)
@@ -1956,9 +2150,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxGcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "G(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Genable = flag
         self._set_expression_active('G[Num](s)', flag)
         self._set_expression_active('G[Den](s)', flag)
@@ -1966,9 +2160,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onGroupBoxHcheck(self,flag):
         
         if (flag == False):
-            self.statusBar().showMessage(_translate("MainWindow", "H(s) desativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "H(s) desativada.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Henable = flag
         self._set_expression_active('H[Num](s)', flag)
         self._set_expression_active('H[Den](s)', flag)
@@ -2002,12 +2196,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             
             if (sysstr):
                 # Change color to green:
-                self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None))
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão válida!", None),1000)
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
                 self._set_expression_error('f(y,u)', False)
             else:
                 # Wrong input, change color ro red:
-                self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None))
+                self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None),1000)
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
                 self._set_expression_error('f(y,u)', True, '[{}] is not a valid expression'.format(value))
                 
@@ -2149,9 +2343,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 #self.lineEditRvalue.setStyleSheet("QLineEdit { background-color: red }")
                 retorno = 0
         if retorno == 0:
-            self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida.", None),1000)
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Expressão válida.", None),1000)
         
         return retorno
 
@@ -2268,7 +2462,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         elif fileName.endswith("LCO"):
             hide = True
         else:
-            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None))
+            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None),5000)
             return
 
         # Pickle object into a string, encode and write to disk:
@@ -2276,7 +2470,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         f.write(base64.b64encode(pickle.dumps(self.sysDict,1)))
         f.close()
         
-        self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None))
+        self.statusBar().showMessage(_translate("MainWindow", "Sistema salvo.", None),3000)
         
     def onLoadAction(self):
         """
@@ -2306,7 +2500,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         if not fileName:
             return
-        
+
+        if fileName.endswith("LCN"):
+            hide = False
+        elif fileName.endswith("LCO"):
+            hide = True
+        else:
+            self.statusBar().showMessage(_translate("MainWindow", "Tipo de arquivo não reconhecido.", None),5000)
+            return        
        
         # Read encoded string from file:
         f = open(fileName, 'rb')
@@ -2320,18 +2521,20 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Remove all the itens in the treewidget:
         rootT = self.treeWidgetSimul.invisibleRootItem()
         rootT.takeChildren()            
-        rootF = self.treeWidgetBode.invisibleRootItem()
+        rootF = self.treeWidgetFreqResp.invisibleRootItem()
         rootF.takeChildren()
         # Update the list with the loaded systems:
         self.sysCounter = -1
         for sys in self.sysDict:
             self.sysCounter = self.sysCounter + 1
+            if hide: # Set the Hide flag if it is the case.
+                self.sysDict[sys].Hide = True
             sysname = self.sysDict[sys].Name
             self.listSystem.addItem(sysname)
             #    Updating the time domain simulation list:
             self.addExistingSimulsToList(self.treeWidgetSimul,self.sysDict[sys])
             #    Updating the frequency response list:
-            self.addExistingFreqRespToList(self.treeWidgetBode,self.sysDict[sys])
+            self.addExistingFreqRespToList(self.treeWidgetFreqResp,self.sysDict[sys])
 
         # If exists simulations, selects the first one:
         if rootT.childCount():
@@ -2341,8 +2544,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if rootF.childCount():
             item = rootF.child(0)
             item.setSelected(True)
+
         self.treeWidgetSimul.expandAll()
-        self.treeWidgetBode.expandAll()
+        self.treeWidgetFreqResp.expandAll()
         # Set the first one as the current system:
         self.listSystem.setCurrentRow(0)        # Select the first row.
         item = self.listSystem.currentItem()    # Get the first row item.
@@ -2351,57 +2555,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Clears the axes:
         self.onBtnSimulClearAxis()
         self.onBtnFreqResponseClearAxis()
-
-
-        # if expSys.Hide == False:
-        #     pass
-
-        # elif expSys.Hide == True:
-        #     self.labelHide.setText(_translate("MainWindow", "Modo Oculto", None))
-        #     # Update feedback switch
-        #     if expSys.Malha == 'Aberta':
-        #         self.radioBtnOpen.setChecked(True)
-        #     else:
-        #         self.radioBtnClose.setChecked(True)                 
-        #     # Update system type and SVG:                        
-        #     self.sys.Type = expSys.Type
-        #     self.sys.Malha = expSys.Malha
-        #     self.comboBoxSys.setCurrentIndex(expSys.Type)
-        #     self.onChangeSystem(expSys.Type)
-        #     # Update groupboxes checkboxes:
-        #     self.groupBoxG.setChecked(expSys.Genabled)
-        #     self.groupBoxC.setChecked(expSys.Cenabled)
-        #     self.groupBoxH.setChecked(expSys.Henabled)            
-
-        #     # Call the callbacks to update system.
-        #     self.onGnumChange(expSys.Gnum)
-        #     self.onGdenChange(expSys.Gden)
-        #     self.onCnumChange(expSys.Cnum)
-        #     self.onCdenChange(expSys.Cden)
-        #     self.onHnumChange(expSys.Hnum)
-        #     self.onHdenChange(expSys.Hden)
-            
-        #     # Update gain
-        #     self.lineEditK.setText(str(expSys.K))
-            
-        #     #self.onChangeSystem(expSys.Type)
-       
-        #     # Update UI:
-        #     self.lineEditGnum.setText('*****')
-        #     self.lineEditGden.setText('*****')
-        #     self.lineEditCnum.setText('*****')
-        #     self.lineEditCden.setText('*****')
-        #     self.lineEditHnum.setText('*****')
-        #     self.lineEditHden.setText('*****')
-        #     # Disable groupboxes:
-        #     self.groupBoxG.setEnabled(False) #setHidden
-        #     self.groupBoxC.setEnabled(False)
-        #     self.groupBoxH.setEnabled(False)
-        #     # Disable Root Locus button:
-        #     self.btnPlotLGR.setEnabled(False)
-
-        #     # Disable change system combo box:
-        #     self.comboBoxSys.setEnabled(False)
+        if rootF.childCount():
+            # Plot the 0 dB line and the -180° line:
+            fmin = self.sysDict[self.sysCurrentName].Fmin
+            fmax = self.sysDict[self.sysCurrentName].Fmax
+            self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+            self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
+            self.mplBode.draw()
 
 
     def addExistingSimulsToList(self,treeWidget,sys):

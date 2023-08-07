@@ -42,16 +42,12 @@ class LTIsystem:
     Henable = False     # Flag to indicate if transfer function H(s) is enabled or not
     
     DLTF_r = ct.tf(1,1) # Open Loop Transfer Function for r input
-    #CLTF_r = ct.tf(1,1) # Closed Loop Transfer Function for r input
     DLTF_poles = np.array([])
     DLTF_zeros = np.array([])
     DLTF_num_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function numerator
     DLTF_den_poly = np.poly1d([]) # Polynomial object for the Direct Loop transfer function denominator
-    #OLTF_w = ct.tf(1,1) # Open Loop Transfer Function for w input
-    #CLTF_w = ct.tf(1,1) # Closed Loop Transfer Function for w input    
     
     TM = ct.tf(1,1) # Transfer Matrix (MIMO system)
-    #TM = ct.tf(1,1) # Closed Loop Transfer Matrix (MIMO system)
 
     #     Initial values:
     NL_e0 = 0.0                     # Initial error value (C(s) input)
@@ -63,7 +59,7 @@ class LTIsystem:
     Type = 0    # system type.
     Index = 0   # System index within a list.
     Name = ''
-    TypeStrList = ['LTI_1','LTI_2', 'LTI_3', 'DTS', 'NLS']    # List with string for the system types.
+    TypeStrList = ['LTI 1','LTI 2', 'LTI 3', 'DTS', 'NLS']    # List with string for the system types.
     TypeStr = ''    # String with the current system type string.
 
     # Inputs (reference and perturbation):
@@ -113,6 +109,7 @@ class LTIsystem:
     dT = 0.1        # Sample period
     NpdT = 20    # Number of points for each dT
     NdT = 100       # Number of discrete periods
+    Umax = 0
 
     
     # Initial states:
@@ -120,8 +117,8 @@ class LTIsystem:
     X0w = None
 
     # Non linear system simulation stuff:
-    NL_sysString = '0.7*u-0.7*np.square(y[0])'
-    NL_sysInputString = '0.7*U-0.7*np.square(Y)'
+    NL_sysString = '0.7*u-0.7*y[0]**2'#'0.7*u-0.7*np.square(y[0])'
+    NL_sysInputString = '0.7*U-0.7*Y^2'
     NL_order  = 1
 
     # Time Domain simulation data
@@ -172,6 +169,8 @@ class LTIsystem:
     #                   'wG'       : Gain crossing frequency value (rad/s)
     #                   'PM'       : Phase margin value
     #                   'wP'       : Phase crossing frequency value (rad/s)
+    #                   'SMflag'   : Draw Stability Margins flag: True or False.
+    #                   'K'        : The direct loop gain used to calculate the freq response.
     FreqResponseData = {'Name':[]}  # The Dictionary to store frequency response data.
     CurrentFreqResponseName = ''
 
@@ -303,11 +302,11 @@ class LTIsystem:
         # Format simul name string. The simulation number is 1 plus the last one:
         self.CurrentTimeSimId = self.TimeSimCounter
         if self.Type < 3:
-            self.CurrentSimulName = 'LTI_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'LTI {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         elif self.Type == 3:
-            self.CurrentSimulName = 'DTS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'DTS {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         elif self.Type == 4:
-            self.CurrentSimulName = 'NLS_{t}:{i}'.format(t=self.Type,i=self.CurrentTimeSimId)
+            self.CurrentSimulName = 'NLS {t}:{i}'.format(t=self.Type+1,i=self.CurrentTimeSimId)
         self.TimeSimData['Name'].append(self.CurrentSimulName)
         self.TimeSimData[self.CurrentSimulName] = {}
         # Store this simul ID:
@@ -443,6 +442,11 @@ class LTIsystem:
         else:
             lg.error('r(t) final signal type {t} not recognized.'.format(t=self.Wt_finalType))
 
+        if self.NoiseRt > 0:
+            r = r + np.random.normal(0, self.NoiseRt, self.N)
+        if self.NoiseWt > 0:
+            w = w + np.random.normal(0, self.NoiseWt, self.N)
+
         # Creating Time Simulation Data with the inputs vectors:
         self.TimeSimData[self.CurrentSimulName]['data'] = {'time':time,'r(t)':r,'w(t)':w}
     
@@ -513,6 +517,15 @@ class LTIsystem:
             t_k[k] = k * self.dT
             # Controller diference equation:
             uk = self.K * np.dot(b,E0) - np.dot(a,U0)
+
+            # Apply saturation (if enable):
+            if self.Umax > 0:
+                if (uk > self.Umax):
+                    uk = self.Umax
+                elif (uk < -self.Umax):
+                    uk = -self.Umax
+                else:
+                    pass
             
             U = uk * np.ones(len(t_step)) # input vector   
             # Lsim2 returns the initial condition in the first element
@@ -677,6 +690,7 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName]['type'] = self.Type
         # Store this simul infos:
         self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'K': self.K}
+        self.FreqResponseData[self.CurrentFreqResponseName]['info'] = {'SMflag': False}
 
     def removeFreqResponse(self, name):
         lg.debug('Removing freq response {s} from sys index {i}'.format(s=name,i=self.Index))
@@ -741,6 +755,7 @@ class LTIsystem:
 
         mag, phase, omega = ct.frequency_response(self.K * self.DLTF_r,omega, squeeze=True)
         gm,pm,sm,wpc,wgc,wms = ct.stability_margins(self.K * self.DLTF_r,returnall=False)
+        #gm,pm,wpc,wgc = ct.margin(self.K * self.DLTF_r)
         self.FreqResponseData[self.CurrentFreqResponseName]['data'] = {'omega': omega}
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['mag'] = mag
         self.FreqResponseData[self.CurrentFreqResponseName]['data']['phase'] = ct.unwrap(phase)
@@ -749,6 +764,7 @@ class LTIsystem:
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['PM'] = pm
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wP'] = wpc
         self.FreqResponseData[self.CurrentFreqResponseName]['info']['wLimits'] = (omega[0],omega[-1])
+        self.FreqResponseData[self.CurrentFreqResponseName]['info']['K'] = self.K
     
     def NyquistGraphLines(self):
         """
@@ -1011,10 +1027,11 @@ class LTIsystem:
     def NLsysParseString(self, string):
         """
         Parse the string entered by user.
-        The terms DY,Y and U will be substitued by y[1], y[0] and self.u 
+        The terms DY,Y and U will be substitued by y[1], y[0] and u 
         respectivelly.
         After susbstituion, the parsed string is evaluated using the temp
-        vecto y. Is eval fails, this method returns 0, otherwise 1.
+        vector y and value u. Is eval fails, this method returns 0, 
+        otherwise returns 1.
         """
         
         sysstr = ''
@@ -1023,10 +1040,13 @@ class LTIsystem:
         self.NL_sysInputString = string
 
         sysstr = string.replace(',','.')
+        sysstr = string.replace('^','**')
+        sysstr = string.replace('e^','math.exp')
+        sysstr = string.replace('sin','math.sin')
+        sysstr = string.replace('cos','math.cos')
         sysstr = sysstr.replace('DY','y[1]')
         sysstr = sysstr.replace('Y','y[0]')
         sysstr = sysstr.replace('U','u')
-        print(sysstr)
         # Test the parsed string:
         try:
             eval(sysstr)
