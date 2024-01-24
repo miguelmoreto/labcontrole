@@ -2217,7 +2217,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             
         Gden = self.checkTFinput(value)
         
-        if (Gden == 0):
+        if (Gden == [0] or Gden == 0):
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
             self._set_expression_error('G[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
@@ -2260,7 +2260,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             
         Cden = self.checkTFinput(value)
         
-        if (Cden == 0):
+        if (Cden == [0] or Cden == 0):
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
             self._set_expression_error('C[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
@@ -2302,7 +2302,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             
         Hden = self.checkTFinput(value)
         
-        if (Hden == 0):
+        if (Hden == [0] or Hden == 0):
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
             self._set_expression_error('H[Den](s)', True, '[{}] is not a valid expression'.format(value))
         else:
