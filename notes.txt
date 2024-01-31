@@ -50,3 +50,20 @@ pylupdate5 LabControl3.py -ts LabControle3_en.ts
 lrelease MainWindow_en.ts HelpWindow_en.ts -qm LabControl3_en.qm
 
 
+TO COMPILE SLYCOT (testado no Linux Mint 21.2):
+
+pip install scikit-build
+sudo apt-get install cmake
+sudo apt-get install gfortran
+sudo apt-get install libopenblas-dev
+export FC=/usr/bin/gfortran
+
+git clone --recurse-submodules https://github.com/python-control/Slycot.git
+cd Slycot
+pip install -v .
+
+
+
+
+
+
