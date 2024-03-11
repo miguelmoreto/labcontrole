@@ -404,13 +404,13 @@ class LTIsystem:
         if (self.Rt_finalType == 0): # 0 => Constant value.
             r[sampleR:] = self.Rt_finalValue
         elif (self.Rt_finalType == 1): # 1 => Ramp 
-            r[sampleR:] = self.Rt_finalValue * (time[sampleR:] - self.InstRt)
+            r[sampleR:] = r[sampleR-1] + self.Rt_finalValue * (time[sampleR:] - self.InstRt)
         elif (self.Rt_finalType == 2): # 2 => Parabolic
-            r[sampleR:] = self.Rt_finalValue * np.square((time[sampleR:] - self.InstRt))
+            r[sampleR:] = r[sampleR-1] + self.Rt_finalValue * np.square((time[sampleR:] - self.InstRt))
         elif (self.Rt_finalType == 3): # 3 => Sin
-            r[sampleR:] = np.sin(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
+            r[sampleR:] = r[sampleR-1] + np.sin(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
         elif (self.Rt_finalType == 4): # 3 => Sin
-            r[sampleR:] = np.cos(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
+            r[sampleR:] = r[sampleR-1] + np.cos(2*np.pi*self.Rt_finalValue*(time[sampleR:] - self.InstRt))
         else:
             lg.error('r(t) final signal type {t} not recognized.'.format(t=self.Rt_finalType))
 
