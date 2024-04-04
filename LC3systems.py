@@ -1038,12 +1038,12 @@ class LTIsystem:
         y = np.array([1,1]) # temp array to test the equation.
         u = 1.0
         self.NL_sysInputString = string
-
-        sysstr = string.replace(',','.')
-        sysstr = string.replace('^','**')
-        sysstr = string.replace('e^','math.exp')
-        sysstr = string.replace('sin','math.sin')
-        sysstr = string.replace('cos','math.cos')
+        sysstr = str(string)
+        sysstr = sysstr.replace(',','.')
+        sysstr = sysstr.replace('e^','math.exp')
+        sysstr = sysstr.replace('^','**')
+        sysstr = sysstr.replace('sin','math.sin')
+        sysstr = sysstr.replace('cos','math.cos')
         sysstr = sysstr.replace('DY','y[1]')
         sysstr = sysstr.replace('Y','y[0]')
         sysstr = sysstr.replace('U','u')
@@ -1052,7 +1052,8 @@ class LTIsystem:
             eval(sysstr)
             print('Eval OK')
         except:
-            print('Erro eval')
+            print('Error eval')
+            #print(sysstr)
             return 0
             
         if ('y[1]' in sysstr):

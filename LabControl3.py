@@ -2322,7 +2322,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         value = value.replace(' ','') # remove spaces
         value = value.replace(',','.') # change , to .
         value = value.replace(')(',')*(') # insert * between parentesis
-        value = value.replace('z','s') # change , to .        
+        value = value.replace('z','s') # change z to s
         
         retorno = None
         
