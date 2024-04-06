@@ -17,6 +17,8 @@ conda install -c conda-forge pyinstaller
 pyinstaller --clean -y --onedir --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
 For a linux binary:
 pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+For a linux binary (pyInstaller 6):
+pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
 For a windows binary:
 pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
 For a windows binary (pyInstaller 6):
