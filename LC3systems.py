@@ -361,8 +361,8 @@ class LTIsystem:
         """
         
         if (self.InstRt > self.Tmax) or (self.InstWt > self.Tmax):
-            lg.warning("Step time cannot be larger than Tmax.")
-            return 0
+            lg.warning("Step time larger than Tmax!")
+            #return 0
         
         # Time vector:
         if (self.Type == 3):
@@ -385,6 +385,11 @@ class LTIsystem:
         # Number of the sample corresponding to the begining of the inputs:
         sampleR = int(self.InstRt/self.Delta_t)
         sampleW = int(self.InstWt/self.Delta_t)
+
+        if sampleR > self.N:
+            sampleR = self.N
+        if sampleW > self.N:
+            sampleW = self.N
         
         # Create vector r(t):
         # r(t) initial part (between 0 and InstRt seconds):
@@ -1042,6 +1047,7 @@ class LTIsystem:
         sysstr = sysstr.replace(',','.')
         sysstr = sysstr.replace('e^','math.exp')
         sysstr = sysstr.replace('^','**')
+        sysstr = sysstr.replace('sqrt','math.sqrt')
         sysstr = sysstr.replace('sin','math.sin')
         sysstr = sysstr.replace('cos','math.cos')
         sysstr = sysstr.replace('DY','y[1]')

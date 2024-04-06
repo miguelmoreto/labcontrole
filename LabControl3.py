@@ -181,15 +181,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
         self.NyquistAxis.set_visible(False)
-        self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-        self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_xlabel(r'$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
         self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
         self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
         self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         self.mplBode.draw()
 
         #self.mplSimul.axes.plot(x,y)
@@ -294,6 +294,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
         self.doubleSpinBoxTmax.valueChanged.connect(self.onTmaxChange)
+        self.doubleSpinBoxTmax1.valueChanged.connect(self.onTmax1Change)
         self.doubleSpinBoxRtime.valueChanged.connect(self.onRtimeChange)
         self.doubleSpinBoxRnoise.valueChanged.connect(self.onRnoiseChange)
         self.doubleSpinBoxWtime.valueChanged.connect(self.onWtimeChange)
@@ -1370,14 +1371,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
         self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
         self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-        self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+        self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         self.NyquistAxis.cla()
         # Adding the invisible unity circle:
         self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
         self.NyquistAxis.add_patch(self.nyquist_circ)
         self.nyquist_circ.set_visible(False)
-        self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-        self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_xlabel(r'$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+        self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
         self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
         self.mplBode.draw()
     
@@ -1398,7 +1399,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
             self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
             self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
-            self.magBodeAxis.set_title(_translate("MainWindow", "Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
+            self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             # Unselect nyquist signals from the list:
             self.uncheckItens(self.treeWidgetFreqResp,'nyquist')
@@ -1408,8 +1409,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
             self.NyquistAxis.add_patch(self.nyquist_circ)
             self.nyquist_circ.set_visible(False)            
-            self.NyquistAxis.set_xlabel('$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_ylabel('$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_xlabel(r'$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
+            self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))            
         else:
             lg.warning('Frequency response type not set.')                      
@@ -2078,17 +2079,39 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         self.sysDict[self.sysCurrentName].Tmax = value
 
-        # Update spinboxes maximum values:
-        self.doubleSpinBoxRtime.setMaximum(value)
-        self.doubleSpinBoxWtime.setMaximum(value)
         # Update the number of discrete sample periods:
         # TO DO: this kind of stuff shoulg go to LC3systems object:
         self.sysDict[self.sysCurrentName].NdT = int(self.sysDict[self.sysCurrentName].Tmax/self.sysDict[self.sysCurrentName].dT)
+        # Update the other spinBox:
+        self.doubleSpinBoxTmax1.blockSignals(True)
+        self.doubleSpinBoxTmax1.setValue(value)
+        self.doubleSpinBoxTmax1.blockSignals(False)
+
+    def onTmax1Change(self,value):
+        """
+        Tmax edited handler
+        """
+        self.sysDict[self.sysCurrentName].Tmax = value
+
+        # Update the number of discrete sample periods:
+        # TO DO: this kind of stuff shoulg go to LC3systems object:
+        self.sysDict[self.sysCurrentName].NdT = int(self.sysDict[self.sysCurrentName].Tmax/self.sysDict[self.sysCurrentName].dT)
+        # Update the other spinBox:
+        self.doubleSpinBoxTmax.blockSignals(True)
+        self.doubleSpinBoxTmax.setValue(value)
+        self.doubleSpinBoxTmax.blockSignals(False)
 
     def onRtimeChange(self,value):
         """
         r(t) input time edited handler
         """
+        tmax = self.sysDict[self.sysCurrentName].Tmax
+        # Consistency check:
+        if value >= tmax:
+            QtWidgets.QMessageBox.warning(self, 'Atenção!', _translate("MainWindow", "Esse valor é igual ou  maior do que a duração\n " \
+                                                                       "da simulação ({tm:.2f} segundos) e não terá\n " \
+                                                                       "efeito na simulação. Altere esse valor ou o\n " \
+                                                                       "valor do Tmax.", None).format(tm=tmax))
         self.sysDict[self.sysCurrentName].InstRt = value
         
     def onRnoiseChange(self,value):
@@ -2101,6 +2124,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         r(t) input time edited handler
         """
+        tmax = self.sysDict[self.sysCurrentName].Tmax
+        # Consistency check:
+        if value >= tmax:
+            QtWidgets.QMessageBox.warning(self, 'Atenção!', _translate("MainWindow", "Esse valor é igual ou  maior do que a duração\n " \
+                                                                       "da simulação ({tm:.2f} segundos) e não terá\n " \
+                                                                       "efeito na simulação. Altere esse valor ou o\n " \
+                                                                       "valor do Tmax.", None).format(tm=tmax))        
         self.sysDict[self.sysCurrentName].InstWt = value
 
     def onWnoiseChange(self,value):
