@@ -62,7 +62,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2967,9 +2967,9 @@ QGroupBox::title {
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,0,0,0,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0">
            <property name="spacing">
-            <number>4</number>
+            <number>2</number>
            </property>
            <property name="leftMargin">
             <number>4</number>
@@ -3244,6 +3244,62 @@ Auto</string>
             </widget>
            </item>
            <item>
+            <widget class="QFrame" name="frameBodeOpt">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>0</number>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>4</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QCheckBox" name="checkBoxDB">
+                <property name="toolTip">
+                 <string>Desmarque para plotar o ganho em unidades físicas</string>
+                </property>
+                <property name="text">
+                 <string>dB</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="checkBoxHz">
+                <property name="toolTip">
+                 <string>Desmarque para plotar em rad/s</string>
+                </property>
+                <property name="text">
+                 <string notr="true">Hz</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
             <widget class="QFrame" name="frameNyquistOpt">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -3253,7 +3309,7 @@ Auto</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>80</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
@@ -3277,7 +3333,7 @@ Auto</string>
                <number>0</number>
               </property>
               <property name="leftMargin">
-               <number>4</number>
+               <number>0</number>
               </property>
               <property name="topMargin">
                <number>0</number>
@@ -3355,7 +3411,7 @@ Auto</string>
              </property>
              <property name="minimumSize">
               <size>
-               <width>80</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>

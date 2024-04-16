@@ -597,8 +597,8 @@ class LTIsystem:
         kvect = np.arange(self.Kmin,self.Kmax,delta_k)
         # Calculating the RL separation points by polynomial derivative:
         # d(-1/G(s))/ds = 0
-        deriv = sp.polyder(self.DLTF_den_poly)*self.DLTF_num_poly - sp.polyder(self.DLTF_num_poly)*self.DLTF_den_poly
-        cpss = sp.roots(deriv) # candidatos a ponto de separacao
+        deriv = np.polyder(self.DLTF_den_poly)*self.DLTF_num_poly - np.polyder(self.DLTF_num_poly)*self.DLTF_den_poly
+        cpss = np.roots(deriv) # candidatos a ponto de separacao
         # Verificacao de quais os candidatos pertinentes
         for root in cpss:		
             aux = self.DLTF_num_poly(root)
@@ -625,8 +625,8 @@ class LTIsystem:
         gains = []
         
         # Calculating d(-1/G(s))/ds = 0
-        deriv = sp.polyder(den)*num - sp.polyder(num)*den
-        cpss = sp.roots(deriv) # candidate points
+        deriv = np.polyder(den)*num - np.polyder(num)*den
+        cpss = np.roots(deriv) # candidate points
         # Verifing which point are ok.
         for root in cpss:		
             aux = num(root)
