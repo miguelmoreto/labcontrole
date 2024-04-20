@@ -3271,28 +3271,28 @@ Auto</string>
                <number>0</number>
               </property>
               <item>
-               <widget class="QCheckBox" name="checkBoxDB">
-                <property name="toolTip">
-                 <string>Desmarque para plotar o ganho em unidades físicas</string>
-                </property>
+               <widget class="QRadioButton" name="radioBtnDB">
                 <property name="text">
-                 <string>dB</string>
+                 <string notr="true">dB</string>
                 </property>
                 <property name="checked">
                  <bool>true</bool>
                 </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBoxHz">
-                <property name="toolTip">
-                 <string>Desmarque para plotar em rad/s</string>
-                </property>
+               <widget class="QRadioButton" name="radioBtnHz">
                 <property name="text">
                  <string notr="true">Hz</string>
                 </property>
                 <property name="checked">
                  <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>

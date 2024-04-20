@@ -1420,6 +1420,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if checked:
             self.radioBtnCirc1.setEnabled(False)
             self.radioBtnFreqNeg.setEnabled(False)
+            self.radioBtnDB.setEnabled(True)
+            self.radioBtnHz.setEnabled(True)
             # Set visible only the Bode Axes':
             self.magBodeAxis.set_visible(True)
             self.phaseBodeAxis.set_visible(True)
@@ -1432,7 +1434,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def onRadioBtnNyquist(self,checked):
         if checked:
             self.radioBtnCirc1.setEnabled(True)
-            self.radioBtnFreqNeg.setEnabled(True)            
+            self.radioBtnFreqNeg.setEnabled(True)
+            self.radioBtnDB.setEnabled(False)
+            self.radioBtnHz.setEnabled(False)                    
             # Set visible only the Nyquist Axes:
             self.magBodeAxis.set_visible(False)
             self.phaseBodeAxis.set_visible(False)
