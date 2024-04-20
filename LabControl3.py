@@ -204,7 +204,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
         self.NyquistAxis.add_patch(self.nyquist_circ)
-        self.nyquist_circ.set_visible(False)        
+        self.nyquist_circ.set_visible(False)
+        self.freqRespHzRadFactor = 2*math.pi # This is used in freq. Response graph. Default is Hz.
         lg.basicConfig(level=lg.DEBUG)
 
         self.sysDict = {}   # A dictionary that contains the LC3systems objects and the corresponding data.
@@ -276,6 +277,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.radioBtnBode.toggled.connect(self.onRadioBtnBode)
         self.radioBtnNyquist.toggled.connect(self.onRadioBtnNyquist)
         self.radioBtnCirc1.toggled.connect(self.onRadioBtnCirc1)
+        self.radioBtnDB.toggled.connect(self.onRadioBtnDB)
+        self.radioBtnHz.toggled.connect(self.onRadioBtnHz)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
         self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
@@ -1116,14 +1119,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         wP = self.sysDict[sysname].FreqResponseData[simulname]['info']['wP']
         PM = self.sysDict[sysname].FreqResponseData[simulname]['info']['PM']
         wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
-        fP=wP/(2*math.pi) # Phase crossing frequency (where the phase crosses -180 deg)
-        fG = wG/(2*math.pi) # Gain crossing frequency (where the gain crosses 0dB)
+        fP=wP/(self.freqRespHzRadFactor) # Phase crossing frequency (where the phase crosses -180 deg)
+        fG = wG/(self.freqRespHzRadFactor) # Gain crossing frequency (where the gain crosses 0dB)
 
         if math.isfinite(GM) and (which == 'GM' or which == 'both'):
             # Get the color of the magnitude plot line:
             c = self.getExistingPlotColor(self.magBodeAxis,label)
             if c: # magnitude plot line exists
-                self.magBodeAxis.semilogx([fP,fP],[0,-20*math.log10(GM)],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+                if self.radioBtnDB.isChecked():
+                    self.magBodeAxis.semilogx([fP,fP],[0,-20*math.log10(GM)],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
+                else:
+                    self.magBodeAxis.semilogx([fP,fP],[0,-1/GM],markevery=[False, True],ms=3,marker='o',ls=':',color=c,label='_'+label) # Draw the line
 
         if math.isfinite(PM) and (which == 'PM' or which == 'both'):
             # Get the color of the phase plot line:
@@ -1174,11 +1180,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             label = '{id}:{s}'.format(id=sysname,s=simulname)
             if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
                 if signal == 'mag':
-                    self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    if self.radioBtnDB.isChecked():
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                    else:
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
                     if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                         self.plotStabilityMargins(sysname,simulname,'GM')
                 elif signal == 'phase':
-                    self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
                     if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                         self.plotStabilityMargins(sysname,simulname,'PM')
                 elif signal == 'nyquist':
@@ -1367,10 +1376,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.magBodeAxis.cla()
         self.phaseBodeAxis.cla()
         self.magBodeAxis.grid(True)
-        self.phaseBodeAxis.grid(True)            
-        self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        self.phaseBodeAxis.grid(True)
+        if self.radioBtnDB.isChecked():
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        else:
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude", None))
         self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-        self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        if self.radioBtnHz.isChecked():
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        else:
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência angular [rad/s]", None))
         self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         self.NyquistAxis.cla()
         # Adding the invisible unity circle:
@@ -1396,9 +1411,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.phaseBodeAxis.cla()
             self.magBodeAxis.grid(True)
             self.phaseBodeAxis.grid(True)
-            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            if self.radioBtnDB.isChecked():
+                self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+            else:
+                self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude", None))
             self.phaseBodeAxis.set_ylabel(_translate("MainWindow", "Fase [graus]", None))
-            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            if self.radioBtnHz.isChecked():
+                self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+            else:
+                self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência angular [rad/s]", None))
             self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
         elif self.radioBtnNyquist.isChecked():
             # Unselect nyquist signals from the list:
@@ -1444,6 +1465,43 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.mplBode.draw() 
             self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Nyquist", None))
 
+    def onRadioBtnDB(self, checked):
+
+        # Check if there are some freq. response already calculated, if so,
+        # give a warning and return.
+        root = self.treeWidgetFreqResp.invisibleRootItem()
+        if (root.childCount() > 0):
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Essa alteração só pode ser feita quando a\nlista de respostas em frequência estiver\nvazia.", None))
+            self.radioBtnDB.blockSignals(True)
+            self.radioBtnDB.toggle() # Revert the state.
+            self.radioBtnDB.blockSignals(False)
+            return
+        # Ok, the list is empty.
+        if checked:
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
+        else:
+            self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude", None))
+        self.mplBode.draw()
+
+    def onRadioBtnHz(self, checked):
+
+        # Check if there are some freq. response already calculated, if so,
+        # give a warning and return.        
+        root = self.treeWidgetFreqResp.invisibleRootItem()
+        if (root.childCount() > 0):
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Essa alteração só pode ser feita quando a\nlista de respostas em frequência estiver\nvazia.", None))
+            self.radioBtnHz.blockSignals(True)
+            self.radioBtnHz.toggle() # Revert the state.
+            self.radioBtnHz.blockSignals(False)
+            return
+        # Ok, the list is empty.
+        if checked:
+            self.freqRespHzRadFactor = 2*math.pi
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência [Hz]", None))
+        else:
+            self.freqRespHzRadFactor = 1
+            self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência angular [rad/s]", None))
+        self.mplBode.draw()
 
     def onBtnPlotFreqResponse(self):
         """
@@ -1521,9 +1579,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     if signal in ['mag','phase']:   # magnitude and phase are checked by default.
                         label = '{id}:{s}'.format(id=sysname,s=simulname)
                         if signal == 'mag':
-                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            if self.radioBtnDB.isChecked():
+                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            else:
+                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
                         elif signal == 'phase':
-                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
                         item.setCheckState(1, Qt.Checked)
                     else:
                         item.setCheckState(1, Qt.Unchecked)
@@ -1552,13 +1613,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     if signal == 'mag':
                         self.removeExistingPlot(self.magBodeAxis,label)
                         self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
-                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        if self.radioBtnDB.isChecked():
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        else:
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
                         if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                             self.plotStabilityMargins(sysname,simulname,'GM')
                     elif signal == 'phase':
                         self.removeExistingPlot(self.phaseBodeAxis,label)
                         self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the gain margin marker
-                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(2*numpy.pi),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
                         if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                             self.plotStabilityMargins(sysname,simulname,'PM')
                     elif signal == 'nyquist':
@@ -1584,10 +1648,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #wG = self.sysDict[sysname].FreqResponseData[simulname]['info']['wG']
         currentItem.setToolTip(0,'System: {i}, type: {t}'.format(i=self.sysDict[sysname].Name,t=self.sysDict[sysname].TypeStr))
         currentItem.setToolTip(1,'K = {k}\nGM = {g:.3f} dB\nPM = {p:.3f}°'.format(k=self.sysDict[sysname].K,g=20*math.log10(GM),p=PM))
+        if self.radioBtnHz.isChecked():
+            fmin = self.sysDict[sysname].Fmin
+            fmax = self.sysDict[sysname].Fmax
+        else:
+            fmin = self.freqRespHzRadFactor * self.sysDict[sysname].Fmin
+            fmax = self.freqRespHzRadFactor * self.sysDict[sysname].Fmax
 
-        fmin = self.sysDict[sysname].Fmin
-        fmax = self.sysDict[sysname].Fmax
-        self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+        if self.radioBtnDB.isChecked(): # plot a dashed lint in gain = 0 dB
+            self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
+        else: # plot a dashed line in gain = 1
+            self.magBodeAxis.axline([fmin,1],[fmax,1],linestyle='--',color='gray')
         self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
 
         self.treeWidgetFreqResp.expandAll()
