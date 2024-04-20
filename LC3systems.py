@@ -199,9 +199,20 @@ class LTIsystem:
         while outpus are y(t) and u(t)
         """
         self.N = self.Tmax/self.Delta_t
-        self.G_tf = ct.tf(self.Gnum,self.Gden)
-        self.C_tf = ct.tf(self.Cnum,self.Cden)
-        self.H_tf = ct.tf(self.Hnum,self.Hden)
+        if self.Genable:
+            self.G_tf = ct.tf(self.Gnum,self.Gden)
+        else:
+            self.G_tf = ct.tf(1,1)
+            
+        if self.Cenable:
+            self.C_tf = ct.tf(self.Cnum,self.Cden)
+        else:
+            self.C_tf = ct.tf(1,1)
+        
+        if self.Henable:
+            self.H_tf = ct.tf(self.Hnum,self.Hden)
+        else:
+            self.H_tf = ct.tf(1,1)
         
         # Compute the Direct Loop transfer functions accordingly with
         # the system type.

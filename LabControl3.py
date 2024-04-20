@@ -2174,6 +2174,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "C(s) ativada.", None),1000)
         
         self.sysDict[self.sysCurrentName].Cenable = flag
+        self.sysDict[self.sysCurrentName].updateSystem()
         self._set_expression_active('C[Num](s)', flag)
         self._set_expression_active('C[Den](s)', flag)
 
@@ -2184,6 +2185,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.statusBar().showMessage(_translate("MainWindow", "G(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Genable = flag
+        self.sysDict[self.sysCurrentName].updateSystem()
         self._set_expression_active('G[Num](s)', flag)
         self._set_expression_active('G[Den](s)', flag)
 
@@ -2194,6 +2196,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             self.statusBar().showMessage(_translate("MainWindow", "H(s) ativada.", None),1000)
         self.sysDict[self.sysCurrentName].Henable = flag
+        self.sysDict[self.sysCurrentName].updateSystem()
         self._set_expression_active('H[Num](s)', flag)
         self._set_expression_active('H[Den](s)', flag)
 
