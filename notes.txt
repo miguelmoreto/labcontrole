@@ -3,26 +3,32 @@
 To generate a executable:
 
 
-Creating a distribution enviroment:
-conda create --name distenv python nomkl --no-default-packages
-conda activate distenv
-conda install numpy
-conda install scipy
-conda install matplotlib
-conda install -c conda-forge control slycot
-pip install --upgrade PyQt5-sip
-conda install -c anaconda pyqt
-conda install -c conda-forge libstdcxx-ng
-conda install -c conda-forge pyinstaller
-pyinstaller --clean -y --onedir --exclude-module sqlalchemy --hidden-import PyQt5.sip LabControl3.py
-For a linux binary:
-pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
-For a linux binary (pyInstaller 6):
-pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
-For a windows binary:
-pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
-For a windows binary (pyInstaller 6):
-pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+Creating a distribution enviroment (Linux):
+    conda create --name labcontrole python nomkl --no-default-packages
+    conda activate distenv
+    conda install numpy
+Creating a distribution enviroment (Windows):
+    conda create --name labcontrole python --no-default-packages
+    conda install conda-forge::blas=*=openblas
+    conda install -c conda-forge numpy
+Activate the enviroment:
+    conda activate labcontrole
+Install packages:
+    conda install scipy
+    conda install matplotlib
+    conda install -c conda-forge control slycot
+    pip install --upgrade PyQt5-sip
+    conda install -c anaconda pyqt
+    conda install -c conda-forge libstdcxx-ng
+    conda install -c conda-forge pyinstaller
+Build the binary (Linux):
+    pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+    For pyInstaller 6:
+        pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+Build the binary (windows):
+    pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+    For pyInstaller 6:
+        pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
 
 conda deactivate
 
