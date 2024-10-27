@@ -12,6 +12,7 @@ a = Analysis(
     runtime_hooks=[],
     excludes=['sqlalchemy'],
     noarchive=False,
+    optimize=0,
 )
 pyz = PYZ(a.pure)
 

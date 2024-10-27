@@ -61,6 +61,7 @@ import logging as lg
 import LC3systems
 import math
 import os
+import copy
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -420,7 +421,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     
     def addSystem(self,systype):
         self.sysCounter = self.sysCounter + 1
-        sys = LC3systems.LTIsystem(self.sysCounter,systype)
+        if self.sysCounter == 0: # First time during program init.
+            sys = LC3systems.LTIsystem(self.sysCounter,systype)
+        else:
+            sys = copy.deepcopy(self.sysDict[self.sysCurrentName]) # Make a copy of the current system definition
+            sys.reInit(self.sysCounter) # Re-init the system with the new name and clear internal simul data
         self.sysDict[sys.Name] = sys
         self.sysCurrentName = sys.Name
         self.listSystem.addItem(sys.Name)

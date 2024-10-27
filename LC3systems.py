@@ -176,7 +176,7 @@ class LTIsystem:
 
     def __init__(self,index,systype):
         """
-        Init function. Updates
+        Inititialize system definition from default values.
         """
         self.Type = systype
         self.Index = index
@@ -187,6 +187,19 @@ class LTIsystem:
         self.clearTimeSimulData()
         self.clearFreqResponseData()
         self.RL_root_vector = np.array([])
+    
+    def reInit(self, index):
+        """
+        Re-initialize system definitions and clear stored simul and freqresp data
+        """
+        self.Index = index
+        #self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
+        self.Name = 'SYS {i}'.format(i=index)   # Update name string
+        self.TypeStr = self.TypeStrList[self.Type]
+        self.updateSystem()
+        self.clearTimeSimulData()
+        self.clearFreqResponseData()
+        self.RL_root_vector = np.array([])       
 
     def updateSystem(self):
         """
