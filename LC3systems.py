@@ -557,10 +557,10 @@ class LTIsystem:
                     pass
             
             U = uk * np.ones(len(t_step)) # input vector   
-            # Lsim2 returns the initial condition in the first element
+            # Lsim returns the initial condition in the first element
             # of the resulting array. We simulate with an aditional
             # Delta_t. The last value is used only in the next discrete step.
-            t_out,yout,xout = signal.lsim2((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
+            t_out,yout,xout = signal.lsim((self.Gnum,self.Gden),U=U,T=t_step,X0=X0G)
             
             t_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = t_out[0:(self.NpdT)] + k*self.dT
             y_plot[((k*self.NpdT)):(((k+1)*self.NpdT))] = yout[0:(self.NpdT)] + self.TimeSimData[self.CurrentSimulName]['data']['w(t)'][((k*self.NpdT)):(((k+1)*self.NpdT))]
@@ -1145,7 +1145,7 @@ class LTIsystem:
             # Check if C(s) is defined.
             if (self.Cenable):
                 # Solve one step of the C(s) differential equation:
-                t, yc, xout = signal.lsim2((self.Cnum,self.Cden),np.array([e0,e]),np.array([0,self.Delta_t]),X0)
+                t, yc, xout = signal.lsim((self.Cnum,self.Cden),np.array([e0,e]),np.array([0,self.Delta_t]),X0)
                 u = yc[1]
                 X0 = xout[1] # Save the last state.
             else:
