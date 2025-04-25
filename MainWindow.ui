@@ -26,8 +26,8 @@
    <string>LabControle 3 - Beta 5</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="images.qrc">
-    <normaloff>:/icons_UI/images/icon48x48.png</normaloff>:/icons_UI/images/icon48x48.png</iconset>
+   <iconset>
+    <normaloff>images/icon48x48.png</normaloff>images/icon48x48.png</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -54,7 +54,6 @@
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
@@ -62,7 +61,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -154,7 +153,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
@@ -192,7 +190,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -276,7 +273,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -317,7 +313,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <italic>false</italic>
                  <bold>false</bold>
                 </font>
@@ -402,7 +397,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -437,7 +431,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -472,7 +465,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -517,7 +509,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -552,7 +543,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -625,7 +615,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
@@ -660,7 +649,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -750,7 +738,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -785,7 +772,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -869,7 +855,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -904,7 +889,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -939,7 +923,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -984,7 +967,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1019,7 +1001,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1086,7 +1067,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>75</weight>
                  <bold>true</bold>
                 </font>
                </property>
@@ -1159,7 +1139,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1173,7 +1152,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1212,7 +1190,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1250,7 +1227,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1288,7 +1264,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1329,7 +1304,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1373,7 +1347,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1402,7 +1375,6 @@
                <property name="font">
                 <font>
                  <pointsize>12</pointsize>
-                 <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
@@ -1497,8 +1469,8 @@
                   <string notr="true">...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
-                   <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
+                  <iconset>
+                   <normaloff>images/addsys.png</normaloff>images/addsys.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1511,8 +1483,8 @@
                   <string notr="true">...</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
-                   <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
+                  <iconset>
+                   <normaloff>images/removesys.png</normaloff>images/removesys.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1525,8 +1497,8 @@
                   <string notr="true">Add</string>
                  </property>
                  <property name="icon">
-                  <iconset resource="images.qrc">
-                   <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                  <iconset>
+                   <normaloff>images/refreshsys.png</normaloff>images/refreshsys.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1612,7 +1584,6 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -1640,7 +1611,6 @@
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -1663,7 +1633,6 @@
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -1689,7 +1658,6 @@
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -1844,7 +1812,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2075,7 +2042,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2312,7 +2278,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2580,7 +2545,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2603,7 +2567,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2635,7 +2598,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2658,7 +2620,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2712,7 +2673,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2735,7 +2695,6 @@ QGroupBox::title {
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -2856,8 +2815,8 @@ QGroupBox::title {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
+                   <iconset>
+                    <normaloff>images/addsys.png</normaloff>images/addsys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -2870,8 +2829,8 @@ QGroupBox::title {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
+                   <iconset>
+                    <normaloff>images/removesys.png</normaloff>images/removesys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -2884,8 +2843,8 @@ QGroupBox::title {
                    <string>Add</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                   <iconset>
+                    <normaloff>images/refreshsys.png</normaloff>images/refreshsys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -2898,8 +2857,8 @@ QGroupBox::title {
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/lupe.png</normaloff>:/icons_UI/images/lupe.png</iconset>
+                   <iconset>
+                    <normaloff>images/lupe.png</normaloff>images/lupe.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3020,7 +2979,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3064,7 +3022,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3096,7 +3053,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3140,7 +3096,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3178,7 +3133,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>10</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3213,7 +3167,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3451,7 +3404,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
-                  <weight>75</weight>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -3471,7 +3423,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>10</pointsize>
-                  <weight>75</weight>
                   <bold>true</bold>
                  </font>
                 </property>
@@ -3503,7 +3454,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3526,7 +3476,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -3656,8 +3605,8 @@ Auto</string>
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/addsys.png</normaloff>:/icons_UI/images/addsys.png</iconset>
+                   <iconset>
+                    <normaloff>images/addsys.png</normaloff>images/addsys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3670,8 +3619,8 @@ Auto</string>
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/removesys.png</normaloff>:/icons_UI/images/removesys.png</iconset>
+                   <iconset>
+                    <normaloff>images/removesys.png</normaloff>images/removesys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3684,8 +3633,8 @@ Auto</string>
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/refreshsys.png</normaloff>:/icons_UI/images/refreshsys.png</iconset>
+                   <iconset>
+                    <normaloff>images/refreshsys.png</normaloff>images/refreshsys.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3698,8 +3647,8 @@ Auto</string>
                    <string>...</string>
                   </property>
                   <property name="icon">
-                   <iconset resource="images.qrc">
-                    <normaloff>:/icons_UI/images/lupe.png</normaloff>:/icons_UI/images/lupe.png</iconset>
+                   <iconset>
+                    <normaloff>images/lupe.png</normaloff>images/lupe.png</iconset>
                   </property>
                  </widget>
                 </item>
@@ -3794,7 +3743,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>75</weight>
                <bold>true</bold>
               </font>
              </property>
@@ -3847,7 +3795,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -3882,7 +3829,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -3932,7 +3878,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -3979,7 +3924,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4014,7 +3958,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4067,7 +4010,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4111,7 +4053,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4149,7 +4090,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4181,7 +4121,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4222,7 +4161,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <italic>false</italic>
                   <bold>false</bold>
                  </font>
@@ -4261,7 +4199,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4329,7 +4266,6 @@ Auto</string>
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
-                    <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
@@ -4355,7 +4291,6 @@ Auto</string>
                   <property name="font">
                    <font>
                     <pointsize>12</pointsize>
-                    <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
@@ -4411,7 +4346,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>11</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4449,7 +4383,6 @@ Auto</string>
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
-                  <weight>50</weight>
                   <bold>false</bold>
                  </font>
                 </property>
@@ -4496,7 +4429,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -4519,7 +4451,6 @@ Auto</string>
              <property name="font">
               <font>
                <pointsize>12</pointsize>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -4582,7 +4513,6 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
@@ -4609,7 +4539,6 @@ Auto</string>
              <font>
               <family>MS Shell Dlg 2</family>
               <pointsize>12</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4649,7 +4578,6 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
@@ -4676,7 +4604,6 @@ Auto</string>
              <font>
               <family>MS Shell Dlg 2</family>
               <pointsize>12</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4716,7 +4643,6 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
@@ -4743,7 +4669,6 @@ Auto</string>
              <font>
               <family>MS Shell Dlg 2</family>
               <pointsize>12</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4786,7 +4711,6 @@ Auto</string>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
@@ -4813,7 +4737,6 @@ Auto</string>
              <font>
               <family>MS Shell Dlg 2</family>
               <pointsize>12</pointsize>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -4865,8 +4788,8 @@ Auto</string>
   </widget>
   <action name="actionSalvar_sistema">
    <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/filesave.png</normaloff>:/icons_UI/images/filesave.png</iconset>
+    <iconset>
+     <normaloff>images/filesave.png</normaloff>images/filesave.png</iconset>
    </property>
    <property name="text">
     <string>Salvar sistema</string>
@@ -4874,8 +4797,8 @@ Auto</string>
   </action>
   <action name="actionCarregar_sistema">
    <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/fileopen.png</normaloff>:/icons_UI/images/fileopen.png</iconset>
+    <iconset>
+     <normaloff>images/fileopen.png</normaloff>images/fileopen.png</iconset>
    </property>
    <property name="text">
     <string>Carregar sistema</string>
@@ -4883,8 +4806,8 @@ Auto</string>
   </action>
   <action name="actionCalc">
    <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/calc.png</normaloff>:/icons_UI/images/calc.png</iconset>
+    <iconset>
+     <normaloff>images/calc.png</normaloff>images/calc.png</iconset>
    </property>
    <property name="text">
     <string>calculadora</string>
@@ -4910,8 +4833,8 @@ Auto</string>
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/help.png</normaloff>:/icons_UI/images/help.png</iconset>
+    <iconset>
+     <normaloff>images/help.png</normaloff>images/help.png</iconset>
    </property>
    <property name="text">
     <string>Ajuda</string>
@@ -4922,8 +4845,8 @@ Auto</string>
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset resource="images.qrc">
-     <normaloff>:/icons_UI/images/cloese.png</normaloff>:/icons_UI/images/cloese.png</iconset>
+    <iconset>
+     <normaloff>images/close.png</normaloff>images/close.png</iconset>
    </property>
    <property name="text">
     <string>Fechar</string>

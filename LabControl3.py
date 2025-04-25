@@ -35,17 +35,18 @@
 # Developed by Miguel Moreto
 # Florianopolis, Brazil, 2023
 import matplotlib
-matplotlib.use("Qt5Agg")
+matplotlib.use("QtAgg")
 
-from PyQt5 import (
+from PyQt6 import (
     QtCore,
     QtGui,
     QtWidgets
 )
 
-from PyQt5.Qt import Qt
-from PyQt5.uic import loadUi
-import images_rc
+#from PyQt6 import Qt
+from PyQt6.QtCore import Qt
+from PyQt6.uic import loadUi
+#import images_rc
 
 from matplotlib.backends.backend_qt5agg  import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.widgets import MultiCursor, Cursor
@@ -88,10 +89,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         empty = QtWidgets.QWidget()
 
         labelUFSC = QtWidgets.QLabel()
-        labelUFSC.setPixmap(QtGui.QPixmap(':/icons_UI/images/ufsc.png'))
+        labelUFSC.setPixmap(QtGui.QPixmap('images/ufsc.png'))
         self.labelHide = QtWidgets.QLabel()
         self.labelSysToolbar = QtWidgets.QLabel()        
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         self.labelHide.setSizePolicy(sizePolicy)
@@ -99,12 +100,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         font.setPointSize(12)
         self.labelHide.setFont(font)
         self.labelHide.setText('')
-        self.labelHide.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
+        self.labelHide.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter|QtCore.Qt.AlignmentFlag.AlignVCenter)
         font.setPointSize(11)
         self.labelSysToolbar.setToolTip(_translate("MainWindow", "Esse é o sistema selecionado no momento.", None))
         self.labelSysToolbar.setFont(font)
-        self.labelSysToolbar.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
-        empty.setSizePolicy(QtWidgets.QSizePolicy.Expanding,QtWidgets.QSizePolicy.Preferred)
+        self.labelSysToolbar.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter|QtCore.Qt.AlignmentFlag.AlignVCenter)
+        empty.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,QtWidgets.QSizePolicy.Policy.Preferred)
 
         self.toolBar.insertWidget(self.actionClose,empty)
         self.toolBar.insertWidget(self.actionClose,self.labelSysToolbar)
@@ -120,11 +121,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Initial definitions:
         # Setting locale to display numbers in the QtextEdits:
         self.locale = QtCore.QLocale.system()
-        self.locale.setNumberOptions(self.locale.OmitGroupSeparator | self.locale.RejectGroupSeparator)
+        self.locale.setNumberOptions(self.locale.NumberOption.OmitGroupSeparator | self.locale.NumberOption.RejectGroupSeparator)
         lg.info('Locale used: {s}'.format(s=self.locale.name()))
         self.doubleValidator = QtGui.QDoubleValidator()
         self.doubleValidator.setLocale(self.locale)  # Using system locale for number notation.
-        self.doubleValidator.setNotation(self.doubleValidator.StandardNotation)
+        self.doubleValidator.setNotation(self.doubleValidator.Notation.StandardNotation)
         self.doubleValidator.setDecimals(4)
         self.lineEditRvalueInit.setValidator(self.doubleValidator)
         self.lineEditWvalueInit.setValidator(self.doubleValidator)
@@ -146,13 +147,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
         self.VBoxLayoutBode.addWidget(self.mpltoolbarBode)
         # Icon list for changing mplToolbar icons (using the old ones):
-        mplicons = {"Home": ":/mpltoolbar/images/mpl_toolbar/home.png",\
-                    "Back": ":/mpltoolbar/images/mpl_toolbar/back.png",\
-                    "Forward": ":/mpltoolbar/images/mpl_toolbar/forward.png",\
-                    "Pan": ":/mpltoolbar/images/mpl_toolbar/move.png",\
-                    "Zoom": ":/mpltoolbar/images/mpl_toolbar/zoom_to_rect.png",\
-                    "Subplots": ":/mpltoolbar/images/mpl_toolbar/subplots.png",
-                    "Save": ":/mpltoolbar/images/mpl_toolbar/filesave.png",
+        mplicons = {"Home": "images/mpl_toolbar/home.png",\
+                    "Back": "images/mpl_toolbar/back.png",\
+                    "Forward": "images/mpl_toolbar/forward.png",\
+                    "Pan": "images/mpl_toolbar/move.png",\
+                    "Zoom": "images/mpl_toolbar/zoom_to_rect.png",\
+                    "Subplots": "images/mpl_toolbar/subplots.png",
+                    "Save": "images/mpl_toolbar/filesave.png",
         }
         # Changing the QAction icons:
         for toobar in [self.mpltoolbarSimul, self.mpltoolbarLGR, self.mpltoolbarBode]:
@@ -219,8 +220,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetFreqResp.setColumnWidth(1, 70)
 
         self.inspectMessageBox = QtWidgets.QMessageBox()
-        self.inspectMessageBox.setTextFormat(Qt.MarkdownText)
-        self.inspectMessageBox.setIcon(QtWidgets.QMessageBox.Information)
+        self.inspectMessageBox.setTextFormat(Qt.TextFormat.MarkdownText)
+        self.inspectMessageBox.setIcon(QtWidgets.QMessageBox.Icon.Information)
 
 
         # Error messages
@@ -709,7 +710,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.sysDict[sysname].setAtiveTimeSimul(simulname)
         if (column == 1): # The second column has the checkboxes
             label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
-            if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
+            if (item.checkState(column) == Qt.CheckState.Unchecked): # Plot the selected signal.
                 lg.debug('Item {s} enabled to plot.'.format(s=label))
                 if signal == 'e[k]': # If signal is e[k] get the line color from e(t)
                     label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
@@ -727,11 +728,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
                 else:
                     self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)                    
-                item.setCheckState(1,Qt.Checked)
-            elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
+                item.setCheckState(1,Qt.CheckState.Checked)
+            elif (item.checkState(column) == Qt.CheckState.Checked): # Remove the selected signal from the plot.
                 lg.debug('Item {s} disabled to plot.'.format(s=label))
                 self.removeExistingPlot(self.mplSimul.axes,label)
-                item.setCheckState(1,Qt.Unchecked)
+                item.setCheckState(1,Qt.CheckState.Unchecked)
             else:
                 lg.debug('Item check state not changed.')
                 return
@@ -910,8 +911,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             msgBox.setText(           _translate("MainWindow", "O sistema selecionado na aba Diagrama\n"\
                                                                "não é o mesmo da simulação selecionada.", None))
             msgBox.setInformativeText(_translate("MainWindow", "Acrescentar uma nova simulação à lista?" , None))
-            yes_btn = msgBox.addButton(msgBox.Yes)
-            no_btn = msgBox.addButton(msgBox.No)
+            yes_btn = msgBox.addButton(msgBox.StandardButton.Yes)
+            no_btn = msgBox.addButton(msgBox.StandardButton.No)
             yes_btn.setText(_translate("MainWindow", "Sim", None))
             no_btn.setText(_translate("MainWindow", "Não (cancelar)", None))
             msgBox.setDefaultButton(yes_btn)
@@ -948,14 +949,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 if (signal != 'time' and signal != 'tk'):
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
                     item.setText(1,signal)
-                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
                     if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
                         label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
                         self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
-                        item.setCheckState(1, Qt.Checked)
+                        item.setCheckState(1, Qt.CheckState.Checked)
                         #print(box.get_points())
                     else:
-                        item.setCheckState(1, Qt.Unchecked)
+                        item.setCheckState(1, Qt.CheckState.Unchecked)
                     #print(signal)
         else: # The simulation already exist in the list.
             # Update the graph, according to the itens selected in the list:
@@ -963,7 +964,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 item = currentItem.child(i)
                 signal = item.text(1)   # Get signal name string
                 label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal) # Format the standard label
-                if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                if (item.checkState(1) == Qt.CheckState.Checked): # Only update the checked itens.
                     # Remove the existing ploted line:
                     self.removeExistingPlot(self.mplSimul.axes,label)
                     # Plot the new data
@@ -1068,7 +1069,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Each margin line has a unique label equal to the corresponding
         plot (mag or phase) preceeding with "_" character.
         """
-        if state == Qt.Checked:
+        if state == Qt.CheckState.Checked:
             state = True
         else:
             state = False
@@ -1183,7 +1184,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         if (column == 1): # The second column has the checkboxes
             label = '{id}:{s}'.format(id=sysname,s=simulname)
-            if (item.checkState(column) == Qt.Unchecked): # Plot the selected signal.
+            if (item.checkState(column) == Qt.CheckState.Unchecked): # Plot the selected signal.
                 if signal == 'mag':
                     if self.radioBtnDB.isChecked():
                         self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
@@ -1199,8 +1200,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     # Redraw the Nyquist plot.
                     self.plotNyquist(sysname,simulname)                    
                 lg.debug('Item {s} enabled to plot.'.format(s=label))
-                item.setCheckState(1,Qt.Checked)
-            elif (item.checkState(column) == Qt.Checked): # Remove the selected signal from the plot.
+                item.setCheckState(1,Qt.CheckState.Checked)
+            elif (item.checkState(column) == Qt.CheckState.Checked): # Remove the selected signal from the plot.
                 if signal == 'mag':
                     self.removeExistingPlot(self.magBodeAxis.axes,label) # Remove the gain line
                     self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
@@ -1221,7 +1222,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     self.removeExistingPlot(self.NyquistAxis,'_am'+label+'1')  # Second...
                     self.removeExistingPlot(self.NyquistAxis,'_o'+label)    # Start point
                 lg.debug('Item {s} disabled to plot.'.format(s=label))
-                item.setCheckState(1,Qt.Unchecked)
+                item.setCheckState(1,Qt.CheckState.Unchecked)
             else:
                 lg.debug('Item check state not changed.')
                 return
@@ -1541,8 +1542,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                                     "mesmo da resposta em frequência selecionada.", None))
             msgBox.setInformativeText(_translate("MainWindow", "Acrescentar uma nova resposta em frequência à\n"\
                                                     "lista?" , None))
-            yes_btn = msgBox.addButton(msgBox.Yes)
-            no_btn = msgBox.addButton(msgBox.No)
+            yes_btn = msgBox.addButton(msgBox.StandardButton.Yes)
+            no_btn = msgBox.addButton(msgBox.StandardButton.No)
             yes_btn.setText(_translate("MainWindow", "Sim", None))
             no_btn.setText(_translate("MainWindow", "Não (cancelar)", None))
             msgBox.setDefaultButton(yes_btn)
@@ -1580,7 +1581,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 if signal != 'omega':
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
                     item.setText(1,signal)
-                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
                     if signal in ['mag','phase']:   # magnitude and phase are checked by default.
                         label = '{id}:{s}'.format(id=sysname,s=simulname)
                         if signal == 'mag':
@@ -1590,9 +1591,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                 self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
                         elif signal == 'phase':
                             self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
-                        item.setCheckState(1, Qt.Checked)
+                        item.setCheckState(1, Qt.CheckState.Checked)
                     else:
-                        item.setCheckState(1, Qt.Unchecked)
+                        item.setCheckState(1, Qt.CheckState.Unchecked)
                     #print(signal)
             if self.checkBoxMargins.isChecked(): # Plot Stability Margins
                 self.plotStabilityMargins(sysname,simulname)
@@ -1603,8 +1604,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[sysname].NyquistGraphLines()
             item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
             item.setText(1,'nyquist')
-            item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
-            item.setCheckState(1, Qt.Checked)
+            item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+            item.setCheckState(1, Qt.CheckState.Checked)
             self.sysDict[sysname].NyquistGraphLines()
             self.plotNyquist(sysname,simulname)
         # Update the graph, according to the itens selected in the list:
@@ -1613,7 +1614,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 item = currentItem.child(i)
                 signal = item.text(1)
                 label = '{id}:{s}'.format(id=sysname,s=simulname)
-                if (item.checkState(1) == Qt.Checked): # Only update the checked itens.
+                if (item.checkState(1) == Qt.CheckState.Checked): # Only update the checked itens.
                     # Remove the existing ploted line:
                     if signal == 'mag':
                         self.removeExistingPlot(self.magBodeAxis,label)
@@ -1886,7 +1887,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             for j in range(item.childCount()): # Signals
                 child = item.child(j)
                 if child.text(1) == signal:
-                    child.setCheckState(1,Qt.Unchecked)
+                    child.setCheckState(1,Qt.CheckState.Unchecked)
 
     def uncheckAllItens(self,treeWidget):
         """
@@ -1899,7 +1900,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             item = root.child(i) # Simulations in the list
             for j in range(item.childCount()): # Signals
                 child = item.child(j)
-                child.setCheckState(1,Qt.Unchecked)
+                child.setCheckState(1,Qt.CheckState.Unchecked)
 
     def removeExistingPlot(self,ax,label):
         """
@@ -2509,7 +2510,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.statusBar().showMessage(_translate("MainWindow", "Sistema ainda não implementado.", None))
             return
 
-        self.label.setPixmap(QtGui.QPixmap(':/diagrams/images/{f}'.format(f=png_file_name)))
+        self.label.setPixmap(QtGui.QPixmap('images/{f}'.format(f=png_file_name)))
 
     def onHelpWindowClose(self):
         """
@@ -2559,10 +2560,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         If the extension is tst the hide flag is True.
         """
         fileName = str()
-        options = QtWidgets.QFileDialog.Options()
+        #options = QtWidgets.QFileDialog.options()
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self,
                                 _translate("MainWindow", "Salvar sistema", None),
-                                "sisXX.LCN",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None),options=options)
+                                "sisXX.LCN",_translate("MainWindow", "Arquivos LabControle Normal (*.LCN);;Arquivos LabControle Oculto (*.LCO)", None))#,options=options)
         if not fileName:
             return
         hide = False
@@ -2597,8 +2598,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                                            "de sistemas, todas as informaçẽos atuais\n"\
                                                            "serão perdidas!", None))
         msgBox.setInformativeText(_translate("MainWindow", "Deseja continuar?" , None))
-        yes_btn = msgBox.addButton(msgBox.Yes)
-        no_btn = msgBox.addButton(msgBox.No)
+        yes_btn = msgBox.addButton(msgBox.StandardButton.Yes)
+        no_btn = msgBox.addButton(msgBox.StandardButton.No)
         yes_btn.setText(_translate("MainWindow", "Sim", None))
         no_btn.setText(_translate("MainWindow", "Não", None))
         msgBox.setDefaultButton(yes_btn)
@@ -2695,9 +2696,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 if (signal != 'time' and signal != 'tk'):
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
                     item.setText(1,signal)
-                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
 
-                    item.setCheckState(1, Qt.Unchecked)
+                    item.setCheckState(1, Qt.CheckState.Unchecked)
 
     def addExistingFreqRespToList(self,treeWidget,sys):
         """
@@ -2717,9 +2718,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 if (signal != 'omega'):
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
                     item.setText(1,signal)
-                    item.setFlags(item.flags() & ~(Qt.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
+                    item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
 
-                    item.setCheckState(1, Qt.Unchecked)
+                    item.setCheckState(1, Qt.CheckState.Unchecked)
 
 
     def onTabChange(self, index):
@@ -2866,5 +2867,5 @@ if __name__ == '__main__':
         app.installTranslator(translator)
     win = LabControl3()
     win.show()
-    app.exec_()
+    app.exec()
     
