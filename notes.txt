@@ -24,11 +24,11 @@ Install packages:
 Build the binary (Linux):
     pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
     For pyInstaller 6:
-        pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+        pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip --hidden-import=numpy.core.multiarray LabControl3.py
 Build the binary (windows):
     pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
     For pyInstaller 6:
-        pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
+        pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip --hidden-import=numpy.core.multiarray LabControl3.py
 
 conda deactivate
 

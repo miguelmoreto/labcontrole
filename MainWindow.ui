@@ -62,7 +62,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2102,7 +2102,7 @@ QGroupBox::title {
              <property name="checkable">
               <bool>true</bool>
              </property>
-             <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1">
+             <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0">
               <property name="leftMargin">
                <number>4</number>
               </property>
@@ -2118,6 +2118,19 @@ QGroupBox::title {
               <property name="verticalSpacing">
                <number>1</number>
               </property>
+              <item row="2" column="1">
+               <spacer name="verticalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="labelGnum">
                 <property name="sizePolicy">
@@ -2180,7 +2193,7 @@ QGroupBox::title {
                  <string>Numerador da planta G(s)</string>
                 </property>
                 <property name="locale">
-                 <locale language="English" country="UnitedStates"/>
+                 <locale language="Portuguese" country="Brazil"/>
                 </property>
                 <property name="inputMethodHints">
                  <set>Qt::ImhNone</set>
@@ -2189,7 +2202,7 @@ QGroupBox::title {
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string notr="true">2*s+10</string>
+                 <string>2*s+10</string>
                 </property>
                 <property name="placeholderText">
                  <string notr="true"/>
@@ -2222,6 +2235,32 @@ QGroupBox::title {
                  <string notr="true">Den:</string>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="1">
+               <spacer name="verticalSpacer_10">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="4" column="1">
+               <spacer name="verticalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="3" column="1">
                <widget class="QLineEdit" name="lineEditGden">
@@ -2258,45 +2297,6 @@ QGroupBox::title {
                  <bool>true</bool>
                 </property>
                </widget>
-              </item>
-              <item row="4" column="1">
-               <spacer name="verticalSpacer_11">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="1">
-               <spacer name="verticalSpacer_10">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="2" column="1">
-               <spacer name="verticalSpacer_12">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>
