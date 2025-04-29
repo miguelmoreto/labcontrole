@@ -2548,6 +2548,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 p=subprocess.Popen('gnome-calculator')
             except FileNotFoundError:
                 QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (gnome-calculator).", None))
+        elif system == 'Darwin':
+            try:
+                p=subprocess.Popen(['open', '-a', 'Calculator'])
+            except OSError:
+                QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (Calculator).", None))
         else:
             QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Não foi possível determinar o sistema operacional.", None))
     
