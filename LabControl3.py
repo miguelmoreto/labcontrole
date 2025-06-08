@@ -112,13 +112,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.toolBar.insertWidget(self.actionClose,self.labelHide)
         self.toolBar.insertWidget(self.actionClose,labelUFSC)
         
-        # Set diagram the current tab:
+        # Set Diagram as the current tab:
         self.tabWidget.setCurrentIndex(0)
+        # Set Bode as the current tab in freq. response:
+        self.tabWidgetFreqResp.setCurrentIndex(0)
         
         self.image = QtGui.QImage()
         self.helpWindow = HelpWindow()
 
         # Initial definitions:
+        self.currentFreqRespType = 'Bode' # Other option is Nyquist
         # Setting locale to display numbers in the QtextEdits:
         self.locale = QtCore.QLocale.system()
         self.locale.setNumberOptions(self.locale.NumberOption.OmitGroupSeparator | self.locale.NumberOption.RejectGroupSeparator)
@@ -141,11 +144,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mpltoolbarSimul = CustomNavigationToolbar(self.mplSimul, self)
         self.mpltoolbarLGR = NavigationToolbar(self.mplLGR, self)
         self.mpltoolbarBode = NavigationToolbar(self.mplBode, self)
+        self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
         #self.mpltoolbarBode = CustomNavigationToolbar(self.mplBode, self)
         #self.mpltoolbarNyquist = NavigationToolbar(self.mplNyquist, self)
         self.VBoxLayoutSimul.addWidget(self.mpltoolbarSimul)
         self.VBoxLayoutLGR.addWidget(self.mpltoolbarLGR)
         self.VBoxLayoutBode.addWidget(self.mpltoolbarBode)
+        self.VBoxLayoutNyquist.addWidget(self.mpltoolbarNyquist)
         # Icon list for changing mplToolbar icons (using the old ones):
         mplicons = {"Home": "images/mpl_toolbar/home.png",\
                     "Back": "images/mpl_toolbar/back.png",\
@@ -155,8 +160,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     "Subplots": "images/mpl_toolbar/subplots.png",
                     "Save": "images/mpl_toolbar/filesave.png",
         }
-        # Changing the QAction icons:
-        for toobar in [self.mpltoolbarSimul, self.mpltoolbarLGR, self.mpltoolbarBode]:
+        # Changing the QAction icons (the default ones are very ugly):
+        for toobar in [self.mpltoolbarSimul, self.mpltoolbarLGR, self.mpltoolbarBode, self.mpltoolbarNyquist]:
             actions = toobar.actions()
             for action in actions:
                 if action.text() in mplicons:
@@ -181,11 +186,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.multicursor = MultiCursor(self.mplBode.figure.canvas, (self.magBodeAxis, self.phaseBodeAxis), color='gray', lw=0.7,
                     linestyle = '--', horizOn=False, vertOn=True)
 
-        self.NyquistAxis = self.mplBode.figure.add_subplot(1,1,1)
-        self.NyquistAxis.set_visible(False)
+        self.NyquistAxis = self.mplNyquist.figure.add_subplot(1,1,1)
+        #self.NyquistAxis.set_visible(False)
         self.NyquistAxis.set_xlabel(r'$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
         self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
         self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
+        self.mplNyquist.draw()
         self.magBodeAxis.grid(True)
         self.phaseBodeAxis.grid(True)
         self.magBodeAxis.set_ylabel(_translate("MainWindow", "Magnitude [dB]", None))
@@ -276,13 +282,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Connecting events:
         self.radioBtnOpen.clicked.connect(self.feedbackOpen)
         self.radioBtnClose.clicked.connect(self.feedbackClose)
-        self.radioBtnBode.toggled.connect(self.onRadioBtnBode)
-        self.radioBtnNyquist.toggled.connect(self.onRadioBtnNyquist)
         self.radioBtnCirc1.toggled.connect(self.onRadioBtnCirc1)
         self.radioBtnDB.toggled.connect(self.onRadioBtnDB)
         self.radioBtnHz.toggled.connect(self.onRadioBtnHz)
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.tabWidget.currentChanged.connect(self.onTabChange)
+        self.tabWidgetFreqResp.currentChanged.connect(self.onTabFreqRespChange)
         self.checkBoxFreqAuto.stateChanged.connect(self.onCheckBoxFreqAuto)
         self.checkBoxMargins.stateChanged.connect(self.onCheckBoxMargins)
         # ComboBoxes:
@@ -1069,7 +1074,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Each margin line has a unique label equal to the corresponding
         plot (mag or phase) preceeding with "_" character.
         """
-        if state == Qt.CheckState.Checked:
+        if self.checkBoxMargins.isChecked(): # state == Qt.CheckState.Checked:
             state = True
         else:
             state = False
@@ -1094,18 +1099,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Store the state of the checkbox:
         self.sysDict[sysname].FreqResponseData[simulname]['info']['SMflag'] = state
         label = '{id}:{s}'.format(id=sysname,s=simulname)
-
+        print(label)
         if not childCount: # No frequency response calculated yet.
             return
         
         if state: # Draw the Stability Margins for the selected freq. response:
             self.plotStabilityMargins(sysname,simulname)
-
-            pass
         else: # Remove the Stability Margins (if exist):
             self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
             self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
-            pass
         
         self.mplBode.draw()
 
@@ -1241,6 +1243,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
             self.NyquistAxis.axes.autoscale(enable=True, axis='both')
             self.mplBode.draw()
+            self.mplNyquist.draw()
         else:
             lg.info('Not clicked in the checkbox.')
 
@@ -1302,8 +1305,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             label = '{id}:{s}'.format(id=sysname,s=freqrespnameremove)
             if signal == 'mag':
                 self.removeExistingPlot(self.magBodeAxis.axes,label)
+                self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
             elif signal == 'phase':
                 self.removeExistingPlot(self.phaseBodeAxis.axes,label)
+                self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
             elif signal == 'nyquist':
                 # The Nyquist plot can contain at most 6 lines, 4 arrows and one start marker:
                 self.removeExistingPlot(self.NyquistAxis,label)         # Regular line
@@ -1333,6 +1338,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
         self.NyquistAxis.axes.autoscale(enable=True, axis='both')
         self.mplBode.draw()
+        self.mplNyquist.draw()
         
         # Remove simulation data from the LC3systems object:
         self.sysDict[sysname].removeFreqResponse(freqrespnameremove)
@@ -1402,13 +1408,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
         self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))             
         self.mplBode.draw()
+        self.mplNyquist.draw()
     
     def onBtnFreqResponseClearAxis(self):
         """
         Uncheck all itens from the list and clear the ploting area.
         """
 
-        if self.radioBtnBode.isChecked():
+        if self.currentFreqRespType == 'Bode': #self.radioBtnBode.isChecked():
             # Unselect bode signals from the list:
             self.uncheckItens(self.treeWidgetFreqResp,'mag')
             self.uncheckItens(self.treeWidgetFreqResp,'phase')
@@ -1427,7 +1434,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else:
                 self.phaseBodeAxis.set_xlabel(_translate("MainWindow", "Frequência angular [rad/s]", None))
             self.magBodeAxis.set_title(_translate("MainWindow", r"Diagrama de Bode de $KC(j\omega)G(j\omega)H(j\omega)$", None))
-        elif self.radioBtnNyquist.isChecked():
+            self.mplBode.draw() 
+        elif self.currentFreqRespType == 'Nyquist': #self.radioBtnNyquist.isChecked():
             # Unselect nyquist signals from the list:
             self.uncheckItens(self.treeWidgetFreqResp,'nyquist')
             self.NyquistAxis.cla()
@@ -1438,38 +1446,35 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.nyquist_circ.set_visible(False)            
             self.NyquistAxis.set_xlabel(r'$Re[KC(j\omega)G(j\omega)H(j\omega)]$')
             self.NyquistAxis.set_ylabel(r'$Im[KC(j\omega)G(j\omega)H(j\omega)]$')
-            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))            
+            self.NyquistAxis.set_title(_translate("MainWindow", "Diagrama de Nyquist", None))
+            self.mplNyquist.draw()        
         else:
             lg.warning('Frequency response type not set.')                      
-        self.mplBode.draw() 
+        
 
-    def onRadioBtnBode(self,checked):
-        if checked:
+    def onTabFreqRespChange(self, index):
+        """
+        Whe the user clicks on the TabWidget to select between Bode and Nyquist plots.
+        """
+        if index == 1:
+            self.radioBtnCirc1.setEnabled(True)
+            self.radioBtnFreqNeg.setEnabled(True)
+            self.radioBtnDB.setEnabled(False)
+            self.radioBtnHz.setEnabled(False)              
+            self.currentFreqRespType = 'Nyquist'
+            self.mplNyquist.draw()
+            self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Nyquist", None))            
+        else:
+            self.currentFreqRespType = 'Bode'
             self.radioBtnCirc1.setEnabled(False)
             self.radioBtnFreqNeg.setEnabled(False)
             self.radioBtnDB.setEnabled(True)
             self.radioBtnHz.setEnabled(True)
-            # Set visible only the Bode Axes':
-            self.magBodeAxis.set_visible(True)
-            self.phaseBodeAxis.set_visible(True)
-            self.NyquistAxis.set_visible(False)
             self.magBodeAxis.grid(True)
             self.phaseBodeAxis.grid(True)
             self.mplBode.draw()
             self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Bode", None))
-
-    def onRadioBtnNyquist(self,checked):
-        if checked:
-            self.radioBtnCirc1.setEnabled(True)
-            self.radioBtnFreqNeg.setEnabled(True)
-            self.radioBtnDB.setEnabled(False)
-            self.radioBtnHz.setEnabled(False)                    
-            # Set visible only the Nyquist Axes:
-            self.magBodeAxis.set_visible(False)
-            self.phaseBodeAxis.set_visible(False)
-            self.NyquistAxis.set_visible(True)
-            self.mplBode.draw() 
-            self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Nyquist", None))
+        print(self.currentFreqRespType)
 
     def onRadioBtnDB(self, checked):
 
@@ -1563,9 +1568,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         simulname = self.sysDict[sysname].CurrentFreqResponseName # Get the simulname
         lg.info('Plotting Bode Diagram Name: {s} in System {i}'.format(s=simulname,i=sysname))
-        if self.radioBtnBode.isChecked():
+        if self.currentFreqRespType == 'Bode': #self.radioBtnBode.isChecked():
             self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Bode...", None))
-        if self.radioBtnNyquist.isChecked():
+        if self.currentFreqRespType == 'Nyquist': #self.radioBtnNyquist.isChecked():
             self.statusBar().showMessage(_translate("MainWindow", "Traçando diagrama de Nyquist...", None))
         self.statusBar().repaint()
         
@@ -1576,7 +1581,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.lineEditFmin.setText(self.locale.toString(self.sysDict[sysname].Fmin))
         self.lineEditFmax.setText(self.locale.toString(self.sysDict[sysname].Fmax))
 
-        if (self.radioBtnBode.isChecked() and childCount < 2): # Check if the list is empty (or there is only one child - nyquist )
+        #if (self.radioBtnBode.isChecked() and childCount < 2): # Check if the list is empty (or there is only one child - nyquist )
+        if (self.currentFreqRespType == 'Bode' and childCount < 2): # Check if the list is empty (or there is only one child - nyquist )
             for signal in self.sysDict[sysname].FreqResponseData[simulname]['data']:
                 if signal != 'omega':
                     item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
@@ -1600,7 +1606,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             else: # Remove Stability Margins if their exists.
                 self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
                 self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the phase margin marker
-        elif (self.radioBtnNyquist.isChecked() and (childCount == 2 or childCount == 0)):
+        #elif (self.radioBtnNyquist.isChecked() and (childCount == 2 or childCount == 0)):
+        elif (self.currentFreqRespType == 'Nyquist' and (childCount == 2 or childCount == 0)):
             self.sysDict[sysname].NyquistGraphLines()
             item = QtWidgets.QTreeWidgetItem(currentItem)   # Create the child itens in the tree.
             item.setText(1,'nyquist')
@@ -1670,28 +1677,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.treeWidgetFreqResp.expandAll()
 
         # Format the plotting area:
-        self.mplBode.axes.autoscale()     
-        self.magBodeAxis.grid(True)
-        self.phaseBodeAxis.grid(True)
-        self.NyquistAxis.grid(True)
-        self.magBodeAxis.legend(loc='center right', draggable = True)
-        self.phaseBodeAxis.legend(loc='center right', draggable = True)
-        self.NyquistAxis.legend(loc='center right', draggable = True)
-        self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
-        self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
-        self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
-        self.phaseBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
-        self.phaseBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
-        self.phaseBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
-        self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
-        self.NyquistAxis.axes.autoscale(enable=True, axis='both')    
+        if self.currentFreqRespType == 'Bode':
+            self.mplBode.axes.autoscale()
+            self.magBodeAxis.grid(True)
+            self.phaseBodeAxis.grid(True)
+            self.magBodeAxis.legend(loc='center right', draggable = True)
+            self.phaseBodeAxis.legend(loc='center right', draggable = True)
+            self.magBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.magBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+            self.magBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+            self.phaseBodeAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.phaseBodeAxis.axes.autoscale(enable=True, axis='x',tight=True)
+            self.phaseBodeAxis.axes.autoscale(enable=True, axis='y',tight=False)
+            self.mplBode.draw()
+        elif self.currentFreqRespType == 'Nyquist':
+            self.NyquistAxis.grid(True)
+            self.NyquistAxis.legend(loc='center right', draggable = True)
+            self.NyquistAxis.axes.relim(visible_only=True) # Recalculate the limits according to the current data.
+            self.NyquistAxis.axes.autoscale(enable=True, axis='both')
+            self.mplNyquist.draw()
         # Custom Navigation
         #self.mpltoolbarBode.init_curve_point([(ax1, f, dB), (ax2, f, phase)])
         #self.mpltoolbarBode.siblings = [ax1, ax2]
         #self.mpltoolbarBode.error = 0.1
-
-
-        self.mplBode.draw()
         self.statusBar().showMessage(_translate("MainWindow", "Traçado concluído.", None),3000)
         self.statusBar().repaint()    
 
@@ -1797,7 +1805,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.nyquist_circ.set_visible(True)
         else:
             self.nyquist_circ.set_visible(False)
-        self.mplBode.draw()
+        self.mplNyquist.draw()
 
     # Internal function to add arrows to a nyquist curve.
     # Code taken from Control module.
@@ -2549,6 +2557,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 p=subprocess.Popen('gnome-calculator')
             except FileNotFoundError:
                 QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (gnome-calculator).", None))
+        elif system == 'Darwin':
+            try:
+                p=subprocess.Popen(['open', '-a', 'Calculator'])
+            except OSError:
+                QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Executável da calculadora não encontrado (Calculator).", None))
         else:
             QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Erro!", None),_translate("MainWindow", "Não foi possível determinar o sistema operacional.", None))
     
@@ -2676,6 +2689,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.magBodeAxis.axline([fmin,0],[fmax,0],linestyle='--',color='gray')
             self.phaseBodeAxis.axline([fmin,-180],[fmax,-180],linestyle='--',color='gray')
             self.mplBode.draw()
+            self.mplNyquist.draw()
 
 
     def addExistingSimulsToList(self,treeWidget,sys):
