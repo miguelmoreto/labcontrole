@@ -1994,7 +1994,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Open loop poles:
         self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_poles), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_poles), 'xr',ms=6,mew=1.5, zorder=3)
         # Open loop zeros:
-        if self.sysDict[self.sysCurrentName].DLTF_zeros.any():
+        if len(self.sysDict[self.sysCurrentName].DLTF_zeros) > 0:
             self.LGRaxis.plot(numpy.real(self.sysDict[self.sysCurrentName].DLTF_zeros), numpy.imag(self.sysDict[self.sysCurrentName].DLTF_zeros), 'or',ms=6, zorder=3)
         for col in self.sysDict[self.sysCurrentName].RL_root_vector.T:
             # Ploting the root locus.
