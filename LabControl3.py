@@ -358,9 +358,51 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.actionCarregar_sistema.triggered.connect(self.onLoadAction)
         # HelpWindow events
         self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
+        # Matplotlib events
+        self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onpick2)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
-        
+
+    def line_picker(self, line, mouseevent):
+        """
+        Find the points within a certain distance from the mouseclick in
+        data coords and attach some extra attributes, pickx and picky
+        which are the data points that were picked.
+        """
+        if mouseevent.xdata is None:
+            return False, dict()
+        xdata = line.get_xdata()
+        ydata = line.get_ydata()
+        maxd = 0.05
+        d = numpy.sqrt(
+            (xdata - mouseevent.xdata)**2 + (ydata - mouseevent.ydata)**2)
+
+        #ind, = numpy.nonzero(d <= maxd)
+        ind = numpy.argmin(d)
+        if d[ind] <= maxd:#len(ind):
+            pickx = xdata[ind]
+            picky = ydata[ind]
+            props = dict(ind=ind, pickx=pickx, picky=picky)
+            return True, props
+        else:
+            return False, dict()
+
+    def onpick2(self, event):
+        print('onpick2 line:', event.pickx, event.picky)
+
+    def onpick1(self, event):
+        print('Click!')
+        if isinstance(event.artist, matplotlib.lines.Line2D):
+            thisline = event.artist
+            ind = event.ind
+            print(event.artist.get_label())
+            print(ind)
+            xdata = thisline.get_xdata()
+            ydata = thisline.get_ydata()
+            print('onpick1 line:', numpy.column_stack([xdata[ind], ydata[ind]]))
+            #print(event.pickx)
+            #print(event.picky)
+
     def _has_expressions_errors(self):
         result = False
         if any([(self.expressions_errors[e].get('error') and self.expressions_errors[e].get('active'))
@@ -957,7 +999,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     item.setFlags(item.flags() & ~(Qt.ItemFlag.ItemIsUserCheckable)) # Checkbox handling is done in the clicked event handler.
                     if signal in ['y(t)','r(t)']:   # y(t) and r(t) are checked by default.
                         label = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg=signal)
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,picker=self.line_picker)
                         item.setCheckState(1, Qt.CheckState.Checked)
                         #print(box.get_points())
                     else:
