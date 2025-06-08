@@ -19,7 +19,7 @@
    <string>Ajuda do LabControle</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="images.qrc">
+   <iconset>
     <normaloff>:/icons_UI/images/icon32x32.png</normaloff>:/icons_UI/images/icon32x32.png</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
@@ -49,10 +49,10 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="images.qrc">:/icons_UI/images/ufsc_large.png</pixmap>
+        <pixmap>:/icons_UI/images/ufsc_large.png</pixmap>
        </property>
        <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -79,7 +79,7 @@
         <string>Selecione o tópico:</string>
        </property>
        <property name="alignment">
-        <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
        </property>
       </widget>
      </item>
@@ -140,9 +140,9 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Versão: 3.0 beta 5
+        <string>Versão: 3.6
 Florianópolis, SC, Brasil
-2024</string>
+2025</string>
        </property>
       </widget>
      </item>

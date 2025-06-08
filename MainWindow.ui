@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 3 - Beta 5</string>
+   <string>LabControle 3.6</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -61,7 +61,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">

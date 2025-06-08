@@ -6,7 +6,7 @@ To generate a executable:
 Creating a distribution enviroment (Linux):
     conda create --name labcontrole python nomkl --no-default-packages
     conda activate distenv
-    conda install numpy
+    
 Creating a distribution enviroment (Windows):
     conda create --name labcontrole python --no-default-packages
     conda install conda-forge::blas=*=openblas
@@ -14,21 +14,21 @@ Creating a distribution enviroment (Windows):
 Activate the enviroment:
     conda activate labcontrole
 Install packages:
+    conda install numpy
     conda install scipy
+    conda install pyqt
     conda install matplotlib
     conda install -c conda-forge control slycot
     pip install --upgrade PyQt5-sip
     conda install -c anaconda pyqt
     conda install -c conda-forge libstdcxx-ng
     conda install -c conda-forge pyinstaller
-Build the binary (Linux):
-    pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
-    For pyInstaller 6:
-        pyinstaller --noconfirm --clean --onedir --contents-directory "."  --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip --hidden-import=numpy.core.multiarray LabControl3.py
-Build the binary (windows):
-    pyinstaller --noconfirm --clean --onedir --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip LabControl3.py
-    For pyInstaller 6:
-        pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip --hidden-import=numpy.core.multiarray LabControl3.py
+
+Build the binary (Linux) with pyInstaller 6:
+    pyinstaller --noconfirm --clean --onedir --contents-directory "." --name=LabControle3 --add-data="MainWindow.ui:." --add-data="HelpWindow.ui:." --add-data="matplotlibwidget.py:." --add-data="./help/*:./help" --add-data="./images/*:./images" --add-data="./images/mpl_toolbar/*:./images/mpl_toolbar" --exclude-module=sqlalchemy --hidden-import=numpy.core.multiarray LabControl3.py
+
+Build the binary (windows) with pyInstaller 6:
+    pyinstaller --noconfirm --clean --onedir --contents-directory "." --add-data="MainWindow.ui;." --add-data="HelpWindow.ui;." --add-data="matplotlibwidget.py;." --add-data="./help/*;./help" --add-data="./images/*:./images" --exclude-module=sqlalchemy --hidden-import=PyQt5.sip --hidden-import=numpy.core.multiarray LabControl3.py
 
 conda deactivate
 
