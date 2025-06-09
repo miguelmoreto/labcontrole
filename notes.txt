@@ -19,9 +19,6 @@ Install packages:
     conda install pyqt
     conda install matplotlib
     conda install -c conda-forge control slycot
-    pip install --upgrade PyQt5-sip
-    conda install -c anaconda pyqt
-    conda install -c conda-forge libstdcxx-ng
     conda install -c conda-forge pyinstaller
 
 Build the binary (Linux) with pyInstaller 6:
@@ -60,7 +57,7 @@ pylupdate5 LabControl3.py -ts LabControle3_en.ts
 lrelease MainWindow_en.ts HelpWindow_en.ts -qm LabControl3_en.qm
 
 
-TO COMPILE SLYCOT (testado no Linux Mint 21.2):
+TO COMPILE SLYCOT (tested on Linux Mint 21.2):
 
 pip install scikit-build
 sudo apt-get install cmake
