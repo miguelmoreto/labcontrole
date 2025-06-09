@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=LabControle 3
+Exec=LabControl3
+Icon=./imagesds/icon48x48.png
+Comment=LabControle 3
+Type=Application
+Terminal=false
+Encoding=UTF-8
+Categories=Science;
