@@ -2801,19 +2801,19 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 txt = _translate("MainWindow", "Desabilitado", None)
                 item = QtWidgets.QListWidgetItem()
                 item.setText(txt)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                 self.listWidgetCLpoles.addItem(item)
                 item = QtWidgets.QListWidgetItem()
                 item.setText(txt)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                 self.listWidgetOLpoles.addItem(item)
                 item = QtWidgets.QListWidgetItem()
                 item.setText(txt)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                 self.listWidgetOLzeros.addItem(item)
                 item = QtWidgets.QListWidgetItem()
                 item.setText(txt)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                 self.listWidgetRLpoints.addItem(item)
                 return
             else:
@@ -2822,21 +2822,21 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 for root in rootsCL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(root))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                     self.listWidgetCLpoles.addItem(item)
                 
                 rootsOL = self.sysDict[self.sysCurrentName].DLroots()
                 for root in rootsOL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(root))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                     self.listWidgetOLpoles.addItem(item)
                     
                 zerosOL = self.sysDict[self.sysCurrentName].DLzeros()
                 for zero in zerosOL:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(zero))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                     self.listWidgetOLzeros.addItem(item)
                 
                 points, gains = self.sysDict[self.sysCurrentName].RLseparationPoints()
@@ -2844,7 +2844,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 for ponto in points:
                     item = QtWidgets.QListWidgetItem()
                     item.setText(self.createRootString(ponto) + " => Kc =  %0.3f" %(gains[i]))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setTextAlignment(QtCore.Qt.AlignmentFlag.AlignCenter.AlignCenter)
                     self.listWidgetRLpoints.addItem(item)
                     i = i + 1
                     
