@@ -369,6 +369,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         data coords and attach some extra attributes, pickx and picky
         which are the data points that were picked.
         """
+        #print(line.get_label())
         if mouseevent.xdata is None:
             return False, dict()
         xdata = line.get_xdata()
@@ -388,6 +389,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             return False, dict()
 
     def onpick2(self, event):
+        print(event)
+        label = event.artist.get_label()
+        print("Line label: {}".format(label))
         print('onpick2 line:', event.pickx, event.picky)
 
     def onpick1(self, event):
@@ -1516,7 +1520,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.phaseBodeAxis.grid(True)
             self.mplBode.draw()
             self.btnPlotFreqResponse.setText(_translate("MainWindow", "Traçar Bode", None))
-        print(self.currentFreqRespType)
+        #print(self.currentFreqRespType)
 
     def onRadioBtnDB(self, checked):
 
@@ -2015,7 +2019,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                                                         "maior do que 10. Aumente a valor de T ou então\n"\
                                                         "diminua o passo de solução.".format(dt=self.sysDict[self.sysCurrentName].Delta_t,\
                                                              T=round(value,5), npt=NpdT), None))
-                msgBox.setIcon(QtWidgets.QMessageBox.Warning)
+                msgBox.setIcon(QtWidgets.QMessageBox.Icon.Warning)
                 msgBox.exec()    
         
     def onBtnRL(self):
