@@ -210,6 +210,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #self.mplSimul.axes.autoscale(True)
         self.mplSimul.draw()
         
+        self.timeSimulAnnotation = LC3annotation(self.mplSimul.axes)
+
         self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
         self.NyquistAxis.add_patch(self.nyquist_circ)
         self.nyquist_circ.set_visible(False)
@@ -359,7 +361,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # HelpWindow events
         self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
         # Matplotlib events
-        self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onpick2)
+        self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onPickTimeSimul)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
 
@@ -388,11 +390,29 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         else:
             return False, dict()
 
-    def onpick2(self, event):
-        print(event)
+    def onPickTimeSimul(self, event):
+        """
+        Pick event that is fired when user clicks sufficiently close to a line in
+        time domain simulation.
+          1) Detects which line is clicked and store its label
+          2) Gets the X and Y values
+          3) Creates an annotation with the values
+        """
+        #print(event)
         label = event.artist.get_label()
+        color = self.getExistingPlotColor(self.mplSimul.axes,label)
+        print(color)
+        self.timeSimulAnnotation.setXY(event.pickx,event.picky)
+        self.timeSimulAnnotation.setLabel(label)
+        self.timeSimulAnnotation.setColor(color)
+        self.timeSimulAnnotation.annotate()
+
+        #label = event.artist.get_label()
         print("Line label: {}".format(label))
         print('onpick2 line:', event.pickx, event.picky)
+
+        #self.mplSimul.axes.annotate("({}, {})".format(event.pickx, event.picky),xy=(event.pickx, event.picky))
+        self.mplSimul.draw()
 
     def onpick1(self, event):
         print('Click!')
@@ -403,7 +423,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             print(ind)
             xdata = thisline.get_xdata()
             ydata = thisline.get_ydata()
-            print('onpick1 line:', numpy.column_stack([xdata[ind], ydata[ind]]))
+            print('onpick1 line: ', numpy.column_stack([xdata[ind], ydata[ind]]))
             #print(event.pickx)
             #print(event.picky)
 
@@ -767,18 +787,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                     label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
                     c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
                     if c: # If color was found:
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5,picker=self.line_picker)
                     else:
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5,picker=self.line_picker)
                 elif signal == 'e(t)': # If signal is e(t) get the line color from e[k]
                     label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e[k]')
                     c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
                     if c: # If color was found:
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,color=c)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,color=c,picker=self.line_picker)
                     else:
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,picker=self.line_picker)
                 else:
-                    self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)                    
+                    self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,picker=self.line_picker)                    
                 item.setCheckState(1,Qt.CheckState.Checked)
             elif (item.checkState(column) == Qt.CheckState.Checked): # Remove the selected signal from the plot.
                 lg.debug('Item {s} disabled to plot.'.format(s=label))
@@ -1023,11 +1043,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         label_tmp = '{id}:{s}:{sg}'.format(id=sysname,s=simulname,sg='e(t)')
                         c = self.getExistingPlotColor(self.mplSimul.axes,label_tmp)
                         if c: # If color was found (e(t) was plotted before)
-                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5)
+                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,color=c,marker='.',markersize=5,picker=self.line_picker)
                         else: # Plot only e[k]
-                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5)
+                            self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['tk'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,linewidth=0,marker='.',markersize=5,picker=self.line_picker)
                     else: # Any other signal:
-                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label)
+                        self.mplSimul.axes.plot(self.sysDict[sysname].TimeSimData[simulname]['data']['time'],self.sysDict[sysname].TimeSimData[simulname]['data'][signal],label=label,picker=self.line_picker)
                     #print(label)
 
         # Setting the simulation tooltip:
@@ -2868,6 +2888,59 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         
         return root_str
 
+
+class LC3annotation():
+    """
+    A class to store data related with annotating points in graphic plots.
+    """
+    X = 0.0         # X coordinate
+    Y = 0.0         # Y coordinate 
+    index = 0       # current array data index 
+    stepSize = 1    # Step size between one annotation and the next
+    ax = None       # Matplotlib axes object where the annotation will 
+                    # be drawn.
+    an = None       # Matplotlib annotation object
+    label = ''
+    color = None
+
+    def __init__(self, axes, stepSize = 1):
+        self.X = 0.0
+        self.Y = 0.0
+        self.index = 0
+        self.stepSize = stepSize
+        self.ax = axes
+        self.lable = ''
+        self.color = 1
+    
+    def setXY(self, x: float, y: float):
+        self.X = x
+        self.Y = y
+
+    def setLabel(self, label: str):
+        self.label = label
+    
+    def setColor(self, color):
+        self.color = color
+    
+    def annotate(self):
+        """
+        Performs the annotation in the canvas.
+        Creates a new one or updates if already created.
+        """
+        if self.an:
+            self.an.xy = (self.X, self.Y)
+            self.an.set_text(f"V = {self.Y:.3f}\nt = {self.X:.3f} s.")
+            self.an.arrow_patch.set(ec=self.color)
+            self.an.set_bbox(dict(boxstyle="round", fc="0.9", ec=self.color))
+            #for attr in dir(self.an):
+            #    print("an.%s = %r" % (attr, getattr(self.an, attr)))
+        else:
+            self.an = self.ax.annotate(f"V = {self.Y:.3f}\nt = {self.X:.3f} s.",
+                                       xy=(self.X, self.Y),
+                                       xytext=(3,1),
+                                       textcoords='offset fontsize',
+                                       bbox=dict(boxstyle="round", fc="0.9", ec=self.color),
+                                       arrowprops=dict(arrowstyle="->", ec=self.color, connectionstyle="angle,angleA=0,angleB=60,rad=10"))
 
 class HelpWindow(QtWidgets.QFrame):
     """
