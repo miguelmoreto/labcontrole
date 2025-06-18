@@ -63,6 +63,7 @@ import LC3systems
 import math
 import os
 import copy
+import sys
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -362,6 +363,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.helpWindow.helpCloseSignal.connect(self.onHelpWindowClose)
         # Matplotlib events
         self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onPickTimeSimul)
+        self.mplSimul.figure.canvas.mpl_connect('key_press_event', self.onTimeSimulKeyPress)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
 
@@ -385,7 +387,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         if d[ind] <= maxd:#len(ind):
             pickx = xdata[ind]
             picky = ydata[ind]
-            props = dict(ind=ind, pickx=pickx, picky=picky)
+            props = dict(ind=ind, pickx=pickx, picky=picky, Xdata=xdata, Ydata=ydata)
             return True, props
         else:
             return False, dict()
@@ -403,6 +405,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         color = self.getExistingPlotColor(self.mplSimul.axes,label)
         print(color)
         self.timeSimulAnnotation.setXY(event.pickx,event.picky)
+        self.timeSimulAnnotation.setIndex(event.ind)
+        self.timeSimulAnnotation.setXYdataVectors(event.Xdata, event.Ydata)
         self.timeSimulAnnotation.setLabel(label)
         self.timeSimulAnnotation.setColor(color)
         self.timeSimulAnnotation.annotate()
@@ -413,6 +417,16 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
         #self.mplSimul.axes.annotate("({}, {})".format(event.pickx, event.picky),xy=(event.pickx, event.picky))
         self.mplSimul.draw()
+    
+    def onTimeSimulKeyPress(self, event):
+        sys.stdout.flush()
+        
+        if event.key == 'x':
+            print('key')
+            self.timeSimulAnnotation.incrementIndex()
+            self.timeSimulAnnotation.annotate()
+            self.mplSimul.draw()
+        pass
 
     def onpick1(self, event):
         print('Click!')
@@ -2895,6 +2909,8 @@ class LC3annotation():
     """
     X = 0.0         # X coordinate
     Y = 0.0         # Y coordinate 
+    Xdata = None    # X data vector
+    Ydata = None    # Y data vector
     index = 0       # current array data index 
     stepSize = 1    # Step size between one annotation and the next
     ax = None       # Matplotlib axes object where the annotation will 
@@ -2911,10 +2927,19 @@ class LC3annotation():
         self.ax = axes
         self.lable = ''
         self.color = 1
+        self.Xdata = None
+        self.Ydata = None
     
     def setXY(self, x: float, y: float):
         self.X = x
         self.Y = y
+    
+    def setXYdataVectors(self, Xdata, Ydata):
+        self.Xdata = Xdata
+        self.Ydata = Ydata
+    
+    def setIndex(self, index):
+        self.index = index
 
     def setLabel(self, label: str):
         self.label = label
@@ -2922,6 +2947,17 @@ class LC3annotation():
     def setColor(self, color):
         self.color = color
     
+    def incrementIndex(self):
+        self.index = self.index + self.stepSize
+        self.X = self.Xdata[self.index]
+        self.Y = self.Xdata[self.index]
+
+    def decrementIndex(self):
+        self.index = self.index - self.stepSize
+        self.X = self.Xdata[self.index]
+        self.Y = self.Xdata[self.index]
+
+
     def annotate(self):
         """
         Performs the annotation in the canvas.
