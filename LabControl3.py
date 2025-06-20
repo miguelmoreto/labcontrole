@@ -364,14 +364,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         # Matplotlib events
         self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onPickTimeSimul)
         self.mplSimul.figure.canvas.mpl_connect('key_press_event', self.onTimeSimulKeyPress)
+        self.mplSimul.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
+        self.mplBode.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
 
     def line_picker(self, line, mouseevent):
         """
         Find the points within a certain distance from the mouseclick in
-        data coords and attach some extra attributes, pickx and picky
-        which are the data points that were picked.
+        data coords and attach some extra attributes:
+            ind:            The array index of the data point picked.
+            pickx, picky:   The data points that were picked.
+            Xdata, Ydata:   The data arrays of the line picked.
         """
         #print(line.get_label())
         if mouseevent.xdata is None:
@@ -382,7 +386,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         d = numpy.sqrt(
             (xdata - mouseevent.xdata)**2 + (ydata - mouseevent.ydata)**2)
 
-        #ind, = numpy.nonzero(d <= maxd)
         ind = numpy.argmin(d)
         if d[ind] <= maxd:#len(ind):
             pickx = xdata[ind]
@@ -391,6 +394,17 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             return True, props
         else:
             return False, dict()
+
+    def onMplPlotAreaClick(self, event):
+        """
+        Handler for a left click in a Matplotlib ploting area.
+        Action: set the focus to the current canvas to receive key press events.
+        """
+        if event.button == 1: # Lef button:
+            event.canvas.setFocus()
+
+        #print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
+        #      ('double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata))
 
     def onPickTimeSimul(self, event):
         """
@@ -403,7 +417,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         #print(event)
         label = event.artist.get_label()
         color = self.getExistingPlotColor(self.mplSimul.axes,label)
-        print(color)
         self.timeSimulAnnotation.setXY(event.pickx,event.picky)
         self.timeSimulAnnotation.setIndex(event.ind)
         self.timeSimulAnnotation.setXYdataVectors(event.Xdata, event.Ydata)
@@ -411,22 +424,31 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.timeSimulAnnotation.setColor(color)
         self.timeSimulAnnotation.annotate()
 
+        self.mplSimul.setFocus()
+
         #label = event.artist.get_label()
-        print("Line label: {}".format(label))
-        print('onpick2 line:', event.pickx, event.picky)
+        #print("Line label: {}".format(label))
+        #print('onpick2 line:', event.pickx, event.picky)
 
         #self.mplSimul.axes.annotate("({}, {})".format(event.pickx, event.picky),xy=(event.pickx, event.picky))
         self.mplSimul.draw()
     
     def onTimeSimulKeyPress(self, event):
         sys.stdout.flush()
+        #print(f"Tecla: {event.key}")
         
-        if event.key == 'x':
-            print('key')
+        if event.key == 'right':
             self.timeSimulAnnotation.incrementIndex()
-            self.timeSimulAnnotation.annotate()
+            self.timeSimulAnnotation.update()
             self.mplSimul.draw()
-        pass
+        elif event.key == 'left':
+            self.timeSimulAnnotation.decrementIndex()
+            self.timeSimulAnnotation.update()
+            self.mplSimul.draw()
+        elif event.key == 'c':
+            self.timeSimulAnnotation.remove()
+            self.mplSimul.draw()
+        
 
     def onpick1(self, event):
         print('Click!')
@@ -473,7 +495,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             QtWidgets.QMessageBox.critical(self,_translate("MainWindow", "Atenção!", None),_translate("MainWindow", "Tipo de entrada ainda não implementado.", None))
             self.comboBoxRinit.setCurrentIndex(0)
             return
-        print('ok')
         self.sysDict[self.sysCurrentName].Rt_initType = index
     
     def onChangeWinitInputType(self, index):
@@ -927,6 +948,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         all the plotted signals.
         """
         self.uncheckAllItens(self.treeWidgetSimul)
+        # Clear annotation:
+        self.timeSimulAnnotation.remove()
         # Clear plot area:
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
@@ -952,6 +975,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         for key in self.sysDict:
             self.sysDict[key].clearTimeSimulData()
 
+        # Clear annotation:
+        self.timeSimulAnnotation.remove()
         # Clear plot area:
         self.mplSimul.axes.cla()
         self.mplSimul.axes.set_xlim(0, self.sysDict[self.sysCurrentName].Tmax)
@@ -2918,6 +2943,7 @@ class LC3annotation():
     an = None       # Matplotlib annotation object
     label = ''
     color = None
+    marker = None
 
     def __init__(self, axes, stepSize = 1):
         self.X = 0.0
@@ -2929,6 +2955,15 @@ class LC3annotation():
         self.color = 1
         self.Xdata = None
         self.Ydata = None
+    
+    def remove(self):
+        """
+        Remove the annotation if exists.
+        """
+        if self.an:
+            self.an.remove()
+            self.marker.remove()
+            self.an = None
     
     def setXY(self, x: float, y: float):
         self.X = x
@@ -2950,12 +2985,28 @@ class LC3annotation():
     def incrementIndex(self):
         self.index = self.index + self.stepSize
         self.X = self.Xdata[self.index]
-        self.Y = self.Xdata[self.index]
+        self.Y = self.Ydata[self.index]
 
     def decrementIndex(self):
         self.index = self.index - self.stepSize
         self.X = self.Xdata[self.index]
-        self.Y = self.Xdata[self.index]
+        self.Y = self.Ydata[self.index]
+
+    def update(self):
+        """
+        Update an annotation if exists.
+        """
+        if self.an:
+            # Update annotation position and value:
+            self.an.xy = (self.X, self.Y)
+            self.an.set_text(f"V = {self.Y:.4f}\nt = {self.X:.4f} s.")
+            self.an.arrow_patch.set(ec=self.color)
+            self.an.set_bbox(dict(boxstyle="round", fc="0.9", ec=self.color))
+            # Update marker position:
+            self.marker.set_xdata([self.X])
+            self.marker.set_ydata([self.Y])
+            #for attr in dir(self.an):
+            #    print("an.%s = %r" % (attr, getattr(self.an, attr)))
 
 
     def annotate(self):
@@ -2964,14 +3015,12 @@ class LC3annotation():
         Creates a new one or updates if already created.
         """
         if self.an:
-            self.an.xy = (self.X, self.Y)
-            self.an.set_text(f"V = {self.Y:.3f}\nt = {self.X:.3f} s.")
-            self.an.arrow_patch.set(ec=self.color)
-            self.an.set_bbox(dict(boxstyle="round", fc="0.9", ec=self.color))
-            #for attr in dir(self.an):
-            #    print("an.%s = %r" % (attr, getattr(self.an, attr)))
+            self.update()
         else:
-            self.an = self.ax.annotate(f"V = {self.Y:.3f}\nt = {self.X:.3f} s.",
+            # Draws a marker:
+            self.marker = self.ax.plot(self.X, self.Y,marker='+',markersize=10, color='0')[0]
+            # Draws an annotation:
+            self.an = self.ax.annotate(f"V = {self.Y:.4f}\nt = {self.X:.4f} s.",
                                        xy=(self.X, self.Y),
                                        xytext=(3,1),
                                        textcoords='offset fontsize',
