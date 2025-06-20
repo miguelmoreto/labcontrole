@@ -212,6 +212,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.draw()
         
         self.timeSimulAnnotation = LC3annotation(self.mplSimul.axes)
+        self.freqRespMagAnnotation = LC3annotation(self.magBodeAxis, Xunit = 'Hz', Yunit = 'dB')
+        self.freqRespPhaseAnnotation = LC3annotation(self.phaseBodeAxis, Xunit = 'Hz', Yunit = 'deg.')
 
         self.nyquist_circ = matplotlib.patches.Circle((0, 0), radius=1, color='r',fill=False)
         self.NyquistAxis.add_patch(self.nyquist_circ)
@@ -365,6 +367,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.figure.canvas.mpl_connect('pick_event', self.onPickTimeSimul)
         self.mplSimul.figure.canvas.mpl_connect('key_press_event', self.onTimeSimulKeyPress)
         self.mplSimul.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
+        self.mplBode.figure.canvas.mpl_connect('pick_event', self.onPickFreqResponse)
         self.mplBode.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
@@ -382,17 +385,18 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             return False, dict()
         xdata = line.get_xdata()
         ydata = line.get_ydata()
-        maxd = 0.05
+        # Threshold is 5% of the abs(max - min) from Y data:
+        maxd = 0.05 * (abs(ydata.max() - ydata.min()))
         d = numpy.sqrt(
             (xdata - mouseevent.xdata)**2 + (ydata - mouseevent.ydata)**2)
-
+        # Find the array index:
         ind = numpy.argmin(d)
-        if d[ind] <= maxd:#len(ind):
+        if d[ind] <= maxd: # Used clicked close enough to a data point
             pickx = xdata[ind]
             picky = ydata[ind]
             props = dict(ind=ind, pickx=pickx, picky=picky, Xdata=xdata, Ydata=ydata)
             return True, props
-        else:
+        else: # Not close enough
             return False, dict()
 
     def onMplPlotAreaClick(self, event):
@@ -448,7 +452,30 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         elif event.key == 'c':
             self.timeSimulAnnotation.remove()
             self.mplSimul.draw()
-        
+
+    def onPickFreqResponse(self, event):
+        """
+        Pick event that is fired when user clicks sufficiently close to a line in
+        a frequency response graph (magnitude or phase)
+          1) Detects which line is clicked and store its label
+          2) Gets the X and Y values
+          3) Creates an annotation with the values
+        """
+        #self.magBodeAxis
+        #self.phaseBodeAxis
+        label = event.artist.get_label()
+        color = self.getExistingPlotColor(self.magBodeAxis,label)
+        #print(self.mplBode.axes.items())
+        print(label.split(':')[0])
+
+        self.freqRespMagAnnotation.setXY(event.pickx,event.picky)
+        self.freqRespMagAnnotation.setIndex(event.ind)
+        self.freqRespMagAnnotation.setXYdataVectors(event.Xdata, event.Ydata)
+        self.freqRespMagAnnotation.setLabel(label)
+        self.freqRespMagAnnotation.setColor(color)
+        self.freqRespMagAnnotation.annotate()
+        self.mplBode.draw()
+
 
     def onpick1(self, event):
         print('Click!')
@@ -1294,13 +1321,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if (item.checkState(column) == Qt.CheckState.Unchecked): # Plot the selected signal.
                 if signal == 'mag':
                     if self.radioBtnDB.isChecked():
-                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label,picker=self.line_picker)
                     else:
-                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
+                        self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label,picker=self.line_picker)
                     if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                         self.plotStabilityMargins(sysname,simulname,'GM')
                 elif signal == 'phase':
-                    self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                    self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label,picker=self.line_picker)
                     if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                         self.plotStabilityMargins(sysname,simulname,'PM')
                 elif signal == 'nyquist':
@@ -1697,11 +1724,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         label = '{id}:{s}'.format(id=sysname,s=simulname)
                         if signal == 'mag':
                             if self.radioBtnDB.isChecked():
-                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label,picker=self.line_picker)
                             else:
-                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
+                                self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label,picker=self.line_picker)
                         elif signal == 'phase':
-                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                            self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label,picker=self.line_picker)
                         item.setCheckState(1, Qt.CheckState.Checked)
                     else:
                         item.setCheckState(1, Qt.CheckState.Unchecked)
@@ -1732,15 +1759,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                         self.removeExistingPlot(self.magBodeAxis,label)
                         self.removeExistingPlot(self.magBodeAxis.axes,'_'+label) # Remove the gain margin marker
                         if self.radioBtnDB.isChecked():
-                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label)
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']),label=label,picker=self.line_picker)
                         else:
-                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label)
+                            self.magBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'],label=label,picker=self.line_picker)
                         if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                             self.plotStabilityMargins(sysname,simulname,'GM')
                     elif signal == 'phase':
                         self.removeExistingPlot(self.phaseBodeAxis,label)
                         self.removeExistingPlot(self.phaseBodeAxis.axes,'_'+label) # Remove the gain margin marker
-                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label)
+                        self.phaseBodeAxis.semilogx(self.sysDict[sysname].FreqResponseData[simulname]['data']['omega']/(self.freqRespHzRadFactor),self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi),label=label,picker=self.line_picker)
                         if self.checkBoxMargins.isChecked(): # Plot Gain Margin
                             self.plotStabilityMargins(sysname,simulname,'PM')
                     elif signal == 'nyquist':
@@ -2942,16 +2969,20 @@ class LC3annotation():
                     # be drawn.
     an = None       # Matplotlib annotation object
     label = ''
+    Xunit = ''
+    Yunit = ''
     color = None
     marker = None
 
-    def __init__(self, axes, stepSize = 1):
+    def __init__(self, axes, Xunit = 's.', Yunit = '', stepSize = 1):
         self.X = 0.0
         self.Y = 0.0
         self.index = 0
         self.stepSize = stepSize
         self.ax = axes
-        self.lable = ''
+        self.label = ''
+        self.Xunit = Xunit
+        self.Yunit = Yunit
         self.color = 1
         self.Xdata = None
         self.Ydata = None
@@ -2999,7 +3030,7 @@ class LC3annotation():
         if self.an:
             # Update annotation position and value:
             self.an.xy = (self.X, self.Y)
-            self.an.set_text(f"V = {self.Y:.4f}\nt = {self.X:.4f} s.")
+            self.an.set_text(f"{self.Y:.4f} {self.Yunit}\n{self.X:.4f} {self.Xunit}")
             self.an.arrow_patch.set(ec=self.color)
             self.an.set_bbox(dict(boxstyle="round", fc="0.9", ec=self.color))
             # Update marker position:
@@ -3020,12 +3051,12 @@ class LC3annotation():
             # Draws a marker:
             self.marker = self.ax.plot(self.X, self.Y,marker='+',markersize=10, color='0')[0]
             # Draws an annotation:
-            self.an = self.ax.annotate(f"V = {self.Y:.4f}\nt = {self.X:.4f} s.",
-                                       xy=(self.X, self.Y),
-                                       xytext=(3,1),
-                                       textcoords='offset fontsize',
-                                       bbox=dict(boxstyle="round", fc="0.9", ec=self.color),
-                                       arrowprops=dict(arrowstyle="->", ec=self.color, connectionstyle="angle,angleA=0,angleB=60,rad=10"))
+            self.an = self.ax.annotate(f"{self.Y:.4f} {self.Yunit}\n{self.X:.4f} {self.Xunit}",
+                            xy=(self.X, self.Y),
+                            xytext=(3,1),
+                            textcoords='offset fontsize',
+                            bbox=dict(boxstyle="round", fc="0.9", ec=self.color),
+                            arrowprops=dict(arrowstyle="->", ec=self.color, connectionstyle="angle,angleA=0,angleB=60,rad=10"))
 
 class HelpWindow(QtWidgets.QFrame):
     """
