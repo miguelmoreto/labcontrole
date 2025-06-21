@@ -23,7 +23,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>LabControle 3.6</string>
+   <string>LabControle 3.7</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -61,7 +61,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -2878,6 +2878,10 @@ QGroupBox::title {
                 <height>100</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Clique sobre uma linha para medir.
+Use as setas para direita e esquerda para alterar o valor.</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -3609,6 +3613,10 @@ Auto</string>
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Clique sobre uma linha para medir.
+Use as setas para direita e esquerda para alterar o valor.</string>
                   </property>
                  </widget>
                 </item>

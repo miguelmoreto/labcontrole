@@ -140,7 +140,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Versão: 3.6
+        <string>Versão: 3.7
 Florianópolis, SC, Brasil
 2025</string>
        </property>

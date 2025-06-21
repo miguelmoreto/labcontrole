@@ -389,6 +389,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         ydata = line.get_ydata()
         # Threshold is 5% of the abs(max - min) from Y data:
         maxd = 0.05 * (abs(ydata.max() - ydata.min()))
+        if (maxd < 0.05):
+            maxd = 0.05 * abs(ydata.max())
         d = numpy.sqrt(
             (xdata - mouseevent.xdata)**2 + (ydata - mouseevent.ydata)**2)
         # Find the array index:
