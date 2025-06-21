@@ -368,6 +368,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.mplSimul.figure.canvas.mpl_connect('key_press_event', self.onTimeSimulKeyPress)
         self.mplSimul.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
         self.mplBode.figure.canvas.mpl_connect('pick_event', self.onPickFreqResponse)
+        self.mplBode.figure.canvas.mpl_connect('key_press_event', self.onFreqRespKeyPress)
         self.mplBode.figure.canvas.mpl_connect('button_press_event', self.onMplPlotAreaClick)
         
         self.statusBar().showMessage(_translate("MainWindow", "Tudo pronto!", None),2000)        
@@ -375,7 +376,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     def line_picker(self, line, mouseevent):
         """
         Find the points within a certain distance from the mouseclick in
-        data coords and attach some extra attributes:
+        data coords and attach some extra attributes considering the
+        closes point found:
             ind:            The array index of the data point picked.
             pickx, picky:   The data points that were picked.
             Xdata, Ydata:   The data arrays of the line picked.
@@ -406,7 +408,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if event.button == 1: # Lef button:
             event.canvas.setFocus()
-
         #print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
         #      ('double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata))
 
@@ -420,6 +421,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         #print(event)
         label = event.artist.get_label()
+        if not label:
+            return
         color = self.getExistingPlotColor(self.mplSimul.axes,label)
         self.timeSimulAnnotation.setXY(event.pickx,event.picky)
         self.timeSimulAnnotation.setIndex(event.ind)
@@ -429,15 +432,15 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.timeSimulAnnotation.annotate()
 
         self.mplSimul.setFocus()
-
-        #label = event.artist.get_label()
-        #print("Line label: {}".format(label))
-        #print('onpick2 line:', event.pickx, event.picky)
-
-        #self.mplSimul.axes.annotate("({}, {})".format(event.pickx, event.picky),xy=(event.pickx, event.picky))
         self.mplSimul.draw()
     
     def onTimeSimulKeyPress(self, event):
+        """
+        Key press handler for time domain simulation graph.
+            Right arrow increments X value of the annotation
+            Left arrow decrements X value of the annotation
+            c clear the annotation:
+        """        
         sys.stdout.flush()
         #print(f"Tecla: {event.key}")
         
@@ -458,37 +461,79 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         Pick event that is fired when user clicks sufficiently close to a line in
         a frequency response graph (magnitude or phase)
           1) Detects which line is clicked and store its label
-          2) Gets the X and Y values
-          3) Creates an annotation with the values
+          2) Gets the X and Y values and X  and Y data vectors
+          3) Creates an annotation with the values in both graphs.
         """
-        #self.magBodeAxis
-        #self.phaseBodeAxis
+        # Get label of the picked object:
         label = event.artist.get_label()
+        if not label: # Only accepts picking in lines with labels.
+            return
+        # Get the color of the picked object :
         color = self.getExistingPlotColor(self.magBodeAxis,label)
-        #print(self.mplBode.axes.items())
-        print(label.split(':')[0])
-
-        self.freqRespMagAnnotation.setXY(event.pickx,event.picky)
+        # Extracts na system name e simulation name:
+        sysname = label.split(':',1)[0]
+        simulname = label.split(':',1)[1]
+        # Getting the freq response data:
+        phase = self.sysDict[sysname].FreqResponseData[simulname]['data']['phase']*180/(numpy.pi)
+        if self.radioBtnDB.isChecked(): # dB magnitude
+            magnitude = 20*numpy.log10(self.sysDict[sysname].FreqResponseData[simulname]['data']['mag'])
+            self.freqRespMagAnnotation.Yunit = 'dB'
+        else:
+            magnitude = self.sysDict[sysname].FreqResponseData[simulname]['data']['mag']
+            self.freqRespMagAnnotation.Yunit = ''
+        # Checking units:
+        if self.radioBtnHz.isChecked(): # Hz frequency
+            self.freqRespMagAnnotation.Xunit = 'Hz'
+            self.freqRespPhaseAnnotation.Xunit = 'Hz'
+        else: # rad/s frequency:
+            self.freqRespMagAnnotation.Xunit = 'rad/s'
+            self.freqRespPhaseAnnotation.Xunit = 'rad/s'
+        
+        # Magnitude annotation:
+        self.freqRespMagAnnotation.setXY(event.pickx,magnitude[event.ind])
         self.freqRespMagAnnotation.setIndex(event.ind)
-        self.freqRespMagAnnotation.setXYdataVectors(event.Xdata, event.Ydata)
+        self.freqRespMagAnnotation.setXYdataVectors(event.Xdata, magnitude)
         self.freqRespMagAnnotation.setLabel(label)
         self.freqRespMagAnnotation.setColor(color)
-        self.freqRespMagAnnotation.annotate()
+        self.freqRespMagAnnotation.annotate(XYtext=(-10,-2))
+        
+        # Phase annotation:
+        self.freqRespPhaseAnnotation.setXY(event.pickx,phase[event.ind])
+        self.freqRespPhaseAnnotation.setIndex(event.ind)
+        self.freqRespPhaseAnnotation.setXYdataVectors(event.Xdata, phase)
+        self.freqRespPhaseAnnotation.setLabel(label)
+        self.freqRespPhaseAnnotation.setColor(color)
+        self.freqRespPhaseAnnotation.annotate(XYtext=(4,2))
+
+        self.mplBode.setFocus()
         self.mplBode.draw()
 
-
-    def onpick1(self, event):
-        print('Click!')
-        if isinstance(event.artist, matplotlib.lines.Line2D):
-            thisline = event.artist
-            ind = event.ind
-            print(event.artist.get_label())
-            print(ind)
-            xdata = thisline.get_xdata()
-            ydata = thisline.get_ydata()
-            print('onpick1 line: ', numpy.column_stack([xdata[ind], ydata[ind]]))
-            #print(event.pickx)
-            #print(event.picky)
+    def onFreqRespKeyPress(self, event):
+        """
+        Key press handler for frequency response graph.
+            Right arrow increments X value of the annotations
+            Left arrow decrements X value of the annotations
+            c clear the annotations:
+        """
+        sys.stdout.flush()
+        #print(f"Tecla: {event.key}")
+        
+        if event.key == 'right':
+            self.freqRespMagAnnotation.incrementIndex()
+            self.freqRespMagAnnotation.update()
+            self.freqRespPhaseAnnotation.incrementIndex()
+            self.freqRespPhaseAnnotation.update()
+            self.mplBode.draw()
+        elif event.key == 'left':
+            self.freqRespMagAnnotation.decrementIndex()
+            self.freqRespMagAnnotation.update()
+            self.freqRespPhaseAnnotation.decrementIndex()
+            self.freqRespPhaseAnnotation.update()            
+            self.mplBode.draw()
+        elif event.key == 'c':
+            self.freqRespMagAnnotation.remove()
+            self.freqRespPhaseAnnotation.remove()
+            self.mplBode.draw()
 
     def _has_expressions_errors(self):
         result = False
@@ -1516,6 +1561,10 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         for key in self.sysDict:
             self.sysDict[key].clearFreqResponseData()
 
+        # Removing annotations:
+        self.freqRespMagAnnotation.remove()
+        self.freqRespPhaseAnnotation.remove()
+
         # Reset ploting area:
         self.magBodeAxis.cla()
         self.phaseBodeAxis.cla()
@@ -1551,6 +1600,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             # Unselect bode signals from the list:
             self.uncheckItens(self.treeWidgetFreqResp,'mag')
             self.uncheckItens(self.treeWidgetFreqResp,'phase')
+            # Removing annotations:
+            self.freqRespMagAnnotation.remove()
+            self.freqRespPhaseAnnotation.remove()
             # Clear Bode magnitude and phase axis:
             self.magBodeAxis.cla()
             self.phaseBodeAxis.cla()
@@ -2057,6 +2109,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         It can be a line or a patch (arrow)
         """
         color = 0
+        print(label)
         for artist in ax.get_children():
             if (artist.get_label() == label):
                 color = artist.get_color()
@@ -3040,7 +3093,7 @@ class LC3annotation():
             #    print("an.%s = %r" % (attr, getattr(self.an, attr)))
 
 
-    def annotate(self):
+    def annotate(self, XYtext = (3,1)):
         """
         Performs the annotation in the canvas.
         Creates a new one or updates if already created.
@@ -3053,7 +3106,7 @@ class LC3annotation():
             # Draws an annotation:
             self.an = self.ax.annotate(f"{self.Y:.4f} {self.Yunit}\n{self.X:.4f} {self.Xunit}",
                             xy=(self.X, self.Y),
-                            xytext=(3,1),
+                            xytext=XYtext,
                             textcoords='offset fontsize',
                             bbox=dict(boxstyle="round", fc="0.9", ec=self.color),
                             arrowprops=dict(arrowstyle="->", ec=self.color, connectionstyle="angle,angleA=0,angleB=60,rad=10"))
