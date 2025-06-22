@@ -245,7 +245,7 @@ def MyRootLocus(num,den,kvect):
         curroots = curpoly.r
         curroots.sort()
         roots.append(curroots)
-    mymat = numpy.row_stack(roots)
+    mymat = numpy.vstack(roots)
     # Sort the roots calculated above, so that the root
     # locus doesn't show weird pseudo-branches as roots jump from
     # one branch to another.

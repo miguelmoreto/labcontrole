@@ -257,6 +257,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 'active': True,
                 'message': ''
             },
+            'TM': {
+                'error': False,
+                'active': True,
+                'message': ''
+            },
             'H[Num](s)': {
                 'error': False,
                 'active': True,
@@ -546,9 +551,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             msgs = []
             for e in self.expressions_errors:
                 if self.expressions_errors[e].get('error') and self.expressions_errors[e].get('active'):
-                    msgs.append('<i>{}</i> for <b>{}</b>'.format(
-                        self.expressions_errors[e].get('message'),
-                        e
+                    if e == 'TM':
+                        msgs.append('<i>{}</i>'.format(
+                            self.expressions_errors[e].get('message')
+                    ))
+                    else:
+                        msgs.append('<i>{}</i> for <b>{}</b>'.format(
+                            self.expressions_errors[e].get('message'),
+                            e
                     ))
             QtWidgets.QMessageBox.critical(self, 'Oops!', '<br />'.join(msgs))
         return result
@@ -2499,6 +2509,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 self.sysDict[self.sysCurrentName].Gnum = Gnum
                 self.sysDict[self.sysCurrentName].GnumStr = str(value)
                 self.sysDict[self.sysCurrentName].updateSystem()
+                flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+                if flag:
+                    self._set_expression_error('TM', False)
+                else:
+                    self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')
+
         elif (self.sysDict[self.sysCurrentName].Type == 4):
             # Parse and check NL system input string:
             sysstr = self.sysDict[self.sysCurrentName].NLsysParseString(str(value))
@@ -2535,7 +2551,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[self.sysCurrentName].Gden = Gden
             self.sysDict[self.sysCurrentName].GdenStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
-
+            flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+            if flag:
+                self._set_expression_error('TM', False)
+            else:
+                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')
 
     def onCnumChange(self,value):
         """
@@ -2557,6 +2577,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[self.sysCurrentName].Cnum = Cnum
             self.sysDict[self.sysCurrentName].CnumStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
+            flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+            if flag:
+                self._set_expression_error('TM', False)
+            else:
+                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')         
     
     def onCdenChange(self,value):
         """
@@ -2578,6 +2603,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self.sysDict[self.sysCurrentName].Cden = Cden
             self.sysDict[self.sysCurrentName].CdenStr = str(value)
             self.sysDict[self.sysCurrentName].updateSystem()
+            flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+            if flag:
+                self._set_expression_error('TM', False)
+            else:
+                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')           
       
     def onHnumChange(self,value):
         """
@@ -2598,7 +2628,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self._set_expression_error('H[Num](s)', False)
             self.sysDict[self.sysCurrentName].Hnum = Hnum
             self.sysDict[self.sysCurrentName].HnumStr = str(value)
-            self.sysDict[self.sysCurrentName].updateSystem()            
+            self.sysDict[self.sysCurrentName].updateSystem()
+            flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+            if flag:
+                self._set_expression_error('TM', False)
+            else:
+                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')                  
     
     def onHdenChange(self,value):
         """
@@ -2619,7 +2654,12 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             self._set_expression_error('H[Den](s)', False)
             self.sysDict[self.sysCurrentName].Hden = Hden
             self.sysDict[self.sysCurrentName].HdenStr = str(value)
-            self.sysDict[self.sysCurrentName].updateSystem()            
+            self.sysDict[self.sysCurrentName].updateSystem()
+            flag, strsys = self.sysDict[self.sysCurrentName].isProper()
+            if flag:
+                self._set_expression_error('TM', False)
+            else:
+                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}') 
     
     def checkTFinput(self, value, expr_var='s'):
         """

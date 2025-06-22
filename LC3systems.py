@@ -227,7 +227,7 @@ class LTIsystem:
         else:
             self.H_tf = ct.tf(1,1)
         
-        # Compute the Direct Loop transfer functions accordingly with
+        # Compute the Open Loop transfer functions accordingly with
         # the system type.
         if (self.Type == 0):
             self.DLTF_r = (self.G_tf * self.H_tf).minreal(0.0001)
@@ -286,12 +286,47 @@ class LTIsystem:
         lg.debug('Closed loop TF matrix numerator: {n}'.format(n=num))
         self.TM = ct.tf(num,den)
 
+    def isProper(self):
+        """
+        Check if the Open Loop Transfer Function is proper.
+            Returs a tuple:
+                True if is proper or False if any TF is improper.
+                A string to indicate which TF is improper.
+        """
+        flag = True
+        strsys = ''
+        if (len(self.TM.den[0][0]) - len(self.TM.num[0][0])) >= 0:
+            flag = True and flag
+        else:
+            flag = False and flag
+            strsys += 'Y(s)/R(s) '
+
+        if (len(self.TM.den[1][0]) - len(self.TM.num[1][0])) >= 0:
+            flag = True and flag
+        else:
+            flag = False and flag
+            strsys += 'U(s)/R(s) '
+
+        if (len(self.TM.den[0][1]) - len(self.TM.num[0][1])) >= 0:
+            flag = True and flag
+        else:
+            flag = False and flag
+            strsys += 'Y(s)/W(s) '
+
+        if (len(self.TM.den[1][1]) - len(self.TM.num[1][1])) >= 0:
+            flag = True and flag
+        else:
+            flag = False and flag
+            strsys += 'U(s)/W(s) '
+
+        return flag, strsys
 
     def changeSystemType(self, newtype):
-        # This method should do:
-        #  Change CurrentSimulName
-        #  Update the transfer matrix (if LTI)
-        #  Add a new TimeSimData or overwrite the current one?
+        """
+        Change simulation system type:
+            Change CurrentSimulName
+            Update the transfer matrix (if LTI)
+        """
         if newtype <= 4:
             lg.debug('Changing system type to {t}'.format(t=newtype))
             self.Type = newtype
