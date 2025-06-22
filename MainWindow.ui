@@ -2880,7 +2880,7 @@ QGroupBox::title {
               </property>
               <property name="toolTip">
                <string>Clique sobre uma linha para medir.
-Use as setas para direita e esquerda para alterar o valor.</string>
+Use as setas para direita e esquerda para alterar o ponto.</string>
               </property>
              </widget>
             </item>
@@ -3616,7 +3616,7 @@ Auto</string>
                   </property>
                   <property name="toolTip">
                    <string>Clique sobre uma linha para medir.
-Use as setas para direita e esquerda para alterar o valor.</string>
+Use as setas para direita e esquerda para alterar o ponto.</string>
                   </property>
                  </widget>
                 </item>
