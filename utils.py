@@ -1,7 +1,39 @@
 # -*- coding: utf-8 -*-
-#from scipy import *
-import scipy as sp
-from numpy import array,arange
+#==============================================================================
+# This file is part of LabControl 3.
+# 
+# LabControl 3 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License.
+# 
+# LabControl 3 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with LabControl 3.  If not, see <http://www.gnu.org/licenses/>.
+#==============================================================================
+#==============================================================================
+# Este arquivo é parte do programa LabControl 3
+# 
+# LabControl 3 é um software livre; você pode redistribui-lo e/ou 
+# modifica-lo dentro dos termos da Licença Pública Geral GNU como 
+# publicada pela Fundação do Software Livre (FSF); na versão 3 da 
+# Licença.
+# Este programa é distribuido na esperança que possa ser  util, 
+# mas SEM NENHUMA GARANTIA; sem uma garantia implicita de ADEQUAÇÂO a 
+# qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral
+# GNU para maiores detalhes.
+# 
+# Você deve ter recebido uma cópia da Licença Pública Geral GNU
+# junto com este programa, se não, escreva para a Fundação do Software
+# Livre(FSF) Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#==============================================================================
+#
+# Developed by Miguel Moreto
+# Florianopolis, Brazil, 2025
+
 import numpy
 
 def parseeqpoly(dados, listeq=[], expr_var='s') :
@@ -75,29 +107,7 @@ def parseeqpoly(dados, listeq=[], expr_var='s') :
 					eqt = eqt / (float(tt.strip('/'))**expoente)
 				else : 
 					eqt = eqt * (float(tt)**expoente)				
-
-			# if tt.find('s') > -1 :
-			# 	if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + potencia
-			# 	if (expoente < 1) : raise 'Erro 3 : ' + potencia				
-			# 	tt = tt.replace('s','')
-			# 	if tt != '' : raise 'Erro 1 : ' + tt
-			# 	paux = numpy.poly1d([1,0])**int(expoente)
-			# 	if flagdiv : eqt = eqt / paux
-			# 	else : eqt = eqt * paux
-			# elif tt.find('#') > -1 :
-			# 	i = tt.find('#')
-			# 	f = tt.find('#',i+1)
-			# 	if f == -1 : raise 'Erro 2 : ' + tt
-			# 	idx = int(tt[i+1:f])
-			# 	if (int(expoente)-expoente) != 0 : raise 'Erro 3 : ' + expoente
-			# 	if (expoente < 1) : raise 'Erro 3 : ' + expoente					
-			# 	if flagdiv : eqt = eqt / (listeq[idx]**int(expoente))
-			# 	else : eqt = eqt * (listeq[idx]**int(expoente))
-			# else :				
-			# 	if flagdiv : 
-			# 		eqt = eqt / (float(tt.strip('/'))**expoente)
-			# 	else : 
-			# 		eqt = eqt * (float(tt)**expoente)				
+				
 		retorno = retorno + sinal * eqt
 	return retorno
 
@@ -128,7 +138,10 @@ def parseexpr(dados, expr_var='s') :
 		return retorno
 	
 
-def FreqResp(num,den,f,getcrossings=False) :	
+def FreqResp(num,den,f,getcrossings=False):
+	"""
+	*** THIS FUNCTION IS NO LONGER USED ***
+	"""
 
 	w = 2j*numpy.pi*f	
 	fresp = num(w)/den(w)	
@@ -224,16 +237,20 @@ def FreqResp(num,den,f,getcrossings=False) :
 	else : return dBmag, phase
 	
 def Nyquist(num,den,f):
-    w = 2j*numpy.pi*f	
-    fresp = num(w)/den(w)
-    preal = numpy.real(fresp)
-    pimag = numpy.imag(fresp)	
-    return preal, pimag
+	"""
+	*** THIS FUNCTION IS NO LONGER USED ***
+	"""
+	w = 2j*numpy.pi*f	
+	fresp = num(w)/den(w)
+	preal = numpy.real(fresp)
+	pimag = numpy.imag(fresp)
+	return preal, pimag
  
 def MyRootLocus(num,den,kvect):
     
     """
-    calculate the roots to draw the root locus
+	*** THIS FUNCTION IS NO LONGER USED ***
+    Calculate the roots to draw the root locus
     
     num and den are poly1d numpy objects.
     """
@@ -269,6 +286,8 @@ def MyRootLocus(num,den,kvect):
 
 def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
     """
+	*** THIS FUNCTION IS NO LONGER USED ***
+
     Remove, from the denominator and numerator the poles and zeros that are
     equals.
     """
@@ -309,8 +328,12 @@ def RemoveEqualZeroPole(num, den, rtol=1e-5, atol=1e-10):
 
     
 def in_with_tol(elem, searchlist, rtol=1e-5, atol=1e-10):
-    """Determine whether or not elem+/-tol matches an element of
-    searchlist."""
+    """
+	*** THIS FUNCTION IS NO LONGER USED ***
+
+	Determine whether or not elem+/-tol matches an element of
+    searchlist.
+	"""
     for n, item in enumerate(searchlist):
        if numpy.allclose(item, elem, rtol=rtol, atol=atol):
             return n

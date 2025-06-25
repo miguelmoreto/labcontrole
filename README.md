@@ -63,9 +63,9 @@ The steps are simular to those for Linux instructions above, using the Anaconda 
 `conda activate labcontrole`
 
 1. Install dependencies:
-	1. `conda install conda-forge::blas=*=openblas`
+	1. `conda install conda-forge::blas=*=openblas` (not necessary for linux)
 	1. `conda install numpy scipy`
-	2. `conda install pyqt`
+	2. `conda install pyqt` (install pyQt version 6)
 	3. `conda install matplotlib`
 	3. `conda install -c conda-forge control slycot`
 
@@ -80,7 +80,7 @@ Run `python LabControl3.py`
 
 ## About
 
-The LabControl 3 is a major update from LabControle 2. Labcontrole 2 was written originaly in Python 2.7 language. Later it was ported to python 3 and graphical library updated to PyQt6. 
+The LabControle 3 is a major update from LabControle 2. Labcontrole 2 was written originaly in Python 2.7 language. Later it was ported to python 3 and graphical library updated to PyQt6. 
 
 It depends on the folowing python packges:
 * Matplotlib
@@ -91,7 +91,8 @@ It depends on the folowing python packges:
 
 ## Developers
 
-Labcontrol 3 was created and is maintained by professor Miguel Moreto from Federal University of Santa Catarina, Florianópolis, SC, Brazil.
+Labcontrol 3 was created and is maintained by professor Miguel Moreto at Federal University of Santa Catarina, Florianópolis, SC, Brazil.
 
-Contributors:
+Acknowledgments:
+* prof. Eduardo Batista, Florianópolis, SC, Brazil.
 * Anderson Livramento, Florianópolis, SC, Brazil.

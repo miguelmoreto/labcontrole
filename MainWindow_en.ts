@@ -1,743 +1,794 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en" sourcelanguage="pt_BR">
+<TS version="2.1" language="en_US" sourcelanguage="pt_BR">
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="MainWindow.ui" line="26"/>
-        <source>LabControle 3 - Beta 1</source>
-        <translation>LabControl 3 - Beta 1</translation>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>LabControle 3.7</source>
+        <translation>LabControle 3.7</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="62"/>
-        <source>Mostra informações do sistema selecionado.</source>
-        <translation>Show information about the selected system.</translation>
-    </message>
-    <message>
-        <location filename="MainWindow.ui" line="69"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Diagrama</source>
         <translation>Diagram</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="668"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Inicial:</source>
         <translation>Initial:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="222"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Tipo do sinal de referência durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</source>
-        <translation>Type of reference signal during the initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
+        <translation>Type of reference signal during initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="819"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Constante</source>
         <translation>Constant</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="824"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Rampa</source>
         <translation>Ramp</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="829"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Parábola</source>
         <translation>Parabole</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="834"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Seno</source>
         <translation>Sine</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="839"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Cosseno</source>
         <translation>Cosine</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="844"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="284"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor do parâmetro do sinal referência durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</source>
-        <translation>Value of the reference signal during the final period (from 0 to &quot;Inst.&quot; seconds).</translation>
+        <translation>Value of reference signal parameter during the initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="793"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Final:</source>
         <translation>Final:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="348"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Tipo do sinal de referência durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</source>
-        <translation>Type of reference signal during the final period (from &quot;Inst.&quot; to &quot;Tmax&quot; seconds).</translation>
+        <translation>Type of reference signal during final period (from &quot;Inst.&quot; to &quot;Tmax.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="410"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor do parâmetro do sinal referência durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</source>
-        <translation>Value of the reference signal during the final period (from &quot;Inst.&quot; to &quot;Tmax&quot; seconds).</translation>
+        <translation>Value of reference signal parameter during the final period (from &quot;Inst.&quot; to &quot;Tmax.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="947"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Instante de tempo em que ocorre a mudança da entrada
  do período inicial para o final.</source>
-        <translation>Time instant when the change of the input occurs from\nthe Initial to Final period.</translation>
+        <translation>Time instant when the input changes
+from intial to final periods.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="992"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ruído:</source>
         <translation>Noise:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="560"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Desvio padrão do ruído a ser aplicado na entrada r(t).</source>
-        <translation>Noise standard deviation to be applied in r(t).</translation>
+        <translation>Standard deviation of the noise to be applied over the input r(t).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="696"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Tipo do sinal de perturbação durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</source>
-        <translation>Type of perturbation signal during the initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
+        <translation>Tipe of perturbation signal during the initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="758"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor do parâmetro do sinal perturbação durante o período inicial (de 0 a &quot;Inst.&quot; segundos).</source>
-        <translation>Value of the perturbation signal during the final period (from 0 to &quot;Inst.&quot; seconds).</translation>
+        <translation>Value of perturbation signal parameter during the initial period (from 0 to &quot;Inst.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="815"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Tipo do sinal de perturbação durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</source>
-        <translation>Type of perturbation signal during the final period (from &quot;Inst.&quot; to &quot;Tmax&quot; seconds).</translation>
+        <translation>Type of perturbation signal during initial period (from &quot;Inst.&quot; to &quot;Tmax.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="877"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor do parâmetro do sinal perturbação durante o período final (de &quot;Inst.&quot; a &quot;Tmax&quot; segundos).</source>
-        <translation>Value of the perturbation signal during the final period (from &quot;Inst.&quot; to &quot;Tmax&quot; seconds).</translation>
+        <translation>Value of perturbation signal parameter during the final period (from &quot;Inst.&quot; to &quot;Tmax.&quot; seconds).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1027"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Desvio padrão do ruído a ser aplicado na entrada w(t).</source>
-        <translation>Noise standard deviation to be applied in w(t).</translation>
+        <translation>Standard deviation of the noise to be applied over the input w(t).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1094"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Configurações diversas</source>
-        <translation>Other settings</translation>
+        <translation>Miscellaneous configurations</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1097"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Configurações:</source>
-        <translation>Settings:</translation>
+        <translation>Configurations:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1125"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Seleção do tipo de sistema a ser analisado.</source>
         <translation>Selection of the system type to be analised.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1132"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema LTI 1: K.G(s) + W(s)</source>
-        <translation>System LTI 1: K.G(s) + W(s)</translation>
+        <translation>LTI 1 System: K.G(s) + W(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1137"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema LTI 2: K.C(s).G(s) + W(s)</source>
-        <translation>System LTI 2: K.C(s).G(s) + W(s)</translation>
+        <translation>LTI 2 System: K.C(s).G(s) + W(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1142"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema LTI 3: [K.C(s) +W(s)].G(s)</source>
-        <translation>System LTI 3: [K.C(s) +W(s)].G(s)</translation>
+        <translation>LTI 3 System: [K.C(s) +W(s)].G(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1147"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema Linear Discreto</source>
-        <translation>Discrete time system</translation>
+        <translation>Discrete Time Linear System</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1152"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema Não-linear</source>
-        <translation>Non-linear system</translation>
+        <translation>Non-linear System</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1221"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor da saturação (0 para desabilitar).</source>
         <translation>Saturation value (0 to disable).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1259"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Taxa de amostragem do sistema discreto</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampling period of the discrete time system</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1262"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>T:</source>
-        <translation type="unfinished"></translation>
+        <translation>T:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1300"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Período de amostragem do sistema discreto em segundos.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sampling period of the discrete time system in seconds.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1306"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source> s</source>
-        <translation type="unfinished"></translation>
+        <translation> s</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1344"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Número de pontos por T usado na simulação discreta.</source>
-        <translation type="unfinished"></translation>
+        <translation>Number of simulation point for each T in discrete time simulation.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1347"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Pontos/T:</source>
-        <translation type="unfinished"></translation>
+        <translation>Points/T:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1392"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistemas armazenados:</source>
-        <translation type="unfinished"></translation>
+        <translation>Stored Systems:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1414"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Listagem dos sistemas armazenados.</source>
-        <translation type="unfinished"></translation>
+        <translation>List of the stored systems.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1457"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</source>
-        <translation type="unfinished"></translation>
+        <translation>Add a new system to the list, copying the data from the current system.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3572"/>
-        <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.ui" line="1471"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Remove da lisa o sistema selecionado</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove the selected system from the list</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1485"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</source>
-        <translation type="unfinished"></translation>
+        <translation>Clears the list of stored systems, keeping only the initial system.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2814"/>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.ui" line="1516"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Diagrama de blocos do sistema selecionado.</source>
-        <translation type="unfinished"></translation>
+        <translation>Block diagram of the selected system.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1583"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Abre/fecha a malha de realimentação</source>
-        <translation type="unfinished"></translation>
+        <translation>Open/close the feedback loop</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1586"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Malha</source>
-        <translation type="unfinished"></translation>
+        <translation>Loop</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1611"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Abrir a malha de realimentação</source>
-        <translation type="unfinished"></translation>
+        <translation>Open the feedback loop</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1614"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Aberta</source>
-        <translation type="unfinished"></translation>
+        <translation>Opened</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1634"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Fechar a malha de realimentação</source>
-        <translation type="unfinished"></translation>
+        <translation>Close the feedback loop</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1637"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Fechada</source>
-        <translation type="unfinished"></translation>
+        <translation>Closed</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1728"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ajuste do ganho de malha direta K</source>
-        <translation type="unfinished"></translation>
+        <translation>Direct loop gain setting</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1674"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ganho</source>
-        <translation type="unfinished"></translation>
+        <translation>Gain</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4237"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ganho de malha direta K.</source>
-        <translation type="unfinished"></translation>
+        <translation>Direct loop gain K.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4240"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation>1</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1815"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita/desabilita o controlador</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/disable the controller</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1829"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Controlador C(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Controller C(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1882"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Num:</source>
-        <translation type="unfinished"></translation>
+        <translation>Num:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1912"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Numerador do controlador C(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Numerator of the controller C(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1945"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Den:</source>
-        <translation type="unfinished"></translation>
+        <translation>Den:</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="1975"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Denominador do controlador C(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Denominator of the controller C(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2040"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita/desabilita a planta</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/disable the process</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2054"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Process G(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2134"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Numerador da planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Numerator of the process G(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2191"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>2*s+10</source>
+        <translation>2*s+10</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Denominador da planta G(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Denominator of the process G(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2256"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita/desabilita o sensor</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable/disable the sensor</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2270"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sensor H(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2410"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Denominador do sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Denominator of the sensor H(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2350"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Numerador do sensor H(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Numerator of the sensor H(s)</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2466"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Resposta Temporal</source>
-        <translation type="unfinished"></translation>
+        <translation>Time Response</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2518"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Tempo máximo de simulação.</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximum simulation time.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2541"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Entre com o tempo máximo de simulação</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter the maximum simulation time</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2605"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source> seg.</source>
-        <translation type="unfinished"></translation>
+        <translation> sec.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2573"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Passo de integração utilizado na solução (resolução temporal da simulação).</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulation step size used to solve the system (simulation time resolution).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2596"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Entre com o passo de solução da simulação (resolução temporal).</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter the simulation solution step size (time resolution).</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2650"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limpar a área do gráfico sem apagar os dados.</source>
-        <translation type="unfinished"></translation>
+        <translation>Clear the graph area without erasing the data.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4404"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limpar</source>
-        <translation type="unfinished"></translation>
+        <translation>Clear</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2673"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Executa uma simulação no domínio do tempo.</source>
-        <translation type="unfinished"></translation>
+        <translation>Runs a simulation in the time domain.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2676"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Simular</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulate</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2733"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Listagem das simulações armazenadas.</source>
-        <translation type="unfinished"></translation>
+        <translation>List of stored simulations.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3484"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Sistema</source>
-        <translation type="unfinished"></translation>
+        <translation>System</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2745"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Simulação</source>
-        <translation type="unfinished"></translation>
+        <translation>Simulation</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2783"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Adiciona uma nova simulação vazia à lista.</source>
-        <translation type="unfinished"></translation>
+        <translation>Add a new empty simulation to the list.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2797"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Remove a simulação selecionada.</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove the selected simulation.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2811"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Remove todas as simulações temporais armazenadas.</source>
-        <translation type="unfinished"></translation>
+        <translation>Remove all the time simulations stored.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2825"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Add</source>
+        <translation>Add</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostra janela com dados calculados a partir da simulação selecionada.</source>
-        <translation type="unfinished"></translation>
+        <translation>Shows a window with data calculated from the selected simulation.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2862"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Clique sobre uma linha para medir.
+Use as setas para direita e esquerda para alterar o ponto.</source>
+        <translation>Click on a line to measure.
+Use the right and left arrows to change the point.</translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Resposta em Frequência</source>
-        <translation type="unfinished"></translation>
+        <translation>Frequency Response</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2919"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita o cálculo automático dos limites de frequência para os gráficos de Bode e Nyquist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enables automatic calculation of frequency limits for Bode and Nyquist plots.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="2922"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Freq.
 Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>Freq.
+Auto</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3002"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limite inferior de frequência.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lower frequency limit.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3005"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>0,0100</source>
-        <translation type="unfinished"></translation>
+        <translation>0,0100</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3078"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limite superior de frequência.</source>
-        <translation type="unfinished"></translation>
+        <translation>Upper frequency limit.</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3081"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>100,0</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">100,0</translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3122"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Pts:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3151"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Número total de pontos de frequência para o traçado dos gráficos (resolução).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3227"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita o traçado do círculo unitário no diagrama de Nyquist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3230"/>
-        <source>Circ. 1</source>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Circulo 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3246"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Habilita traçado do diagrama de nyquist com freq. negativa.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3249"/>
-        <source>F. Neg.</source>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Freq. Neg.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3271"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostrar as margens de estabilidade no diagrama de Bode.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3274"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Margens</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3333"/>
-        <source>Para traçar o diagrama de Bode a partir dos dados da resposta em frequência.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.ui" line="3353"/>
-        <source>Para traçar o diagrama de Nyquist a partir dos dados da resposta em frequência.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="MainWindow.ui" line="3385"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limpar a área do gráfico (sem apagar os dados).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3408"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Plota a resposta em frequência (Bode ou Nyquist).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3411"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Traçar Bode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3477"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Listagem das respostas em frequência armazenadas.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3489"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Freq. resp.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3527"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Adiciona uma resposta em frequência vazia à lista.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3541"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Remove a resposta em frequência selecionada.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3555"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Remove todas as respostas em frequência armazenadas.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3569"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostra janela com dados calculados a partir da resposta em frequência selecionada.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3606"/>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Bode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
+        <source>Nyquist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Lugar das Raízes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3676"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Configuração</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3764"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor máximo de ganho para traçado do LGR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3814"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor da restrição de tempo de resposta.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3896"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor da restrição de tempo de pico.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3949"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor mínimo de ganho para traçado do LGR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="3993"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Região proibida de tempo de pico</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4031"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Região proibida de sobresinal percentual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4063"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ajuste de ganho de malha direta K.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4105"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Região proibida de tempo de resposta</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4143"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Valor da restrição de sobressinal percentual.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4293"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Resolução do gráfico (número de pontos)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4331"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Número de pontos para o traçado do LGR.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4378"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Traçar o Lugar Geomátrico das Raízes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4381"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Traçar LGR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4401"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Limpar a área do gráfico.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4422"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostra informações sobre o sistema LIT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4425"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>SisInfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4470"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Pólos em malha aberta:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4537"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Zeros em malha aberta:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4604"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Pólos em malha fechada:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4674"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Pontos de separação LGR:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4695"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostra o valor dos pontos de separação
  e o correspondente ganho.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4724"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4746"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Salvar sistema</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4755"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Carregar sistema</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4764"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>calculadora</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4767"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Executa a calculadora do sistema</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4776"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Configurações</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4779"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Abre opções de configuração.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4791"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Ajuda</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4794"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Mostra conteúdo de ajuda</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4803"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Fechar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="MainWindow.ui" line="4806"/>
+        <location filename="MainWindow.ui" line="0"/>
         <source>Fechar o programa.</source>
         <translation type="unfinished"></translation>
     </message>

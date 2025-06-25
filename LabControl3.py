@@ -33,7 +33,7 @@
 #==============================================================================
 #
 # Developed by Miguel Moreto
-# Florianopolis, Brazil, 2023
+# Florianopolis, Brazil, 2025
 import matplotlib
 matplotlib.use("QtAgg")
 
@@ -77,7 +77,10 @@ except AttributeError:
 
 class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
     """
-    hwl is inherited from both QtGui.QDialog and hw.Ui_Dialog
+    Main window class.
+
+    Load the graphical elements from .ui Qt Designer 6 file.
+
     """
 
     def __init__(self,parent=None):
@@ -552,11 +555,11 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             for e in self.expressions_errors:
                 if self.expressions_errors[e].get('error') and self.expressions_errors[e].get('active'):
                     if e == 'TM':
-                        msgs.append('<i>{}</i>'.format(
+                        msgs.append('<i>{0}</i>'.format(
                             self.expressions_errors[e].get('message')
                     ))
                     else:
-                        msgs.append('<i>{}</i> for <b>{}</b>'.format(
+                        msgs.append(_translate("MainWindow", "<i>{0}</i> para <b>{1}</b>'", None).format(
                             self.expressions_errors[e].get('message'),
                             e
                     ))
@@ -2501,7 +2504,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if (Gnum == 0):
                 # Change color ro red:
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-                self._set_expression_error('G[Num](s)', True, '[{}] is not a valid expression'.format(value))
+                self._set_expression_error('G[Num](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             else:
                 # Change color to green:
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
@@ -2513,8 +2516,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 if flag:
                     self._set_expression_error('TM', False)
                 else:
-                    self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')
-
+                    self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys))
+        #_translate("MainWindow", "Esse é o sistema selecionado no momento.", None)
         elif (self.sysDict[self.sysCurrentName].Type == 4):
             # Parse and check NL system input string:
             sysstr = self.sysDict[self.sysCurrentName].NLsysParseString(str(value))
@@ -2528,7 +2531,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 # Wrong input, change color ro red:
                 self.statusBar().showMessage(_translate("MainWindow", "Expressão inválida!", None),1000)
                 self.lineEditGnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-                self._set_expression_error('f(y,u)', True, '[{}] is not a valid expression'.format(value))
+                self._set_expression_error('f(y,u)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
                 
     
     def onGdenChange(self,value):
@@ -2537,14 +2540,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('G[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('G[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             return
             
         Gden = self.checkTFinput(value)
         
         if (Gden == [0] or Gden == 0):
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('G[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('G[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
         else:
             self.lineEditGden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('G[Den](s)', False)
@@ -2555,7 +2558,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if flag:
                 self._set_expression_error('TM', False)
             else:
-                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')
+                self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys))
 
     def onCnumChange(self,value):
         """
@@ -2563,14 +2566,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('C[Num](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('C[Num](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             return
             
         Cnum = self.checkTFinput(value)
         
         if (Cnum == 0):
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('C[Num](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('C[Num](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
         else:
             self.lineEditCnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('C[Num](s)', False)
@@ -2581,7 +2584,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if flag:
                 self._set_expression_error('TM', False)
             else:
-                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')         
+                self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys))         
     
     def onCdenChange(self,value):
         """
@@ -2589,14 +2592,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('C[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('C[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             return
             
         Cden = self.checkTFinput(value)
         
         if (Cden == [0] or Cden == 0):
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('C[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('C[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
         else:
             self.lineEditCden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('C[Den](s)', False)
@@ -2607,7 +2610,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if flag:
                 self._set_expression_error('TM', False)
             else:
-                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')           
+                self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys))           
       
     def onHnumChange(self,value):
         """
@@ -2615,14 +2618,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('H[Num](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('H[Num](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             return
             
         Hnum = self.checkTFinput(value)
         
         if (Hnum == 0):
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('H[Num](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('H[Num](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
         else:
             self.lineEditHnum.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('H[Num](s)', False)
@@ -2633,7 +2636,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if flag:
                 self._set_expression_error('TM', False)
             else:
-                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}')                  
+                self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys))                  
     
     def onHdenChange(self,value):
         """
@@ -2641,14 +2644,14 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         """
         if not value:
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('H[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('H[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
             return
             
         Hden = self.checkTFinput(value)
         
         if (Hden == [0] or Hden == 0):
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(255, 170, 170) }")
-            self._set_expression_error('H[Den](s)', True, '[{}] is not a valid expression'.format(value))
+            self._set_expression_error('H[Den](s)', True, _translate("MainWindow", "[{0}] não é uma expressão válida", None).format(value))
         else:
             self.lineEditHden.setStyleSheet("QLineEdit { background-color:  rgb(95, 211, 141) }")
             self._set_expression_error('H[Den](s)', False)
@@ -2659,7 +2662,7 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
             if flag:
                 self._set_expression_error('TM', False)
             else:
-                self._set_expression_error('TM', True, f'Improper transfer(s) function(s): {strsys}') 
+                self._set_expression_error('TM', True, _translate("MainWindow", "Função de Transferência imprópria: {0}", None).format(strsys)) 
     
     def checkTFinput(self, value, expr_var='s'):
         """
@@ -3139,6 +3142,7 @@ class LC3annotation():
         """
         Performs the annotation in the canvas.
         Creates a new one or updates if already created.
+            XYtext is the text position offset in fontsize units.
         """
         if self.an:
             self.update()
