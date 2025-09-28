@@ -61,7 +61,7 @@
        <string/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabDiagrama">
        <attribute name="title">
@@ -4513,7 +4513,7 @@ Use as setas para direita e esquerda para alterar o ponto.</string>
              <number>0</number>
             </property>
             <property name="text">
-             <string>Pólos em malha aberta:</string>
+             <string>Polos em malha aberta:</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
@@ -4643,7 +4643,7 @@ Use as setas para direita e esquerda para alterar o ponto.</string>
              <number>0</number>
             </property>
             <property name="text">
-             <string>Pólos em malha fechada:</string>
+             <string>Polos em malha fechada:</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>

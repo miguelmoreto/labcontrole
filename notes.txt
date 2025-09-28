@@ -5,7 +5,6 @@ To generate a executable:
 
 Creating a distribution enviroment (Linux):
     conda create --name labcontrole python nomkl --no-default-packages
-    conda activate distenv
     
 Creating a distribution enviroment (Windows):
     conda create --name labcontrole python --no-default-packages
@@ -29,7 +28,7 @@ Build the binary (windows) with pyInstaller 6:
 
 conda deactivate
 
-Utility commands:
+Utility commands (deprecated):
 pyrcc5 images.qrc -o images_rc.py
 
 # Resize to specific width:
